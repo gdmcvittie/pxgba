@@ -100,7 +100,7 @@ To run and build PxGBA, ensure you have:
 
 ### 1. Clone & Install Core Frontend Dependencies
 ```bash
-git clone https://github.com/your-username/pxgba.git
+git clone https://github.com/gdmcvittie/pxgba.git
 cd pxgba
 npm install
 ```
