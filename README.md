@@ -6,6 +6,15 @@ Why is it called PxGBA? Because I made a pixel art tool called Px, which was wha
 
 ---
 
+## OFFICAL LINKS
+GitHub: https://github.com/gdmcvittie/pxgba
+Itch.io: https://liftedpixelgames.itch.io/pxgba
+Discord: https://discord.gg/4zPChaMc
+Reddit: https://www.reddit.com/r/PxGBA/
+YouTube: https://www.youtube.com/@liftedpixelgames
+
+---
+
 ## 📖 Table of Contents
 - [Architecture](#-architecture)
 - [Key Features](#-key-features)
