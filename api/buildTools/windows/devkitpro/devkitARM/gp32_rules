@@ -1,0 +1,25 @@
+ifeq ($(strip $(DEVKITPRO)),)
+$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro)
+endif
+
+PORTLIBS	:=	$(DEVKITPRO)/portlibs/gp32 $(DEVKITPRO)/portlibs/armv4t
+export PATH := $(DEVKITPRO)/portlibs/gp32/bin:$(DEVKITPRO)/portlibs/armv4t/bin:$(PATH)
+LIBMIRKO	:=	$(DEVKITPRO)/libmirko
+
+include $(DEVKITPRO)/devkitARM/base_rules
+
+#---------------------------------------------------------------------------------
+%.fxe: %.bin
+	$(SILENTCMD)b2fxec -a "$(AUTHOR)" -t "$(TITLE)" $< $@
+	$(SILENTMSG) built ... $(notdir $@)
+
+#---------------------------------------------------------------------------------
+%.bin: %.elf
+	$(SILENTCMD)$(OBJCOPY) -O binary $< $@
+	$(SILENTMSG) built ... $(notdir $@)
+
+#---------------------------------------------------------------------------------
+%.elf:
+	$(SILENTMSG) linking binary
+	$(ADD_COMPILE_COMMAND) end
+	$(SILENTCMD)$(LD)  $(LDFLAGS) -specs=gp32.specs $(OFILES) $(LIBPATHS) $(LIBS) -o $@

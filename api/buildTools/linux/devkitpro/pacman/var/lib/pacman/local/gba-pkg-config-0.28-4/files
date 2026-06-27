@@ -1,0 +1,8 @@
+%FILES%
+opt/
+opt/devkitpro/
+opt/devkitpro/portlibs/
+opt/devkitpro/portlibs/gba/
+opt/devkitpro/portlibs/gba/bin/
+opt/devkitpro/portlibs/gba/bin/arm-none-eabi-pkg-config
+

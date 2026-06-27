@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>bn::dmg_music namespace | Butano Docs</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
+  <link rel="icon" href="favicon-dark.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <span id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">
+        <a href="https://github.com/GValiente/butano">Butano</a> <span class="m-breadcrumb">|</span> <a href="index.html" class="m-thin">Docs</a>
+      </span>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="pages.html">Pages</a></li>
+            <li><a href="modules.html">Modules</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="namespaces.html">Namespaces</a></li>
+            <li><a href="annotated.html">Classes</a></li>
+            <li><a href="files.html">Files</a></li>
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          <span class="m-breadcrumb"><a href="namespacebn.html">bn</a>::<wbr/></span>dmg_music <span class="m-thin">namespace</span>
+          <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="bn__dmg__music_8h.html">&lt;bn_dmg_music.h&gt;</a></div>
+        </h1>
+        <p>DMG music related functions.</p>
+        <nav class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#func-members">Functions</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+        <section id="func-members">
+          <h2><a href="#func-members">Functions</a></h2>
+          <dl class="m-doc">
+            <dt id="a3cf2be8c9c56cb2aa63d7194ecab9e48">
+              <span class="m-doc-wrap-bumper">auto <a href="#a3cf2be8c9c56cb2aa63d7194ecab9e48" class="m-doc-self">playing</a>(</span><span class="m-doc-wrap">) -&gt; bool</span>
+            </dt>
+            <dd>Indicates if currently there&#x27;s any DMG music playing or not.</dd>
+            <dt id="acc8cb9353b5437e51ac5886d2bf9712b">
+              <span class="m-doc-wrap-bumper">auto <a href="#acc8cb9353b5437e51ac5886d2bf9712b" class="m-doc-self">playing_item</a>(</span><span class="m-doc-wrap">) -&gt; <a href="classbn_1_1optional.html" class="m-doc">optional</a>&lt;<a href="classbn_1_1dmg__music__item.html" class="m-doc">dmg_<wbr />music_<wbr />item</a>&gt;</span>
+            </dt>
+            <dd>Returns the active <a href="classbn_1_1dmg__music__item.html" class="m-doc">dmg_<wbr />music_<wbr />item</a> if there&#x27;s any DMG music playing; <a href="namespacebn.html#a01f293535903e4c4777564a86a0f520b" class="m-doc">bn::<wbr />nullopt</a> otherwise.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#aa76eb8568cb02c5d8202d4c358b10666" class="m-doc">play</a>(</span><span class="m-doc-wrap">const <a href="classbn_1_1dmg__music__item.html" class="m-doc">dmg_<wbr />music_<wbr />item</a>&amp; item)</span>
+            </dt>
+            <dd>Plays the DMG music specified by the given <a href="classbn_1_1dmg__music__item.html" class="m-doc">dmg_<wbr />music_<wbr />item</a> with default settings.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a9e9fcb61ca92d0d606d861ee70c4369b" class="m-doc">play</a>(</span><span class="m-doc-wrap">const <a href="classbn_1_1dmg__music__item.html" class="m-doc">dmg_<wbr />music_<wbr />item</a>&amp; item,
+              int speed)</span>
+            </dt>
+            <dd>Plays the DMG music specified by the given <a href="classbn_1_1dmg__music__item.html" class="m-doc">dmg_<wbr />music_<wbr />item</a>.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a52c45e72aef5b037b65c59d327d05378" class="m-doc">play</a>(</span><span class="m-doc-wrap">const <a href="classbn_1_1dmg__music__item.html" class="m-doc">dmg_<wbr />music_<wbr />item</a>&amp; item,
+              int speed,
+              bool loop)</span>
+            </dt>
+            <dd>Plays the DMG music specified by the given <a href="classbn_1_1dmg__music__item.html" class="m-doc">dmg_<wbr />music_<wbr />item</a>.</dd>
+            <dt id="ae5e0befde85bfba8318c1f6fc26bc5bc">
+              <span class="m-doc-wrap-bumper">void <a href="#ae5e0befde85bfba8318c1f6fc26bc5bc" class="m-doc-self">stop</a>(</span><span class="m-doc-wrap">)</span>
+            </dt>
+            <dd>Stops playback of the active DMG music.</dd>
+            <dt id="a8ababcd93c2f3eb1a819da6f3932c047">
+              <span class="m-doc-wrap-bumper">auto <a href="#a8ababcd93c2f3eb1a819da6f3932c047" class="m-doc-self">paused</a>(</span><span class="m-doc-wrap">) -&gt; bool</span>
+            </dt>
+            <dd>Indicates if the active DMG music has been paused or not.</dd>
+            <dt id="ae08c4dafaa7ca65cc2196500b0a47adb">
+              <span class="m-doc-wrap-bumper">void <a href="#ae08c4dafaa7ca65cc2196500b0a47adb" class="m-doc-self">pause</a>(</span><span class="m-doc-wrap">)</span>
+            </dt>
+            <dd>Pauses playback of the active DMG music.</dd>
+            <dt id="a7f8fb5912eb86a3eb7d3bb256fcff655">
+              <span class="m-doc-wrap-bumper">void <a href="#a7f8fb5912eb86a3eb7d3bb256fcff655" class="m-doc-self">resume</a>(</span><span class="m-doc-wrap">)</span>
+            </dt>
+            <dd>Resumes playback of the paused DMG music.</dd>
+            <dt id="a4fe705dd9f573f3d1102d9986b7204da">
+              <span class="m-doc-wrap-bumper">auto <a href="#a4fe705dd9f573f3d1102d9986b7204da" class="m-doc-self">position</a>(</span><span class="m-doc-wrap">) -&gt; const <a href="classbn_1_1dmg__music__position.html" class="m-doc">dmg_<wbr />music_<wbr />position</a>&amp;</span>
+            </dt>
+            <dd>Returns the sequence position of the active DMG music.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a038276454cf28cb26f31f47dceedd15c" class="m-doc">set_position</a>(</span><span class="m-doc-wrap">int pattern,
+              int row)</span>
+            </dt>
+            <dd>Sets the sequence position of the active DMG music.</dd>
+            <dt id="a34c97852534204b536c4a4c551810b7b">
+              <span class="m-doc-wrap-bumper">void <a href="#a34c97852534204b536c4a4c551810b7b" class="m-doc-self">set_position</a>(</span><span class="m-doc-wrap">const <a href="classbn_1_1dmg__music__position.html" class="m-doc">dmg_<wbr />music_<wbr />position</a>&amp; position)</span>
+            </dt>
+            <dd>Sets the sequence position of the active DMG music.</dd>
+            <dt id="a98b50b3376a369d98ce2b80a3f05fe85">
+              <span class="m-doc-wrap-bumper">auto <a href="#a98b50b3376a369d98ce2b80a3f05fe85" class="m-doc-self">left_volume</a>(</span><span class="m-doc-wrap">) -&gt; <a href="namespacebn.html#a0de0484a51e353c5b48db21590f4dfc9" class="m-doc">fixed</a></span>
+            </dt>
+            <dd>Returns the volume of the active DMG music for the left speaker.</dd>
+            <dt id="ac86c06459136d56e9d1b8047825bb445">
+              <span class="m-doc-wrap-bumper">auto <a href="#ac86c06459136d56e9d1b8047825bb445" class="m-doc-self">right_volume</a>(</span><span class="m-doc-wrap">) -&gt; <a href="namespacebn.html#a0de0484a51e353c5b48db21590f4dfc9" class="m-doc">fixed</a></span>
+            </dt>
+            <dd>Returns the volume of the active DMG music for the right speaker.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a945033f43b36f1446cde06023df208d5" class="m-doc">set_left_volume</a>(</span><span class="m-doc-wrap"><a href="namespacebn.html#a0de0484a51e353c5b48db21590f4dfc9" class="m-doc">fixed</a> left_volume)</span>
+            </dt>
+            <dd>Sets the volume of the active DMG music for the left speaker.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#ae41d53ddc556f509d00b6c07b0e08d00" class="m-doc">set_right_volume</a>(</span><span class="m-doc-wrap"><a href="namespacebn.html#a0de0484a51e353c5b48db21590f4dfc9" class="m-doc">fixed</a> right_volume)</span>
+            </dt>
+            <dd>Sets the volume of the active DMG music for the right speaker.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#ad1e2bc5807def79d35a9c402f5fb2a12" class="m-doc">set_volume</a>(</span><span class="m-doc-wrap"><a href="namespacebn.html#a0de0484a51e353c5b48db21590f4dfc9" class="m-doc">fixed</a> volume)</span>
+            </dt>
+            <dd>Sets the volume of the active DMG music for both speakers.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a6c3719e43acf34c17a458453836b063f" class="m-doc">set_volume</a>(</span><span class="m-doc-wrap"><a href="namespacebn.html#a0de0484a51e353c5b48db21590f4dfc9" class="m-doc">fixed</a> left_volume,
+              <a href="namespacebn.html#a0de0484a51e353c5b48db21590f4dfc9" class="m-doc">fixed</a> right_volume)</span>
+            </dt>
+            <dd>Sets the volume of the active DMG music for both speakers.</dd>
+            <dt id="a8d5a4dfe8160354fc7ffa4575f83916c">
+              <span class="m-doc-wrap-bumper">auto <a href="#a8d5a4dfe8160354fc7ffa4575f83916c" class="m-doc-self">master_volume</a>(</span><span class="m-doc-wrap">) -&gt; <a href="group__dmg__music.html#gab1b4b1b30155d7f77c1cac93f61179b2" class="m-doc">dmg_<wbr />music_<wbr />master_<wbr />volume</a></span>
+            </dt>
+            <dd>Returns the master volume of all DMG music.</dd>
+            <dt id="a55a100af3c116115bc03a2f57370eefd">
+              <span class="m-doc-wrap-bumper">void <a href="#a55a100af3c116115bc03a2f57370eefd" class="m-doc-self">set_master_volume</a>(</span><span class="m-doc-wrap"><a href="group__dmg__music.html#gab1b4b1b30155d7f77c1cac93f61179b2" class="m-doc">dmg_<wbr />music_<wbr />master_<wbr />volume</a> volume)</span>
+            </dt>
+            <dd>Sets the master volume of all DMG music.</dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="aa76eb8568cb02c5d8202d4c358b10666"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void bn::<wbr />dmg_music::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa76eb8568cb02c5d8202d4c358b10666" class="m-doc-self">play</a>(</span><span class="m-doc-wrap">const <a href="classbn_1_1dmg__music__item.html" class="m-doc">dmg_<wbr />music_<wbr />item</a>&amp; item)</span></span>
+            </h3>
+            <p>Plays the DMG music specified by the given <a href="classbn_1_1dmg__music__item.html" class="m-doc">dmg_<wbr />music_<wbr />item</a> with default settings.</p>
+<p>Default settings are speed = 1 and loop enabled.</p>
+          </div></section>
+          <section class="m-doc-details" id="a9e9fcb61ca92d0d606d861ee70c4369b"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void bn::<wbr />dmg_music::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9e9fcb61ca92d0d606d861ee70c4369b" class="m-doc-self">play</a>(</span><span class="m-doc-wrap">const <a href="classbn_1_1dmg__music__item.html" class="m-doc">dmg_<wbr />music_<wbr />item</a>&amp; item,
+              int speed)</span></span>
+            </h3>
+            <p>Plays the DMG music specified by the given <a href="classbn_1_1dmg__music__item.html" class="m-doc">dmg_<wbr />music_<wbr />item</a>.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">item</td>
+                  <td>Specifies the DMG music to play.</td>
+                </tr>
+                <tr>
+                  <td>speed</td>
+                  <td>Playback speed, in the range [1..256].</td>
+                </tr>
+              </tbody>
+            </table>
+<p>VGM player only supports the default playback speed (1).</p>
+          </div></section>
+          <section class="m-doc-details" id="a52c45e72aef5b037b65c59d327d05378"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void bn::<wbr />dmg_music::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a52c45e72aef5b037b65c59d327d05378" class="m-doc-self">play</a>(</span><span class="m-doc-wrap">const <a href="classbn_1_1dmg__music__item.html" class="m-doc">dmg_<wbr />music_<wbr />item</a>&amp; item,
+              int speed,
+              bool loop)</span></span>
+            </h3>
+            <p>Plays the DMG music specified by the given <a href="classbn_1_1dmg__music__item.html" class="m-doc">dmg_<wbr />music_<wbr />item</a>.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">item</td>
+                  <td>Specifies the DMG music to play.</td>
+                </tr>
+                <tr>
+                  <td>speed</td>
+                  <td>Playback speed, in the range [1..256].</td>
+                </tr>
+                <tr>
+                  <td>loop</td>
+                  <td>Indicates if it must be played until it is stopped manually or until end.</td>
+                </tr>
+              </tbody>
+            </table>
+<p>VGM player only supports the default playback speed (1).</p>
+          </div></section>
+          <section class="m-doc-details" id="a038276454cf28cb26f31f47dceedd15c"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void bn::<wbr />dmg_music::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a038276454cf28cb26f31f47dceedd15c" class="m-doc-self">set_position</a>(</span><span class="m-doc-wrap">int pattern,
+              int row)</span></span>
+            </h3>
+            <p>Sets the sequence position of the active DMG music.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">pattern</td>
+                  <td>Pattern order.</td>
+                </tr>
+                <tr>
+                  <td>row</td>
+                  <td>Row inside the pattern.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a945033f43b36f1446cde06023df208d5"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void bn::<wbr />dmg_music::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a945033f43b36f1446cde06023df208d5" class="m-doc-self">set_left_volume</a>(</span><span class="m-doc-wrap"><a href="namespacebn.html#a0de0484a51e353c5b48db21590f4dfc9" class="m-doc">fixed</a> left_volume)</span></span>
+            </h3>
+            <p>Sets the volume of the active DMG music for the left speaker.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">left_volume</td>
+                  <td>Left speaker volume level, in the range [0..1].</td>
+                </tr>
+              </tbody>
+            </table>
+<p>Volume change is not supported by the VGM player.</p>
+          </div></section>
+          <section class="m-doc-details" id="ae41d53ddc556f509d00b6c07b0e08d00"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void bn::<wbr />dmg_music::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ae41d53ddc556f509d00b6c07b0e08d00" class="m-doc-self">set_right_volume</a>(</span><span class="m-doc-wrap"><a href="namespacebn.html#a0de0484a51e353c5b48db21590f4dfc9" class="m-doc">fixed</a> right_volume)</span></span>
+            </h3>
+            <p>Sets the volume of the active DMG music for the right speaker.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">right_volume</td>
+                  <td>Right speaker volume level, in the range [0..1].</td>
+                </tr>
+              </tbody>
+            </table>
+<p>Volume change is not supported by the VGM player.</p>
+          </div></section>
+          <section class="m-doc-details" id="ad1e2bc5807def79d35a9c402f5fb2a12"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void bn::<wbr />dmg_music::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ad1e2bc5807def79d35a9c402f5fb2a12" class="m-doc-self">set_volume</a>(</span><span class="m-doc-wrap"><a href="namespacebn.html#a0de0484a51e353c5b48db21590f4dfc9" class="m-doc">fixed</a> volume)</span></span>
+            </h3>
+            <p>Sets the volume of the active DMG music for both speakers.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">volume</td>
+                  <td>Volume level, in the range [0..1].</td>
+                </tr>
+              </tbody>
+            </table>
+<p>Volume change is not supported by the VGM player.</p>
+          </div></section>
+          <section class="m-doc-details" id="a6c3719e43acf34c17a458453836b063f"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void bn::<wbr />dmg_music::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a6c3719e43acf34c17a458453836b063f" class="m-doc-self">set_volume</a>(</span><span class="m-doc-wrap"><a href="namespacebn.html#a0de0484a51e353c5b48db21590f4dfc9" class="m-doc">fixed</a> left_volume,
+              <a href="namespacebn.html#a0de0484a51e353c5b48db21590f4dfc9" class="m-doc">fixed</a> right_volume)</span></span>
+            </h3>
+            <p>Sets the volume of the active DMG music for both speakers.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">left_volume</td>
+                  <td>Left speaker volume level, in the range [0..1].</td>
+                </tr>
+                <tr>
+                  <td>right_volume</td>
+                  <td>Right speaker volume level, in the range [0..1].</td>
+                </tr>
+              </tbody>
+            </table>
+<p>Volume change is not supported by the VGM player.</p>
+          </div></section>
+        </section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v2.js"></script>
+<script src="searchdata-v2.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Butano Docs. Created with <a href="https://doxygen.org/">Doxygen</a> 1.14.0 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>

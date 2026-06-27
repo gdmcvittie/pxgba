@@ -1,0 +1,36 @@
+%NAME%
+devkitpro-keyring
+
+%VERSION%
+20180316-1
+
+%BASE%
+devkitpro-keyring
+
+%DESC%
+devkitPro PGP keyring
+
+%URL%
+https://github.com/devkitpro/devkitpro-keyring
+
+%ARCH%
+any
+
+%BUILDDATE%
+1593821458
+
+%INSTALLDATE%
+1622843984
+
+%PACKAGER%
+Dave Murphy <davem@devkitpro.org>
+
+%SIZE%
+34816
+
+%LICENSE%
+GPL
+
+%VALIDATION%
+pgp
+

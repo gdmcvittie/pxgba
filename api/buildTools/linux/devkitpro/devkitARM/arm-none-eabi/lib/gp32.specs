@@ -1,0 +1,7 @@
+%include <sync-none.specs>
+
+*link:
++ -T gp32.ld%s --gc-sections --no-warn-rwx-segments
+
+*startfile:
+gp32_crt0%O%s crti%O%s crtbegin%O%s

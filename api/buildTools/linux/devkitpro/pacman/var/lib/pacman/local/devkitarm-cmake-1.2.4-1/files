@@ -1,0 +1,12 @@
+%FILES%
+opt/
+opt/devkitpro/
+opt/devkitpro/cmake/
+opt/devkitpro/cmake/devkitARM.cmake
+opt/devkitpro/cmake/dkp-arm-mode-wrapper
+opt/devkitpro/cmake/dkp-gba-ds-common.cmake
+opt/devkitpro/cmake/dkp-gba-ds-utils.cmake
+opt/devkitpro/devkitARM/
+opt/devkitpro/devkitARM/bin/
+opt/devkitpro/devkitARM/bin/arm-none-eabi-cmake
+

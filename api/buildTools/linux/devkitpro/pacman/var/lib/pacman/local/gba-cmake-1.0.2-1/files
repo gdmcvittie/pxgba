@@ -1,0 +1,12 @@
+%FILES%
+opt/
+opt/devkitpro/
+opt/devkitpro/cmake/
+opt/devkitpro/cmake/GBA.cmake
+opt/devkitpro/cmake/Platform/
+opt/devkitpro/cmake/Platform/NintendoGBA.cmake
+opt/devkitpro/portlibs/
+opt/devkitpro/portlibs/gba/
+opt/devkitpro/portlibs/gba/bin/
+opt/devkitpro/portlibs/gba/bin/arm-none-eabi-cmake
+

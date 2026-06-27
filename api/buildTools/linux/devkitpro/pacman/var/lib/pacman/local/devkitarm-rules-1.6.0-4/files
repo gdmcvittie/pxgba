@@ -1,0 +1,11 @@
+%FILES%
+opt/
+opt/devkitpro/
+opt/devkitpro/devkitARM/
+opt/devkitpro/devkitARM/3ds_rules
+opt/devkitpro/devkitARM/base_rules
+opt/devkitpro/devkitARM/base_tools
+opt/devkitpro/devkitARM/ds_rules
+opt/devkitpro/devkitARM/gba_rules
+opt/devkitpro/devkitARM/gp32_rules
+

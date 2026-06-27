@@ -1,0 +1,359 @@
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp: In function 'scene_0_map::collision_type scene_0_map::get_collision(int, int)':
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:11:38: warning: unused parameter 'x' [-Wunused-parameter]
+   11 |     collision_type get_collision(int x, int y) {
+      |                                  ~~~~^
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:11:45: warning: unused parameter 'y' [-Wunused-parameter]
+   11 |     collision_type get_collision(int x, int y) {
+      |                                         ~~~~^
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp: In member function 'void bn::dummy_sprite::set_visible(bool)':
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:24:31: warning: unused parameter 'v' [-Wunused-parameter]
+   24 |         void set_visible(bool v) {}
+      |                          ~~~~~^
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp: In member function 'void bn::dummy_sprite::set_tiles(int)':
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:25:28: warning: unused parameter 't' [-Wunused-parameter]
+   25 |         void set_tiles(int t) {}
+      |                        ~~~~^
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp: In member function 'void bn::dummy_sprite::set_x(bn::fixed)':
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:26:26: warning: unused parameter 'x' [-Wunused-parameter]
+   26 |         void set_x(fixed x) {}
+      |                    ~~~~~~^
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp: In member function 'void bn::dummy_sprite::set_y(bn::fixed)':
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:27:26: warning: unused parameter 'y' [-Wunused-parameter]
+   27 |         void set_y(fixed y) {}
+      |                    ~~~~~~^
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp: In member function 'void bn::dummy_camera::set_x(bn::fixed)':
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:32:26: warning: unused parameter 'x' [-Wunused-parameter]
+   32 |         void set_x(fixed x) {}
+      |                    ~~~~~~^
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp: In member function 'void bn::dummy_camera::set_y(bn::fixed)':
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:33:26: warning: unused parameter 'y' [-Wunused-parameter]
+   33 |         void set_y(fixed y) {}
+      |                    ~~~~~~^
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp: In function 'int main()':
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:382:21: warning: unused variable 'plat_b' [-Wunused-variable]
+  382 |                 int plat_b = actor_1_y + 0 + 8;
+      |                     ^~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:402:21: warning: unused variable 'plat_b' [-Wunused-variable]
+  402 |                 int plat_b = actor_2_y + 0 + 8;
+      |                     ^~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:416:21: warning: unused variable 'plat_b' [-Wunused-variable]
+  416 |                 int plat_b = actor_10_y + 0 + 16;
+      |                     ^~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:441:21: warning: unused variable 'plat_b' [-Wunused-variable]
+  441 |                 int plat_b = actor_12_y + 0 + 16;
+      |                     ^~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:533:28: error: 'hazard' was not declared in this scope
+  533 |                 int hx_l = hazard.x + 0;
+      |                            ^~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:677:29: warning: unused variable 'plat_t' [-Wunused-variable]
+  677 |                         int plat_t = actor_2_y + 0;
+      |                             ^~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:42:20: warning: unused variable 'camera' [-Wunused-variable]
+   42 |     bn::camera_ptr camera;
+      |                    ^~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:63:9: warning: unused variable 'actor_0_timer' [-Wunused-variable]
+   63 |     int actor_0_timer = 0;
+      |         ^~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:71:9: warning: unused variable 'actor_0_idle_frames' [-Wunused-variable]
+   71 |     int actor_0_idle_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:72:9: warning: unused variable 'actor_0_walk_frames' [-Wunused-variable]
+   72 |     int actor_0_walk_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:73:9: warning: unused variable 'actor_0_anim_timer' [-Wunused-variable]
+   73 |     int actor_0_anim_timer = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:74:9: warning: unused variable 'actor_0_anim_idx' [-Wunused-variable]
+   74 |     int actor_0_anim_idx = 0;
+      |         ^~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:75:9: warning: unused variable 'actor_0_anim_state' [-Wunused-variable]
+   75 |     int actor_0_anim_state = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:76:9: warning: unused variable 'actor_0_anim_lock' [-Wunused-variable]
+   76 |     int actor_0_anim_lock = 0;
+      |         ^~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:83:9: warning: unused variable 'actor_1_timer' [-Wunused-variable]
+   83 |     int actor_1_timer = 0;
+      |         ^~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:91:9: warning: unused variable 'actor_1_idle_frames' [-Wunused-variable]
+   91 |     int actor_1_idle_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:92:9: warning: unused variable 'actor_1_walk_frames' [-Wunused-variable]
+   92 |     int actor_1_walk_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:93:9: warning: unused variable 'actor_1_anim_timer' [-Wunused-variable]
+   93 |     int actor_1_anim_timer = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:94:9: warning: unused variable 'actor_1_anim_idx' [-Wunused-variable]
+   94 |     int actor_1_anim_idx = 0;
+      |         ^~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:95:9: warning: unused variable 'actor_1_anim_state' [-Wunused-variable]
+   95 |     int actor_1_anim_state = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:96:9: warning: unused variable 'actor_1_anim_lock' [-Wunused-variable]
+   96 |     int actor_1_anim_lock = 0;
+      |         ^~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:103:9: warning: unused variable 'actor_2_timer' [-Wunused-variable]
+  103 |     int actor_2_timer = 0;
+      |         ^~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:107:10: warning: unused variable 'actor_2_player_on' [-Wunused-variable]
+  107 |     bool actor_2_player_on = false;
+      |          ^~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:108:9: warning: unused variable 'actor_2_idle_frames' [-Wunused-variable]
+  108 |     int actor_2_idle_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:109:9: warning: unused variable 'actor_2_walk_frames' [-Wunused-variable]
+  109 |     int actor_2_walk_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:110:9: warning: unused variable 'actor_2_anim_timer' [-Wunused-variable]
+  110 |     int actor_2_anim_timer = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:111:9: warning: unused variable 'actor_2_anim_idx' [-Wunused-variable]
+  111 |     int actor_2_anim_idx = 0;
+      |         ^~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:112:9: warning: unused variable 'actor_2_anim_state' [-Wunused-variable]
+  112 |     int actor_2_anim_state = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:113:9: warning: unused variable 'actor_2_anim_lock' [-Wunused-variable]
+  113 |     int actor_2_anim_lock = 0;
+      |         ^~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:120:9: warning: unused variable 'actor_3_timer' [-Wunused-variable]
+  120 |     int actor_3_timer = 0;
+      |         ^~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:127:9: warning: unused variable 'actor_3_idle_frames' [-Wunused-variable]
+  127 |     int actor_3_idle_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:128:9: warning: unused variable 'actor_3_walk_frames' [-Wunused-variable]
+  128 |     int actor_3_walk_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:129:9: warning: unused variable 'actor_3_anim_timer' [-Wunused-variable]
+  129 |     int actor_3_anim_timer = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:130:9: warning: unused variable 'actor_3_anim_idx' [-Wunused-variable]
+  130 |     int actor_3_anim_idx = 0;
+      |         ^~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:131:9: warning: unused variable 'actor_3_anim_state' [-Wunused-variable]
+  131 |     int actor_3_anim_state = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:132:9: warning: unused variable 'actor_3_anim_lock' [-Wunused-variable]
+  132 |     int actor_3_anim_lock = 0;
+      |         ^~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:139:9: warning: unused variable 'actor_4_timer' [-Wunused-variable]
+  139 |     int actor_4_timer = 0;
+      |         ^~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:143:9: warning: unused variable 'actor_4_idle_frames' [-Wunused-variable]
+  143 |     int actor_4_idle_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:144:9: warning: unused variable 'actor_4_walk_frames' [-Wunused-variable]
+  144 |     int actor_4_walk_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:145:9: warning: unused variable 'actor_4_anim_timer' [-Wunused-variable]
+  145 |     int actor_4_anim_timer = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:146:9: warning: unused variable 'actor_4_anim_idx' [-Wunused-variable]
+  146 |     int actor_4_anim_idx = 0;
+      |         ^~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:147:9: warning: unused variable 'actor_4_anim_state' [-Wunused-variable]
+  147 |     int actor_4_anim_state = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:148:9: warning: unused variable 'actor_4_anim_lock' [-Wunused-variable]
+  148 |     int actor_4_anim_lock = 0;
+      |         ^~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:155:9: warning: unused variable 'actor_5_timer' [-Wunused-variable]
+  155 |     int actor_5_timer = 0;
+      |         ^~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:162:9: warning: unused variable 'actor_5_idle_frames' [-Wunused-variable]
+  162 |     int actor_5_idle_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:163:9: warning: unused variable 'actor_5_walk_frames' [-Wunused-variable]
+  163 |     int actor_5_walk_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:164:9: warning: unused variable 'actor_5_anim_timer' [-Wunused-variable]
+  164 |     int actor_5_anim_timer = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:165:9: warning: unused variable 'actor_5_anim_idx' [-Wunused-variable]
+  165 |     int actor_5_anim_idx = 0;
+      |         ^~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:166:9: warning: unused variable 'actor_5_anim_state' [-Wunused-variable]
+  166 |     int actor_5_anim_state = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:167:9: warning: unused variable 'actor_5_anim_lock' [-Wunused-variable]
+  167 |     int actor_5_anim_lock = 0;
+      |         ^~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:174:9: warning: unused variable 'actor_6_timer' [-Wunused-variable]
+  174 |     int actor_6_timer = 0;
+      |         ^~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:181:9: warning: unused variable 'actor_6_idle_frames' [-Wunused-variable]
+  181 |     int actor_6_idle_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:182:9: warning: unused variable 'actor_6_walk_frames' [-Wunused-variable]
+  182 |     int actor_6_walk_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:183:9: warning: unused variable 'actor_6_anim_timer' [-Wunused-variable]
+  183 |     int actor_6_anim_timer = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:184:9: warning: unused variable 'actor_6_anim_idx' [-Wunused-variable]
+  184 |     int actor_6_anim_idx = 0;
+      |         ^~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:185:9: warning: unused variable 'actor_6_anim_state' [-Wunused-variable]
+  185 |     int actor_6_anim_state = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:186:9: warning: unused variable 'actor_6_anim_lock' [-Wunused-variable]
+  186 |     int actor_6_anim_lock = 0;
+      |         ^~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:193:9: warning: unused variable 'actor_7_timer' [-Wunused-variable]
+  193 |     int actor_7_timer = 0;
+      |         ^~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:201:9: warning: unused variable 'actor_7_dir' [-Wunused-variable]
+  201 |     int actor_7_dir = 1;
+      |         ^~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:202:9: warning: unused variable 'actor_7_idle_frames' [-Wunused-variable]
+  202 |     int actor_7_idle_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:203:9: warning: unused variable 'actor_7_walk_frames' [-Wunused-variable]
+  203 |     int actor_7_walk_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:204:9: warning: unused variable 'actor_7_anim_timer' [-Wunused-variable]
+  204 |     int actor_7_anim_timer = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:205:9: warning: unused variable 'actor_7_anim_idx' [-Wunused-variable]
+  205 |     int actor_7_anim_idx = 0;
+      |         ^~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:206:9: warning: unused variable 'actor_7_anim_state' [-Wunused-variable]
+  206 |     int actor_7_anim_state = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:207:9: warning: unused variable 'actor_7_anim_lock' [-Wunused-variable]
+  207 |     int actor_7_anim_lock = 0;
+      |         ^~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:214:9: warning: unused variable 'actor_8_timer' [-Wunused-variable]
+  214 |     int actor_8_timer = 0;
+      |         ^~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:222:9: warning: unused variable 'actor_8_idle_frames' [-Wunused-variable]
+  222 |     int actor_8_idle_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:223:9: warning: unused variable 'actor_8_walk_frames' [-Wunused-variable]
+  223 |     int actor_8_walk_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:224:9: warning: unused variable 'actor_8_anim_timer' [-Wunused-variable]
+  224 |     int actor_8_anim_timer = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:225:9: warning: unused variable 'actor_8_anim_idx' [-Wunused-variable]
+  225 |     int actor_8_anim_idx = 0;
+      |         ^~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:226:9: warning: unused variable 'actor_8_anim_state' [-Wunused-variable]
+  226 |     int actor_8_anim_state = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:227:9: warning: unused variable 'actor_8_anim_lock' [-Wunused-variable]
+  227 |     int actor_8_anim_lock = 0;
+      |         ^~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:238:9: warning: unused variable 'actor_9_idle_frames' [-Wunused-variable]
+  238 |     int actor_9_idle_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:239:9: warning: unused variable 'actor_9_walk_frames' [-Wunused-variable]
+  239 |     int actor_9_walk_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:240:9: warning: unused variable 'actor_9_anim_timer' [-Wunused-variable]
+  240 |     int actor_9_anim_timer = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:241:9: warning: unused variable 'actor_9_anim_idx' [-Wunused-variable]
+  241 |     int actor_9_anim_idx = 0;
+      |         ^~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:242:9: warning: unused variable 'actor_9_anim_state' [-Wunused-variable]
+  242 |     int actor_9_anim_state = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:243:9: warning: unused variable 'actor_9_anim_lock' [-Wunused-variable]
+  243 |     int actor_9_anim_lock = 0;
+      |         ^~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:250:9: warning: unused variable 'actor_10_timer' [-Wunused-variable]
+  250 |     int actor_10_timer = 0;
+      |         ^~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:255:10: warning: unused variable 'actor_10_player_on' [-Wunused-variable]
+  255 |     bool actor_10_player_on = false;
+      |          ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:256:9: warning: unused variable 'actor_10_idle_frames' [-Wunused-variable]
+  256 |     int actor_10_idle_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:257:9: warning: unused variable 'actor_10_walk_frames' [-Wunused-variable]
+  257 |     int actor_10_walk_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:258:9: warning: unused variable 'actor_10_anim_timer' [-Wunused-variable]
+  258 |     int actor_10_anim_timer = 0;
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:259:9: warning: unused variable 'actor_10_anim_idx' [-Wunused-variable]
+  259 |     int actor_10_anim_idx = 0;
+      |         ^~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:260:9: warning: unused variable 'actor_10_anim_state' [-Wunused-variable]
+  260 |     int actor_10_anim_state = 0;
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:261:9: warning: unused variable 'actor_10_anim_lock' [-Wunused-variable]
+  261 |     int actor_10_anim_lock = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:268:9: warning: unused variable 'actor_11_timer' [-Wunused-variable]
+  268 |     int actor_11_timer = 0;
+      |         ^~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:272:9: warning: unused variable 'actor_11_idle_frames' [-Wunused-variable]
+  272 |     int actor_11_idle_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:273:9: warning: unused variable 'actor_11_walk_frames' [-Wunused-variable]
+  273 |     int actor_11_walk_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:274:9: warning: unused variable 'actor_11_anim_timer' [-Wunused-variable]
+  274 |     int actor_11_anim_timer = 0;
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:275:9: warning: unused variable 'actor_11_anim_idx' [-Wunused-variable]
+  275 |     int actor_11_anim_idx = 0;
+      |         ^~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:276:9: warning: unused variable 'actor_11_anim_state' [-Wunused-variable]
+  276 |     int actor_11_anim_state = 0;
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:277:9: warning: unused variable 'actor_11_anim_lock' [-Wunused-variable]
+  277 |     int actor_11_anim_lock = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:284:9: warning: unused variable 'actor_12_timer' [-Wunused-variable]
+  284 |     int actor_12_timer = 0;
+      |         ^~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:288:10: warning: unused variable 'actor_12_player_on' [-Wunused-variable]
+  288 |     bool actor_12_player_on = false;
+      |          ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:289:9: warning: unused variable 'actor_12_idle_frames' [-Wunused-variable]
+  289 |     int actor_12_idle_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:290:9: warning: unused variable 'actor_12_walk_frames' [-Wunused-variable]
+  290 |     int actor_12_walk_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:291:9: warning: unused variable 'actor_12_anim_timer' [-Wunused-variable]
+  291 |     int actor_12_anim_timer = 0;
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:292:9: warning: unused variable 'actor_12_anim_idx' [-Wunused-variable]
+  292 |     int actor_12_anim_idx = 0;
+      |         ^~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:293:9: warning: unused variable 'actor_12_anim_state' [-Wunused-variable]
+  293 |     int actor_12_anim_state = 0;
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:294:9: warning: unused variable 'actor_12_anim_lock' [-Wunused-variable]
+  294 |     int actor_12_anim_lock = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:301:9: warning: unused variable 'actor_13_timer' [-Wunused-variable]
+  301 |     int actor_13_timer = 0;
+      |         ^~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:305:9: warning: unused variable 'actor_13_idle_frames' [-Wunused-variable]
+  305 |     int actor_13_idle_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:306:9: warning: unused variable 'actor_13_walk_frames' [-Wunused-variable]
+  306 |     int actor_13_walk_frames[] = { 0 };
+      |         ^~~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:307:9: warning: unused variable 'actor_13_anim_timer' [-Wunused-variable]
+  307 |     int actor_13_anim_timer = 0;
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:308:9: warning: unused variable 'actor_13_anim_idx' [-Wunused-variable]
+  308 |     int actor_13_anim_idx = 0;
+      |         ^~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:309:9: warning: unused variable 'actor_13_anim_state' [-Wunused-variable]
+  309 |     int actor_13_anim_state = 0;
+      |         ^~~~~~~~~~~~~~~~~~~
+C:/_code/gba-maker/api/buildTools/butano/template/src/main.cpp:310:9: warning: unused variable 'actor_13_anim_lock' [-Wunused-variable]
+  310 |     int actor_13_anim_lock = 0;
+      |         ^~~~~~~~~~~~~~~~~~
+make[2]: *** [C:/devkitPro/devkitARM/base_rules:34: main.o] Error 1
+make[1]: *** [C:/_code/gba-maker/api/buildTools/butano/butano/tools/common_setup.mak:93: build] Error 2
+make: *** [C:/_code/gba-maker/api/buildTools/butano/butano/tools/common_setup.mak:88: all] Error 2

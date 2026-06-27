@@ -1,0 +1,46 @@
+- butano images
+    By Sun Ladder
+    Licensed under the Creative Commons Attribution-Share Alike 3.0 Unported license
+    https://commons.wikimedia.org/wiki/File:ButaneGasCylinder_WhiteBack.jpg
+
+- mountain_clouds.bmp
+    By Luis Zuno (@ansimuz)
+    License (CC0) http://creativecommons.org/publicdomain/zero/1.0/
+    ansimuz.com
+
+- big_map.bmp
+    By Tiao Ferreira
+    License (CC BY-SA 3.0) https://creativecommons.org/licenses/by-sa/3.0/
+    https://opengameart.org/content/cidade-gba-city-gba
+
+- dice.bmp
+    By JamesWhite
+    License (CC0) http://creativecommons.org/publicdomain/zero/1.0/
+    https://opengameart.org/content/dice-4
+	
+- mr_and_mrs_andrews.bmp
+    By Thomas Gainsborough
+    Released into the public domain
+	https://commons.wikimedia.org/wiki/File:Thomas_Gainsborough_-_Mr_and_Mrs_Andrews.jpg
+
+- escaping_criticism.bmp
+    By Pere Borrell del Caso
+    Released into the public domain
+	https://commons.wikimedia.org/wiki/File:Escaping_criticism-by_pere_borrel_del_caso.png
+
+- GBA images
+    By Evan-Amos
+    Released into the public domain
+	https://commons.wikimedia.org/wiki/File:Nintendo-Game-Boy-Advance-Purple-FL.jpg
+
+- face.bmp
+    By Gustavo Valiente
+    Released into the public domain
+
+- everything else
+    The assets in this repository are created at Sparklin Labs by Pixel-boy: https://twitter.com/2pblog1
+    Their creation is funded by your support on Patreon (http://patreon.com/SparklinLabs) and through donations (http://sparklinlabs.itch.io/superpowers) Thanks!
+
+    Attribution/Licensing:
+        Creative Commons Zero: http://creativecommons.org/publicdomain/zero/1.0/
+        Attribution is not required but appreciated. Placing a link to http://superpowers-html5.com/ somewhere would be awesome :)

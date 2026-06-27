@@ -1,0 +1,15 @@
+%FILES%
+opt/
+opt/devkitpro/
+opt/devkitpro/cmake/
+opt/devkitpro/cmake/Platform/
+opt/devkitpro/cmake/Platform/Generic-dkP.cmake
+opt/devkitpro/cmake/dkp-asset-folder.cmake
+opt/devkitpro/cmake/dkp-custom-target.cmake
+opt/devkitpro/cmake/dkp-embedded-binary.cmake
+opt/devkitpro/cmake/dkp-impl-helpers.cmake
+opt/devkitpro/cmake/dkp-initialize-path.cmake
+opt/devkitpro/cmake/dkp-linker-utils.cmake
+opt/devkitpro/cmake/dkp-rule-overrides.cmake
+opt/devkitpro/cmake/dkp-toolchain-common.cmake
+

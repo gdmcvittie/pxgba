@@ -1,0 +1,54 @@
+[2021-06-04T22:59:44+0100] [PACMAN] Running '/opt/devkitpro/pacman/bin/pacman -U --noconfirm --arch i686 --root /home/davem/projects/devkitpro/deb-packages/devkitpro-pacman.i686 devkitpro-keyring-20180316-1-any.pkg.tar.xz'
+[2021-06-04T22:59:44+0100] [ALPM] transaction started
+[2021-06-04T22:59:44+0100] [ALPM] installed devkitpro-keyring (20180316-1)
+[2021-06-04T22:59:44+0100] [ALPM-SCRIPTLET] call to execv failed (No such file or directory)
+[2021-06-04T22:59:44+0100] [ALPM] transaction completed
+[2021-06-04T23:01:28+0100] [PACMAN] Running '/opt/devkitpro/pacman/bin/pacman -U --noconfirm --arch i686 --root /home/davem/projects/devkitpro/deb-packages/devkitpro-pacman.i686 pacman-5.2.2-5-i686.pkg.tar.xz'
+[2021-06-04T23:01:28+0100] [ALPM] transaction started
+[2021-06-04T23:01:28+0100] [ALPM] installed pacman (5.2.2-5)
+[2021-06-04T23:01:28+0100] [ALPM] transaction completed
+[2022-02-10T02:26:58+0000] [PACMAN] Running '/opt/devkitpro/pacman/bin/pacman -r devkitpro-pacman_6.0.1-1_amd64/ --noscriptlet --arch x86_64 --config ./pacman.conf -U /home/davem/packages/dkp-linux/x86_64/pacman-6.0.1-7-x86_64.pkg.tar.xz'
+[2022-02-10T02:27:08+0000] [ALPM] transaction started
+[2022-02-10T02:27:09+0000] [ALPM] upgraded pacman (5.2.2-5 -> 6.0.1-7)
+[2022-02-10T02:27:09+0000] [ALPM] transaction completed
+[2022-02-10T02:27:29+0000] [PACMAN] Running '/opt/devkitpro/pacman/bin/pacman -r devkitpro-pacman_6.0.1-1_amd64/ --noscriptlet --arch x86_64 --config ./pacman.conf -Syy'
+[2022-02-10T02:27:29+0000] [PACMAN] synchronizing package lists
+[2022-02-11T13:53:06+0000] [PACMAN] Running '/opt/devkitpro/pacman/bin/pacman -r devkitpro-pacman_6.0.1-2_amd64 --noscriptlet --arch x86_64 --config ./pacman.conf -Sy pacman'
+[2022-02-11T13:53:06+0000] [PACMAN] synchronizing package lists
+[2022-02-11T13:53:16+0000] [ALPM] transaction started
+[2022-02-11T13:53:17+0000] [ALPM] reinstalled pacman (6.0.1-7)
+[2022-02-11T13:53:17+0000] [ALPM] transaction completed
+[2026-06-02T17:55:15+0000] [PACMAN] Running '/opt/devkitpro/pacman/bin/pacman -Syy'
+[2026-06-02T17:55:15+0000] [PACMAN] synchronizing package lists
+[2026-06-02T17:55:18+0000] [PACMAN] Running '/opt/devkitpro/pacman/bin/pacman -S --noconfirm gba-dev'
+[2026-06-02T17:55:24+0000] [ALPM] transaction started
+[2026-06-02T17:55:24+0000] [ALPM] installed armv4t-pkg-config (0.28-1)
+[2026-06-02T17:55:24+0000] [ALPM] installed dkp-cmake-common-utils (1.5.3-1)
+[2026-06-02T17:55:24+0000] [ALPM] installed catnip (0.2.0-1)
+[2026-06-02T17:55:24+0000] [ALPM] installed devkitarm-binutils (2.45.1-2)
+[2026-06-02T17:55:24+0000] [ALPM] installed devkitarm-newlib (4.6.0.20260123-5)
+[2026-06-02T17:55:24+0000] [ALPM] installed general-tools (1.4.4-1)
+[2026-06-02T17:55:24+0000] [ALPM] installed devkitarm-rules (1.6.0-4)
+[2026-06-02T17:55:24+0000] [ALPM] installed devkitarm-crtls (1.2.6-1)
+[2026-06-02T17:55:25+0000] [ALPM] installed devkitarm-gcc (15.2.0-7)
+[2026-06-02T17:55:25+0000] [ALPM] installed devkitARM (r67.1-1)
+[2026-06-02T17:55:25+0000] [ALPM] installed devkitarm-cmake (1.2.4-1)
+[2026-06-02T17:55:25+0000] [ALPM] installed gba-tools (1.2.0-1)
+[2026-06-02T17:55:25+0000] [ALPM] installed grit (0.10.0-1)
+[2026-06-02T17:55:25+0000] [ALPM] installed mmutil (1.10.1-1)
+[2026-06-02T17:55:25+0000] [ALPM] installed gba-pkg-config (0.28-4)
+[2026-06-02T17:55:25+0000] [ALPM] installed gba-cmake (1.0.2-1)
+[2026-06-02T17:55:25+0000] [ALPM] installed gba-examples (20240626-1)
+[2026-06-02T17:55:25+0000] [ALPM] installed libfat-gba (1.1.5-1)
+[2026-06-02T17:55:25+0000] [ALPM] installed libgba (0.5.4-1)
+[2026-06-02T17:55:25+0000] [ALPM] installed libtonc (1.4.5-1)
+[2026-06-02T17:55:25+0000] [ALPM] installed maxmod-gba (1.0.15-1)
+[2026-06-02T17:55:25+0000] [ALPM] installed devkit-env (1.0.1-2)
+[2026-06-02T17:55:25+0000] [ALPM-SCRIPTLET] To use the toolchains some variables need to be set in your shell. A file
+[2026-06-02T17:55:25+0000] [ALPM-SCRIPTLET] has been provided for POSIX compatible shells (bash, zsh, ...) which will
+[2026-06-02T17:55:25+0000] [ALPM-SCRIPTLET] set the necessary variables after you logout and login again.
+[2026-06-02T17:55:25+0000] [ALPM-SCRIPTLET] 
+[2026-06-02T17:55:25+0000] [ALPM-SCRIPTLET] To use the toolchains right away, use
+[2026-06-02T17:55:25+0000] [ALPM-SCRIPTLET]   $ source /etc/profile.d/devkit-env.sh
+[2026-06-02T17:55:25+0000] [ALPM] installed devkitARM-gdb (14.1-2)
+[2026-06-02T17:55:25+0000] [ALPM] transaction completed

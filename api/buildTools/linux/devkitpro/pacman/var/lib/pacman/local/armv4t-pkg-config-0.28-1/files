@@ -1,0 +1,8 @@
+%FILES%
+opt/
+opt/devkitpro/
+opt/devkitpro/portlibs/
+opt/devkitpro/portlibs/armv4t/
+opt/devkitpro/portlibs/armv4t/bin/
+opt/devkitpro/portlibs/armv4t/bin/arm-none-eabi-pkg-config
+

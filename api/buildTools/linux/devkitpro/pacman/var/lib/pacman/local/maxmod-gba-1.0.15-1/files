@@ -1,0 +1,11 @@
+%FILES%
+opt/
+opt/devkitpro/
+opt/devkitpro/libgba/
+opt/devkitpro/libgba/include/
+opt/devkitpro/libgba/include/maxmod.h
+opt/devkitpro/libgba/include/mm_types.h
+opt/devkitpro/libgba/lib/
+opt/devkitpro/libgba/lib/libmm.a
+opt/devkitpro/libgba/maxmod_license.txt
+

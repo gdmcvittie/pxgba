@@ -1,0 +1,14 @@
+%FILES%
+opt/
+opt/devkitpro/
+opt/devkitpro/licenses/
+opt/devkitpro/licenses/general-tools/
+opt/devkitpro/licenses/general-tools/COPYING
+opt/devkitpro/tools/
+opt/devkitpro/tools/bin/
+opt/devkitpro/tools/bin/bin2s
+opt/devkitpro/tools/bin/bmp2bin
+opt/devkitpro/tools/bin/generate_compile_commands
+opt/devkitpro/tools/bin/padbin
+opt/devkitpro/tools/bin/raw2c
+

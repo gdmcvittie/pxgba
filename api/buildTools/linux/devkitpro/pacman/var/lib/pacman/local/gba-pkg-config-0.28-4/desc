@@ -1,0 +1,36 @@
+%NAME%
+gba-pkg-config
+
+%VERSION%
+0.28-4
+
+%BASE%
+gba-pkg-config
+
+%DESC%
+pkg-config wrapper (for Nintendo GBA homebrew development)
+
+%URL%
+http://devkitpro.org/
+
+%ARCH%
+any
+
+%BUILDDATE%
+1665933313
+
+%INSTALLDATE%
+1780422925
+
+%PACKAGER%
+fincs <fincs@devkitpro.org>
+
+%SIZE%
+451
+
+%GROUPS%
+gba-dev
+
+%VALIDATION%
+pgp
+

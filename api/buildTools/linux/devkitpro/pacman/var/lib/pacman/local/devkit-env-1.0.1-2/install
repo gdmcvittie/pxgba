@@ -1,0 +1,8 @@
+post_install() {
+  echo "To use the toolchains some variables need to be set in your shell. A file"
+  echo "has been provided for POSIX compatible shells (bash, zsh, ...) which will"
+  echo "set the necessary variables after you logout and login again."
+  echo
+  echo "To use the toolchains right away, use"
+  echo "  $ source /etc/profile.d/devkit-env.sh"
+}

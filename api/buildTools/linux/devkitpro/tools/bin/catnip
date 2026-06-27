@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+set -e
+shopt -s extglob
+
+catnip_help() {
+	echo "Catnip - build helper tool for devkitPro CMake projects"
+	echo "Usage:"
+	echo ""
+	echo "catnip [options] [<verb>] [<selectors>...]"
+	echo ""
+	echo "Verbs:"
+	echo "  config"
+	echo "  build (Default)"
+	echo "  clean"
+	echo "  install"
+	echo ""
+	echo "Options:"
+	echo "  -S <path-to-root>            = Explicitly specify the source root"
+	echo "  -B <path-to-build>           = Explicitly specify the build folder"
+	echo "  -D <var>[:<type>]=<value>    = Create or update a Catnip cache entry"
+	echo "  -U <var>                     = Remove matching entries from Catnip cache"
+	echo "  -T <toolset>                 = Specify default toolset used to build projects"
+	echo "  -p                           = Enable package selector mode"
+	echo "  -v                           = Enable verbose mode"
+	echo "  -f                           = Enable forceful mode"
+	echo "  -j <nproc>                   = Specify number of parallel jobs"
+	echo "  --clangd                     = Generate .clangd config for the first preset"
+	echo ""
+	exit 0
+}
+
+cmake_list() {
+	local IFS=";"
+	echo "$*"
+}
+
+args=()
+flags=()
+cache=()
+
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+	--help)
+		catnip_help
+		;;
+	--clangd)
+		flags+=("-DCATNIP_GEN_CLANGD:BOOL=ON")
+		shift
+		;;
+	--dump-*)
+		flags+=("-DCATNIP_VERB:STRING=${1:2}")
+		dump_mode=1
+		shift
+		;;
+	--*)
+		echo "Invalid option: $1"
+		catnip_help
+		;;
+	-*)
+		OPTIND=1
+		while getopts "S:B:D:U:T:t:pvfj:?h" opt; do
+			case "$opt" in
+			h|\?)
+				catnip_help
+				;;
+			S)
+				flags+=("-DCATNIP_ROOT:STRING=${OPTARG}")
+				;;
+			B)
+				flags+=("-DCATNIP_BUILD_DIR:STRING=${OPTARG}")
+				;;
+			D)
+				case "${OPTARG}" in
+				+([a-zA-Z0-9_])?(:BOOL|:FILEPATH|:PATH|:STRING|:INTERNAL)=*)
+					cache+=("${OPTARG}")
+					;;
+				*)
+					echo "Invalid cache entry: ${OPTARG}"
+					catnip_help
+					;;
+				esac
+				;;
+			U)
+				cache+=("${OPTARG}:UNSET=")
+				;;
+			[Tt])
+				flags+=("-DCATNIP_DEFAULT_TOOLSET:STRING=${OPTARG}")
+				;;
+			p)
+				flags+=("-DCATNIP_PACKAGE_SELECTORS:BOOL=ON")
+				;;
+			v)
+				flags+=("-DCATNIP_VERBOSE:BOOL=ON")
+				;;
+			f)
+				flags+=("-DCATNIP_FORCE_FLAG:BOOL=ON")
+				;;
+			j)
+				flags+=("-DCATNIP_PARALLEL_JOBS:INT=${OPTARG}")
+				;;
+			esac
+		done
+		shift $((OPTIND-1))
+		;;
+	+([a-zA-Z0-9_.]))
+		args+=("$1")
+		shift
+		;;
+	*)
+		if [[ "$dump_mode" -eq "1" ]]; then
+			args+=("$1")
+			shift
+		else
+			echo "Invalid argument: $1"
+			catnip_help
+		fi
+		;;
+	esac
+done
+
+flags+=("-DCATNIP_CACHE:STRING=$(cmake_list "${cache[@]}")")
+flags+=("-DCATNIP_ARGV:STRING=$(cmake_list "${args[@]}")")
+
+exec cmake "${flags[@]}" -P ${DEVKITPRO}/cmake/catnip-main.cmake

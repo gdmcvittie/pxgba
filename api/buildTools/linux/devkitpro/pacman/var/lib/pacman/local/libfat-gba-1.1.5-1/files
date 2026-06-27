@@ -1,0 +1,10 @@
+%FILES%
+opt/
+opt/devkitpro/
+opt/devkitpro/libgba/
+opt/devkitpro/libgba/include/
+opt/devkitpro/libgba/include/fat.h
+opt/devkitpro/libgba/include/libfatversion.h
+opt/devkitpro/libgba/lib/
+opt/devkitpro/libgba/lib/libfat.a
+

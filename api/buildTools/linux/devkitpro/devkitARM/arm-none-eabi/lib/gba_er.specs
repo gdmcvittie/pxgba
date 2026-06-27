@@ -1,0 +1,8 @@
+%include <sync-none.specs>
+%rename endfile		old_endfile
+
+*link:
++ -T gba_er.ld%s --gc-sections --no-warn-rwx-segments
+
+*startfile:
+er_crt0%O%s

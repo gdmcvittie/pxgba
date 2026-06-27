@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+
+translate_args() {
+  local _newargs=
+  local _path
+  read -a strarr <<< $1
+  for ((i=0;i<${#strarr[*]};i++));
+  do
+    local _arg=${strarr[$i]}
+    case ${_arg} in
+      -I*)
+        _path=${_arg#-I}
+        if [[ "${_path}" == "" ]]; then
+          strarr[$i+1]=`cygpath -ma ${strarr[$i+1]}`
+        else
+          strarr[$i]=-I`cygpath -ma ${_path}`
+        fi
+      ;;
+    -iquote*)
+        _path=${_arg#-iquote}
+        if [[ "${_path}" == "" ]]; then
+          strarr[$i+1]=`cygpath -ma ${strarr[$i+1]}`
+        else
+          strarr[$i]=-iquote`cygpath -ma ${_path}`
+        fi
+      ;;
+      -isystem*)
+        _path=${_arg#-isystem}
+        if [[ "${_path}" == "" ]]; then
+          strarr[$i+1]=`cygpath -ma ${strarr[$i+1]}`
+        else
+          strarr[$i]=-isystem`cygpath -ma ${_path}`
+        fi
+        ;;
+      -c*)
+        strarr[$i+1]=`cygpath -ma ${strarr[$i+1]}`
+        ;;
+    esac
+   _newargs+=" ${strarr[$i]}"
+  done
+  echo "${_newargs//\"/\\\"}"
+}
+
+exec 200>/tmp/compile_commands.lock
+
+flock 200
+
+os=`uname -o`
+
+if [[ "${os}" == "Msys" ]]; then
+  dir=`cygpath -ma .`
+else
+  dir=`pwd`
+fi
+
+if [ $# -eq 0 ]; then
+  echo "Usage: add command arguments file"
+  echo "       end"
+  exit 1
+fi
+
+if [ "$1" == "end" ]; then
+
+  echo "]" >> compile_commands.part
+  mv compile_commands.part compile_commands.json
+
+elif [ "$1" == "add" ]; then
+
+  if [ ! -f compile_commands.part ]; then
+    echo "[" > compile_commands.part
+  else
+    echo "," >> compile_commands.part
+  fi
+
+  echo "{" >> compile_commands.part
+
+  echo "  \"directory\": \"${dir}\"," >> compile_commands.part
+
+  _command=`which $2`
+  _args=${3//\"/\\\"}
+
+  if [[ "${os}" == "Msys" ]]; then
+    _command=`cygpath -ma ${_command}`
+    _args=$(translate_args "$_args")
+  fi
+
+  echo "  \"command\": \"${_command} ${_args}\"," >> compile_commands.part
+
+  if [[ "${os}" == "Msys" ]]; then
+    file=`cygpath -ma $4`
+  else
+    file=$4
+  fi
+
+  echo "  \"file\": \"${file}\"" >> compile_commands.part
+
+  echo "}" >> compile_commands.part
+else
+  echo "Usage: add command arguments file"
+  echo "       end"
+  exit 1
+fi
+
+flock -u 200

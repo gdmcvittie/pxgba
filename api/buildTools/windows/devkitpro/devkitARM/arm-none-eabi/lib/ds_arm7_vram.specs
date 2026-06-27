@@ -1,0 +1,7 @@
+%include <sync-none.specs>
+
+*link:
++ -T ds_arm7_vram.ld%s --no-warn-rwx-segments
+
+*startfile:
+ds_arm7_vram_crt0%O%s crti%O%s crtbegin%O%s

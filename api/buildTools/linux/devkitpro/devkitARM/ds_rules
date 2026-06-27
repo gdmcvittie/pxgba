@@ -1,0 +1,62 @@
+ifeq ($(strip $(DEVKITPRO)),)
+$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPro)
+endif
+
+include $(DEVKITARM)/base_rules
+
+PORTLIBS	:=	$(DEVKITPRO)/portlibs/nds $(DEVKITPRO)/portlibs/armv5te $(DEVKITPRO)/portlibs/armv4t
+export PATH := $(DEVKITPRO)/portlibs/nds/bin:$(DEVKITPRO)/portlibs/armv5te/bin:$(DEVKITPRO)/portlibs/armv4t/bin:$(PATH)
+
+CALICO		:=	$(DEVKITPRO)/calico
+LIBNDS		:=	$(DEVKITPRO)/libnds
+_ARM7_ELF	:=	-7 $(CALICO)/bin/ds7_maine.elf
+_DEF_ICON	:=	$(CALICO)/share/nds-icon.bmp
+
+_EXTRADEFS	:=	-D__NDS__ -I$(CALICO)/include
+
+ifeq ($(strip $(GAME_TITLE)),)
+GAME_TITLE	:=	$(notdir $(OUTPUT))
+endif
+
+ifeq ($(strip $(GAME_SUBTITLE1)),)
+GAME_SUBTITLE1	:=	built with devkitARM
+endif
+
+ifeq ($(strip $(GAME_SUBTITLE2)),)
+GAME_SUBTITLE2	:=	http://devkitpro.org
+endif
+
+ifeq ($(strip $(GAME_ICON)),)
+GAME_ICON      :=      $(_DEF_ICON)
+endif
+
+ifneq ($(strip $(NITRO_FILES)),)
+_ADDFILES	:=	-d $(NITRO_FILES)
+endif
+
+#---------------------------------------------------------------------------------
+%.nds: %.elf
+	$(SILENTCMD)ndstool -c $@ -9 $< $(_ARM7_ELF) -b $(GAME_ICON) "$(GAME_TITLE);$(GAME_SUBTITLE1);$(GAME_SUBTITLE2)" $(_ADDFILES)
+	$(SILENTMSG) built ... $(notdir $@)
+
+#---------------------------------------------------------------------------------
+
+%.elf: LIBPATHS := -L$(CALICO)/lib $(LIBPATHS)
+
+%.elf: _LDFLAGS = \
+	$(subst -specs=ds_arm9.specs,-specs=$(CALICO)/share/ds9.specs, \
+		$(subst -specs=ds_arm7.specs,-specs=$(CALICO)/share/ds7.specs, \
+			$(LDFLAGS))) \
+
+%.elf: _EXTRALIBS = \
+	$(if $(findstring -lcalico_ds,$(LIBS)),, \
+		$(if $(findstring -lnds9,$(LIBS)),-lcalico_ds9) \
+		$(if $(findstring -lnds7,$(LIBS)),-lcalico_ds7))
+
+#---------------------------------------------------------------------------------
+
+%.elf:
+	$(SILENTMSG) linking $(notdir $@)
+	$(ADD_COMPILE_COMMAND) end
+	$(SILENTCMD)$(LD) $(LIBPATHS) $(_LDFLAGS) $(OFILES) $(LIBS) $(_EXTRALIBS) -o $@
+	$(SILENTCMD)$(NM) -CSn $@ > $(notdir $*.lst)
