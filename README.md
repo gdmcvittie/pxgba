@@ -11,7 +11,7 @@ GitHub: https://github.com/gdmcvittie/pxgba
 Itch.io: https://liftedpixelgames.itch.io/pxgba
 Discord: https://discord.gg/4zPChaMc
 Reddit: https://www.reddit.com/r/PxGBA/
-YouTube: https://www.youtube.com/@liftedpixelgames
+YouTube: https://www.youtube.com/@LiftedPixel_ca
 
 ---
 
