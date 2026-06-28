@@ -4781,26 +4781,30 @@ export const PxShopProvider = ({ children }) => {
           setActiveActorId(clickedActor.id);
           setSelectionStart({ x, y, actorOriginalX: clickedActor.x, actorOriginalY: clickedActor.y });
         } else {
-          const newActor = {
-            id: Date.now() + Math.random(),
-            name: `Actor ${actors.length + 1}`,
-            type: actors.length === 0 ? 'player' : 'npc',
-            x: Math.floor(x / 8) * 8,
-            y: Math.floor(y / 8) * 8,
-            width: 8,
-            height: 8,
-            color: currentColor || '#ff00ff',
-            spriteId: null,
-            isHidden: false,
-            hflip: true,
-            attackAnimId: null,
-            script: { nodes: [], edges: [] }
-          };
-          const nextActors = [...actors, newActor];
-          setActors(nextActors);
-          setActiveActorId(newActor.id);
-          setSelectionStart({ x, y, actorOriginalX: newActor.x, actorOriginalY: newActor.y });
-          saveHistory("Add Actor", layers, dimensions, { actors: nextActors });
+          if (activeActorId) {
+            setActiveActorId(null);
+          } else {
+            const newActor = {
+              id: Date.now() + Math.random(),
+              name: `Actor ${actors.length + 1}`,
+              type: actors.length === 0 ? 'player' : 'npc',
+              x: Math.floor(x / 8) * 8,
+              y: Math.floor(y / 8) * 8,
+              width: 8,
+              height: 8,
+              color: currentColor || '#ff00ff',
+              spriteId: null,
+              isHidden: false,
+              hflip: true,
+              attackAnimId: null,
+              script: { nodes: [], edges: [] }
+            };
+            const nextActors = [...actors, newActor];
+            setActors(nextActors);
+            setActiveActorId(newActor.id);
+            setSelectionStart({ x, y, actorOriginalX: newActor.x, actorOriginalY: newActor.y });
+            saveHistory("Add Actor", layers, dimensions, { actors: nextActors });
+          }
         }
       } else if (selectionStart && activeActorId) {
         const dx = x - selectionStart.x;
