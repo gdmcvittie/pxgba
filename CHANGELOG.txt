@@ -1,0 +1,3 @@
+
+- adding a new actor now adds the actor to the middle of the current view, not the middle of the scene
+    - so if you're zoomed into an area of a large map, adding an actor adds it where you can see into

@@ -606,7 +606,8 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
     animations, setAnimations,
     variables,
     customScripts, setCustomScripts,
-    saveHistory, layers, dimensions
+    saveHistory, layers, dimensions,
+    zoom, viewX, viewY, viewportSize
   } = usePxShop();
 
   useEffect(() => {
@@ -823,12 +824,27 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
 
   const createActorWithType = (type) => {
     const defaultSpriteId = ACTOR_DEFAULT_TILE_MAP[type] || null;
+
+    let targetX = Math.floor(dimensions.w / 2) - 4;
+    let targetY = Math.floor(dimensions.h / 2) - 4;
+
+    if (viewportSize && viewportSize.w > 0 && viewportSize.h > 0 && zoom) {
+      const cx = (viewportSize.w / 2 - viewX) / zoom;
+      const cy = (viewportSize.h / 2 - viewY) / zoom;
+      targetX = Math.floor(cx) - 4;
+      targetY = Math.floor(cy) - 4;
+    }
+
+    // Clamp coordinates to stay within level dimensions
+    targetX = Math.max(0, Math.min(dimensions.w - 8, targetX));
+    targetY = Math.max(0, Math.min(dimensions.h - 8, targetY));
+
     const newActor = {
       id: Date.now() + Math.random(),
       name: ACTOR_TYPE_NAMES[type] || 'Actor',
       type: type,
-      x: Math.floor(dimensions.w / 2) - 4,
-      y: Math.floor(dimensions.h / 2) - 4,
+      x: targetX,
+      y: targetY,
       useVarX: false,
       useVarY: false,
       varX: '',
