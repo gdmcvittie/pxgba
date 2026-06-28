@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { usePxShop } from '../context/PxShopContext';
+import { usePxShop, INITIAL_DEFAULT_TILES } from '../context/PxShopContext';
 import { BsFolder2Open, BsPlayFill, BsCameraVideo, BsMusicNoteBeamed, BsBrush, BsReddit, BsDiscord, BsStars, BsYoutube } from 'react-icons/bs';
 import { version } from '../../package.json';
 import toast from 'react-hot-toast';
@@ -396,6 +396,12 @@ const Dialogs = () => {
     showTileImportPaletteDialog, setShowTileImportPaletteDialog,
     pendingTileImportData, setPendingTileImportData,
     executeTileImport,
+    showTileImportSizeDialog, setShowTileImportSizeDialog,
+    pendingTileImportFile, setPendingTileImportFile,
+    pendingOgaImportData, setPendingOgaImportData,
+    setOgaImportTilesWide,
+    processTileImport,
+    importTilesDirectly,
 
     // Game Assets Export
     showExportDialog, setShowExportDialog,
@@ -2468,6 +2474,117 @@ const Dialogs = () => {
       {/* VIDEO PLAYER */}
       <VideoPlayer />
 
+      {/* TILE IMPORT SIZE DIALOG */}
+      {showTileImportSizeDialog && (pendingTileImportFile || pendingOgaImportData) && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 110000, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(3px)' }}>
+          <div style={{ background: '#242426', border: '1px solid #4CAF50', borderRadius: '8px', boxShadow: '0 15px 40px rgba(0,0,0,0.8)', padding: '24px', width: '400px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ fontSize: '15px', color: '#fff', fontWeight: 'bold', borderBottom: '1px solid #3c3c3c', paddingBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span>SELECT TILE IMPORT SIZE</span>
+              <button onClick={() => { setShowTileImportSizeDialog(false); setPendingTileImportFile(null); if (pendingOgaImportData) { if (pendingOgaImportData.loadingToastId) toast.dismiss(pendingOgaImportData.loadingToastId); setPendingOgaImportData(null); } }} style={{ background: 'none', border: 'none', color: '#ffffff', cursor: 'pointer', fontSize: '16px' }}>✕</button>
+            </div>
+
+            <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.5' }}>
+              Select the grid size of the tiles in the spritesheet you are importing:
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
+              <button
+                onClick={() => {
+                  if (pendingOgaImportData) {
+                    importTilesDirectly(pendingOgaImportData, 'keep', 8);
+                    setOgaImportTilesWide(Math.floor(pendingOgaImportData.w / 8));
+                    setPendingOgaImportData(null);
+                  } else {
+                    processTileImport(pendingTileImportFile, 8);
+                    setPendingTileImportFile(null);
+                  }
+                  setShowTileImportSizeDialog(false);
+                }}
+                style={{
+                  background: '#4CAF50',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '12px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                  transition: 'background 0.2s',
+                  flexGrow: 1
+                }}
+                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#45a049'}
+                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#4CAF50'}
+              >
+                8x8 Tiles
+              </button>
+
+              <button
+                onClick={() => {
+                  if (pendingOgaImportData) {
+                    importTilesDirectly(pendingOgaImportData, 'keep', 16);
+                    setOgaImportTilesWide(Math.floor(pendingOgaImportData.w / 8));
+                    setPendingOgaImportData(null);
+                  } else {
+                    processTileImport(pendingTileImportFile, 16);
+                    setPendingTileImportFile(null);
+                  }
+                  setShowTileImportSizeDialog(false);
+                }}
+                style={{
+                  background: '#0078d4',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '12px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                  transition: 'background 0.2s',
+                  flexGrow: 1
+                }}
+                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#005a9e'}
+                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#0078d4'}
+              >
+                16x16 Tiles
+              </button>
+
+              <button
+                onClick={() => {
+                  if (pendingOgaImportData) {
+                    importTilesDirectly(pendingOgaImportData, 'keep', 32);
+                    setOgaImportTilesWide(Math.floor(pendingOgaImportData.w / 8));
+                    setPendingOgaImportData(null);
+                  } else {
+                    processTileImport(pendingTileImportFile, 32);
+                    setPendingTileImportFile(null);
+                  }
+                  setShowTileImportSizeDialog(false);
+                }}
+                style={{
+                  background: '#ff9800',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '12px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                  transition: 'background 0.2s',
+                  flexGrow: 1
+                }}
+                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#e68a00'}
+                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#ff9800'}
+              >
+                32x32 Tiles
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* TILE IMPORT PALETTE DIALOG */}
       {showTileImportPaletteDialog && pendingTileImportData && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 110000, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(3px)' }}>
@@ -2661,6 +2778,69 @@ export const TileSelector = ({ tiles, value, onChange, label = '', style, hideLa
     ? tiles.filter(t => t.name.toLowerCase().includes(search.toLowerCase()))
     : tiles;
 
+  const defaultTileIds = new Set(INITIAL_DEFAULT_TILES.map(t => t.id));
+  const defaultFiltered = filtered.filter(t => defaultTileIds.has(t.id));
+  const customFiltered = filtered.filter(t => !defaultTileIds.has(t.id));
+
+  const groupOrder = [];
+  const groupMap = {};
+  for (const tile of customFiltered) {
+    const gid = tile.groupId || tile.id;
+    if (!groupMap[gid]) {
+      groupMap[gid] = [];
+      groupOrder.push(gid);
+    }
+    groupMap[gid].push(tile);
+  }
+
+  const getSubGridSize = (group) => {
+    if (group.length <= 1) return { cols: 1, rows: 1 };
+    const name = group[0].name || '';
+    if (/\(TL\)|\(TR\)|\(BL\)|\(BR\)/.test(name)) return { cols: 2, rows: 2 };
+    if (/\(\d_\d\)/.test(name)) {
+      const indices = group.map(t => {
+        const m = (t.name || '').match(/\((\d)_(\d)\)/);
+        return m ? { y: parseInt(m[1]), x: parseInt(m[2]) } : null;
+      }).filter(Boolean);
+      const maxY = Math.max(...indices.map(i => i.y));
+      const maxX = Math.max(...indices.map(i => i.x));
+      return { cols: maxX + 1, rows: maxY + 1 };
+    }
+    return { cols: group.length, rows: 1 };
+  };
+
+  const getTilePosition = (tile, cols) => {
+    const name = tile.name || '';
+    const tlMatch = name.match(/\((TL|TR|BL|BR)\)/);
+    if (tlMatch) {
+      const pos = { TL: 0, TR: 1, BL: 2, BR: 3 }[tlMatch[1]];
+      return pos;
+    }
+    const gridMatch = name.match(/\((\d)_(\d)\)/);
+    if (gridMatch) {
+      return parseInt(gridMatch[1]) * cols + parseInt(gridMatch[2]);
+    }
+    return 0;
+  };
+
+  const renderTileRow = (t) => (
+    <div
+      key={t.id}
+      onClick={() => { onChange(t.id); setIsOpen(false); setSearch(''); }}
+      style={{
+        padding: '6px 8px', fontSize: '12px', cursor: 'pointer', color: '#ccc',
+        display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0,
+        background: value === t.id ? '#2a4a2a' : 'transparent',
+        borderRadius: '3px'
+      }}
+      onMouseEnter={e => e.currentTarget.style.background = value === t.id ? '#2a4a2a' : '#333'}
+      onMouseLeave={e => e.currentTarget.style.background = value === t.id ? '#2a4a2a' : 'transparent'}
+    >
+      <TilePreview tile={t} size={24} />
+      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.name}</span>
+    </div>
+  );
+
   const updateCoords = () => {
     if (triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
@@ -2753,24 +2933,51 @@ export const TileSelector = ({ tiles, value, onChange, label = '', style, hideLa
               >
                 {placeholder}
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', padding: '4px' }}>
-                {filtered.map(t => (
-                  <div
-                    key={t.id}
-                    onClick={() => { onChange(t.id); setIsOpen(false); setSearch(''); }}
-                    style={{
-                      padding: '6px 8px', fontSize: '12px', cursor: 'pointer', color: '#ccc',
-                      display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0,
-                      background: value === t.id ? '#2a4a2a' : 'transparent',
-                      borderRadius: '3px'
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.background = value === t.id ? '#2a4a2a' : '#333'}
-                    onMouseLeave={e => e.currentTarget.style.background = value === t.id ? '#2a4a2a' : 'transparent'}
-                  >
-                    <TilePreview tile={t} size={24} />
-                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.name}</span>
-                  </div>
-                ))}
+              <div style={{ display: 'flex', flexDirection: 'column', padding: '4px', gap: '4px' }}>
+                {defaultFiltered.map(t => renderTileRow(t))}
+                {customFiltered.length > 0 && defaultFiltered.length > 0 && (
+                  <div style={{ height: '0', borderTop: '1px dashed #555', margin: '2px 0' }} />
+                )}
+                {groupOrder.map(gid => {
+                  const group = groupMap[gid];
+                  if (group.length <= 1) {
+                    return renderTileRow(group[0]);
+                  }
+                  const { cols, rows } = getSubGridSize(group);
+                  const sorted = new Array(cols * rows).fill(null);
+                  for (const tile of group) {
+                    const pos = getTilePosition(tile, cols);
+                    sorted[pos] = tile;
+                  }
+                  return (
+                    <div
+                      key={gid}
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: `repeat(${cols}, 24px)`,
+                        gap: '2px',
+                        padding: '4px',
+                        background: '#2a2a2a',
+                        border: '1px solid #555',
+                        borderRadius: '4px',
+                        justifyItems: 'center',
+                        alignItems: 'center'
+                      }}
+                      title={`Tile group (${cols}x${rows})`}
+                    >
+                      {sorted.map((tile, i) => tile ? (
+                        <div
+                          key={tile.id}
+                          onClick={() => { onChange(tile.id); setIsOpen(false); setSearch(''); }}
+                          style={{ cursor: 'pointer' }}
+                          title={tile.name || "Unnamed Tile"}
+                        >
+                          <TilePreview tile={tile} size={24} />
+                        </div>
+                      ) : <div key={`empty-${i}`} style={{ width: '24px', height: '24px' }} />)}
+                    </div>
+                  );
+                })}
               </div>
               {filtered.length === 0 && (
                 <div style={{ padding: '8px', fontSize: '11px', color: '#666', textAlign: 'center' }}>No tiles found</div>

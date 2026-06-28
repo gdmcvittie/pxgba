@@ -3,3 +3,4 @@
     - so if you're zoomed into an area of a large map, adding an actor adds it where you can see into
 - replaced simple tile name only dropdown with a searchable and scrollable tile selector in HUD settings
 - fixed canvas clicking when an actor is selected adding another actor to the scene
+- adds support for 16x16 and 32x32 tile imports

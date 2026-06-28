@@ -241,6 +241,10 @@ export const PxShopProvider = ({ children }) => {
   // Tile import palette choices
   const [showTileImportPaletteDialog, setShowTileImportPaletteDialog] = useState(false);
   const [pendingTileImportData, setPendingTileImportData] = useState(null);
+  const [showTileImportSizeDialog, setShowTileImportSizeDialog] = useState(false);
+  const [pendingTileImportFile, setPendingTileImportFile] = useState(null);
+  const [pendingOgaImportData, setPendingOgaImportData] = useState(null);
+  const [ogaImportTilesWide, setOgaImportTilesWide] = useState(null);
 
   // Sidebar panel layout states
   const [activeCol1Panel, setActiveCol1Panel] = useState(() => {
@@ -5998,6 +6002,7 @@ export const PxShopProvider = ({ children }) => {
 
     const newTile = {
       id: Date.now() + Math.random(),
+      groupId: generateUniqueId(),
       name: "Custom Tile",
       collisionType: "none",
       data: tileData
@@ -6013,6 +6018,12 @@ export const PxShopProvider = ({ children }) => {
   const handleTileSheetUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    setPendingTileImportFile(file);
+    setShowTileImportSizeDialog(true);
+  };
+
+  const processTileImport = (file, tileSize) => {
+    if (!file) return;
 
     const loadingToastId = toast.loading("Loading image...");
 
@@ -6023,11 +6034,15 @@ export const PxShopProvider = ({ children }) => {
         try {
           let w = img.width;
           let h = img.height;
+          
           const MAX_DIM = 1024;
           if (w > MAX_DIM || h > MAX_DIM) {
             const scale = Math.min(MAX_DIM / w, MAX_DIM / h);
-            w = Math.floor(w * scale / 8) * 8;
-            h = Math.floor(h * scale / 8) * 8;
+            w = Math.floor(w * scale / tileSize) * tileSize;
+            h = Math.floor(h * scale / tileSize) * tileSize;
+          } else {
+            w = Math.floor(w / tileSize) * tileSize;
+            h = Math.floor(h / tileSize) * tileSize;
           }
 
           const tempCanvas = document.createElement('canvas');
@@ -6061,13 +6076,6 @@ export const PxShopProvider = ({ children }) => {
             return { r, g, b };
           };
 
-          const getDistance = (c1, c2) => {
-            const dr = c1.r - c2.r;
-            const dg = c1.g - c2.g;
-            const db = c1.b - c2.b;
-            return Math.sqrt(dr * dr + dg * dg + db * db);
-          };
-
           const colorList = uniqueColors.map(hex => ({
             hex,
             count: colorCounts[hex],
@@ -6095,7 +6103,8 @@ export const PxShopProvider = ({ children }) => {
             dominantColors,
             uniqueColors,
             loadingToastId
-          }, 'keep');
+          }, 'keep', tileSize);
+          setOgaImportTilesWide(Math.floor(w / 8));
           if (tileSheetInputRef.current) tileSheetInputRef.current.value = "";
         } catch (error) {
           console.error("Error processing sprite sheet:", error);
@@ -6109,7 +6118,7 @@ export const PxShopProvider = ({ children }) => {
     reader.readAsDataURL(file);
   };
 
-  const importTilesDirectly = useCallback((importData, choice) => {
+  const importTilesDirectly = useCallback((importData, choice, tileSize = 8) => {
     const { imageData, w, h, filename, dominantColors, uniqueColors, loadingToastId } = importData;
     
     let finalPalette;
@@ -6282,47 +6291,155 @@ export const PxShopProvider = ({ children }) => {
       colorMap[origColor] = getClosestPaletteColor(origColor, finalPalette);
     }
 
-    // Parse the image into 8x8 tiles using the colorMap
-    const cols = Math.floor(w / 8);
-    const rows = Math.floor(h / 8);
     const newTiles = [];
-    
     const currentSavedTiles = updatedTiles;
-
     const existingTileFingerprints = new Set(currentSavedTiles.map(tile => JSON.stringify(tile.data)));
 
-    for (let ty = 0; ty < rows; ty++) {
-      for (let tx = 0; tx < cols; tx++) {
-        const tileData = Array(8).fill(null).map(() => Array(8).fill(null));
-        let hasPixels = false;
+    if (tileSize === 16) {
+      const cols16 = Math.floor(w / 16);
+      const rows16 = Math.floor(h / 16);
+      
+      for (let ty = 0; ty < rows16; ty++) {
+        for (let tx = 0; tx < cols16; tx++) {
+          const groupId = generateUniqueId();
+          const subTileOffsets = [
+            { dx: 0, dy: 0, suffix: 'TL' },
+            { dx: 8, dy: 0, suffix: 'TR' },
+            { dx: 0, dy: 8, suffix: 'BL' },
+            { dx: 8, dy: 8, suffix: 'BR' }
+          ];
 
-        for (let py = 0; py < 8; py++) {
-          for (let px = 0; px < 8; px++) {
-            const srcX = tx * 8 + px;
-            const srcY = ty * 8 + py;
-            const i = (srcY * w + srcX) * 4;
-            const r = imageData[i], g = imageData[i + 1], b = imageData[i + 2], a = imageData[i + 3];
+          for (const offset of subTileOffsets) {
+            const tileData = Array(8).fill(null).map(() => Array(8).fill(null));
+            let hasPixels = false;
 
-            if (a < 128) {
-              tileData[py][px] = null;
-            } else {
-              const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-              tileData[py][px] = colorMap[hex] || null;
-              hasPixels = true;
+            for (let py = 0; py < 8; py++) {
+              for (let px = 0; px < 8; px++) {
+                const srcX = tx * 16 + offset.dx + px;
+                const srcY = ty * 16 + offset.dy + py;
+                const i = (srcY * w + srcX) * 4;
+                const r = imageData[i], g = imageData[i + 1], b = imageData[i + 2], a = imageData[i + 3];
+
+                if (a < 128) {
+                  tileData[py][px] = null;
+                } else {
+                  const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+                  tileData[py][px] = colorMap[hex] || null;
+                  hasPixels = true;
+                }
+              }
+            }
+
+            if (hasPixels) {
+              const fingerprint = JSON.stringify(tileData);
+              if (!existingTileFingerprints.has(fingerprint)) {
+                newTiles.push({
+                  id: generateUniqueId(),
+                  groupId,
+                  name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${offset.suffix})`,
+                  collisionType: "none",
+                  data: tileData
+                });
+                existingTileFingerprints.add(fingerprint);
+              }
             }
           }
         }
+      }
+    } else if (tileSize === 32) {
+      const cols32 = Math.floor(w / 32);
+      const rows32 = Math.floor(h / 32);
 
-        if (hasPixels) {
-          const fingerprint = JSON.stringify(tileData);
-          if (!existingTileFingerprints.has(fingerprint)) {
-            newTiles.push({
-              id: generateUniqueId(),
-              name: `Tile ${currentSavedTiles.length + newTiles.length + 1}`,
-              collisionType: "none",
-              data: tileData
-            });
-            existingTileFingerprints.add(fingerprint);
+      for (let ty = 0; ty < rows32; ty++) {
+        for (let tx = 0; tx < cols32; tx++) {
+          const groupId = generateUniqueId();
+          const subTileOffsets = [];
+          for (let sY = 0; sY < 4; sY++) {
+            for (let sX = 0; sX < 4; sX++) {
+              subTileOffsets.push({
+                dx: sX * 8,
+                dy: sY * 8,
+                suffix: `${sY}_${sX}`
+              });
+            }
+          }
+
+          for (const offset of subTileOffsets) {
+            const tileData = Array(8).fill(null).map(() => Array(8).fill(null));
+            let hasPixels = false;
+
+            for (let py = 0; py < 8; py++) {
+              for (let px = 0; px < 8; px++) {
+                const srcX = tx * 32 + offset.dx + px;
+                const srcY = ty * 32 + offset.dy + py;
+                const i = (srcY * w + srcX) * 4;
+                const r = imageData[i], g = imageData[i + 1], b = imageData[i + 2], a = imageData[i + 3];
+
+                if (a < 128) {
+                  tileData[py][px] = null;
+                } else {
+                  const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+                  tileData[py][px] = colorMap[hex] || null;
+                  hasPixels = true;
+                }
+              }
+            }
+
+            if (hasPixels) {
+              const fingerprint = JSON.stringify(tileData);
+              if (!existingTileFingerprints.has(fingerprint)) {
+                newTiles.push({
+                  id: generateUniqueId(),
+                  groupId,
+                  name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${offset.suffix})`,
+                  collisionType: "none",
+                  data: tileData
+                });
+                existingTileFingerprints.add(fingerprint);
+              }
+            }
+          }
+        }
+      }
+    } else {
+      const cols = Math.floor(w / 8);
+      const rows = Math.floor(h / 8);
+
+      for (let ty = 0; ty < rows; ty++) {
+        for (let tx = 0; tx < cols; tx++) {
+          const groupId = generateUniqueId();
+          const tileData = Array(8).fill(null).map(() => Array(8).fill(null));
+          let hasPixels = false;
+
+          for (let py = 0; py < 8; py++) {
+            for (let px = 0; px < 8; px++) {
+              const srcX = tx * 8 + px;
+              const srcY = ty * 8 + py;
+              const i = (srcY * w + srcX) * 4;
+              const r = imageData[i], g = imageData[i + 1], b = imageData[i + 2], a = imageData[i + 3];
+
+              if (a < 128) {
+                tileData[py][px] = null;
+              } else {
+                const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+                tileData[py][px] = colorMap[hex] || null;
+                hasPixels = true;
+              }
+            }
+          }
+
+          if (hasPixels) {
+            const fingerprint = JSON.stringify(tileData);
+            if (!existingTileFingerprints.has(fingerprint)) {
+              newTiles.push({
+                id: generateUniqueId(),
+                groupId,
+                name: `Tile ${currentSavedTiles.length + newTiles.length + 1}`,
+                collisionType: "none",
+                data: tileData
+              });
+              existingTileFingerprints.add(fingerprint);
+            }
           }
         }
       }
@@ -8014,6 +8131,11 @@ const handleWizardCreate = () => {
     activeSavedTileId, setActiveSavedTileId,
     showTileImportPaletteDialog, setShowTileImportPaletteDialog,
     pendingTileImportData, setPendingTileImportData,
+    showTileImportSizeDialog, setShowTileImportSizeDialog,
+    pendingTileImportFile, setPendingTileImportFile,
+    pendingOgaImportData, setPendingOgaImportData,
+    ogaImportTilesWide, setOgaImportTilesWide,
+    processTileImport,
     executeTileImport,
     importTilesDirectly,
     scenes, setScenes, activeSceneId, switchScene, addScene, deleteScene, renameScene, duplicateScene, generateLevelForScene,

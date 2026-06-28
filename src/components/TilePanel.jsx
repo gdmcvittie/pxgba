@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { usePxShop, INITIAL_DEFAULT_TILES } from '../context/PxShopContext';
 import { BsBorder, BsBoxArrowInDown, BsPlus, BsChevronDown, BsChevronRight, BsSearch, BsFileEarmarkZip, BsFileEarmarkImage, BsFileEarmarkText, BsArrowLeft, BsBoxArrowUp, BsTrash } from 'react-icons/bs';
@@ -25,8 +25,62 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
     recentColors,
     setShowTileImportPaletteDialog,
     setPendingTileImportData,
-    importTilesDirectly
+    importTilesDirectly,
+    pendingOgaImportData,
+    setPendingOgaImportData,
+    showTileImportSizeDialog,
+    setShowTileImportSizeDialog,
+    ogaImportTilesWide
   } = usePxShop();
+
+  const [tilesWideFlow, setTilesWideFlow] = useState(() => {
+    const saved = localStorage.getItem('px_shop_tilesWideFlow');
+    return saved === 'true';
+  });
+  const [tilesWideAuto, setTilesWideAuto] = useState(() => {
+    const saved = localStorage.getItem('px_shop_tilesWideAuto');
+    return saved === 'true';
+  });
+  const [tilesWideManual, setTilesWideManual] = useState(() => {
+    const saved = localStorage.getItem('px_shop_tilesWide');
+    return saved && saved !== 'flow' ? parseInt(saved, 10) || 6 : 6;
+  });
+  const [hasImportedTileSheet, setHasImportedTileSheet] = useState(false);
+
+  const handleTilesWideFlowChange = (val) => {
+    setTilesWideFlow(val);
+    localStorage.setItem('px_shop_tilesWideFlow', String(val));
+    if (val) {
+      setTilesWideAuto(false);
+      localStorage.setItem('px_shop_tilesWideAuto', 'false');
+    }
+  };
+
+  const handleTilesWideAutoChange = (val) => {
+    setTilesWideAuto(val);
+    localStorage.setItem('px_shop_tilesWideAuto', String(val));
+    if (val) {
+      setTilesWideFlow(false);
+      localStorage.setItem('px_shop_tilesWideFlow', 'false');
+    }
+  };
+
+  const handleTilesWideManualChange = (val) => {
+    const clamped = Math.max(1, Math.min(20, val));
+    setTilesWideManual(clamped);
+    localStorage.setItem('px_shop_tilesWide', String(clamped));
+  };
+
+  useEffect(() => {
+    if (ogaImportTilesWide != null) {
+      setHasImportedTileSheet(true);
+      if (tilesWideAuto) {
+        handleTilesWideManualChange(ogaImportTilesWide);
+      }
+    }
+  }, [ogaImportTilesWide]);
+
+  const effectiveTilesWide = tilesWideFlow ? 'flow' : (tilesWideAuto && hasImportedTileSheet ? tilesWideManual : (tilesWideAuto ? 'flow' : tilesWideManual));
 
   const activeTile = savedTiles.find(t => t.id === activeSavedTileId);
 
@@ -286,8 +340,8 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
           const MAX_DIM = 1024;
           if (w > MAX_DIM || h > MAX_DIM) {
             const scale = Math.min(MAX_DIM / w, MAX_DIM / h);
-            w = Math.floor(w * scale / 8) * 8;
-            h = Math.floor(h * scale / 8) * 8;
+            w = Math.floor(w * scale);
+            h = Math.floor(h * scale);
           }
 
           const tempCanvas = document.createElement('canvas');
@@ -346,8 +400,8 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
             dominantColors.push(nextColor);
           }
 
-          // Import tileset directly without prompting
-          importTilesDirectly({
+          // Store processed data and prompt for tile size
+          setPendingOgaImportData({
             imageData,
             w,
             h,
@@ -355,7 +409,8 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
             dominantColors,
             uniqueColors,
             loadingToastId
-          }, 'keep');
+          });
+          setShowTileImportSizeDialog(true);
           setIsSearchModalOpen(false);
         } catch (error) {
           console.error("Error processing tileset image:", error);
@@ -598,30 +653,200 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
             </div>
           </div>
 
-          <div style={{ padding: '10px', display: 'flex', flexWrap: 'wrap', gap: '4px', flex: 1, overflowY: 'auto', alignContent: 'flex-start', minHeight: '100px' }}>
-            {filteredTiles.length === 0 ? (
-              <div style={{ color: '#aaa', fontSize: '11px', padding: '10px', width: '100%', textAlign: 'center' }}>
-                No matching tiles found
-              </div>
-            ) : (
-              filteredTiles.map(tile => (
-                <div
-                  key={tile.id}
-                  onClick={() => { setActiveSavedTileId(tile.id); if (tool !== 'tileFill') { setTool('tile'); setActiveDraw('tile'); } }}
-                  style={{
-                    width: '32px', height: '32px',
-                    outline: activeSavedTileId === tile.id ? '2px solid #65ff00' : '1px solid #444',
-                    outlineOffset: '2px',
-                    cursor: 'pointer',
-                    flexShrink: 0
-                  }}
-                  title={tile.name || "Unnamed Tile"}
-                >
-                  <TileIcon tile={tile} size={32} />
-                </div>
-              ))
-            )}
+          {/* Tiles wide control */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 10px', borderBottom: '1px solid #3c3c3c', backgroundColor: '#1d1d1f' }}>
+            <div style={{ display: 'flex', fontSize: '10px', color: '#aaa' }}>Tile Display</div>
+            <label style={{ display: 'flex', flexGrow: 1, alignItems: 'center', gap: '4px', fontSize: '10px', color: '#aaa', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={tilesWideFlow}
+                onChange={(e) => handleTilesWideFlowChange(e.target.checked)}
+                style={{ margin: 0, cursor: 'pointer' }}
+              />
+              Flow
+            </label>
+            <label style={{ display: 'flex', flexGrow: 1, alignItems: 'center', gap: '4px', fontSize: '10px', color: '#aaa', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={tilesWideAuto}
+                onChange={(e) => handleTilesWideAutoChange(e.target.checked)}
+                disabled={tilesWideFlow}
+                style={{ margin: 0, cursor: tilesWideFlow ? 'not-allowed' : 'pointer' }}
+              />
+              Auto
+            </label>
+            <button
+              onClick={() => handleTilesWideManualChange(tilesWideManual - 1)}
+              disabled={tilesWideFlow || tilesWideAuto}
+              style={{ background: '#444', border: 'none', color: (tilesWideFlow || tilesWideAuto) ? '#666' : '#fff', width: '18px', height: '18px', borderRadius: '3px', cursor: (tilesWideFlow || tilesWideAuto) ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', padding: 0, lineHeight: 1 }}
+            >-</button>
+            <span style={{ minWidth: '20px', textAlign: 'center', color: (tilesWideFlow || tilesWideAuto) ? '#666' : '#fff', fontWeight: 'bold', fontSize: '10px' }}>{tilesWideManual}</span>
+            <button
+              onClick={() => handleTilesWideManualChange(tilesWideManual + 1)}
+              disabled={tilesWideFlow || tilesWideAuto}
+              style={{ background: '#444', border: 'none', color: (tilesWideFlow || tilesWideAuto) ? '#666' : '#fff', width: '18px', height: '18px', borderRadius: '3px', cursor: (tilesWideFlow || tilesWideAuto) ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', padding: 0, lineHeight: 1 }}
+            >+</button>
           </div>
+
+          {(() => {
+            const defaultTileIds = new Set(INITIAL_DEFAULT_TILES.map(t => t.id));
+            const defaultTiles = filteredTiles.filter(t => defaultTileIds.has(t.id));
+            const customTiles = filteredTiles.filter(t => !defaultTileIds.has(t.id));
+
+            const groupOrder = [];
+            const groupMap = {};
+            for (const tile of customTiles) {
+              const gid = tile.groupId || tile.id;
+              if (!groupMap[gid]) {
+                groupMap[gid] = [];
+                groupOrder.push(gid);
+              }
+              groupMap[gid].push(tile);
+            }
+
+            const getSubGridSize = (group) => {
+              if (group.length <= 1) return { cols: 1, rows: 1 };
+              const name = group[0].name || '';
+              if (/\(TL\)|\(TR\)|\(BL\)|\(BR\)/.test(name)) return { cols: 2, rows: 2 };
+              if (/\(\d_\d\)/.test(name)) {
+                const indices = group.map(t => {
+                  const m = (t.name || '').match(/\((\d)_(\d)\)/);
+                  return m ? { y: parseInt(m[1]), x: parseInt(m[2]) } : null;
+                }).filter(Boolean);
+                const maxY = Math.max(...indices.map(i => i.y));
+                const maxX = Math.max(...indices.map(i => i.x));
+                return { cols: maxX + 1, rows: maxY + 1 };
+              }
+              return { cols: group.length, rows: 1 };
+            };
+
+            const getTilePosition = (tile, cols) => {
+              const name = tile.name || '';
+              const tlMatch = name.match(/\((TL|TR|BL|BR)\)/);
+              if (tlMatch) {
+                const pos = { TL: 0, TR: 1, BL: 2, BR: 3 }[tlMatch[1]];
+                return pos;
+              }
+              const gridMatch = name.match(/\((\d)_(\d)\)/);
+              if (gridMatch) {
+                return parseInt(gridMatch[1]) * cols + parseInt(gridMatch[2]);
+              }
+              return 0;
+            };
+
+            const renderTile = (tile) => (
+              <div
+                key={tile.id}
+                onClick={() => { setActiveSavedTileId(tile.id); if (tool !== 'tileFill') { setTool('tile'); setActiveDraw('tile'); } }}
+                style={{
+                  width: '32px', height: '32px',
+                  outline: activeSavedTileId === tile.id ? '2px solid #65ff00' : '1px solid #444',
+                  outlineOffset: '2px',
+                  cursor: 'pointer',
+                  flexShrink: 0
+                }}
+                title={tile.name || "Unnamed Tile"}
+              >
+                <TileIcon tile={tile} size={32} />
+              </div>
+            );
+
+            const isFlow = effectiveTilesWide === 'flow';
+            const effectiveWidth = isFlow ? 999 : effectiveTilesWide;
+
+            return (
+              <div style={{
+                padding: '10px',
+                display: isFlow ? 'flex' : 'grid',
+                ...(isFlow ? { flexWrap: 'wrap' } : { gridTemplateColumns: `repeat(${effectiveTilesWide}, 32px)` }),
+                gap: '4px',
+                flex: 1,
+                overflowY: 'auto',
+                alignContent: 'flex-start',
+                minHeight: '100px',
+                ...(isFlow ? {} : { justifyItems: 'center' })
+              }}>
+                {filteredTiles.length === 0 ? (
+                  <div style={{ color: '#aaa', fontSize: '11px', padding: '10px', width: '100%', textAlign: 'center' }}>
+                    No matching tiles found
+                  </div>
+                ) : (
+                  <>
+                    {defaultTiles.map(tile => renderTile(tile))}
+                    {customTiles.length > 0 && defaultTiles.length > 0 && (
+                      <div style={{
+                        ...(isFlow ? { width: '100%' } : { gridColumn: '1 / -1' }),
+                        height: '0',
+                        borderTop: '1px dashed #555',
+                        margin: '4px 0'
+                      }} />
+                    )}
+                    {groupOrder.map(gid => {
+                      const group = groupMap[gid];
+                      if (group.length <= 1 || isFlow) {
+                        if (isFlow && group.length > 1) {
+                          const { cols, rows } = getSubGridSize(group);
+                          const sorted = new Array(cols * rows).fill(null);
+                          for (const tile of group) {
+                            const pos = getTilePosition(tile, cols);
+                            sorted[pos] = tile;
+                          }
+                          return (
+                            <div
+                              key={gid}
+                              style={{
+                                display: 'grid',
+                                gridTemplateColumns: `repeat(${cols}, 32px)`,
+                                gridTemplateRows: `repeat(${rows}, 32px)`,
+                                gap: '2px',
+                                padding: '4px',
+                                background: '#2a2a2a',
+                                border: '1px solid #555',
+                                borderRadius: '4px',
+                                justifyItems: 'center',
+                                alignItems: 'center'
+                              }}
+                              title={`Tile group (${cols}x${rows})`}
+                            >
+                              {sorted.map((tile, i) => tile ? renderTile(tile) : <div key={`empty-${i}`} style={{ width: '32px', height: '32px' }} />)}
+                            </div>
+                          );
+                        }
+                        return renderTile(group[0]);
+                      }
+                      const { cols, rows } = getSubGridSize(group);
+                      const sorted = new Array(cols * rows).fill(null);
+                      for (const tile of group) {
+                        const pos = getTilePosition(tile, cols);
+                        sorted[pos] = tile;
+                      }
+                      return (
+                        <div
+                          key={gid}
+                          style={{
+                            gridColumn: `span ${Math.min(cols, effectiveWidth)}`,
+                            display: 'grid',
+                            gridTemplateColumns: `repeat(${cols}, 32px)`,
+                            gridTemplateRows: `repeat(${rows}, 32px)`,
+                            gap: '2px',
+                            padding: '4px',
+                            background: '#2a2a2a',
+                            border: '1px solid #555',
+                            borderRadius: '4px',
+                            justifyItems: 'center',
+                            alignItems: 'center'
+                          }}
+                          title={`Tile group (${cols}x${rows})`}
+                        >
+                          {sorted.map((tile, i) => tile ? renderTile(tile) : <div key={`empty-${i}`} style={{ width: '32px', height: '32px' }} />)}
+                        </div>
+                      );
+                    })}
+                  </>
+                )}
+              </div>
+            );
+          })()}
 
           {activeTile && (
             <div style={{ padding: '10px', borderTop: '1px solid #444', display: 'flex', flexDirection: 'column', gap: '8px', backgroundColor: '#252525' }}>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { usePxShop } from '../context/PxShopContext';
+import { usePxShop, INITIAL_DEFAULT_TILES } from '../context/PxShopContext';
 import { BsPlus, BsTrash, BsChevronDown, BsChevronRight, BsCopy, BsPencil, BsSymmetryVertical, BsSymmetryHorizontal, BsFolder2Open, BsFiles } from 'react-icons/bs';
 import { ImMan } from 'react-icons/im';
 import TileIcon from './TileIcon';
@@ -470,21 +470,108 @@ const ActorDesignerModal = ({ actor, savedTiles, animations, onClose, onSave }) 
               </button>
             </div>
             <div style={{ fontSize: '11px', color: '#aaa' }}>Select Tile:</div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', overflowY: 'auto', maxHeight: '300px' }}>
-              <div
-                onClick={() => setActiveTileId(null)}
-                style={{ width: '32px', height: '32px', border: activeTileId === null ? '2px solid #4CAF50' : '1px solid #444', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#ff4444', background: '#111' }}
-              >Eraser</div>
-              {savedTiles.map(t => (
+            {(() => {
+              const defaultTileIds = new Set(INITIAL_DEFAULT_TILES.map(t => t.id));
+              const defaultTiles = savedTiles.filter(t => defaultTileIds.has(t.id));
+              const customTiles = savedTiles.filter(t => !defaultTileIds.has(t.id));
+
+              const groupOrder = [];
+              const groupMap = {};
+              for (const tile of customTiles) {
+                const gid = tile.groupId || tile.id;
+                if (!groupMap[gid]) {
+                  groupMap[gid] = [];
+                  groupOrder.push(gid);
+                }
+                groupMap[gid].push(tile);
+              }
+
+              const getSubGridSize = (group) => {
+                if (group.length <= 1) return { cols: 1, rows: 1 };
+                const name = group[0].name || '';
+                if (/\(TL\)|\(TR\)|\(BL\)|\(BR\)/.test(name)) return { cols: 2, rows: 2 };
+                if (/\(\d_\d\)/.test(name)) {
+                  const indices = group.map(t => {
+                    const m = (t.name || '').match(/\((\d)_(\d)\)/);
+                    return m ? { y: parseInt(m[1]), x: parseInt(m[2]) } : null;
+                  }).filter(Boolean);
+                  const maxY = Math.max(...indices.map(i => i.y));
+                  const maxX = Math.max(...indices.map(i => i.x));
+                  return { cols: maxX + 1, rows: maxY + 1 };
+                }
+                return { cols: group.length, rows: 1 };
+              };
+
+              const getTilePosition = (tile, cols) => {
+                const name = tile.name || '';
+                const tlMatch = name.match(/\((TL|TR|BL|BR)\)/);
+                if (tlMatch) {
+                  const pos = { TL: 0, TR: 1, BL: 2, BR: 3 }[tlMatch[1]];
+                  return pos;
+                }
+                const gridMatch = name.match(/\((\d)_(\d)\)/);
+                if (gridMatch) {
+                  return parseInt(gridMatch[1]) * cols + parseInt(gridMatch[2]);
+                }
+                return 0;
+              };
+
+              const renderTile = (tile) => (
                 <div
-                  key={t.id}
-                  onClick={() => setActiveTileId(t.id)}
-                  style={{ width: '32px', height: '32px', border: activeTileId === t.id ? '2px solid #4CAF50' : '1px solid #444', cursor: 'pointer' }}
+                  key={tile.id}
+                  onClick={() => setActiveTileId(tile.id)}
+                  style={{ width: '32px', height: '32px', border: activeTileId === tile.id ? '2px solid #4CAF50' : '1px solid #444', cursor: 'pointer' }}
+                  title={tile.name || "Unnamed Tile"}
                 >
-                  <TileIcon tile={t} size={32} />
+                  <TileIcon tile={tile} size={32} />
                 </div>
-              ))}
-            </div>
+              );
+
+              return (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', overflowY: 'auto', maxHeight: '300px', alignContent: 'flex-start' }}>
+                  <div
+                    onClick={() => setActiveTileId(null)}
+                    style={{ width: '32px', height: '32px', border: activeTileId === null ? '2px solid #4CAF50' : '1px solid #444', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#ff4444', background: '#111' }}
+                  >Eraser</div>
+                  {defaultTiles.map(tile => renderTile(tile))}
+                  {customTiles.length > 0 && defaultTiles.length > 0 && (
+                    <div style={{ width: '100%', height: '0', borderTop: '1px dashed #555', margin: '4px 0' }} />
+                  )}
+                  {groupOrder.map(gid => {
+                    const group = groupMap[gid];
+                    if (group.length <= 1) {
+                      return renderTile(group[0]);
+                    }
+                    const { cols, rows } = getSubGridSize(group);
+                    const sorted = new Array(cols * rows).fill(null);
+                    for (const tile of group) {
+                      const pos = getTilePosition(tile, cols);
+                      sorted[pos] = tile;
+                    }
+                    return (
+                      <div
+                        key={gid}
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: `repeat(${cols}, 32px)`,
+                          gridTemplateRows: `repeat(${rows}, 32px)`,
+                          gap: '2px',
+                          padding: '4px',
+                          background: '#2a2a2a',
+                          border: '1px solid #555',
+                          borderRadius: '4px',
+                          justifyItems: 'center',
+                          alignItems: 'center'
+                        }}
+                        title={`Tile group (${cols}x${rows})`}
+                      >
+                        {sorted.map((tile, i) => tile ? renderTile(tile) : <div key={`empty-${i}`} style={{ width: '32px', height: '32px' }} />)}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
           </div>
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <div style={{ display: 'flex', gap: '4px', overflowX: 'auto', borderBottom: '1px solid #444', paddingBottom: '4px' }}>
