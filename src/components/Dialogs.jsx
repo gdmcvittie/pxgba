@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { usePxShop } from '../context/PxShopContext';
 import { BsFolder2Open, BsPlayFill, BsCameraVideo, BsMusicNoteBeamed, BsBrush, BsReddit, BsDiscord, BsStars, BsYoutube } from 'react-icons/bs';
 import { version } from '../../package.json';
@@ -2635,14 +2636,18 @@ export const TilePreview = ({ tile, size }) => {
   );
 };
 
-export const TileSelector = ({ tiles, value, onChange, label, style }) => {
+export const TileSelector = ({ tiles, value, onChange, label = '', style, hideLabel = false, placeholder = 'Auto-detect' }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const containerRef = useRef(null);
+  const triggerRef = useRef(null);
   const inputRef = useRef(null);
+  const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
+
   const selectedTile = tiles.find(t => t.id === value);
-  const matchLabel = (label.match(/\(([^)]+)\)/) || [null, label])[1];
+  const matchLabel = ((label || '').match(/\(([^)]+)\)/) || [null, label || ''])[1];
   const defaultTile = selectedTile || (() => {
+    if (!matchLabel) return tiles[0];
     const parts = matchLabel.toLowerCase().split(/[\/\s]+/).filter(Boolean);
     const keywordMap = { ground: 'grass', track: 'road', border: 'stone', fill: 'road' };
     let firstKeyword = keywordMap[parts[0]] || parts[0];
@@ -2656,9 +2661,21 @@ export const TileSelector = ({ tiles, value, onChange, label, style }) => {
     ? tiles.filter(t => t.name.toLowerCase().includes(search.toLowerCase()))
     : tiles;
 
+  const updateCoords = () => {
+    if (triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setCoords({
+        top: rect.bottom,
+        left: rect.left,
+        width: rect.width
+      });
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
+        if (e.target.closest('.tile-selector-portal')) return;
         setIsOpen(false);
       }
     };
@@ -2667,19 +2684,29 @@ export const TileSelector = ({ tiles, value, onChange, label, style }) => {
   }, []);
 
   useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus();
+    if (isOpen) {
+      updateCoords();
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+      window.addEventListener('resize', updateCoords);
+      window.addEventListener('scroll', updateCoords, true);
+      return () => {
+        window.removeEventListener('resize', updateCoords);
+        window.removeEventListener('scroll', updateCoords, true);
+      };
     }
   }, [isOpen]);
 
-  const displayText = selectedTile ? selectedTile.name : 'Auto-detect';
+  const displayText = selectedTile ? selectedTile.name : placeholder;
 
   return (
     <div ref={containerRef} style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '8px', ...style }}>
       <TilePreview tile={defaultTile} size={24} />
-      <span style={{ fontSize: '12px', color: '#ccc', minWidth: '40px', textAlign: 'left' }}>{label}</span>
+      {!hideLabel && <span style={{ fontSize: '12px', color: '#ccc', minWidth: '40px', textAlign: 'left' }}>{label}</span>}
       <div style={{ position: 'relative', flex: 1, minWidth: 0 }}>
         <div
+          ref={triggerRef}
           onClick={() => setIsOpen(!isOpen)}
           style={{
             background: '#1a1a1a', color: '#ccc', border: '1px solid #444', borderRadius: '3px',
@@ -2690,13 +2717,20 @@ export const TileSelector = ({ tiles, value, onChange, label, style }) => {
           <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{displayText}</span>
           <span style={{ fontSize: '9px', color: '#888' }}>▼</span>
         </div>
-        {isOpen && (
-          <div style={{
-            position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 10,
-            background: '#1a1a1a', border: '1px solid #555', borderRadius: '3px',
-            maxHeight: '200px', overflow: 'hidden', display: 'flex', flexDirection: 'column',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
-          }}>
+        {isOpen && createPortal(
+          <div 
+            className="tile-selector-portal"
+            style={{
+              position: 'fixed',
+              top: `${coords.top}px`,
+              left: `${coords.left}px`,
+              width: `${coords.width}px`,
+              zIndex: 999999,
+              background: '#1a1a1a', border: '1px solid #555', borderRadius: '3px',
+              maxHeight: '200px', overflow: 'hidden', display: 'flex', flexDirection: 'column',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
+            }}
+          >
             <input
               ref={inputRef}
               type="text"
@@ -2717,7 +2751,7 @@ export const TileSelector = ({ tiles, value, onChange, label, style }) => {
                   background: value == null ? '#333' : 'transparent'
                 }}
               >
-                Auto-detect
+                {placeholder}
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', padding: '4px' }}>
                 {filtered.map(t => (
@@ -2742,7 +2776,8 @@ export const TileSelector = ({ tiles, value, onChange, label, style }) => {
                 <div style={{ padding: '8px', fontSize: '11px', color: '#666', textAlign: 'center' }}>No tiles found</div>
               )}
             </div>
-          </div>
+          </div>,
+          document.body
         )}
       </div>
     </div>

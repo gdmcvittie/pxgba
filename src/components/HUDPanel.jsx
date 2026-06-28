@@ -1,6 +1,7 @@
 import { usePxShop } from '../context/PxShopContext';
 import { BsTv, BsChevronDown, BsChevronRight, BsTextLeft, BsTextCenter, BsTextRight } from 'react-icons/bs';
 import PaletteColorPicker from './PaletteColorPicker';
+import { TileSelector } from './Dialogs';
 
 const HUDPanel = ({ isCollapsed, onToggle }) => {
   const {
@@ -282,8 +283,6 @@ const HUDPanel = ({ isCollapsed, onToggle }) => {
                     + Add Item
                   </button>
                 </div>
-                <span style={{ fontSize: '9px', color: '#888', fontStyle: 'italic' }}>Use &#123;PLAYER_HP&#125;, &#123;PLAYER_BONUS&#125;, or &#123;varName&#125; in text. All text is converted to uppercase.</span>
-                
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '200px', overflowY: 'auto' }}>
                   {(hudSettings.displayItems || []).map((item, idx) => (
                     <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#222', padding: '6px', borderRadius: '4px', border: '1px solid #333' }}>
@@ -306,20 +305,18 @@ const HUDPanel = ({ isCollapsed, onToggle }) => {
                       </div>
 
                       {/* Tile selection */}
-                      <select 
-                        value={item.tileId || ''} 
-                        onChange={(e) => {
-                          const v = e.target.value ? Number(e.target.value) : null;
+                      <TileSelector
+                        tiles={savedTiles || []}
+                        value={item.tileId}
+                        onChange={(v) => {
                           handleUpdateItem(item.id, 'tileId', v);
                           saveHistory("Update HUD Item Icon", layers, dimensions, { hudSettings: { ...hudSettings, displayItems: (hudSettings.displayItems || []).map(it => it.id === item.id ? { ...it, tileId: v } : it) } });
                         }}
-                        style={{ background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '10px', outline: 'none', borderRadius: '3px', width: '70px', minWidth: 0 }}
-                      >
-                        <option value="">[Icon]</option>
-                        {savedTiles.map(t => (
-                          <option key={t.id} value={t.id}>{t.name}</option>
-                        ))}
-                      </select>
+                        label=""
+                        hideLabel={true}
+                        placeholder="[Icon]"
+                        style={{ width: '130px', minWidth: '0' }}
+                      />
 
                       {/* Text */}
                       <input 
