@@ -15,3 +15,5 @@
         - the actor is selected (activeActorId matches)
         - the actor has isMoving enabled
         - the movement range is greater than 0
+- locks down default PLAYER variables
+    - a lot of the default actor types and HUD stuff is linked to those variables

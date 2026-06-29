@@ -158,7 +158,7 @@ const Sidebar = () => {
       `}</style>
       
       {/* Column 1 */}
-      <div id="tour-sidebar-col1" style={{ position: 'relative', width: `${col1Collapsed ? 30 : col1Width}px`, backgroundColor: '#2d2d2d', borderLeft: '1px solid #3c3c3c', display: 'flex', flexDirection: 'column', zIndex: 10, flexShrink: 0, transition: 'width 0.2s ease' }}>
+      <div id="tour-sidebar-col1" style={{ position: 'relative', width: `${col1Collapsed ? 30 : col1Width}px`, backgroundColor: '#2d2d2d', borderLeft: '1px solid #1a1a1a', display: 'flex', flexDirection: 'column', zIndex: 10, flexShrink: 0, transition: 'width 0.2s ease' }}>
         {!col1Collapsed && <div onMouseDown={startDrag(1, col1Width)} style={{ position: 'absolute', top: 0, left: -3, width: 6, bottom: 0, cursor: 'col-resize', zIndex: 20 }} />}
         
         <div 
@@ -192,7 +192,7 @@ const Sidebar = () => {
       </div>
 
       {/* Column 2 */}
-      <div id="tour-sidebar-col2" style={{ position: 'relative', width: `${col2Collapsed ? 30 : col2Width}px`, backgroundColor: '#252528', borderLeft: '1px solid #3c3c3c', display: 'flex', flexDirection: 'column', zIndex: 10, flexShrink: 0, transition: 'width 0.2s ease' }}>
+      <div id="tour-sidebar-col2" style={{ position: 'relative', width: `${col2Collapsed ? 30 : col2Width}px`, backgroundColor: '#252528', borderLeft: '1px solid #1a1a1a', display: 'flex', flexDirection: 'column', zIndex: 10, flexShrink: 0, transition: 'width 0.2s ease' }}>
         {!col2Collapsed && <div onMouseDown={startDrag(2, col2Width)} style={{ position: 'absolute', top: 0, left: -3, width: 6, bottom: 0, cursor: 'col-resize', zIndex: 20 }} />}
         
         <div 
@@ -225,7 +225,7 @@ const Sidebar = () => {
       </div>
 
       {/* Column 3 */}
-      <div id="tour-sidebar-col3" style={{ position: 'relative', width: `${col3Collapsed ? 30 : col3Width}px`, backgroundColor: '#252528', borderLeft: '1px solid #3c3c3c', display: 'flex', flexDirection: 'column', zIndex: 10, flexShrink: 0, transition: 'width 0.2s ease' }}>
+      <div id="tour-sidebar-col3" style={{ position: 'relative', width: `${col3Collapsed ? 30 : col3Width}px`, backgroundColor: '#252528', borderLeft: '1px solid #1a1a1a', display: 'flex', flexDirection: 'column', zIndex: 10, flexShrink: 0, transition: 'width 0.2s ease' }}>
         {!col3Collapsed && <div onMouseDown={startDrag(3, col3Width)} style={{ position: 'absolute', top: 0, left: -3, width: 6, bottom: 0, cursor: 'col-resize', zIndex: 20 }} />}
         
         <div 

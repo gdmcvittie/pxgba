@@ -207,8 +207,8 @@ const VariablesPanel = ({ isCollapsed, onToggle }) => {
                     />
                   ) : (
                     <span
-                      onDoubleClick={(e) => { e.stopPropagation(); setEditingGroupId(v.id); }}
-                      style={{ fontSize: '12px', fontWeight: 'bold', color: '#ff9800', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer', textAlign: 'left' }}
+                      onDoubleClick={(e) => { if (!isDefaultPlayerGroup(v.id)) { e.stopPropagation(); setEditingGroupId(v.id); } }}
+                      style={{ fontSize: '12px', fontWeight: 'bold', color: '#ff9800', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: isDefaultPlayerGroup(v.id) ? 'default' : 'pointer', textAlign: 'left' }}
                     >
                       📁 {v.name}
                     </span>
@@ -234,20 +234,24 @@ const VariablesPanel = ({ isCollapsed, onToggle }) => {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
                 <input
                   value={v.name}
+                  disabled={isDefaultPlayerVar(v.id)}
                   onChange={(e) => updateVariable(v.id, 'name', e.target.value.replace(/[^a-zA-Z0-9_]/g, '_'))}
-                  style={{ width: '120px', background: '#111', color: '#fff', border: '1px solid #4CAF50', outline: 'none', padding: '2px 4px', fontSize: '12px', borderRadius: '3px' }}
+                  style={{ width: '120px', background: isDefaultPlayerVar(v.id) ? '#2a2a2a' : '#111', color: isDefaultPlayerVar(v.id) ? '#888' : '#fff', border: '1px solid #4CAF50', outline: 'none', padding: '2px 4px', fontSize: '12px', borderRadius: '3px', cursor: isDefaultPlayerVar(v.id) ? 'not-allowed' : 'text' }}
                   placeholder="Variable Name"
                 />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <button title="Duplicate Variable" onClick={(e) => duplicateVariable(e, v)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', opacity: 0.8, padding: 0, display: 'flex', alignItems: 'center' }}><BsFiles size={12} /></button>
                   <button title="Move Up" onClick={(e) => moveVariableUp(e, v.id)} disabled={index === 0} style={{ background: 'none', border: 'none', color: index === 0 ? '#555' : '#fff', cursor: index === 0 ? 'default' : 'pointer', padding: 0 }}>▲</button>
                   <button title="Move Down" onClick={(e) => moveVariableDown(e, v.id)} disabled={index === variables.length - 1} style={{ background: 'none', border: 'none', color: index === variables.length - 1 ? '#555' : '#fff', cursor: index === variables.length - 1 ? 'default' : 'pointer', padding: 0 }}>▼</button>
-                  <button onClick={(e) => deleteVariable(e, v.id)} style={{ background: 'none', border: 'none', color: '#ff4444', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}><BsTrash size={12} /></button>
+                  {!isDefaultPlayerVar(v.id) && (
+                    <button onClick={(e) => deleteVariable(e, v.id)} style={{ background: 'none', border: 'none', color: '#ff4444', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}><BsTrash size={12} /></button>
+                  )}
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <select 
                     value={v.type} 
+                    disabled={isDefaultPlayerVar(v.id)}
                     onChange={(e) => {
                       const newType = e.target.value;
                       let initialVal = 0;
@@ -258,7 +262,7 @@ const VariablesPanel = ({ isCollapsed, onToggle }) => {
                       setVariables(nextVars);
                       saveHistory("Update Variable Type", layers, dimensions, { variables: nextVars });
                     }} 
-                    style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }}
+                    style={{ flex: 1, background: isDefaultPlayerVar(v.id) ? '#2a2a2a' : '#111', color: isDefaultPlayerVar(v.id) ? '#888' : '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px', cursor: isDefaultPlayerVar(v.id) ? 'not-allowed' : 'pointer' }}
                   >
                      <option value="number">Number</option>
                      <option value="float">Float</option>
@@ -288,6 +292,7 @@ const VariablesPanel = ({ isCollapsed, onToggle }) => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px', borderTop: '1px solid #2d2d2d', paddingTop: '6px' }}>
                 <select 
                   value={v.groupId || ""} 
+                  disabled={isDefaultPlayerVar(v.id)}
                   onChange={(e) => {
                     e.stopPropagation();
                     const newGroupId = e.target.value ? Number(e.target.value) : null;
@@ -329,7 +334,7 @@ const VariablesPanel = ({ isCollapsed, onToggle }) => {
                     saveHistory("Change Variable Group", layers, dimensions, { variables: nextVars });
                   }}
                   onClick={(e) => e.stopPropagation()}
-                  style={{ background: 'transparent', color: '#aaa', border: '1px solid #444', borderRadius: '3px', maxWidth: '120px', fontSize: '10px', outline: 'none' }}
+                  style={{ background: isDefaultPlayerVar(v.id) ? '#2a2a2a' : 'transparent', color: isDefaultPlayerVar(v.id) ? '#888' : '#aaa', border: '1px solid #444', borderRadius: '3px', maxWidth: '120px', fontSize: '10px', outline: 'none', cursor: isDefaultPlayerVar(v.id) ? 'not-allowed' : 'pointer' }}
                 >
                   <option value="">No Group</option>
                   {variables.filter(item => item.type === 'group').map(g => (
