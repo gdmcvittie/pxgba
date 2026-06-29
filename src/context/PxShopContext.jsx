@@ -10,7 +10,8 @@ import {
   hexToRgb, rgbToHsl, hslToRgb, rgbToHex, adjustHslHex,
   adjustBrightnessContrastHex, blendHexColors, invertHex, getNextZoom,
   parseColorTo32, generateWav, cloneLayersForHistory, createEmptyLayer,
-  getClosestPaletteColor, filterSimilarColors, generateUniqueId, sortColorsByHue
+  getClosestPaletteColor, filterSimilarColors, generateUniqueId, sortColorsByHue,
+  detectTransparencyColor
 } from './utils';
 import { generateButano } from './codegen/butano';
 import { generateFormat, getFormatLabel, getFormatFilename } from './codegen/formats';
@@ -6054,6 +6055,11 @@ export const PxShopProvider = ({ children }) => {
 
           const imageData = tempCtx.getImageData(0, 0, w, h).data;
 
+          const maskColorHex = detectTransparencyColor(imageData, w, h);
+          if (maskColorHex) {
+            toast.success(`Masked background color (${maskColorHex}) as transparent.`, { id: loadingToastId });
+          }
+
           // 1. Extract unique non-transparent colors and count frequencies
           const colorCounts = {};
           for (let i = 0; i < imageData.length; i += 4) {
@@ -6063,7 +6069,9 @@ export const PxShopProvider = ({ children }) => {
               const g = imageData[i + 1];
               const b = imageData[i + 2];
               const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-              colorCounts[hex] = (colorCounts[hex] || 0) + 1;
+              if (hex !== maskColorHex) {
+                colorCounts[hex] = (colorCounts[hex] || 0) + 1;
+              }
             }
           }
 
@@ -6103,7 +6111,8 @@ export const PxShopProvider = ({ children }) => {
             filename: file.name,
             dominantColors,
             uniqueColors,
-            loadingToastId
+            loadingToastId,
+            maskColorHex
           }, 'keep', tileSize);
           setOgaImportTilesWide(Math.floor(w / 8));
           if (tileSheetInputRef.current) tileSheetInputRef.current.value = "";
@@ -6120,7 +6129,7 @@ export const PxShopProvider = ({ children }) => {
   };
 
   const importTilesDirectly = useCallback((importData, choice, tileSize = 8) => {
-    const { imageData, w, h, filename, dominantColors, uniqueColors, loadingToastId } = importData;
+    const { imageData, w, h, filename, dominantColors, uniqueColors, loadingToastId, maskColorHex } = importData;
     
     let finalPalette;
     let dominantColorsList = [...dominantColors];
@@ -6320,11 +6329,11 @@ export const PxShopProvider = ({ children }) => {
                 const srcY = ty * 16 + offset.dy + py;
                 const i = (srcY * w + srcX) * 4;
                 const r = imageData[i], g = imageData[i + 1], b = imageData[i + 2], a = imageData[i + 3];
+                const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 
-                if (a < 128) {
+                if (a < 128 || hex === maskColorHex) {
                   tileData[py][px] = null;
                 } else {
-                  const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
                   tileData[py][px] = colorMap[hex] || null;
                   hasPixels = true;
                 }
@@ -6375,11 +6384,11 @@ export const PxShopProvider = ({ children }) => {
                 const srcY = ty * 32 + offset.dy + py;
                 const i = (srcY * w + srcX) * 4;
                 const r = imageData[i], g = imageData[i + 1], b = imageData[i + 2], a = imageData[i + 3];
+                const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 
-                if (a < 128) {
+                if (a < 128 || hex === maskColorHex) {
                   tileData[py][px] = null;
                 } else {
-                  const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
                   tileData[py][px] = colorMap[hex] || null;
                   hasPixels = true;
                 }
@@ -6418,11 +6427,11 @@ export const PxShopProvider = ({ children }) => {
               const srcY = ty * 8 + py;
               const i = (srcY * w + srcX) * 4;
               const r = imageData[i], g = imageData[i + 1], b = imageData[i + 2], a = imageData[i + 3];
+              const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 
-              if (a < 128) {
+              if (a < 128 || hex === maskColorHex) {
                 tileData[py][px] = null;
               } else {
-                const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
                 tileData[py][px] = colorMap[hex] || null;
                 hasPixels = true;
               }

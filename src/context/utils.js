@@ -454,3 +454,62 @@ export function generateUniqueId() {
   uniqueIdCounter = (uniqueIdCounter + 1) % 1000000;
   return Date.now() * 1000 + uniqueIdCounter;
 }
+
+export const detectTransparencyColor = (imageData, w, h) => {
+  let hasTransparentPixels = false;
+  for (let i = 3; i < imageData.length; i += 4) {
+    if (imageData[i] < 128) {
+      hasTransparentPixels = true;
+      break;
+    }
+  }
+
+  const getPixelHex = (x, y) => {
+    const idx = (y * w + x) * 4;
+    const r = imageData[idx];
+    const g = imageData[idx + 1];
+    const b = imageData[idx + 2];
+    const a = imageData[idx + 3];
+    return {
+      hex: "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1),
+      opaque: a >= 128
+    };
+  };
+
+  const corners = [
+    getPixelHex(0, 0),
+    getPixelHex(w - 1, 0),
+    getPixelHex(0, h - 1),
+    getPixelHex(w - 1, h - 1)
+  ];
+
+  if (hasTransparentPixels) {
+    const magentaCorner = corners.find(c => c.opaque && c.hex === '#ff00ff');
+    if (magentaCorner) {
+      return magentaCorner.hex;
+    }
+    return null;
+  }
+
+  const colorGroups = {};
+  corners.forEach(c => {
+    if (c.opaque) {
+      colorGroups[c.hex] = (colorGroups[c.hex] || 0) + 1;
+    }
+  });
+
+  let consensusColor = null;
+  let maxCount = 0;
+  for (const hex in colorGroups) {
+    if (colorGroups[hex] > maxCount) {
+      maxCount = colorGroups[hex];
+      consensusColor = hex;
+    }
+  }
+
+  if (maxCount >= 3) {
+    return consensusColor;
+  }
+
+  return null;
+};

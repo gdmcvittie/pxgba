@@ -5,6 +5,7 @@
 - fixed canvas clicking when an actor is selected adding another actor to the scene
 - adds support for 16x16 and 32x32 tile imports
     - sprite picker and designer updated accordingly
+- adds background remover for imported tile sets to the actor designer
 - adds a movement range visualization for actors and enemies
 - when an actor is selected and has movement enabled, a colored overlay shows the movement range 
     - green overlay for horizontal movement

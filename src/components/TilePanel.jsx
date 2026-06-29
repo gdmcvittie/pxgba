@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import JSZip from 'jszip';
 import TileIcon from './TileIcon';
 import { API_BASE_URL } from '../config';
-import { getClosestPaletteColor } from '../context/utils';
+import { getClosestPaletteColor, detectTransparencyColor } from '../context/utils';
 
 
 const TilePanel = ({ isCollapsed, onToggle }) => {
@@ -412,6 +412,11 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
 
           const imageData = tempCtx.getImageData(0, 0, w, h).data;
 
+          const maskColorHex = detectTransparencyColor(imageData, w, h);
+          if (maskColorHex) {
+            toast.success(`Masked background color (${maskColorHex}) as transparent.`, { id: loadingToastId });
+          }
+
           // 1. Extract unique non-transparent colors and count frequencies
           const colorCounts = {};
           for (let i = 0; i < imageData.length; i += 4) {
@@ -421,7 +426,9 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
               const g = imageData[i + 1];
               const b = imageData[i + 2];
               const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-              colorCounts[hex] = (colorCounts[hex] || 0) + 1;
+              if (hex !== maskColorHex) {
+                colorCounts[hex] = (colorCounts[hex] || 0) + 1;
+              }
             }
           }
 
@@ -468,7 +475,8 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
             filename,
             dominantColors,
             uniqueColors,
-            loadingToastId
+            loadingToastId,
+            maskColorHex
           });
           setShowTileImportSizeDialog(true);
           setIsSearchModalOpen(false);

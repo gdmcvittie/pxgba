@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { usePxShop, INITIAL_DEFAULT_TILES } from '../context/PxShopContext';
 import { BsPlus, BsTrash, BsChevronDown, BsChevronRight, BsCopy, BsPencil, BsSymmetryVertical, BsSymmetryHorizontal, BsFolder2Open, BsFiles } from 'react-icons/bs';
@@ -48,7 +48,7 @@ const ACTOR_DEFAULT_TILE_MAP = {
   grass_block: 59
 };
 
-const ActorDesignerModal = ({ actor, savedTiles, animations, onClose, onSave }) => {
+const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, layers, dimensions, animations, onClose, onSave }) => {
   const [designerW, setDesignerW] = useState(actor.width || 8);
   const [designerH, setDesignerH] = useState(actor.height || 8);
 
@@ -253,6 +253,151 @@ const ActorDesignerModal = ({ actor, savedTiles, animations, onClose, onSave }) 
   const [brushFlipH, setBrushFlipH] = useState(false);
   const [brushFlipV, setBrushFlipV] = useState(false);
 
+  const uniqueColorsInActor = useMemo(() => {
+    const usedTileIds = new Set();
+    const collectTileIds = (anim) => {
+      if (!anim || !anim.frames) return;
+      anim.frames.forEach(frame => {
+        if (Array.isArray(frame)) {
+          frame.forEach(t => {
+            if (t) {
+              const id = typeof t === 'object' ? t.id : t;
+              if (id !== null && id !== undefined) {
+                usedTileIds.add(String(id));
+              }
+            }
+          });
+        }
+      });
+    };
+    
+    collectTileIds(idleAnim);
+    collectTileIds(walkAnim);
+    collectTileIds(attackAnim);
+    customAnims.forEach(collectTileIds);
+
+    if (activeTileId !== null && activeTileId !== undefined) {
+      usedTileIds.add(String(activeTileId));
+    }
+
+    const colors = new Set();
+    usedTileIds.forEach(id => {
+      const tile = savedTiles.find(t => String(t.id) === id);
+      if (tile && tile.data) {
+        tile.data.forEach(row => {
+          row.forEach(color => {
+            if (color) {
+              colors.add(color);
+            }
+          });
+        });
+      }
+    });
+    return Array.from(colors);
+  }, [idleAnim, walkAnim, attackAnim, customAnims, savedTiles, activeTileId]);
+
+  const suggestedBgColor = useMemo(() => {
+    const usedTileIds = new Set();
+    const collectTileIds = (anim) => {
+      if (!anim || !anim.frames) return;
+      anim.frames.forEach(frame => {
+        if (Array.isArray(frame)) {
+          frame.forEach(t => {
+            if (t) {
+              const id = typeof t === 'object' ? t.id : t;
+              if (id !== null && id !== undefined) {
+                usedTileIds.add(String(id));
+              }
+            }
+          });
+        }
+      });
+    };
+    
+    collectTileIds(idleAnim);
+    collectTileIds(walkAnim);
+    collectTileIds(attackAnim);
+    customAnims.forEach(collectTileIds);
+
+    if (activeTileId !== null && activeTileId !== undefined) {
+      usedTileIds.add(String(activeTileId));
+    }
+
+    const cornerColorCounts = {};
+    usedTileIds.forEach(id => {
+      const tile = savedTiles.find(t => String(t.id) === id);
+      if (tile && tile.data) {
+        const corners = [
+          tile.data[0]?.[0],
+          tile.data[0]?.[7],
+          tile.data[7]?.[0],
+          tile.data[7]?.[7]
+        ];
+        corners.forEach(color => {
+          if (color) {
+            cornerColorCounts[color] = (cornerColorCounts[color] || 0) + 1;
+          }
+        });
+      }
+    });
+
+    let bestColor = null;
+    let maxCount = 0;
+    for (const color in cornerColorCounts) {
+      if (cornerColorCounts[color] > maxCount) {
+        maxCount = cornerColorCounts[color];
+        bestColor = color;
+      }
+    }
+    return bestColor;
+  }, [idleAnim, walkAnim, attackAnim, customAnims, savedTiles, activeTileId]);
+
+  const handleRemoveColor = (colorToRemove) => {
+    const usedTileIds = new Set();
+    const collectTileIds = (anim) => {
+      if (!anim || !anim.frames) return;
+      anim.frames.forEach(frame => {
+        if (Array.isArray(frame)) {
+          frame.forEach(t => {
+            if (t) {
+              const id = typeof t === 'object' ? t.id : t;
+              if (id !== null && id !== undefined) {
+                usedTileIds.add(String(id));
+              }
+            }
+          });
+        }
+      });
+    };
+    
+    collectTileIds(idleAnim);
+    collectTileIds(walkAnim);
+    collectTileIds(attackAnim);
+    customAnims.forEach(collectTileIds);
+
+    if (activeTileId !== null && activeTileId !== undefined) {
+      usedTileIds.add(String(activeTileId));
+    }
+    
+    if (usedTileIds.size === 0) return;
+    
+    const nextTiles = savedTiles.map(tile => {
+      if (usedTileIds.has(String(tile.id))) {
+        if (!tile.data) return tile;
+        const nextData = tile.data.map(row => 
+          row.map(color => color === colorToRemove ? null : color)
+        );
+        return { ...tile, data: nextData };
+      }
+      return tile;
+    });
+    
+    setSavedTiles(nextTiles);
+    if (saveHistory) {
+      saveHistory("Remove Tile Background Color", layers, dimensions, { savedTiles: nextTiles });
+    }
+  };
+
   const applyTile = (idx) => {
     setIsPlayingPreview(false);
     const next = [...getCurrentSpriteIds()];
@@ -431,7 +576,7 @@ const ActorDesignerModal = ({ actor, savedTiles, animations, onClose, onSave }) 
 
   return createPortal(
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 100000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onMouseUp={() => setIsDrawing(false)} onMouseLeave={() => setIsDrawing(false)}>
-      <div style={{ background: '#222', border: '1px solid #4CAF50', borderRadius: '8px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px', width: '550px' }}>
+      <div style={{ background: '#222', border: '1px solid #4CAF50', borderRadius: '8px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px', width: '650px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4CAF50', fontWeight: 'bold', fontSize: '14px', alignItems: 'center' }}>
           <span>Actor Designer: {actor.name}</span>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', fontSize: '11px', color: '#aaa', fontWeight: 'normal' }}>
@@ -466,7 +611,7 @@ const ActorDesignerModal = ({ actor, savedTiles, animations, onClose, onSave }) 
           </div>
         </div>
         <div style={{ display: 'flex', gap: '20px' }}>
-          <div style={{ width: '150px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ width: '150px', display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '600px', overflowY: 'auto', paddingRight: '4px' }}>
             {activeTab !== 'base' && (
               <div style={{ background: '#151515', border: '1px solid #333', borderRadius: '6px', padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
                 <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#4CAF50', alignSelf: 'flex-start' }}>Animation Preview</div>
@@ -623,6 +768,82 @@ const ActorDesignerModal = ({ actor, savedTiles, animations, onClose, onSave }) 
                 }}
               >Eraser</div>
             </div>
+            {uniqueColorsInActor.length > 0 && (
+              <div style={{
+                background: '#1a1a1a',
+                border: '1px solid #333',
+                borderRadius: '8px',
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.5)',
+                marginTop: '10px'
+              }}>
+                <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#4CAF50', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>Remove Bg Color</span>
+                  <span style={{ fontSize: '9px', color: '#888', fontWeight: 'normal' }}>Click to erase</span>
+                </div>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  gap: '6px',
+                  maxHeight: '100px',
+                  overflowY: 'auto',
+                  paddingRight: '2px'
+                }}>
+                  {uniqueColorsInActor.map(color => {
+                    const isSuggested = color === suggestedBgColor;
+                    return (
+                      <button
+                        key={color}
+                        onClick={() => {
+                          if (window.confirm(`Convert all pixels of color ${color} to transparent in this actor's tiles?`)) {
+                            handleRemoveColor(color);
+                          }
+                        }}
+                        style={{
+                          width: '100%',
+                          aspectRatio: '1',
+                          backgroundColor: color,
+                          border: isSuggested ? '2px solid #4CAF50' : '1px solid #444',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          padding: 0,
+                          position: 'relative',
+                          transition: 'transform 0.1s ease, border-color 0.1s ease',
+                          boxShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'scale(1.1)';
+                          if (!isSuggested) e.currentTarget.style.borderColor = '#4CAF50';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'scale(1)';
+                          if (!isSuggested) e.currentTarget.style.borderColor = '#444';
+                        }}
+                        title={isSuggested ? `Suggested BG color: ${color} (Click to remove)` : `Make color ${color} transparent`}
+                      >
+                        {isSuggested && (
+                          <div style={{
+                            position: 'absolute',
+                            top: '-3px',
+                            right: '-3px',
+                            background: '#4CAF50',
+                            color: '#fff',
+                            fontSize: '6px',
+                            padding: '1px 2px',
+                            borderRadius: '2px',
+                            lineHeight: '1',
+                            fontWeight: 'bold'
+                          }}>BG</div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <div style={{ display: 'flex', gap: '4px', overflowX: 'auto', borderBottom: '1px solid #444', paddingBottom: '4px' }}>
@@ -737,7 +958,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
     toggleGlobalActorInScene, setGlobalActorPosition, scenes, activeSceneId,
     activeActorId, setActiveActorId,
     setTool,
-    savedTiles,
+    savedTiles, setSavedTiles,
     recentColors,
     setEditingScriptActorId,
     setEditingCustomScriptId,
@@ -2851,6 +3072,10 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
             <ActorDesignerModal
               actor={actors.find(a => a.id === designerActorId) || globalActors.find(a => a.id === designerActorId)}
               savedTiles={savedTiles}
+              setSavedTiles={setSavedTiles}
+              saveHistory={saveHistory}
+              layers={layers}
+              dimensions={dimensions}
               animations={animations}
               onClose={() => setDesignerActorId(null)}
               onSave={(newSpriteIds, newW, newH, newIdle, newWalk, newAttack, newCustoms, newColX, newColY, newColW, newColH, newHFlip, newVFlip) => {
