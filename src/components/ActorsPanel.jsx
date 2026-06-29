@@ -6,6 +6,7 @@ import { ImMan } from 'react-icons/im';
 import TileIcon from './TileIcon';
 import PaletteColorPicker from './PaletteColorPicker';
 import { TbArrowsLeftRight, TbArrowsUpDown} from 'react-icons/tb';
+import { TileSelector } from './Dialogs';
 
 
 const ActorDesignerModal = ({ actor, savedTiles, animations, onClose, onSave }) => {
@@ -302,6 +303,77 @@ const ActorDesignerModal = ({ actor, savedTiles, animations, onClose, onSave }) 
     if (activeFrameIdx >= idx && activeFrameIdx > 0) setActiveFrameIdx(activeFrameIdx - 1);
   };
 
+  const handleTileSelect = (tileId) => {
+    setActiveTileId(tileId);
+    
+    if (tileId === null) return;
+    
+    const selectedTile = savedTiles.find(t => String(t.id) === String(tileId));
+    if (!selectedTile || !selectedTile.groupId) return;
+    
+    // Find all tiles in the same group
+    const groupTiles = savedTiles.filter(t => String(t.groupId) === String(selectedTile.groupId));
+    
+    // Only auto-populate if it's a multi-tile group (16x16 or 32x32)
+    if (groupTiles.length <= 1) return;
+    
+    // Determine group size from tile names
+    let groupCols = 1, groupRows = 1;
+    const firstName = groupTiles[0].name || '';
+    
+    if (/\(TL\)|\(TR\)|\(BL\)|\(BR\)/.test(firstName)) {
+      // 16x16 tile group (2x2 sub-tiles)
+      groupCols = 2;
+      groupRows = 2;
+    } else if (/\(\d_\d\)/.test(firstName)) {
+      // 32x32 tile group (4x4 sub-tiles)
+      groupCols = 4;
+      groupRows = 4;
+    } else {
+      return; // Unknown group format, don't auto-populate
+    }
+    
+    // Resize designer to fit the group
+    const newW = groupCols * 8;
+    const newH = groupRows * 8;
+    
+    // Sort tiles by position in group
+    const sortedTiles = new Array(groupCols * groupRows).fill(null);
+    for (const tile of groupTiles) {
+      const name = tile.name || '';
+      const tlMatch = name.match(/\((TL|TR|BL|BR)\)/);
+      if (tlMatch) {
+        const pos = { TL: 0, TR: 1, BL: 2, BR: 3 }[tlMatch[1]];
+        sortedTiles[pos] = tile;
+      } else {
+        const gridMatch = name.match(/\((\d)_(\d)\)/);
+        if (gridMatch) {
+          const row = parseInt(gridMatch[1]);
+          const col = parseInt(gridMatch[2]);
+          sortedTiles[row * groupCols + col] = tile;
+        }
+      }
+    }
+    
+    // Resize the designer
+    handleResize(newW, newH);
+    
+    // Fill the current frame with the group tiles
+    const newFrame = sortedTiles.map(tile => tile ? { id: tile.id, flipH: false, flipV: false } : null);
+    
+    // Update all animations with the new frame size and content
+    if (idleAnim) setIdleAnim(prev => ({ ...prev, frames: [newFrame] }));
+    if (walkAnim) setWalkAnim(prev => ({ ...prev, frames: prev.frames.map(() => newFrame) }));
+    if (attackAnim) setAttackAnim(prev => ({ ...prev, frames: prev.frames.map(() => newFrame) }));
+    setCustomAnims(prev => prev.map(a => ({ ...a, frames: a.frames.map(() => newFrame) })));
+    
+    // Set collision box to match the full sprite
+    setColX(0);
+    setColY(0);
+    setColW(newW);
+    setColH(newH);
+  };
+
   return createPortal(
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 100000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onMouseUp={() => setIsDrawing(false)} onMouseLeave={() => setIsDrawing(false)}>
       <div style={{ background: '#222', border: '1px solid #4CAF50', borderRadius: '8px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px', width: '550px' }}>
@@ -469,109 +541,33 @@ const ActorDesignerModal = ({ actor, savedTiles, animations, onClose, onSave }) 
                 Auto-fit to Sprite
               </button>
             </div>
-            <div style={{ fontSize: '11px', color: '#aaa' }}>Select Tile:</div>
-            {(() => {
-              const defaultTileIds = new Set(INITIAL_DEFAULT_TILES.map(t => t.id));
-              const defaultTiles = savedTiles.filter(t => defaultTileIds.has(t.id));
-              const customTiles = savedTiles.filter(t => !defaultTileIds.has(t.id));
-
-              const groupOrder = [];
-              const groupMap = {};
-              for (const tile of customTiles) {
-                const gid = tile.groupId || tile.id;
-                if (!groupMap[gid]) {
-                  groupMap[gid] = [];
-                  groupOrder.push(gid);
-                }
-                groupMap[gid].push(tile);
-              }
-
-              const getSubGridSize = (group) => {
-                if (group.length <= 1) return { cols: 1, rows: 1 };
-                const name = group[0].name || '';
-                if (/\(TL\)|\(TR\)|\(BL\)|\(BR\)/.test(name)) return { cols: 2, rows: 2 };
-                if (/\(\d_\d\)/.test(name)) {
-                  const indices = group.map(t => {
-                    const m = (t.name || '').match(/\((\d)_(\d)\)/);
-                    return m ? { y: parseInt(m[1]), x: parseInt(m[2]) } : null;
-                  }).filter(Boolean);
-                  const maxY = Math.max(...indices.map(i => i.y));
-                  const maxX = Math.max(...indices.map(i => i.x));
-                  return { cols: maxX + 1, rows: maxY + 1 };
-                }
-                return { cols: group.length, rows: 1 };
-              };
-
-              const getTilePosition = (tile, cols) => {
-                const name = tile.name || '';
-                const tlMatch = name.match(/\((TL|TR|BL|BR)\)/);
-                if (tlMatch) {
-                  const pos = { TL: 0, TR: 1, BL: 2, BR: 3 }[tlMatch[1]];
-                  return pos;
-                }
-                const gridMatch = name.match(/\((\d)_(\d)\)/);
-                if (gridMatch) {
-                  return parseInt(gridMatch[1]) * cols + parseInt(gridMatch[2]);
-                }
-                return 0;
-              };
-
-              const renderTile = (tile) => (
-                <div
-                  key={tile.id}
-                  onClick={() => setActiveTileId(tile.id)}
-                  style={{ width: '32px', height: '32px', border: activeTileId === tile.id ? '2px solid #4CAF50' : '1px solid #444', cursor: 'pointer' }}
-                  title={tile.name || "Unnamed Tile"}
-                >
-                  <TileIcon tile={tile} size={32} />
-                </div>
-              );
-
-              return (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', overflowY: 'auto', maxHeight: '300px', alignContent: 'flex-start' }}>
-                  <div
-                    onClick={() => setActiveTileId(null)}
-                    style={{ width: '32px', height: '32px', border: activeTileId === null ? '2px solid #4CAF50' : '1px solid #444', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#ff4444', background: '#111' }}
-                  >Eraser</div>
-                  {defaultTiles.map(tile => renderTile(tile))}
-                  {customTiles.length > 0 && defaultTiles.length > 0 && (
-                    <div style={{ width: '100%', height: '0', borderTop: '1px dashed #555', margin: '4px 0' }} />
-                  )}
-                  {groupOrder.map(gid => {
-                    const group = groupMap[gid];
-                    if (group.length <= 1) {
-                      return renderTile(group[0]);
-                    }
-                    const { cols, rows } = getSubGridSize(group);
-                    const sorted = new Array(cols * rows).fill(null);
-                    for (const tile of group) {
-                      const pos = getTilePosition(tile, cols);
-                      sorted[pos] = tile;
-                    }
-                    return (
-                      <div
-                        key={gid}
-                        style={{
-                          display: 'grid',
-                          gridTemplateColumns: `repeat(${cols}, 32px)`,
-                          gridTemplateRows: `repeat(${rows}, 32px)`,
-                          gap: '2px',
-                          padding: '4px',
-                          background: '#2a2a2a',
-                          border: '1px solid #555',
-                          borderRadius: '4px',
-                          justifyItems: 'center',
-                          alignItems: 'center'
-                        }}
-                        title={`Tile group (${cols}x${rows})`}
-                      >
-                        {sorted.map((tile, i) => tile ? renderTile(tile) : <div key={`empty-${i}`} style={{ width: '32px', height: '32px' }} />)}
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })()}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ fontSize: '11px', color: '#aaa' }}>Select Tile:</div>
+              <TileSelector
+                tiles={savedTiles}
+                value={activeTileId}
+                onChange={handleTileSelect}
+                hideLabel={true}
+                placeholder="Eraser"
+                style={{ width: '100%' }}
+              />
+              <div
+                onClick={() => handleTileSelect(null)}
+                style={{ 
+                  width: '100%', 
+                  padding: '6px', 
+                  border: activeTileId === null ? '2px solid #4CAF50' : '1px solid #444', 
+                  cursor: 'pointer', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  fontSize: '10px', 
+                  color: '#ff4444', 
+                  background: '#111',
+                  borderRadius: '3px'
+                }}
+              >Eraser</div>
+            </div>
           </div>
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
             <div style={{ display: 'flex', gap: '4px', overflowX: 'auto', borderBottom: '1px solid #444', paddingBottom: '4px' }}>
@@ -2541,20 +2537,25 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <label style={{ fontSize: '11px', color: '#aaa', width: '40px' }}>{actor.spriteIds && actor.spriteIds.length > 0 ? 'Design:' : 'Sprite:'}</label>
-                    <select value={actor.spriteIds && actor.spriteIds.length > 0 ? (actor.spriteId ? actor.spriteId : "custom_design") : (actor.spriteId || "")} onChange={(e) => {
-                      const val = e.target.value;
-                      if (val !== "custom_design") {
-                        updateActor(actor.id, 'spriteId', val ? Number(val) : null);
-                        updateActor(actor.id, 'spriteIds', null);
-                      }
-                    }} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px', minWidth: 0 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
                       {actor.spriteIds && actor.spriteIds.length > 0 ? (
-                        <option value="custom_design">Custom Design</option>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <div style={{ flex: 1, background: '#222', color: '#4CAF50', border: '1px solid #444', padding: '4px', fontSize: '11px', borderRadius: '3px' }}>Custom Design</div>
+                        </div>
                       ) : (
-                        <option value="">None (Solid Color)</option>
+                        <TileSelector
+                          tiles={savedTiles}
+                          value={actor.spriteId}
+                          onChange={(val) => {
+                            updateActor(actor.id, 'spriteId', val ? Number(val) : null);
+                            updateActor(actor.id, 'spriteIds', null);
+                          }}
+                          hideLabel={true}
+                          placeholder="None (Solid Color)"
+                          style={{ width: '100%' }}
+                        />
                       )}
-                      {savedTiles.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-                    </select>
+                    </div>
                     <button onClick={(e) => { e.stopPropagation(); setDesignerActorId(actor.id); }} style={{ background: '#0078d4', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '3px', cursor: 'pointer', fontSize: '10px', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
                       Design
                     </button>
