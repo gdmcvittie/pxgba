@@ -7,7 +7,46 @@ import TileIcon from './TileIcon';
 import PaletteColorPicker from './PaletteColorPicker';
 import { TbArrowsLeftRight, TbArrowsUpDown} from 'react-icons/tb';
 import { TileSelector } from './Dialogs';
-
+const ACTOR_DEFAULT_TILE_MAP = {
+  player: 1,
+  npc: 2,
+  platform: 3,
+  ladder: 4,
+  bonus: 5,
+  spring: 6,
+  hazard: 7,
+  enemy: 8,
+  destructible: 9,
+  key: 10,
+  door: 11,
+  powerup: 12,
+  sign: 13,
+  conveyor: 14,
+  checkpoint: 58,
+  turret: 31,
+  spawner: 32,
+  pushable: 20,
+  companion: 33,
+  pressure_plate: 34,
+  push_target: 35,
+  teleporter: 36,
+  crumbling_platform: 37,
+  ice_block: 38,
+  chest: 39,
+  torch: 40,
+  save_point: 42,
+  xp_orb: 43,
+  shield: 44,
+  ammo_pickup: 45,
+  grenade: 46,
+  wall_jump_surface: 48,
+  one_way_wall: 49,
+  magnet: 50,
+  gravity_flip_zone: 51,
+  boost_pad: 56,
+  checkpoint_gate: 57,
+  grass_block: 59
+};
 
 const ActorDesignerModal = ({ actor, savedTiles, animations, onClose, onSave }) => {
   const [designerW, setDesignerW] = useState(actor.width || 8);
@@ -193,7 +232,23 @@ const ActorDesignerModal = ({ actor, savedTiles, animations, onClose, onSave }) 
     setCustomAnims(prev => prev.map(a => ({ ...a, frames: a.frames.map(resizeFrame) })));
   };
 
-  const [activeTileId, setActiveTileId] = useState(savedTiles.length > 0 ? savedTiles[0].id : null);
+  const [activeTileId, setActiveTileId] = useState(() => {
+    if (actor.spriteIds && actor.spriteIds.length > 0) {
+      const first = actor.spriteIds[0];
+      if (first) {
+        const id = typeof first === 'object' ? first.id : first;
+        if (id !== null && id !== undefined) return id;
+      }
+    }
+    if (actor.spriteId !== null && actor.spriteId !== undefined) {
+      return actor.spriteId;
+    }
+    const defaultTileId = ACTOR_DEFAULT_TILE_MAP[actor.type];
+    if (defaultTileId !== undefined && defaultTileId !== null) {
+      return defaultTileId;
+    }
+    return savedTiles.length > 0 ? savedTiles[0].id : null;
+  });
   const [isDrawing, setIsDrawing] = useState(false);
   const [brushFlipH, setBrushFlipH] = useState(false);
   const [brushFlipV, setBrushFlipV] = useState(false);
@@ -823,46 +878,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
     }
   ];
 
-  const ACTOR_DEFAULT_TILE_MAP = {
-    player: 1,
-    npc: 2,
-    platform: 3,
-    ladder: 4,
-    bonus: 5,
-    spring: 6,
-    hazard: 7,
-    enemy: 8,
-    destructible: 9,
-    key: 10,
-    door: 11,
-    powerup: 12,
-    sign: 13,
-      conveyor: 14,
-      checkpoint: 58,
-      turret: 31,
-    spawner: 32,
-    pushable: 20,
-    companion: 33,
-    pressure_plate: 34,
-    push_target: 35,
-    teleporter: 36,
-    crumbling_platform: 37,
-    ice_block: 38,
-    chest: 39,
-    torch: 40,
-    save_point: 42,
-    xp_orb: 43,
-    shield: 44,
-    ammo_pickup: 45,
-    grenade: 46,
-    wall_jump_surface: 48,
-    one_way_wall: 49,
-    magnet: 50,
-    gravity_flip_zone: 51,
-    boost_pad: 56,
-    checkpoint_gate: 57,
-    grass_block: 59
-  };
+
 
   const ACTOR_TYPE_NAMES = {
     player: 'Player',
