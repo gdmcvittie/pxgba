@@ -43,8 +43,9 @@ const ScenesPanel = ({ isCollapsed, onToggle }) => {
 
   const [scriptPrompt, setScriptPrompt] = useState(null);
   const [scriptPromptName, setScriptPromptName] = useState('');
+  const [scriptPromptType, setScriptPromptType] = useState('start');
 
-  const confirmAddSceneScript = (sceneId, name) => {
+  const confirmAddSceneScript = (sceneId, name, type = 'start') => {
     const scene = scenes.find(s => s.id === sceneId);
     const sceneName = scene?.name || 'Unknown Scene';
     const existingGroup = customScripts.find(s => s.type === 'group' && s.name === sceneName);
@@ -68,12 +69,14 @@ const ScenesPanel = ({ isCollapsed, onToggle }) => {
     };
     nextScripts = [...nextScripts, newScript];
     setCustomScripts(nextScripts);
-    const nextScenes = scenes.map(s => s.id === sceneId ? { ...s, startScriptId: newScript.id } : s);
+    const scriptKey = type === 'finish' ? 'finishScriptId' : 'startScriptId';
+    const nextScenes = scenes.map(s => s.id === sceneId ? { ...s, [scriptKey]: newScript.id } : s);
     setScenes(nextScenes);
     saveHistory("Add Scene Script", layers, dimensions, { customScripts: nextScripts, scenes: nextScenes });
     setEditingCustomScriptId(newScript.id);
     setTool('script');
     setScriptPrompt(null);
+    setScriptPromptType('start');
   };
 
   const handleRenameComplete = () => {
@@ -1081,11 +1084,82 @@ const ScenesPanel = ({ isCollapsed, onToggle }) => {
                               V
                             </button>
                           </div>
+                          </div>
                         </div>
-                       </div>
-                     </>
-                   )}
-                   <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <label style={{ fontSize: '10px', color: '#aaa', textAlign: 'left' }}>Laps to Finish:</label>
+                          <input 
+                            className="nodrag" 
+                            type="number"
+                            step="1"
+                            min="1"
+                            value={scene.lapsToFinish ?? 3} 
+                            onChange={(e) => {
+                              const val = parseInt(e.target.value) || 1;
+                              const clampedVal = Math.max(1, val);
+                              const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, lapsToFinish: clampedVal } : s);
+                              setScenes(nextScenes);
+                              saveHistory("Set Scene Laps to Finish", layers, dimensions, { scenes: nextScenes });
+                            }}
+                            style={{ 
+                              width: '100%', 
+                              background: '#111', 
+                              color: '#fff', 
+                              border: '1px solid #555', 
+                              borderRadius: '4px', 
+                              padding: '6px', 
+                              fontSize: '11px', 
+                              outline: 'none',
+                              boxSizing: 'border-box'
+                            }}
+                          />
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <label style={{ fontSize: '10px', color: '#aaa' }}>On Finish:</label>
+                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <select 
+                                className="nodrag" 
+                                value={scene.finishScriptId || ''} 
+                                onChange={(e) => {
+                                  const val = e.target.value ? Number(e.target.value) : null;
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, finishScriptId: val } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Finish Script", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ 
+                                  width: '100%', 
+                                  background: '#111', 
+                                  color: '#fff', 
+                                  border: '1px solid #555', 
+                                  borderRadius: '4px', 
+                                  padding: '6px', 
+                                  fontSize: '11px', 
+                                  outline: 'none',
+                                  boxSizing: 'border-box'
+                                }}
+                              >
+                                 <option value="">[None]</option>
+                                  {customScripts && customScripts.filter(cs => cs.type !== 'group').length > 0 && (
+                                    <optgroup label="Custom Scripts">
+                                      {customScripts.filter(cs => cs.type !== 'group').map(cs => (
+                                        <option key={cs.id} value={cs.id}>{cs.name}</option>
+                                      ))}
+                                    </optgroup>
+                                  )}
+                              </select>
+                            </div>
+                            {scene.finishScriptId && (
+                              <button onClick={() => { setEditingCustomScriptId(scene.finishScriptId); setTool('script'); }} style={{ background: 'transparent', color: '#888', border: 'none', padding: '2px 4px', cursor: 'pointer', fontSize: '13px', display: 'flex', alignItems: 'center', borderRadius: '3px', flexShrink: 0 }} title="Edit Script"><BsPencil /></button>
+                            )}
+                            {!scene.finishScriptId && (
+                              <button onClick={() => { setScriptPromptName('On Finish'); setScriptPrompt(scene.id); setScriptPromptType('finish'); }} style={{ background: 'transparent', color: '#4CAF50', border: 'none', padding: '2px 4px', cursor: 'pointer', fontSize: '15px', display: 'flex', alignItems: 'center', borderRadius: '3px', flexShrink: 0 }} title="Add Script"><BsPlus /></button>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                       <label style={{ fontSize: '10px', color: '#aaa', textAlign: 'left' }}>Scene Music:</label>
                       <select 
                         className="nodrag" 
@@ -1143,7 +1217,7 @@ const ScenesPanel = ({ isCollapsed, onToggle }) => {
                             <button onClick={() => { setEditingCustomScriptId(scene.startScriptId); setTool('script'); }} style={{ background: 'transparent', color: '#888', border: 'none', padding: '2px 4px', cursor: 'pointer', fontSize: '13px', display: 'flex', alignItems: 'center', borderRadius: '3px', flexShrink: 0 }} title="Edit Script"><BsPencil /></button>
                           )}
                           {!scene.startScriptId && (
-                            <button onClick={() => { setScriptPromptName('On Scene Start'); setScriptPrompt(scene.id); }} style={{ background: 'transparent', color: '#4CAF50', border: 'none', padding: '2px 4px', cursor: 'pointer', fontSize: '15px', display: 'flex', alignItems: 'center', borderRadius: '3px', flexShrink: 0 }} title="Add Script"><BsPlus /></button>
+                            <button onClick={() => { setScriptPromptName('On Scene Start'); setScriptPrompt(scene.id); setScriptPromptType('start'); }} style={{ background: 'transparent', color: '#4CAF50', border: 'none', padding: '2px 4px', cursor: 'pointer', fontSize: '15px', display: 'flex', alignItems: 'center', borderRadius: '3px', flexShrink: 0 }} title="Add Script"><BsPlus /></button>
                           )}
                         </div>
                    </div>
@@ -1216,7 +1290,7 @@ const ScenesPanel = ({ isCollapsed, onToggle }) => {
               onChange={e => setScriptPromptName(e.target.value)}
               onKeyDown={e => {
                 if (e.key === 'Enter' && scriptPromptName.trim()) {
-                  confirmAddSceneScript(scriptPrompt, scriptPromptName.trim());
+                  confirmAddSceneScript(scriptPrompt, scriptPromptName.trim(), scriptPromptType);
                 } else if (e.key === 'Escape') {
                   setScriptPrompt(null);
                 }
@@ -1225,7 +1299,7 @@ const ScenesPanel = ({ isCollapsed, onToggle }) => {
             />
             <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
               <button onClick={() => setScriptPrompt(null)} style={{ background: '#333', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Cancel</button>
-              <button onClick={() => { if (scriptPromptName.trim()) confirmAddSceneScript(scriptPrompt, scriptPromptName.trim()); }} style={{ background: '#4CAF50', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>Create</button>
+              <button onClick={() => { if (scriptPromptName.trim()) confirmAddSceneScript(scriptPrompt, scriptPromptName.trim(), scriptPromptType); }} style={{ background: '#4CAF50', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>Create</button>
             </div>
           </div>
         </div>
