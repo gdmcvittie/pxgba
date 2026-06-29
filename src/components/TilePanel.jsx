@@ -278,7 +278,8 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
         const filePromises = [];
 
         zip.forEach((relativePath, zipEntry) => {
-          if (!zipEntry.dir && relativePath.match(/\.(png|jpg|jpeg|gif|bmp)$/i)) {
+          const filename = relativePath.split('/').pop();
+          if (!zipEntry.dir && relativePath.match(/\.(png|jpg|jpeg|gif|bmp)$/i) && !filename.startsWith('.')) {
             filePromises.push((async () => {
               const blob = await zipEntry.async('blob');
               const objectUrl = URL.createObjectURL(blob);

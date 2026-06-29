@@ -151,6 +151,14 @@ export async function generateButano(ctx) {
           mainCppDefinitions += `#define ${safeVarName} (${min} + rng.get_int(${range}))\n`;
         }
       });
+      // Auto-declare PLAYER_KEYS if there are keys or doors in any scene
+      const hasKeysOrDoors = scenes.some(s => {
+        const sceneActors = [...(s.actors || []), ...globalActors].filter(a => a && a.type !== 'group');
+        return sceneActors.some(a => a.type === 'key' || a.type === 'door');
+      });
+      if (hasKeysOrDoors && !variables.some(v => v.name === 'PLAYER_KEYS')) {
+        mainCppDefinitions += `int PLAYER_KEYS = 0;\n`;
+      }
       mainCppDefinitions += '\n';
 
       mainCppDefinitions += `
@@ -2248,7 +2256,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 actorLogicCode += `                    actor_${j}_sprite.set_visible(false);\n`;
                 const targetsValidDoor = key.unlockDoorActorId && sActors.some(act => act && act.type === 'door' && act.id === key.unlockDoorActorId);
                 if (!targetsValidDoor) {
-                  actorLogicCode += `                    global_keys++;\n`;
+                  actorLogicCode += `                    PLAYER_KEYS++;\n`;
                 }
                 actorLogicCode += `                    bn::sound_items::snd_square_440_100.play();\n`;
                 let keyScriptCode = generateScriptLogic(key.script, j, key.width, key.height, undefined, undefined, scCtx);
@@ -2305,8 +2313,8 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                   }
                   actorLogicCode += `                    }\n`;
                 } else {
-                  actorLogicCode += `                    if (global_keys > 0) {\n`;
-                  actorLogicCode += `                        global_keys--;\n`;
+                  actorLogicCode += `                    if (PLAYER_KEYS > 0) {\n`;
+                  actorLogicCode += `                        PLAYER_KEYS--;\n`;
                   actorLogicCode += `                        actor_${j}_active = false;\n`;
                   actorLogicCode += `                        actor_${j}_sprite.set_visible(false);\n`;
                   actorLogicCode += `                        bn::sound_items::snd_square_440_100.play();\n`;
@@ -5328,7 +5336,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
         sceneCode += bgDeclarations;
         const _hasKeys = sActors.some(a => a && a.type === 'key' || a.type === 'door');
         const _hasGrenades = sActors.some(a => a && a.type === 'grenade');
-        sceneCode += `    int proj_x[20];\n    int proj_y[20];\n    bn::fixed proj_dx[20];\n    bn::fixed proj_dy[20];\n    bool proj_active[20];\n    bool proj_from_player[20];\n    bool proj_bouncing[20];\n    int proj_bounce_count[20];\n    for(int i=0; i<20; ++i) {\n        proj_active[i] = false;\n        proj_from_player[i] = false;\n        proj_bouncing[i] = false;\n        proj_bounce_count[i] = 0;\n    }\n    bn::optional<bn::sprite_ptr> proj_sprites[20];\n    ${_hasKeys ? 'int global_keys = 0;\n' : ''}\n`;
+        sceneCode += `    int proj_x[20];\n    int proj_y[20];\n    bn::fixed proj_dx[20];\n    bn::fixed proj_dy[20];\n    bool proj_active[20];\n    bool proj_from_player[20];\n    bool proj_bouncing[20];\n    int proj_bounce_count[20];\n    for(int i=0; i<20; ++i) {\n        proj_active[i] = false;\n        proj_from_player[i] = false;\n        proj_bouncing[i] = false;\n        proj_bounce_count[i] = 0;\n    }\n    bn::optional<bn::sprite_ptr> proj_sprites[20];\n`;
         if (_hasGrenades) {
           sceneCode += `    int grenade_x[5];\n    int grenade_y[5];\n    bn::fixed grenade_dx[5];\n    bn::fixed grenade_dy[5];\n    bool grenade_active[5];\n    int grenade_timer[5];\n    for(int i=0; i<5; ++i) {\n        grenade_active[i] = false;\n        grenade_timer[i] = 0;\n    }\n    bn::optional<bn::sprite_ptr> grenade_sprites[5];\n`;
         }

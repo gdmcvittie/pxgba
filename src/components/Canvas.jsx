@@ -233,6 +233,56 @@ const Canvas = () => {
             ctx.fillText('Player Start', (actor.x + actor.width / 2) * zoom, (actor.y + actor.height) * zoom + 12);
           }
         }
+
+        // Draw movement range visualization for selected moving actors
+        if ((tool === 'actor' || tool === 'spawn') && activeActorId === actor.id && (actor.isMoving || (actor.type === 'enemy' && (actor.enemyBehavior || 'patrol') === 'patrol'))) {
+          const moveAmount = actor.moveAmount ?? actor.enemyRange ?? 0;
+          const moveDir = actor.moveDir || actor.enemyDir || 'horizontal';
+          
+          if (moveAmount > 0) {
+            ctx.save();
+            ctx.globalAlpha = 0.3;
+            ctx.lineWidth = 2 * zoom;
+            ctx.setLineDash([4 * zoom, 4 * zoom]);
+            
+            if (moveDir === 'horizontal') {
+              // Draw horizontal movement range
+              const rangeX = actor.x - moveAmount;
+              const rangeY = actor.y;
+              const rangeW = actor.width + moveAmount * 2;
+              const rangeH = actor.height;
+              
+              ctx.fillStyle = '#4CAF50';
+              ctx.fillRect(rangeX * zoom, rangeY * zoom, rangeW * zoom, rangeH * zoom);
+              ctx.strokeStyle = '#4CAF50';
+              ctx.strokeRect(rangeX * zoom, rangeY * zoom, rangeW * zoom, rangeH * zoom);
+            } else if (moveDir === 'vertical') {
+              // Draw vertical movement range
+              const rangeX = actor.x;
+              const rangeY = actor.y - moveAmount;
+              const rangeW = actor.width;
+              const rangeH = actor.height + moveAmount * 2;
+              
+              ctx.fillStyle = '#2196F3';
+              ctx.fillRect(rangeX * zoom, rangeY * zoom, rangeW * zoom, rangeH * zoom);
+              ctx.strokeStyle = '#2196F3';
+              ctx.strokeRect(rangeX * zoom, rangeY * zoom, rangeW * zoom, rangeH * zoom);
+            } else if (moveDir === 'bounce') {
+              // Draw bounce movement range (both directions)
+              const rangeX = actor.x - moveAmount;
+              const rangeY = actor.y - moveAmount;
+              const rangeW = actor.width + moveAmount * 2;
+              const rangeH = actor.height + moveAmount * 2;
+              
+              ctx.fillStyle = '#FF9800';
+              ctx.fillRect(rangeX * zoom, rangeY * zoom, rangeW * zoom, rangeH * zoom);
+              ctx.strokeStyle = '#FF9800';
+              ctx.strokeRect(rangeX * zoom, rangeY * zoom, rangeW * zoom, rangeH * zoom);
+            }
+            
+            ctx.restore();
+          }
+        }
       });
 
       // Render triggers if tool is trigger

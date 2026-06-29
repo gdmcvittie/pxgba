@@ -4,3 +4,14 @@
 - replaced simple tile name only dropdown with a searchable and scrollable tile selector in HUD settings
 - fixed canvas clicking when an actor is selected adding another actor to the scene
 - adds support for 16x16 and 32x32 tile imports
+- adds a movement range visualization for actors and enemies
+- when an actor is selected and has movement enabled, a colored overlay shows the movement range 
+    - green overlay for horizontal movement
+    - blue overlay for vertical movement
+    - orange overlay for bounce movement
+    - works for both actors and enemies (checks moveAmount and enemyRange properties)
+    - visualization only appears when: 
+        - using the actor or spawn tool
+        - the actor is selected (activeActorId matches)
+        - the actor has isMoving enabled
+        - the movement range is greater than 0
