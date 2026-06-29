@@ -2536,28 +2536,23 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                   )}
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <label style={{ fontSize: '11px', color: '#aaa', width: '40px' }}>{actor.spriteIds && actor.spriteIds.length > 0 ? 'Design:' : 'Sprite:'}</label>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      {actor.spriteIds && actor.spriteIds.length > 0 ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <div style={{ flex: 1, background: '#222', color: '#4CAF50', border: '1px solid #444', padding: '4px', fontSize: '11px', borderRadius: '3px' }}>Custom Design</div>
-                        </div>
-                      ) : (
-                        <TileSelector
-                          tiles={savedTiles}
-                          value={actor.spriteId}
-                          onChange={(val) => {
-                            updateActor(actor.id, 'spriteId', val ? Number(val) : null);
-                            updateActor(actor.id, 'spriteIds', null);
-                          }}
-                          hideLabel={true}
-                          placeholder="None (Solid Color)"
-                          style={{ width: '100%' }}
-                        />
-                      )}
-                    </div>
-                    <button onClick={(e) => { e.stopPropagation(); setDesignerActorId(actor.id); }} style={{ background: '#0078d4', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '3px', cursor: 'pointer', fontSize: '10px', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
-                      Design
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setDesignerActorId(actor.id); }}
+                      style={{
+                        flex: 1,
+                        background: '#0078d4',
+                        color: '#fff',
+                        border: 'none',
+                        padding: '6px',
+                        fontSize: '11px',
+                        outline: 'none',
+                        borderRadius: '3px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        textAlign: 'center'
+                      }}
+                    >
+                      Design Sprite
                     </button>
                   </div>
 

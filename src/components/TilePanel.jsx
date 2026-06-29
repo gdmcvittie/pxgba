@@ -98,7 +98,55 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
   const [filesList, setFilesList] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [zipImages, setZipImages] = useState([]);
+  const [filePreviews, setFilePreviews] = useState({});
   const [nameFilter, setNameFilter] = useState('');
+
+  useEffect(() => {
+    if (!filesList || filesList.length === 0) return;
+
+    filesList.forEach(file => {
+      const isZip = file.filename.toLowerCase().endsWith('.zip');
+      if (isZip) {
+        (async () => {
+          try {
+            const proxyUrl = `${API_BASE_URL}/proxy-oga?url=${encodeURIComponent(file.url)}`;
+            const response = await fetch(proxyUrl);
+            if (!response.ok) return;
+            const buffer = await response.arrayBuffer();
+            const zip = await JSZip.loadAsync(buffer);
+            let firstImgUrl = null;
+
+            for (const relativePath of Object.keys(zip.files)) {
+              const zipEntry = zip.files[relativePath];
+              const filename = relativePath.split('/').pop();
+              if (!zipEntry.dir && relativePath.match(/\.(png|jpg|jpeg|gif|bmp)$/i) && !filename.startsWith('.')) {
+                const ext = filename.split('.').pop().toLowerCase();
+                const mimeTypes = {
+                  'png': 'image/png',
+                  'jpg': 'image/jpeg',
+                  'jpeg': 'image/jpeg',
+                  'gif': 'image/gif',
+                  'bmp': 'image/bmp',
+                  'webp': 'image/webp'
+                };
+                const mimeType = mimeTypes[ext] || 'image/png';
+                const fileData = await zipEntry.async('uint8array');
+                const blob = new Blob([fileData], { type: mimeType });
+                firstImgUrl = URL.createObjectURL(blob);
+                break;
+              }
+            }
+
+            if (firstImgUrl) {
+              setFilePreviews(prev => ({ ...prev, [file.url]: firstImgUrl }));
+            }
+          } catch (e) {
+            console.error("Failed to generate background zip preview:", e);
+          }
+        })();
+      }
+    });
+  }, [filesList]);
 
   // Search fetching & parsing logic
   const handleSearch = async () => {
@@ -281,7 +329,18 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
           const filename = relativePath.split('/').pop();
           if (!zipEntry.dir && relativePath.match(/\.(png|jpg|jpeg|gif|bmp)$/i) && !filename.startsWith('.')) {
             filePromises.push((async () => {
-              const blob = await zipEntry.async('blob');
+              const ext = filename.split('.').pop().toLowerCase();
+              const mimeTypes = {
+                'png': 'image/png',
+                'jpg': 'image/jpeg',
+                'jpeg': 'image/jpeg',
+                'gif': 'image/gif',
+                'bmp': 'image/bmp',
+                'webp': 'image/webp'
+              };
+              const mimeType = mimeTypes[ext] || 'image/png';
+              const fileData = await zipEntry.async('uint8array');
+              const blob = new Blob([fileData], { type: mimeType });
               const objectUrl = URL.createObjectURL(blob);
               return {
                 name: relativePath,
@@ -441,6 +500,12 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
         URL.revokeObjectURL(img.url);
       }
     });
+    Object.values(filePreviews).forEach(url => {
+      if (url && url.startsWith('blob:')) {
+        URL.revokeObjectURL(url);
+      }
+    });
+    setFilePreviews({});
     setIsSearchModalOpen(false);
     setFilesList([]);
     setSelectedFile(null);
@@ -460,6 +525,12 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
     if (selectedFile && filesList.length > 1) {
       setSelectedFile(null);
     } else {
+      Object.values(filePreviews).forEach(url => {
+        if (url && url.startsWith('blob:')) {
+          URL.revokeObjectURL(url);
+        }
+      });
+      setFilePreviews({});
       setSelectedFile(null);
       setFilesList([]);
       setSelectedTileset(null);
@@ -1104,9 +1175,21 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                             {isZip ? (
-                              <BsFileEarmarkZip style={{ color: '#ffb900' }} size={24} />
+                              <div style={{ width: '100px', height: '100px', background: '#0d0d0e', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden', border: '1px solid #222', flexShrink: 0 }}>
+                                <img
+                                  src={filePreviews[file.url] || `${API_BASE_URL}/proxy-oga?url=${encodeURIComponent(selectedTileset.previewUrl)}`}
+                                  alt="Preview"
+                                  style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', imageRendering: 'pixelated' }}
+                                />
+                              </div>
                             ) : isImg ? (
-                              <BsFileEarmarkImage style={{ color: '#0078d4' }} size={24} />
+                              <div style={{ width: '100px', height: '100px', background: '#0d0d0e', borderRadius: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden', border: '1px solid #222', flexShrink: 0 }}>
+                                <img
+                                  src={`${API_BASE_URL}/proxy-oga?url=${encodeURIComponent(file.url)}`}
+                                  alt="Preview"
+                                  style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', imageRendering: 'pixelated' }}
+                                />
+                              </div>
                             ) : (
                               <BsFileEarmarkText style={{ color: '#a0a0a0' }} size={24} />
                             )}
@@ -1168,11 +1251,13 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
                           padding: '12px',
                           display: 'flex',
                           flexDirection: 'column',
+                          justifyContent: 'space-between',
                           gap: '12px',
-                          cursor: 'pointer',
-                          transition: 'transform 0.15s'
+                          boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+                          transition: 'transform 0.15s',
+                          cursor: 'pointer'
                         }}
-                        onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = '#4CAF50'; }}
+                        onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = '#444'; }}
                         onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = '#333'; }}
                       >
                         <div style={{
@@ -1196,25 +1281,29 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
                             }}
                           />
                         </div>
-                        <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={img.name}>
-                          {img.name}
-                        </div>
-                        <button
-                          style={{
-                            background: '#4CAF50',
-                            color: '#fff',
-                            border: 'none',
-                            borderRadius: '4px',
-                            padding: '6px 12px',
-                            fontWeight: 'bold',
-                            fontSize: '11px',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          Import This Sheet
-                        </button>
-                      </div>
-                    ))}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#fff', height: '36px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', lineHeight: '1.4' }} title={img.name}>
+                            {img.name}
+                          </div>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleImportImage(img.url, img.name); }}
+                            style={{
+                              width: '100%',
+                              background: '#0078d4',
+                              color: '#fff',
+                              border: 'none',
+                              borderRadius: '4px',
+                              padding: '6px 12px',
+                              cursor: 'pointer',
+                              fontSize: '11px',
+                              fontWeight: 'bold'
+                        }}
+                      >
+                        Import This Sheet
+                      </button>
+                    </div>
+                  </div>
+                ))}
                   </div>
                 </div>
               )}

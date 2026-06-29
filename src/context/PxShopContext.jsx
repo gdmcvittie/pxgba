@@ -245,6 +245,7 @@ export const PxShopProvider = ({ children }) => {
   const [pendingTileImportFile, setPendingTileImportFile] = useState(null);
   const [pendingOgaImportData, setPendingOgaImportData] = useState(null);
   const [ogaImportTilesWide, setOgaImportTilesWide] = useState(null);
+  const [removeDuplicates, setRemoveDuplicates] = useState(false);
 
   // Sidebar panel layout states
   const [activeCol1Panel, setActiveCol1Panel] = useState(() => {
@@ -6332,7 +6333,7 @@ export const PxShopProvider = ({ children }) => {
 
             if (hasPixels) {
               const fingerprint = JSON.stringify(tileData);
-              if (!existingTileFingerprints.has(fingerprint)) {
+              if (!!removeDuplicates === false || !existingTileFingerprints.has(fingerprint)) {
                 newTiles.push({
                   id: generateUniqueId(),
                   groupId,
@@ -6387,7 +6388,7 @@ export const PxShopProvider = ({ children }) => {
 
             if (hasPixels) {
               const fingerprint = JSON.stringify(tileData);
-              if (!existingTileFingerprints.has(fingerprint)) {
+              if (!!removeDuplicates === false || !existingTileFingerprints.has(fingerprint)) {
                 newTiles.push({
                   id: generateUniqueId(),
                   groupId,
@@ -6430,7 +6431,7 @@ export const PxShopProvider = ({ children }) => {
 
           if (hasPixels) {
             const fingerprint = JSON.stringify(tileData);
-            if (!existingTileFingerprints.has(fingerprint)) {
+            if (!!removeDuplicates === false || !existingTileFingerprints.has(fingerprint)) {
               newTiles.push({
                 id: generateUniqueId(),
                 groupId,
@@ -6463,7 +6464,7 @@ export const PxShopProvider = ({ children }) => {
     } else {
       toast.success("No new unique tiles found.", { id: loadingToastId });
     }
-  }, [savedTiles, scenes, layers, recentColors, dimensions, saveHistory, currentColor, secondaryColor, hudSettings, creditsBgColor, creditsTextColor, textSettings, setCurrentColor, setSecondaryColor, setHudSettings, setCreditsBgColor, setCreditsTextColor, setTextSettings]);
+  }, [savedTiles, scenes, layers, recentColors, dimensions, saveHistory, currentColor, secondaryColor, hudSettings, creditsBgColor, creditsTextColor, textSettings, setCurrentColor, setSecondaryColor, setHudSettings, setCreditsBgColor, setCreditsTextColor, setTextSettings, removeDuplicates]);
 
   const executeTileImport = useCallback((choice) => {
     if (!pendingTileImportData) return;
@@ -8135,6 +8136,7 @@ const handleWizardCreate = () => {
     pendingTileImportFile, setPendingTileImportFile,
     pendingOgaImportData, setPendingOgaImportData,
     ogaImportTilesWide, setOgaImportTilesWide,
+    removeDuplicates, setRemoveDuplicates,
     processTileImport,
     executeTileImport,
     importTilesDirectly,

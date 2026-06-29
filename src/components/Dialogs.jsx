@@ -402,6 +402,7 @@ const Dialogs = () => {
     setOgaImportTilesWide,
     processTileImport,
     importTilesDirectly,
+    removeDuplicates, setRemoveDuplicates,
 
     // Game Assets Export
     showExportDialog, setShowExportDialog,
@@ -449,6 +450,12 @@ const Dialogs = () => {
       setImportMode('scene');
     }
   }, [showPaletteConvertDialog, pendingConvertData]);
+
+  useEffect(() => {
+    if (showTileImportSizeDialog) {
+      setRemoveDuplicates(false);
+    }
+  }, [showTileImportSizeDialog, setRemoveDuplicates]);
 
   const emulatorCanvasRef = useRef(null);
   const audioContextRef = useRef(null);
@@ -2485,6 +2492,19 @@ const Dialogs = () => {
 
             <div style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.5' }}>
               Select the grid size of the tiles in the spritesheet you are importing:
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#ccc', marginTop: '-5px' }}>
+              <input
+                type="checkbox"
+                id="remove-duplicates-checkbox"
+                checked={removeDuplicates}
+                onChange={(e) => setRemoveDuplicates(e.target.checked)}
+                style={{ accentColor: '#4CAF50', cursor: 'pointer' }}
+              />
+              <label htmlFor="remove-duplicates-checkbox" style={{ cursor: 'pointer', userSelect: 'none' }}>
+                Remove duplicates (filters identical tiles)
+              </label>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
