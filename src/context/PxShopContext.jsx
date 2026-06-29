@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useRef, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import JSZip from 'jszip';
 import { readPsd, writePsd } from 'ag-psd';
@@ -588,6 +588,122 @@ export const PxShopProvider = ({ children }) => {
 
     setWarnings(newWarnings);
   }, [layers, actors, dimensions, hudSettings, scenes, activeSceneId]);
+
+  const estimatedRomSize = useMemo(() => {
+    const GBA_MAX_ROM = 32 * 1024 * 1024;
+    let totalBytes = 0;
+
+    const BASE_OVERHEAD = 256 * 1024;
+    totalBytes += BASE_OVERHEAD;
+
+    const realScenes = scenes.filter(s => s.type !== 'group');
+    realScenes.forEach(scene => {
+      const sDims = scene.dimensions || dimensions;
+      const sLayers = scene.id === activeSceneId
+        ? layers
+        : (scene.frames && scene.frames.length > 0
+          ? scene.frames[0]?.layers || []
+          : scene.layers || []);
+
+      const groupVis = {};
+      sLayers.forEach(l => {
+        if (l.type === 'group') groupVis[String(l.id)] = l.visible;
+      });
+
+      const flat = Array.from({ length: sDims.h }, () => Array(sDims.w).fill(null));
+      [...sLayers].reverse().forEach(layer => {
+        if (layer.type === 'group' || !layer.data) return;
+        const gVis = layer.groupId ? groupVis[String(layer.groupId)] !== false : true;
+        if (!layer.visible || !gVis) return;
+        for (let y = 0; y < sDims.h; y++) {
+          const row = layer.data[y];
+          if (!row) continue;
+          for (let x = 0; x < sDims.w; x++) {
+            const c = row[x];
+            if (c) flat[y][x] = c;
+          }
+        }
+      });
+
+      const uTiles = new Set();
+      const c = Math.floor(sDims.w / 8);
+      const r = Math.floor(sDims.h / 8);
+      for (let ty = 0; ty < r; ty++) {
+        for (let tx = 0; tx < c; tx++) {
+          let key = '';
+          for (let py = 0; py < 8; py++) {
+            const y = ty * 8 + py;
+            for (let px = 0; px < 8; px++) {
+              const x = tx * 8 + px;
+              key += (flat[y]?.[x] || '.') + ',';
+            }
+          }
+          uTiles.add(key);
+        }
+      }
+
+      totalBytes += uTiles.size * 64;
+      totalBytes += c * r * 2;
+      totalBytes += 512;
+    });
+
+    savedTiles.forEach(tile => {
+      if (!tile || !tile.data) return;
+      const th = tile.data.length;
+      const tw = tile.data[0] ? tile.data[0].length : 0;
+      const tilesX = Math.ceil(tw / 8);
+      const tilesY = Math.ceil(th / 8);
+      totalBytes += tilesX * tilesY * 32;
+    });
+
+    totalBytes += 512;
+
+    realScenes.forEach(scene => {
+      const sActors = scene.id === activeSceneId ? actors : (scene.actors || []);
+      sActors.forEach(actor => {
+        const st = savedTiles.find(t => String(t.id) === String(actor.spriteId));
+        if (!st || !st.data) return;
+        const aw = actor.width || (st.data[0] ? st.data[0].length : 16);
+        const ah = actor.height || (st.data ? st.data.length : 16);
+        const atx = Math.ceil(aw / 8);
+        const aty = Math.ceil(ah / 8);
+        totalBytes += atx * aty * 32;
+      });
+    });
+
+    musicTracks.forEach(track => {
+      if (track.isComposed && track.composerData) {
+        const sl = track.composerData.songLength || 64;
+        const np = Math.ceil(sl / 64);
+        totalBytes += 1084 + (np * 1024) + 1344;
+      } else if (track.data) {
+        const parts = track.data.split(',');
+        if (parts.length > 1) {
+          totalBytes += Math.ceil(parts[1].length * 0.75);
+        }
+      }
+    });
+
+    totalBytes += 32 * 1024;
+
+    const uniqueColors = new Set();
+    layers.forEach(l => {
+      if (l.type === 'group' || !l.visible || !l.data) return;
+      l.data.forEach(row => {
+        row.forEach(color => {
+          if (color) uniqueColors.add(color);
+        });
+      });
+    });
+    const numPalettes = Math.max(1, Math.ceil(uniqueColors.size / 16));
+    totalBytes += numPalettes * 32;
+
+    return {
+      bytes: Math.min(totalBytes, GBA_MAX_ROM),
+      maxBytes: GBA_MAX_ROM,
+      percent: Math.min(100, (totalBytes / GBA_MAX_ROM) * 100),
+    };
+  }, [scenes, layers, actors, dimensions, savedTiles, musicTracks, activeSceneId]);
 
   const activeLayer = layers.find(l => l.id === activeLayerId);
   const canvasRef = useRef(null);
@@ -8332,7 +8448,8 @@ const handleWizardCreate = () => {
     activeCol2Panel, setActiveCol2Panel,
     activeCol3Panel, setActiveCol3Panel,
     showWelcomeTour, setShowWelcomeTour,
-    hudSettings, setHudSettings
+    hudSettings, setHudSettings,
+    estimatedRomSize
   };
 
   return (
