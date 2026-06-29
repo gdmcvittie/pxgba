@@ -6,6 +6,13 @@ const VariablesPanel = ({ isCollapsed, onToggle }) => {
   const { variables, setVariables, saveHistory, layers, dimensions } = usePxShop();
   const [editingGroupId, setEditingGroupId] = useState(null);
 
+  // Default PLAYER variables (IDs 1-8) and PLAYER group (ID 9) are protected
+  const DEFAULT_PLAYER_VAR_IDS = [1, 2, 3, 4, 5, 6, 7, 8];
+  const DEFAULT_PLAYER_GROUP_ID = 9;
+
+  const isDefaultPlayerVar = (id) => DEFAULT_PLAYER_VAR_IDS.includes(id);
+  const isDefaultPlayerGroup = (id) => id === DEFAULT_PLAYER_GROUP_ID;
+
   const handleRenameComplete = () => {
     setEditingGroupId(null);
   };
@@ -46,6 +53,12 @@ const VariablesPanel = ({ isCollapsed, onToggle }) => {
 
   const deleteVariable = (e, id) => {
     e.stopPropagation();
+    
+    // Prevent deletion of default PLAYER variables and PLAYER group
+    if (isDefaultPlayerVar(id) || isDefaultPlayerGroup(id)) {
+      return;
+    }
+    
     const targetVar = variables.find(v => v.id === id);
     let newVars;
     if (targetVar && targetVar.type === 'group') {
@@ -203,9 +216,11 @@ const VariablesPanel = ({ isCollapsed, onToggle }) => {
                   <button title="Duplicate Group" onClick={(e) => duplicateVariable(e, v)} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}><BsFiles size={14} /></button>
                   <button title="Move Up" onClick={(e) => moveVariableUp(e, v.id)} disabled={index === 0} style={{ background: 'none', border: 'none', color: index === 0 ? '#555' : '#fff', cursor: index === 0 ? 'default' : 'pointer', padding: 0 }}>▲</button>
                   <button title="Move Down" onClick={(e) => moveVariableDown(e, v.id)} disabled={index === variables.length - 1} style={{ background: 'none', border: 'none', color: index === variables.length - 1 ? '#555' : '#fff', cursor: index === variables.length - 1 ? 'default' : 'pointer', padding: 0 }}>▼</button>
-                  <button onClick={(e) => deleteVariable(e, v.id)} style={{ background: 'none', border: 'none', color: '#ff4444', cursor: 'pointer', padding: 0, marginLeft: '5px', display: 'flex', alignItems: 'center' }}>
-                    <BsTrash />
-                  </button>
+                  {!isDefaultPlayerGroup(v.id) && (
+                    <button onClick={(e) => deleteVariable(e, v.id)} style={{ background: 'none', border: 'none', color: '#ff4444', cursor: 'pointer', padding: 0, marginLeft: '5px', display: 'flex', alignItems: 'center' }}>
+                      <BsTrash />
+                    </button>
+                  )}
                 </div>
               </div>
             );
