@@ -593,7 +593,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
 
   return createPortal(
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 100000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onMouseUp={() => setIsDrawing(false)} onMouseLeave={() => setIsDrawing(false)}>
-      <div style={{ background: '#222', border: '1px solid #4CAF50', borderRadius: '8px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px', width: '650px' }}>
+      <div style={{ background: '#222', border: '1px solid #4CAF50', borderRadius: '8px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px', width: '50%' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4CAF50', fontWeight: 'bold', fontSize: '14px', alignItems: 'center' }}>
           <span>Actor Designer: {actor.name}</span>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', fontSize: '11px', color: '#aaa', fontWeight: 'normal' }}>
@@ -628,7 +628,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
           </div>
         </div>
         <div style={{ display: 'flex', gap: '20px' }}>
-          <div style={{ width: '150px', display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '600px', overflowY: 'auto', paddingRight: '4px' }}>
+          <div style={{ width: '35%', display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '600px', overflowY: 'auto', paddingRight: '4px' }}>
             {activeTab !== 'base' && (
               <div style={{ background: '#151515', border: '1px solid #333', borderRadius: '6px', padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
                 <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#4CAF50', alignSelf: 'flex-start' }}>Animation Preview</div>
