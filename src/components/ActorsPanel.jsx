@@ -187,14 +187,30 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
 
   const setCurrentSpriteIds = (next) => {
     if (activeTab === 'idle') {
-      setIdleAnim(prev => { const nextAnim = { ...prev }; nextAnim.frames[activeFrameIdx] = next; return nextAnim; });
+      setIdleAnim(prev => {
+        const nextFrames = [...prev.frames];
+        nextFrames[activeFrameIdx] = next;
+        return { ...prev, frames: nextFrames };
+      });
     } else if (activeTab === 'walk') {
-      setWalkAnim(prev => { const nextAnim = { ...prev }; nextAnim.frames[activeFrameIdx] = next; return nextAnim; });
+      setWalkAnim(prev => {
+        const nextFrames = [...prev.frames];
+        nextFrames[activeFrameIdx] = next;
+        return { ...prev, frames: nextFrames };
+      });
     } else if (activeTab === 'attack') {
-      setAttackAnim(prev => { const nextAnim = { ...prev }; nextAnim.frames[activeFrameIdx] = next; return nextAnim; });
+      setAttackAnim(prev => {
+        const nextFrames = [...prev.frames];
+        nextFrames[activeFrameIdx] = next;
+        return { ...prev, frames: nextFrames };
+      });
     } else {
       setCustomAnims(prev => prev.map(a => {
-        if (a.id === activeTab) { const nextAnim = { ...a }; nextAnim.frames[activeFrameIdx] = next; return nextAnim; }
+        if (a.id === activeTab) {
+          const nextFrames = [...a.frames];
+          nextFrames[activeFrameIdx] = next;
+          return { ...a, frames: nextFrames };
+        }
         return a;
       }));
     }
@@ -490,7 +506,11 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
     else if (activeTab === 'walk') setWalkAnim(updateAnimFrames);
     else if (activeTab === 'attack') setAttackAnim(updateAnimFrames);
     else setCustomAnims(prev => prev.map(a => a.id === activeTab ? updateAnimFrames(a) : a));
-    setActiveFrameIdx(getCurrentAnim().frames.length);
+    
+    const currentAnim = getCurrentAnim();
+    if (currentAnim && currentAnim.frames) {
+      setActiveFrameIdx(currentAnim.frames.length);
+    }
   };
 
   const deleteFrame = (idx) => {
@@ -561,11 +581,8 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
     // Fill the current frame with the group tiles
     const newFrame = sortedTiles.map(tile => tile ? { id: tile.id, flipH: false, flipV: false } : null);
     
-    // Update all animations with the new frame size and content
-    if (idleAnim) setIdleAnim(prev => ({ ...prev, frames: [newFrame] }));
-    if (walkAnim) setWalkAnim(prev => ({ ...prev, frames: prev.frames.map(() => newFrame) }));
-    if (attackAnim) setAttackAnim(prev => ({ ...prev, frames: prev.frames.map(() => newFrame) }));
-    setCustomAnims(prev => prev.map(a => ({ ...a, frames: a.frames.map(() => newFrame) })));
+    // Update the active frame of the active tab/animation with the new group tiles
+    setCurrentSpriteIds(newFrame);
     
     // Set collision box to match the full sprite
     setColX(0);
