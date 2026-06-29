@@ -391,6 +391,10 @@ export const PxShopProvider = ({ children }) => {
   const [creditsMusicId, setCreditsMusicId] = useState(null);
   const [creditsEffect, setCreditsEffect] = useState('none');
 
+  // Save tracking
+  const [lastSavedTime, setLastSavedTime] = useState(null);
+  const [saveWarningShown, setSaveWarningShown] = useState(false);
+
   const addOgaArtist = useCallback((name) => {
     if (!name || name === 'Unknown') return;
     setIncludedArtists(prev => prev.some(a => a.name === name) ? prev : [...prev, { name, source: 'opengameart' }]);
@@ -6962,6 +6966,8 @@ export const PxShopProvider = ({ children }) => {
     link.download = `PxGBA-${Date.now()}.pxg`;
     link.click();
     URL.revokeObjectURL(url);
+    setLastSavedTime(Date.now());
+    setSaveWarningShown(false);
   };
 
   const pollCompileJob = async (jobId, toastId, onProgress) => {
@@ -7425,6 +7431,8 @@ export const PxShopProvider = ({ children }) => {
         activeLayerId: project.scenes ? (project.activeLayerId && restoredLayers.find(l => l.id === project.activeLayerId) ? project.activeLayerId : (restoredLayers.find(l => l.type !== 'group')?.id || restoredLayers[0].id)) : (newLayers.find(l => l.type !== 'group')?.id || newLayers[0].id)
       });
     }, 10);
+    setLastSavedTime(Date.now());
+    setSaveWarningShown(false);
   }, [saveHistory]);
 
   const handleProjectUpload = (e) => {
@@ -7695,6 +7703,8 @@ export const PxShopProvider = ({ children }) => {
     setShowNewProjectDialog(false);
     setLevelGenSceneId(newScene.id);
     setShowLevelGenDialog(true);
+    setLastSavedTime(Date.now());
+    setSaveWarningShown(false);
   };
 
 const handleWizardCreate = () => {
@@ -8098,6 +8108,8 @@ const handleWizardCreate = () => {
       });
       newScenes.forEach(s => { delete s._autoGenConfig; });
     }, 100);
+    setLastSavedTime(Date.now());
+    setSaveWarningShown(false);
   };
 
   const renderText = useCallback(async (settings, targetLayerId = null) => {
@@ -8449,7 +8461,9 @@ const handleWizardCreate = () => {
     activeCol3Panel, setActiveCol3Panel,
     showWelcomeTour, setShowWelcomeTour,
     hudSettings, setHudSettings,
-    estimatedRomSize
+    estimatedRomSize,
+    lastSavedTime,
+    saveWarningShown, setSaveWarningShown
   };
 
   return (
