@@ -611,6 +611,36 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
           code += `${indent}actor_${targetActorIdx}_sprite.set_visible(false);\n`;
         }
       }
+    } else if (label === 'Play Animation' || currentNode.data?.actionType === 'play_animation') {
+      const targetActorId = currentNode.data.targetActorId;
+      const animId = currentNode.data.animId;
+      const targetActorIdx = targetActorId ? sActors.findIndex(a => a && String(a.id) === String(targetActorId)) : actorIndex;
+      
+      if (targetActorIdx !== -1) {
+        const targetActor = sActors[targetActorIdx];
+        let stateId = 0;
+        let lockFrames = 0;
+        
+        if (targetActor.walkAnimId && String(targetActor.walkAnimId) === String(animId)) {
+          stateId = 1;
+        } else if (targetActor.__customAnimData) {
+          const cad = targetActor.__customAnimData.find(c => String(c.animId) === String(animId));
+          if (cad) {
+            stateId = cad.stateId;
+            const fps = cad.fps > 0 ? cad.fps : 8;
+            const framesCount = cad.indices ? cad.indices.length : 1;
+            lockFrames = framesCount * Math.floor(60 / fps);
+          }
+        }
+        
+        code += `${indent}actor_${targetActorIdx}_anim_state = ${stateId};\n`;
+        code += `${indent}actor_${targetActorIdx}_anim_idx = 0;\n`;
+        code += `${indent}actor_${targetActorIdx}_anim_timer = 0;\n`;
+        code += `${indent}actor_${targetActorIdx}_anim_lock = ${lockFrames};\n`;
+        if (targetActor.type === 'player' && targetActor.playerAnimFireProjectile) {
+          code += `${indent}actor_${targetActorIdx}_anim_fired = false;\n`;
+        }
+      }
     } else if (label === 'Move Camera' || currentNode.data?.actionType === 'move_camera') {
       const targetType = currentNode.data?.targetType || 'custom';
       if (targetType === 'reset') {

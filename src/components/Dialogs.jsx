@@ -2507,7 +2507,7 @@ const Dialogs = () => {
               </label>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'row', gap: '10px' }}>
+            <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px' }}>
               <button
                 onClick={() => {
                   if (pendingOgaImportData) {
@@ -2531,7 +2531,8 @@ const Dialogs = () => {
                   fontSize: '12px',
                   boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
                   transition: 'background 0.2s',
-                  flexGrow: 1
+                  flexGrow: 1,
+                  minWidth: '120px'
                 }}
                 onMouseEnter={e => e.currentTarget.style.backgroundColor = '#45a049'}
                 onMouseLeave={e => e.currentTarget.style.backgroundColor = '#4CAF50'}
@@ -2562,7 +2563,8 @@ const Dialogs = () => {
                   fontSize: '12px',
                   boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
                   transition: 'background 0.2s',
-                  flexGrow: 1
+                  flexGrow: 1,
+                  minWidth: '120px'
                 }}
                 onMouseEnter={e => e.currentTarget.style.backgroundColor = '#005a9e'}
                 onMouseLeave={e => e.currentTarget.style.backgroundColor = '#0078d4'}
@@ -2593,12 +2595,77 @@ const Dialogs = () => {
                   fontSize: '12px',
                   boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
                   transition: 'background 0.2s',
-                  flexGrow: 1
+                  flexGrow: 1,
+                  minWidth: '120px'
                 }}
                 onMouseEnter={e => e.currentTarget.style.backgroundColor = '#e68a00'}
                 onMouseLeave={e => e.currentTarget.style.backgroundColor = '#ff9800'}
               >
                 32x32 Tiles
+              </button>
+
+              <button
+                onClick={() => {
+                  if (pendingOgaImportData) {
+                    importTilesDirectly(pendingOgaImportData, 'keep', 48);
+                    setOgaImportTilesWide(Math.floor(pendingOgaImportData.w / 8));
+                    setPendingOgaImportData(null);
+                  } else {
+                    processTileImport(pendingTileImportFile, 48);
+                    setPendingTileImportFile(null);
+                  }
+                  setShowTileImportSizeDialog(false);
+                }}
+                style={{
+                  background: '#9c27b0',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '12px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                  transition: 'background 0.2s',
+                  flexGrow: 1,
+                  minWidth: '120px'
+                }}
+                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#7b1fa2'}
+                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#9c27b0'}
+              >
+                48x48 Tiles
+              </button>
+
+              <button
+                onClick={() => {
+                  if (pendingOgaImportData) {
+                    importTilesDirectly(pendingOgaImportData, 'keep', 64);
+                    setOgaImportTilesWide(Math.floor(pendingOgaImportData.w / 8));
+                    setPendingOgaImportData(null);
+                  } else {
+                    processTileImport(pendingTileImportFile, 64);
+                    setPendingTileImportFile(null);
+                  }
+                  setShowTileImportSizeDialog(false);
+                }}
+                style={{
+                  background: '#e91e63',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  padding: '12px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                  transition: 'background 0.2s',
+                  flexGrow: 1,
+                  minWidth: '120px'
+                }}
+                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#c2185b'}
+                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#e91e63'}
+              >
+                64x64 Tiles
               </button>
             </div>
           </div>

@@ -6531,6 +6531,116 @@ export const PxShopProvider = ({ children }) => {
           }
         }
       }
+    } else if (tileSize === 48) {
+      const cols48 = Math.floor(w / 48);
+      const rows48 = Math.floor(h / 48);
+
+      for (let ty = 0; ty < rows48; ty++) {
+        for (let tx = 0; tx < cols48; tx++) {
+          const groupId = generateUniqueId();
+          const subTileOffsets = [];
+          for (let sY = 0; sY < 6; sY++) {
+            for (let sX = 0; sX < 6; sX++) {
+              subTileOffsets.push({
+                dx: sX * 8,
+                dy: sY * 8,
+                suffix: `${sY}_${sX}`
+              });
+            }
+          }
+
+          for (const offset of subTileOffsets) {
+            const tileData = Array(8).fill(null).map(() => Array(8).fill(null));
+            let hasPixels = false;
+
+            for (let py = 0; py < 8; py++) {
+              for (let px = 0; px < 8; px++) {
+                const srcX = tx * 48 + offset.dx + px;
+                const srcY = ty * 48 + offset.dy + py;
+                const i = (srcY * w + srcX) * 4;
+                const r = imageData[i], g = imageData[i + 1], b = imageData[i + 2], a = imageData[i + 3];
+                const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+
+                if (a < 128 || hex === maskColorHex) {
+                  tileData[py][px] = null;
+                } else {
+                  tileData[py][px] = colorMap[hex] || null;
+                  hasPixels = true;
+                }
+              }
+            }
+
+            if (hasPixels) {
+              const fingerprint = JSON.stringify(tileData);
+              if (!!removeDuplicates === false || !existingTileFingerprints.has(fingerprint)) {
+                newTiles.push({
+                  id: generateUniqueId(),
+                  groupId,
+                  name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${offset.suffix})`,
+                  collisionType: "none",
+                  data: tileData
+                });
+                existingTileFingerprints.add(fingerprint);
+              }
+            }
+          }
+        }
+      }
+    } else if (tileSize === 64) {
+      const cols64 = Math.floor(w / 64);
+      const rows64 = Math.floor(h / 64);
+
+      for (let ty = 0; ty < rows64; ty++) {
+        for (let tx = 0; tx < cols64; tx++) {
+          const groupId = generateUniqueId();
+          const subTileOffsets = [];
+          for (let sY = 0; sY < 8; sY++) {
+            for (let sX = 0; sX < 8; sX++) {
+              subTileOffsets.push({
+                dx: sX * 8,
+                dy: sY * 8,
+                suffix: `${sY}_${sX}`
+              });
+            }
+          }
+
+          for (const offset of subTileOffsets) {
+            const tileData = Array(8).fill(null).map(() => Array(8).fill(null));
+            let hasPixels = false;
+
+            for (let py = 0; py < 8; py++) {
+              for (let px = 0; px < 8; px++) {
+                const srcX = tx * 64 + offset.dx + px;
+                const srcY = ty * 64 + offset.dy + py;
+                const i = (srcY * w + srcX) * 4;
+                const r = imageData[i], g = imageData[i + 1], b = imageData[i + 2], a = imageData[i + 3];
+                const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+
+                if (a < 128 || hex === maskColorHex) {
+                  tileData[py][px] = null;
+                } else {
+                  tileData[py][px] = colorMap[hex] || null;
+                  hasPixels = true;
+                }
+              }
+            }
+
+            if (hasPixels) {
+              const fingerprint = JSON.stringify(tileData);
+              if (!!removeDuplicates === false || !existingTileFingerprints.has(fingerprint)) {
+                newTiles.push({
+                  id: generateUniqueId(),
+                  groupId,
+                  name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${offset.suffix})`,
+                  collisionType: "none",
+                  data: tileData
+                });
+                existingTileFingerprints.add(fingerprint);
+              }
+            }
+          }
+        }
+      }
     } else {
       const cols = Math.floor(w / 8);
       const rows = Math.floor(h / 8);

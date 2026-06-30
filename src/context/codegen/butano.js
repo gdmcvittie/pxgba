@@ -92,6 +92,9 @@ export async function generateButano(ctx) {
         globalSpriteColors.push([0, 0, 0, 255]);
       }
 
+      const globalBppMode = globalSpriteColors.length > 16 ? "bpp_8" : "bpp_4";
+      const globalColorsCount = globalSpriteColors.length;
+
       let mainCppIncludes = `#include "bn_core.h"\n#include "bn_log.h"\n#include "bn_random.h"\n#include "bn_camera_ptr.h"\n#include "bn_keypad.h"\n#include "bn_optional.h"\n#include "bn_sprite_ptr.h"\n#include "bn_sprite_tiles_ptr.h"\n#include "bn_sprite_palette_ptr.h"\n#include "bn_sprite_affine_mat_ptr.h"\n#include "bn_music.h"\n#include "bn_bg_palettes.h"\n#include "bn_string_view.h"\n#include "bn_sprite_item.h"\n#include "bn_vector.h"\n`;
       mainCppIncludes += `#include "bn_affine_mat_attributes.h"\n#include "bn_affine_bg_ptr.h"\n#include "bn_regular_bg_ptr.h"\n#include "bn_sram.h"\n`;
       let hasMusic = false;
@@ -1316,8 +1319,8 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             type: "sprite",
             width: validW,
             height: validH,
-            bpp_mode: bppMode,
-            colors_count: colorsCount
+            bpp_mode: globalBppMode,
+            colors_count: globalColorsCount
           }, null, 2));
           zip.file(`graphics/${actName}.grit`, `-m!`);
           mainCppIncludes += `#include "bn_sprite_items_${actName}.h"\n`;
@@ -6386,8 +6389,8 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
               type: "sprite",
               width: 8,
               height: 8,
-              bpp_mode: bppMode,
-              colors_count: colorsCount
+              bpp_mode: globalBppMode,
+              colors_count: globalColorsCount
             }, null, 2));
             zip.file(`graphics/hud_item_${i}_tile_sprite.grit`, `-m!`);
             mainCppIncludes += `#include "bn_sprite_items_hud_item_${i}_tile_sprite.h"\n`;
@@ -6438,8 +6441,8 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
             type: "sprite",
             width: 8,
             height: 8,
-            bpp_mode: bppMode,
-            colors_count: colorsCount
+            bpp_mode: globalBppMode,
+            colors_count: globalColorsCount
           }, null, 2));
           zip.file(`graphics/hud_heart_sprite.grit`, `-m!`);
           mainCppIncludes += `#include "bn_sprite_items_hud_heart_sprite.h"\n`;
@@ -6477,8 +6480,8 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
             type: "sprite",
             width: 8,
             height: 8,
-            bpp_mode: bppMode,
-            colors_count: colorsCount
+            bpp_mode: globalBppMode,
+            colors_count: globalColorsCount
           }, null, 2));
           zip.file(`graphics/hud_bonus_sprite.grit`, `-m!`);
           mainCppIncludes += `#include "bn_sprite_items_hud_bonus_sprite.h"\n`;
@@ -6528,8 +6531,8 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
               type: "sprite",
               width: 8,
               height: 8,
-              bpp_mode: bppMode,
-              colors_count: colorsCount
+              bpp_mode: globalBppMode,
+              colors_count: globalColorsCount
             }, null, 2));
             zip.file(`graphics/${name}.grit`, `-m!`);
             mainCppIncludes += `#include "bn_sprite_items_${name}.h"\n`;
@@ -6584,8 +6587,8 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
           type: "sprite",
           width: 8,
           height: 8,
-          bpp_mode: bppMode,
-          colors_count: colorsCount
+          bpp_mode: globalBppMode,
+          colors_count: globalColorsCount
         }, null, 2));
         zip.file(`graphics/${pName}.grit`, `-m!`);
         mainCppIncludes += `#include "bn_sprite_items_${pName}.h"\n`;

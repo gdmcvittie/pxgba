@@ -546,9 +546,18 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
       groupCols = 2;
       groupRows = 2;
     } else if (/\(\d_\d\)/.test(firstName)) {
-      // 32x32 tile group (4x4 sub-tiles)
-      groupCols = 4;
-      groupRows = 4;
+      // Grid tile group (32x32, 48x48, 64x64, etc.)
+      let maxRow = 0;
+      let maxCol = 0;
+      for (const tile of groupTiles) {
+        const gridMatch = (tile.name || '').match(/\((\d)_(\d)\)/);
+        if (gridMatch) {
+          maxRow = Math.max(maxRow, parseInt(gridMatch[1]));
+          maxCol = Math.max(maxCol, parseInt(gridMatch[2]));
+        }
+      }
+      groupCols = maxCol + 1;
+      groupRows = maxRow + 1;
     } else {
       return; // Unknown group format, don't auto-populate
     }
@@ -607,12 +616,13 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
                 }}
                 style={{ background: '#111', color: '#fff', border: '1px solid #444', padding: '2px 4px', borderRadius: '3px', outline: 'none' }}
               >
-                {!["8x8", "16x16", "32x32", "64x64", "16x8", "32x8", "32x16", "64x32", "8x16", "8x32", "16x32", "32x64"].includes(`${designerW}x${designerH}`) && (
+                {!["8x8", "16x16", "32x32", "48x48", "64x64", "16x8", "32x8", "32x16", "64x32", "8x16", "8x32", "16x32", "32x64"].includes(`${designerW}x${designerH}`) && (
                   <option value={`${designerW}x${designerH}`}>{designerW} x {designerH} (Invalid)</option>
                 )}
                 <option value="8x8">8 x 8</option>
                 <option value="16x16">16 x 16</option>
                 <option value="32x32">32 x 32</option>
+                <option value="48x48">48 x 48</option>
                 <option value="64x64">64 x 64</option>
                 <option value="16x8">16 x 8</option>
                 <option value="32x8">32 x 8</option>
@@ -633,8 +643,8 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
               <div style={{ background: '#151515', border: '1px solid #333', borderRadius: '6px', padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
                 <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#4CAF50', alignSelf: 'flex-start' }}>Animation Preview</div>
                 <div style={{
-                  width: '64px',
-                  height: '64px',
+                  width: '96px',
+                  height: '96px',
                   background: 'transparent',
                   border: '1px solid #444',
                   display: 'flex',
