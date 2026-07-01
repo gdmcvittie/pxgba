@@ -1,5 +1,7 @@
 - added health pickup item actor
 - added grouped tiles for large sprites naming
+- fixed bitmap bug on jump landing transition to other animation
+- fixed hud text color
 
 
 

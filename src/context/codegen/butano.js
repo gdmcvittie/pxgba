@@ -1297,6 +1297,10 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 }
               }
             });
+            // GCC Linker identical-data-merge defeat pixel - always add one
+            // per actor so no two actors produce byte-identical BMPs.
+            sCtx.fillStyle = `rgb(${defeatR}, ${defeatG}, ${defeatB})`;
+            sCtx.fillRect(0, 0, 1, 1);
           }
           const imgDataTemp = sCtx.getImageData(0, 0, sCanvas.width, sCanvas.height);
           const uniqueColorsSet = new Set();
@@ -1309,7 +1313,8 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
           const colorsCount = Math.min(256, Math.max(16, Math.ceil(uniqueCount / 16) * 16));
           const bppMode = colorsCount > 16 ? "bpp_8" : "bpp_4";
 
-          const bmpBlob = canvasToIndexedBmpBlob(sCanvas, globalSpriteColors);
+          const forceBpp = globalBppMode === 'bpp_8' ? 8 : 4;
+          const bmpBlob = canvasToIndexedBmpBlob(sCanvas, globalSpriteColors, forceBpp);
           zip.file(`graphics/${actName}.bmp`, bmpBlob);
           // Butano's SpriteItem derives graphics_count from the BMP's full
           // dimensions divided by the per-graphic dimensions in the JSON.
@@ -6398,7 +6403,8 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
             const colorsCount = Math.min(256, Math.max(16, Math.ceil(uniqueCount / 16) * 16));
             const bppMode = colorsCount > 16 ? "bpp_8" : "bpp_4";
 
-            const bmpBlob = canvasToIndexedBmpBlob(tileCanvas, globalSpriteColors);
+            const forceBpp = globalBppMode === 'bpp_8' ? 8 : 4;
+            const bmpBlob = canvasToIndexedBmpBlob(tileCanvas, globalSpriteColors, forceBpp);
             zip.file(`graphics/hud_item_${i}_tile_sprite.bmp`, bmpBlob);
             zip.file(`graphics/hud_item_${i}_tile_sprite.json`, JSON.stringify({
               type: "sprite",
@@ -6450,7 +6456,8 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
           const colorsCount = Math.min(256, Math.max(16, Math.ceil(uniqueCount / 16) * 16));
           const bppMode = colorsCount > 16 ? "bpp_8" : "bpp_4";
 
-          const bmpBlob = canvasToIndexedBmpBlob(hCanvas, globalSpriteColors);
+          const forceBpp = globalBppMode === 'bpp_8' ? 8 : 4;
+          const bmpBlob = canvasToIndexedBmpBlob(hCanvas, globalSpriteColors, forceBpp);
           zip.file(`graphics/hud_heart_sprite.bmp`, bmpBlob);
           zip.file(`graphics/hud_heart_sprite.json`, JSON.stringify({
             type: "sprite",
@@ -6489,7 +6496,8 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
           const colorsCount = Math.min(256, Math.max(16, Math.ceil(uniqueCount / 16) * 16));
           const bppMode = colorsCount > 16 ? "bpp_8" : "bpp_4";
 
-          const bmpBlob = canvasToIndexedBmpBlob(bCanvas, globalSpriteColors);
+          const forceBpp = globalBppMode === 'bpp_8' ? 8 : 4;
+          const bmpBlob = canvasToIndexedBmpBlob(bCanvas, globalSpriteColors, forceBpp);
           zip.file(`graphics/hud_bonus_sprite.bmp`, bmpBlob);
           zip.file(`graphics/hud_bonus_sprite.json`, JSON.stringify({
             type: "sprite",
@@ -6538,7 +6546,8 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
           const colorsCount = Math.min(256, Math.max(16, Math.ceil(uniqueCount / 16) * 16));
           const bppMode = colorsCount > 16 ? "bpp_8" : "bpp_4";
 
-          const bmpBlob = canvasToIndexedBmpBlob(cCanvas, globalSpriteColors);
+          const forceBpp = globalBppMode === 'bpp_8' ? 8 : 4;
+          const bmpBlob = canvasToIndexedBmpBlob(cCanvas, globalSpriteColors, forceBpp);
           const name = getCharSpriteItemName(char);
           if (name) {
             zip.file(`graphics/${name}.bmp`, bmpBlob);
@@ -6596,7 +6605,8 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
         const colorsCount = Math.min(256, Math.max(16, Math.ceil(uniqueCount / 16) * 16));
         const bppMode = colorsCount > 16 ? "bpp_8" : "bpp_4";
 
-        const bmpBlob = canvasToIndexedBmpBlob(bCanvas, globalSpriteColors);
+        const forceBpp = globalBppMode === 'bpp_8' ? 8 : 4;
+        const bmpBlob = canvasToIndexedBmpBlob(bCanvas, globalSpriteColors, forceBpp);
         zip.file(`graphics/${pName}.bmp`, bmpBlob);
         zip.file(`graphics/${pName}.json`, JSON.stringify({
           type: "sprite",
