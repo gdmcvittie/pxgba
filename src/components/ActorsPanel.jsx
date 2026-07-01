@@ -49,6 +49,16 @@ const ACTOR_DEFAULT_TILE_MAP = {
   health_pickup: 21
 };
 
+const ACTOR_TYPE_TO_GROUP = {
+  key: 'Pickups', bonus: 'Pickups', powerup: 'Pickups', ammo_pickup: 'Pickups',
+  xp_orb: 'Pickups', shield: 'Pickups', grenade: 'Pickups', magnet: 'Pickups',
+  health_pickup: 'Pickups',
+  enemy: 'Enemies', turret: 'Enemies',
+  hazard: 'Hazards',
+  platform: 'Platforms', ladder: 'Platforms', crumbling_platform: 'Platforms',
+  npc: 'NPCs', companion: 'NPCs',
+};
+
 const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, layers, dimensions, animations, onClose, onSave }) => {
   const [designerW, setDesignerW] = useState(actor.width || 8);
   const [designerH, setDesignerH] = useState(actor.height || 8);
@@ -1208,7 +1218,32 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
       script: { nodes: [], edges: [] },
       ...(type === 'xp_orb' ? { xpVarName: 'PLAYER_XP', xpValue: 1 } : {})
     };
-    const nextActors = [...actors, newActor];
+
+    const targetGroupName = ACTOR_TYPE_TO_GROUP[type];
+    if (targetGroupName) {
+      const targetGroup = actors.find(a => a.type === 'group' && a.name === targetGroupName);
+      if (targetGroup) {
+        newActor.groupId = targetGroup.id;
+      }
+    } else if (type !== 'player') {
+      const miscGroup = actors.find(a => a.type === 'group' && a.name === 'Misc');
+      if (miscGroup) {
+        newActor.groupId = miscGroup.id;
+      }
+    }
+
+    let nextActors;
+    if (newActor.groupId) {
+      const groupIndex = actors.findIndex(a => a.id === newActor.groupId);
+      let insertIndex = groupIndex + 1;
+      while (insertIndex < actors.length && String(actors[insertIndex].groupId) === String(newActor.groupId)) {
+        insertIndex++;
+      }
+      nextActors = [...actors];
+      nextActors.splice(insertIndex, 0, newActor);
+    } else {
+      nextActors = [...actors, newActor];
+    }
     setActors(nextActors);
     setActiveActorId(newActor.id);
     setTool('actor');
