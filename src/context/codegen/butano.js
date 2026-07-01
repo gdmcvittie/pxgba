@@ -47,6 +47,33 @@ export async function generateButano(ctx) {
       const globalSpriteColors = [[255, 0, 255, 0]]; // Magenta for transparent key
       const globalSpriteColorSet = new Set();
 
+      // Pre-calculate defeat colors for all actors across all scenes
+      // Add them FIRST to ensure they're always in the palette
+      const allActors = [];
+      scenes.forEach(s => {
+        if (s.type === 'INTRO' || s.type === 'PAUSE') return;
+        const sceneGlobalIds = s.globalActorIds || [];
+        const scenePositions = s.globalActorPositions || {};
+        const sceneGlobalActors = (globalActors || [])
+          .filter(a => sceneGlobalIds.includes(a.id) && !(s.type === 'POINTNCLICK' && a.type === 'player'))
+          .map(a => {
+            const override = scenePositions[a.id];
+            return override ? { ...a, x: override.x, y: override.y } : a;
+          });
+        const sActors = [...sceneGlobalActors, ...(s.actors || [])].filter(a => a.type !== 'group');
+        allActors.push(...sActors);
+      });
+
+      // Add defeat colors for each actor (up to 255 actors to stay within palette limit)
+      const defeatColors = [];
+      for (let i = 0; i < Math.min(allActors.length, 255); i++) {
+        const defeatR = 254;
+        const defeatG = ((i * 13) % 253) + 1;
+        const defeatB = ((i * 47 + 7) % 253) + 1;
+        defeatColors.push([defeatR, defeatG, defeatB, 255]);
+        globalSpriteColors.push([defeatR, defeatG, defeatB, 255]);
+      }
+
       // Ensure white is always in the set (for HUD text)
       globalSpriteColorSet.add('255,255,255');
 
@@ -92,8 +119,8 @@ export async function generateButano(ctx) {
         globalSpriteColors.push([0, 0, 0, 255]);
       }
 
-      const globalBppMode = globalSpriteColors.length > 16 ? "bpp_8" : "bpp_4";
-      const globalColorsCount = globalSpriteColors.length;
+      let globalBppMode = globalSpriteColors.length > 16 ? "bpp_8" : "bpp_4";
+      let globalColorsCount = globalSpriteColors.length;
 
       let mainCppIncludes = `#include "bn_core.h"\n#include "bn_log.h"\n#include "bn_random.h"\n#include "bn_camera_ptr.h"\n#include "bn_keypad.h"\n#include "bn_optional.h"\n#include "bn_sprite_ptr.h"\n#include "bn_sprite_tiles_ptr.h"\n#include "bn_sprite_palette_ptr.h"\n#include "bn_sprite_affine_mat_ptr.h"\n#include "bn_music.h"\n#include "bn_bg_palettes.h"\n#include "bn_string_view.h"\n#include "bn_sprite_item.h"\n#include "bn_vector.h"\n`;
       mainCppIncludes += `#include "bn_affine_mat_attributes.h"\n#include "bn_affine_bg_ptr.h"\n#include "bn_regular_bg_ptr.h"\n#include "bn_sram.h"\n`;
@@ -1203,24 +1230,29 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
           const padX = Math.floor((validW - (a.width || 16)) / 2);
           const padY = Math.floor((validH - (a.height || 16)) / 2);
 
+          // Get the pre-calculated defeat color for this actor
+          const defeatR = 254;
+          const defeatG = ((i * 13) % 253) + 1;
+          const defeatB = ((i * 47 + 7) % 253) + 1;
+
           const sCanvas = document.createElement('canvas');
           sCanvas.width = validW;
           sCanvas.height = validH * Math.max(1, frameTiles.length);
           const sCtx = sCanvas.getContext('2d', { willReadFrequently: true });
 
           // GCC Linker identical-data-merge defeat pixel.
-          // Each actor needs a UNIQUE pixel (sprayed across R/G/B channels) so its
-          // sprite_item never collides with another actor's at link time, otherwise
-          // butano's bn::sprite_tiles_manager::_find_impl throws "tiles data does
-          // not match items tiles data" (line 553) at runtime.
-          const defeatR = 254;
-          const defeatG = ((i * 13) % 253) + 1;
-          const defeatB = ((i * 47 + 7) % 253) + 1;
+          // Each actor gets a UNIQUE color (pre-added to palette) so its sprite_item
+          // never collides with another actor's at link time, otherwise butano's
+          // bn::sprite_tiles_manager::_find_impl throws "tiles data does not match
+          // items tiles data" (line 553) at runtime.
+          // For multi-frame sprites, the defeat pixel is placed at different positions
+          // in each frame. Placed AFTER tile drawing to ensure it's not overwritten.
 
           if (frameTiles.length === 0 || (frameTiles.length === 1 && frameTiles[0] == null)) {
             sCtx.fillStyle = a.color || '#ff00ff';
             sCtx.fillRect(padX, padY, a.width || 16, a.height || 16);
-
+            
+            // Add defeat pixel for single-frame sprites
             sCtx.fillStyle = `rgb(${defeatR}, ${defeatG}, ${defeatB})`;
             sCtx.fillRect(0, 0, 1, 1);
           } else {
@@ -1288,19 +1320,18 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                   for (let py = 0; py < 8; py++) for (let px = 0; px < 8; px++) if (tile.data[py][px]) { sCtx.fillStyle = tile.data[py][px]; sCtx.fillRect(padX + px * scaleX, fY + padY + py * scaleY, scaleX, scaleY); }
                 } else {
                   sCtx.fillStyle = a.color || '#ff00ff'; sCtx.fillRect(padX, fY + padY, a.width || 16, a.height || 16);
-
-                  const frameDefeatR = 254;
-                  const frameDefeatG = (((fIdx * 19) + (i * 13)) % 253) + 1;
-                  const frameDefeatB = (((fIdx * 29) + (i * 47) + 7) % 253) + 1;
-                  sCtx.fillStyle = `rgb(${frameDefeatR}, ${frameDefeatG}, ${frameDefeatB})`;
-                  sCtx.fillRect(0, fY, 1, 1);
                 }
               }
             });
-            // GCC Linker identical-data-merge defeat pixel - always add one
-            // per actor so no two actors produce byte-identical BMPs.
-            sCtx.fillStyle = `rgb(${defeatR}, ${defeatG}, ${defeatB})`;
-            sCtx.fillRect(0, 0, 1, 1);
+            
+            // GCC Linker identical-data-merge defeat pixel - add one per frame
+            // AFTER tile drawing so it's not overwritten.
+            // Each frame gets the actor's unique defeat color at position (0, fIdx*validH),
+            // making the tile data byte-unique and preventing linker merging.
+            frameTiles.forEach((_, fIdx) => {
+              sCtx.fillStyle = `rgb(${defeatR}, ${defeatG}, ${defeatB})`;
+              sCtx.fillRect(0, fIdx * validH, 1, 1);
+            });
           }
           const imgDataTemp = sCtx.getImageData(0, 0, sCanvas.width, sCanvas.height);
           const uniqueColorsSet = new Set();
