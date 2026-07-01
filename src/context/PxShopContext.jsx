@@ -335,7 +335,14 @@ export const PxShopProvider = ({ children }) => {
       id: 'frame-1',
       layers: [createEmptyLayer('Background', null, 240, 160)]
     }],
-    actors: [],
+    actors: [
+      { id: 1001, type: 'group', name: 'Pickups', isOpen: true },
+      { id: 1002, type: 'group', name: 'Enemies', isOpen: true },
+      { id: 1003, type: 'group', name: 'Hazards', isOpen: true },
+      { id: 1004, type: 'group', name: 'Platforms', isOpen: true },
+      { id: 1005, type: 'group', name: 'NPCs', isOpen: true },
+      { id: 1006, type: 'group', name: 'Misc', isOpen: true }
+    ],
     triggers: [],
     musicId: null,
     dimensions: { w: 240, h: 160 },
@@ -1302,27 +1309,36 @@ export const PxShopProvider = ({ children }) => {
     const newDims = dimensions ? { w: dimensions.w, h: dimensions.h } : { w: 240, h: 160 };
     const newLayer = createEmptyLayer('Background', null, newDims.w, newDims.h);
     const newFrame = { id: 'frame-1', layers: [newLayer] };
+    const baseId = Date.now();
     const newScene = {
-      id: Date.now() + Math.random(),
+      id: baseId + Math.random(),
       name: `Scene ${actualScenes.length + 1}`,
       frames: [newFrame],
       globalActorIds: [],
       globalActorPositions: {},
-      actors: [{
-        id: Date.now() + Math.random(),
-        name: 'Player',
-        type: 'player',
-        x: Math.floor(newDims.w / 2 / 8) * 8,
-        y: Math.floor(newDims.h / 2 / 8) * 8,
-        width: 8,
-        height: 8,
-        color: '#65ff00',
-        spriteId: 1,
-        isHidden: false,
-        hflip: true,
-        attackAnimId: null,
-        script: { nodes: [{ id: 'start', position: { x: 250, y: 100 }, data: { label: 'On Update' }, type: 'input' }], edges: [] }
-      }],
+      actors: [
+        {
+          id: baseId + Math.random(),
+          name: 'Player',
+          type: 'player',
+          x: Math.floor(newDims.w / 2 / 8) * 8,
+          y: Math.floor(newDims.h / 2 / 8) * 8,
+          width: 8,
+          height: 8,
+          color: '#65ff00',
+          spriteId: 1,
+          isHidden: false,
+          hflip: true,
+          attackAnimId: null,
+          script: { nodes: [{ id: 'start', position: { x: 250, y: 100 }, data: { label: 'On Update' }, type: 'input' }], edges: [] }
+        },
+        { id: baseId + 1 + Math.random(), type: 'group', name: 'Pickups', isOpen: true },
+        { id: baseId + 2 + Math.random(), type: 'group', name: 'Enemies', isOpen: true },
+        { id: baseId + 3 + Math.random(), type: 'group', name: 'Hazards', isOpen: true },
+        { id: baseId + 4 + Math.random(), type: 'group', name: 'Platforms', isOpen: true },
+        { id: baseId + 5 + Math.random(), type: 'group', name: 'NPCs', isOpen: true },
+        { id: baseId + 6 + Math.random(), type: 'group', name: 'Misc', isOpen: true }
+      ],
       triggers: [],
       collisions: [],
       musicId: null,
@@ -7475,11 +7491,19 @@ export const PxShopProvider = ({ children }) => {
       setActiveFrameId(newFrame.id);
       setLayers(newLayers);
       loadedLayers = newLayers;
+      const compatBaseId = Date.now();
       newScene = {
-        id: Date.now() + Math.random(),
+        id: compatBaseId + Math.random(),
         name: 'Imported Scene',
         frames: [newFrame],
-        actors: [],
+        actors: [
+          { id: compatBaseId + 1 + Math.random(), type: 'group', name: 'Pickups', isOpen: true },
+          { id: compatBaseId + 2 + Math.random(), type: 'group', name: 'Enemies', isOpen: true },
+          { id: compatBaseId + 3 + Math.random(), type: 'group', name: 'Hazards', isOpen: true },
+          { id: compatBaseId + 4 + Math.random(), type: 'group', name: 'Platforms', isOpen: true },
+          { id: compatBaseId + 5 + Math.random(), type: 'group', name: 'NPCs', isOpen: true },
+          { id: compatBaseId + 6 + Math.random(), type: 'group', name: 'Misc', isOpen: true }
+        ],
         triggers: [],
         collisions: [],
         musicId: null,
@@ -7737,6 +7761,7 @@ export const PxShopProvider = ({ children }) => {
     }
 
     const newFrame = { id: 'frame-1', layers: [newLayer] };
+    const baseId = Date.now();
 
     setDimensions(newDims);
     setFrames([newFrame]);
@@ -7745,24 +7770,32 @@ export const PxShopProvider = ({ children }) => {
     setActiveLayerId(newLayer.id);
 
     const newScene = {
-      id: Date.now() + Math.random(),
+      id: baseId + Math.random(),
       name: 'Scene 1',
       frames: [newFrame],
-      actors: [{
-        id: Date.now() + Math.random(),
-        name: 'Player',
-        type: 'player',
-        x: Math.floor(newDims.w / 2 / 8) * 8,
-        y: Math.floor(newDims.h / 2 / 8) * 8,
-        width: 8,
-        height: 8,
-        color: '#65ff00',
-        spriteId: 1,
-        isHidden: false,
-        hflip: true,
-        attackAnimId: null,
-        script: { nodes: [{ id: 'start', position: { x: 250, y: 100 }, data: { label: 'On Update' }, type: 'input' }], edges: [] }
-      }],
+      actors: [
+        {
+          id: baseId + Math.random(),
+          name: 'Player',
+          type: 'player',
+          x: Math.floor(newDims.w / 2 / 8) * 8,
+          y: Math.floor(newDims.h / 2 / 8) * 8,
+          width: 8,
+          height: 8,
+          color: '#65ff00',
+          spriteId: 1,
+          isHidden: false,
+          hflip: true,
+          attackAnimId: null,
+          script: { nodes: [{ id: 'start', position: { x: 250, y: 100 }, data: { label: 'On Update' }, type: 'input' }], edges: [] }
+        },
+        { id: baseId + 1 + Math.random(), type: 'group', name: 'Pickups', isOpen: true },
+        { id: baseId + 2 + Math.random(), type: 'group', name: 'Enemies', isOpen: true },
+        { id: baseId + 3 + Math.random(), type: 'group', name: 'Hazards', isOpen: true },
+        { id: baseId + 4 + Math.random(), type: 'group', name: 'Platforms', isOpen: true },
+        { id: baseId + 5 + Math.random(), type: 'group', name: 'NPCs', isOpen: true },
+        { id: baseId + 6 + Math.random(), type: 'group', name: 'Misc', isOpen: true }
+      ],
       triggers: [],
       collisions: [],
       musicId: null,
@@ -7911,6 +7944,18 @@ const handleWizardCreate = () => {
       }
 
       const playerActor = (globalPlayer || isIntroOrPause) ? null : makePlayerActor(sceneDims);
+      const wizardBaseId = Date.now() + index;
+
+      const defaultActorGroups = [
+        { id: wizardBaseId + 1000 + Math.random(), type: 'group', name: 'Pickups', isOpen: true },
+        { id: wizardBaseId + 2000 + Math.random(), type: 'group', name: 'Enemies', isOpen: true },
+        { id: wizardBaseId + 3000 + Math.random(), type: 'group', name: 'Hazards', isOpen: true },
+        { id: wizardBaseId + 4000 + Math.random(), type: 'group', name: 'Platforms', isOpen: true },
+        { id: wizardBaseId + 5000 + Math.random(), type: 'group', name: 'NPCs', isOpen: true },
+        { id: wizardBaseId + 6000 + Math.random(), type: 'group', name: 'Misc', isOpen: true }
+      ];
+
+      const sceneActors = playerActor ? [playerActor, ...defaultActorGroups] : defaultActorGroups;
 
       const scene = {
         id: Date.now() + Math.random() + index,
@@ -7919,7 +7964,7 @@ const handleWizardCreate = () => {
         frames: [frame],
         globalActorIds: [],
         globalActorPositions: {},
-        actors: playerActor ? [playerActor] : [],
+        actors: sceneActors,
         triggers: [],
         collisions: [],
         musicId: null,
