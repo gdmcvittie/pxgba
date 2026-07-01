@@ -20,7 +20,7 @@ const formatTimeSince = (timestamp, now) => {
 };
 
 const StatusBar = () => {
-  const { estimatedRomSize, lastSavedTime, setSaveWarningShown } = usePxShop();
+  const { estimatedRomSize, lastSavedTime, setSaveWarningShown, exportProjectJSON } = usePxShop();
   const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
@@ -92,7 +92,7 @@ const StatusBar = () => {
 
       {isOverdue && (
         <button
-          onClick={() => setSaveWarningShown(false)}
+          onClick={() => { exportProjectJSON(); setSaveWarningShown(false); }}
           style={{
             display: 'flex',
             alignItems: 'center',
