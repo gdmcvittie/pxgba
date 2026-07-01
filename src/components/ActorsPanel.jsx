@@ -1620,56 +1620,6 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                         </select>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderTop: '1px solid #333', paddingTop: '6px', marginTop: '4px' }}>
-                        <label style={{ fontSize: '11px', color: '#aaa', width: '80px' }}>HP:</label>
-                        {(actor.useVarPlayerHp ?? true) ? (
-                          <select value={actor.varPlayerHp || 'PLAYER_HP'} onChange={(e) => updateActor(actor.id, 'varPlayerHp', e.target.value)} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px', minWidth: 0 }}>
-                            <option value="">Select Var</option>
-                            {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
-                          </select>
-                        ) : (
-                          <input type="number" min="1" value={actor.playerHp ?? 10} onChange={(e) => updateActor(actor.id, 'playerHp', parseInt(e.target.value) || 10)} style={{ width: '50px', background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }} />
-                        )}
-                        <button onClick={(e) => { e.stopPropagation(); updateActor(actor.id, 'useVarPlayerHp', !(actor.useVarPlayerHp ?? true)); }} title="Toggle Variable" style={{ background: (actor.useVarPlayerHp ?? true) ? '#4CAF50' : '#333', color: '#fff', border: 'none', borderRadius: '3px', padding: '4px 6px', cursor: 'pointer', fontSize: '10px' }}>V</button>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <label style={{ fontSize: '11px', color: '#aaa', width: '80px' }}>Max HP:</label>
-                        {(actor.useVarPlayerMaxHp ?? false) ? (
-                          <select value={actor.varPlayerMaxHp || ''} onChange={(e) => updateActor(actor.id, 'varPlayerMaxHp', e.target.value)} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px', minWidth: 0 }}>
-                            <option value="">Select Var</option>
-                            {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
-                          </select>
-                        ) : (
-                          <input type="number" min="1" value={actor.playerMaxHp ?? 10} onChange={(e) => updateActor(actor.id, 'playerMaxHp', parseInt(e.target.value) || 10)} style={{ width: '50px', background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }} />
-                        )}
-                        <button onClick={(e) => { e.stopPropagation(); updateActor(actor.id, 'useVarPlayerMaxHp', !(actor.useVarPlayerMaxHp ?? false)); }} title="Toggle Variable" style={{ background: (actor.useVarPlayerMaxHp ?? false) ? '#4CAF50' : '#333', color: '#fff', border: 'none', borderRadius: '3px', padding: '4px 6px', cursor: 'pointer', fontSize: '10px' }}>V</button>
-                      </div>
-
-                      {/* Player Bonus Settings */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderTop: '1px solid #333', paddingTop: '6px', marginTop: '4px' }}>
-                        <label style={{ fontSize: '11px', color: '#aaa', width: '80px' }}>Bonus:</label>
-                        {(actor.useVarPlayerBonus ?? true) ? (
-                          <select value={actor.varPlayerBonus || 'PLAYER_BONUS'} onChange={(e) => updateActor(actor.id, 'varPlayerBonus', e.target.value)} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px', minWidth: 0 }}>
-                            <option value="">Select Var</option>
-                            {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
-                          </select>
-                        ) : (
-                          <input type="number" min="0" value={actor.playerBonus ?? 0} onChange={(e) => updateActor(actor.id, 'playerBonus', parseInt(e.target.value) || 0)} style={{ width: '50px', background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }} />
-                        )}
-                        <button onClick={(e) => { e.stopPropagation(); updateActor(actor.id, 'useVarPlayerBonus', !(actor.useVarPlayerBonus ?? true)); }} title="Toggle Variable" style={{ background: (actor.useVarPlayerBonus ?? true) ? '#4CAF50' : '#333', color: '#fff', border: 'none', borderRadius: '3px', padding: '4px 6px', cursor: 'pointer', fontSize: '10px' }}>V</button>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <label style={{ fontSize: '11px', color: '#aaa', width: '80px' }}>Max Bonus:</label>
-                        {(actor.useVarPlayerMaxBonus ?? false) ? (
-                          <select value={actor.varPlayerMaxBonus || ''} onChange={(e) => updateActor(actor.id, 'varPlayerMaxBonus', e.target.value)} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px', minWidth: 0 }}>
-                            <option value="">Select Var</option>
-                            {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
-                          </select>
-                        ) : (
-                          <input type="number" min="1" value={actor.playerMaxBonus ?? 10} onChange={(e) => updateActor(actor.id, 'playerMaxBonus', parseInt(e.target.value) || 10)} style={{ width: '50px', background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }} />
-                        )}
-                        <button onClick={(e) => { e.stopPropagation(); updateActor(actor.id, 'useVarPlayerMaxBonus', !(actor.useVarPlayerMaxBonus ?? false)); }} title="Toggle Variable" style={{ background: (actor.useVarPlayerMaxBonus ?? false) ? '#4CAF50' : '#333', color: '#fff', border: 'none', borderRadius: '3px', padding: '4px 6px', cursor: 'pointer', fontSize: '10px' }}>V</button>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <label style={{ fontSize: '11px', color: '#aaa', width: '80px' }}>On Max Bonus:</label>
                         <select value={actor.playerBonusMaxScriptId || ""} onChange={(e) => updateActor(actor.id, 'playerBonusMaxScriptId', e.target.value ? Number(e.target.value) : null)} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }}>
                           <option value="">[None / Default]</option>
@@ -1679,6 +1629,18 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                           <button onClick={() => { setEditingCustomScriptId(actor.playerBonusMaxScriptId); setTool('script'); }} style={{ background: 'transparent', color: '#888', border: 'none', padding: '2px 4px', cursor: 'pointer', fontSize: '13px', display: 'flex', alignItems: 'center', borderRadius: '3px', flexShrink: 0 }} title="Edit Script"><BsPencil /></button>
                         ) : (
                           <button onClick={() => { setScriptPromptName('On Max Bonus'); setScriptPrompt({ actorId: actor.id, prop: 'playerBonusMaxScriptId' }); }} style={{ background: 'transparent', color: '#4CAF50', border: 'none', padding: '2px 4px', cursor: 'pointer', fontSize: '15px', display: 'flex', alignItems: 'center', borderRadius: '3px', flexShrink: 0 }} title="Add Script"><BsPlus /></button>
+                        )}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <label style={{ fontSize: '11px', color: '#aaa', width: '80px' }}>On Max XP:</label>
+                        <select value={actor.playerMaxXpScriptId || ""} onChange={(e) => updateActor(actor.id, 'playerMaxXpScriptId', e.target.value ? Number(e.target.value) : null)} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }}>
+                          <option value="">[None / Default]</option>
+                          {customScripts.filter(cs => cs.type !== 'group').map(cs => <option key={cs.id} value={cs.id}>{cs.name}</option>)}
+                        </select>
+                        {actor.playerMaxXpScriptId ? (
+                          <button onClick={() => { setEditingCustomScriptId(actor.playerMaxXpScriptId); setTool('script'); }} style={{ background: 'transparent', color: '#888', border: 'none', padding: '2px 4px', cursor: 'pointer', fontSize: '13px', display: 'flex', alignItems: 'center', borderRadius: '3px', flexShrink: 0 }} title="Edit Script"><BsPencil /></button>
+                        ) : (
+                          <button onClick={() => { setScriptPromptName('On Max XP'); setScriptPrompt({ actorId: actor.id, prop: 'playerMaxXpScriptId' }); }} style={{ background: 'transparent', color: '#4CAF50', border: 'none', padding: '2px 4px', cursor: 'pointer', fontSize: '15px', display: 'flex', alignItems: 'center', borderRadius: '3px', flexShrink: 0 }} title="Add Script"><BsPlus /></button>
                         )}
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

@@ -1,4 +1,5 @@
 - added health pickup item actor
+- added PLAYER_MAX_HP variable 
 - added grouped tiles for large sprites naming
 - fixed bitmap bug on jump landing transition to other animation
 - fixed hud text color

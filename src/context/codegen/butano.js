@@ -4207,6 +4207,14 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             const xpValue = a.xpValue ?? 1;
             const xpVar = a.xpVarName || 'PLAYER_XP';
             if (playerIdx !== -1) {
+              const playerActor = sActors[playerIdx];
+              let maxXpScriptCompiled = '';
+              if (playerActor.playerMaxXpScriptId) {
+                const maxXpScriptObj = customScripts.find(cs => cs && Number(cs.id) === Number(playerActor.playerMaxXpScriptId));
+                if (maxXpScriptObj) {
+                  maxXpScriptCompiled = generateScriptLogic(maxXpScriptObj.script, playerIdx, playerActor.width, playerActor.height, undefined, undefined, scCtx);
+                }
+              }
               actorLogicCode += `            {\n`;
               actorLogicCode += `                int px = actor_${playerIdx}_x + ${Math.floor((sActors[playerIdx].width || 16) / 2)};\n`;
               actorLogicCode += `                int py = actor_${playerIdx}_y + ${Math.floor((sActors[playerIdx].height || 16) / 2)};\n`;
@@ -4215,6 +4223,12 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               actorLogicCode += `                    actor_${i}_active = false;\n`;
               actorLogicCode += `                    actor_${i}_sprite.set_visible(false);\n`;
               actorLogicCode += `                    ${xpVar} += ${xpValue};\n`;
+              actorLogicCode += `                    if (${xpVar} >= PLAYER_MAX_XP) {\n`;
+              actorLogicCode += `                        ${xpVar} = 0;\n`;
+              if (maxXpScriptCompiled) {
+                actorLogicCode += maxXpScriptCompiled;
+              }
+              actorLogicCode += `                    }\n`;
               actorLogicCode += `                }\n`;
               actorLogicCode += `            }\n`;
             }
@@ -4242,6 +4256,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               actorLogicCode += `                int py = actor_${playerIdx}_y + ${Math.floor((sActors[playerIdx].height || 16) / 2)};\n`;
               actorLogicCode += `                bool overlap = (px >= actor_${i}_x && px <= actor_${i}_x + ${a.width || 16} && py >= actor_${i}_y && py <= actor_${i}_y + ${a.height || 16});\n`;
               actorLogicCode += `                if (overlap) {\n`;
+              actorLogicCode += `                    PLAYER_HP = PLAYER_MAX_HP;\n`;
               actorLogicCode += `                    actor_${playerIdx}_hp = actor_${playerIdx}_max_hp;\n`;
               actorLogicCode += `                    actor_${i}_active = false;\n`;
               actorLogicCode += `                    actor_${i}_sprite.set_visible(false);\n`;

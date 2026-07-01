@@ -6,8 +6,8 @@ const VariablesPanel = ({ isCollapsed, onToggle }) => {
   const { variables, setVariables, saveHistory, layers, dimensions } = usePxShop();
   const [editingGroupId, setEditingGroupId] = useState(null);
 
-  // Default PLAYER variables (IDs 1-8) and PLAYER group (ID 9) are protected
-  const DEFAULT_PLAYER_VAR_IDS = [1, 2, 3, 4, 5, 6, 7, 8];
+  // Default PLAYER variables (IDs 1-8, 10-12) and PLAYER group (ID 9) are protected
+  const DEFAULT_PLAYER_VAR_IDS = [1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12];
   const DEFAULT_PLAYER_GROUP_ID = 9;
 
   const isDefaultPlayerVar = (id) => DEFAULT_PLAYER_VAR_IDS.includes(id);
