@@ -67,9 +67,12 @@ export async function generateButano(ctx) {
       // Add defeat colors for each actor (up to 255 actors to stay within palette limit)
       const defeatColors = [];
       for (let i = 0; i < Math.min(allActors.length, 255); i++) {
-        const defeatR = 254;
-        const defeatG = ((i * 13) % 253) + 1;
-        const defeatB = ((i * 47 + 7) % 253) + 1;
+        // HACK: Keep RGB values extremely low (1-20) so the pixel is visually
+        // indistinguishable from pitch-black (#000000), hiding it from the player
+        // while maintaining the mathematical uniqueness required by the GCC linker.
+        const defeatR = 1;
+        const defeatG = ((i * 13) % 20) + 1; 
+        const defeatB = ((i * 47 + 7) % 20) + 1;
         defeatColors.push([defeatR, defeatG, defeatB, 255]);
         globalSpriteColors.push([defeatR, defeatG, defeatB, 255]);
       }
@@ -1231,9 +1234,9 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
           const padY = Math.floor((validH - (a.height || 16)) / 2);
 
           // Get the pre-calculated defeat color for this actor
-          const defeatR = 254;
-          const defeatG = ((i * 13) % 253) + 1;
-          const defeatB = ((i * 47 + 7) % 253) + 1;
+          const defeatR = 1;
+          const defeatG = ((i * 13) % 20) + 1;
+          const defeatB = ((i * 47 + 7) % 20) + 1;
 
           const sCanvas = document.createElement('canvas');
           sCanvas.width = validW;
