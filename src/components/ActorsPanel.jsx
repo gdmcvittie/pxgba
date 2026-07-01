@@ -2531,7 +2531,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                     </div>
                   )}
 
-                  {(actor.type === 'platform' || actor.type === 'ladder' || actor.type === 'bonus' || actor.type === 'spring' || actor.type === 'hazard' || actor.type === 'destructible' || actor.type === 'key' || actor.type === 'door' || actor.type === 'powerup' || actor.type === 'sign' || actor.type === 'checkpoint' || actor.type === 'turret' || actor.type === 'spawner') && (
+                  {(actor.type === 'platform' || actor.type === 'ladder' || actor.type === 'bonus' || actor.type === 'spring' || actor.type === 'hazard' || actor.type === 'destructible' || actor.type === 'key' || actor.type === 'door' || actor.type === 'powerup' || actor.type === 'sign' || actor.type === 'checkpoint' || actor.type === 'turret' || actor.type === 'spawner' || actor.type === 'ammo_pickup' || actor.type === 'xp_orb' || actor.type === 'shield' || actor.type === 'grenade' || actor.type === 'magnet' || actor.type === 'health_pickup') && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '4px', background: '#222', padding: '8px', borderRadius: '4px', border: '1px solid #444' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <input type="checkbox" id={`isMoving-${actor.id}`} checked={actor.isMoving ?? (actor.type === 'movingPlatform')} onChange={(e) => updateActor(actor.id, 'isMoving', e.target.checked)} />

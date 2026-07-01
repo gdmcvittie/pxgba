@@ -178,7 +178,7 @@ const TriggersPanel = ({ isCollapsed, onToggle }) => {
             const isActive = activeTriggerId === group.id;
 
             return (
-              <div key={group.id} style={{ display: 'flex', flexDirection: 'column', border: isActive ? '1px solid #ff9800' : '1px solid #333', borderRadius: '6px', backgroundColor: '#1e1e1e', overflow: 'hidden' }}>
+              <div key={group.id} style={{ display: 'flex', flexDirection: 'column', border: isActive ? '1px solid #ff9800' : '1px solid #333', borderRadius: '6px', backgroundColor: '#1e1e1e', overflow: 'auto' }}>
                 {/* Group Header */}
                 <div
                   onClick={() => { setActiveTriggerId(group.id); setTool('trigger'); }}
@@ -188,7 +188,7 @@ const TriggersPanel = ({ isCollapsed, onToggle }) => {
                     cursor: 'pointer'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, overflow: 'auto' }}>
                     <div
                       onClick={(e) => {
                         e.stopPropagation();

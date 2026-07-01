@@ -1,9 +1,11 @@
 - added health pickup item actor
-- added PLAYER_MAX_HP variable 
+- added player variables
+- simplified player actor config
 - added grouped tiles for large sprites naming
 - fixed bitmap bug on jump landing transition to other animation
 - fixed hud text color
-
+- added movement config to pickup items missing them
+- fixes scrolling in collision and trigger groups
 
 
 

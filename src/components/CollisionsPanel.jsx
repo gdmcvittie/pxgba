@@ -181,7 +181,7 @@ const CollisionsPanel = ({ isCollapsed, onToggle }) => {
             const isActive = activeCollisionId === group.id;
 
             return (
-              <div key={group.id} style={{ display: 'flex', flexDirection: 'column', border: isActive ? '1px solid #2196F3' : '1px solid #333', borderRadius: '6px', backgroundColor: '#1e1e1e', overflow: 'hidden' }}>
+              <div key={group.id} style={{ display: 'flex', flexDirection: 'column', border: isActive ? '1px solid #2196F3' : '1px solid #333', borderRadius: '6px', backgroundColor: '#1e1e1e', overflow: 'auto' }}>
                 {/* Group Header */}
                 <div
                   onClick={() => { setActiveCollisionId(group.id); setTool('collision'); }}
@@ -191,7 +191,7 @@ const CollisionsPanel = ({ isCollapsed, onToggle }) => {
                     cursor: 'pointer'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, overflow: 'hidden', overflowY: 'auto' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, overflow: 'hidden', overflow: 'auto' }}>
                     <div
                       onClick={(e) => {
                         e.stopPropagation();

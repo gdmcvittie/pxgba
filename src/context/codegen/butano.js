@@ -3169,7 +3169,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             } else if (scriptCode) {
               actorLogicCode += scriptCode;
             }
-          } else if (a.type === 'platform' || a.type === 'staticPlatform' || a.type === 'movingPlatform' || a.type === 'ladder' || a.type === 'coin' || a.type === 'bonus' || a.type === 'spring' || a.type === 'hazard' || a.type === 'destructible' || a.type === 'key' || a.type === 'door' || a.type === 'powerup' || a.type === 'sign' || a.type === 'pushable' || a.type === 'conveyor' || a.type === 'checkpoint') {
+          } else if (a.type === 'platform' || a.type === 'staticPlatform' || a.type === 'movingPlatform' || a.type === 'ladder' || a.type === 'coin' || a.type === 'bonus' || a.type === 'spring' || a.type === 'hazard' || a.type === 'destructible' || a.type === 'key' || a.type === 'door' || a.type === 'powerup' || a.type === 'sign' || a.type === 'pushable' || a.type === 'conveyor' || a.type === 'checkpoint' || a.type === 'ammo_pickup' || a.type === 'xp_orb' || a.type === 'shield' || a.type === 'grenade' || a.type === 'magnet' || a.type === 'health_pickup') {
             const isMoving = a.isMoving ?? (a.type === 'movingPlatform');
             if (isMoving) {
               const speedVal = a.moveSpeed ?? 1;
@@ -4275,6 +4275,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               actorLogicCode += `                    actor_${i}_active = false;\n`;
               actorLogicCode += `                    actor_${i}_sprite.set_visible(false);\n`;
               actorLogicCode += `                    PLAYER_GRENADES += actor_${i}_grenade_qty;\n`;
+              actorLogicCode += `                    if (PLAYER_GRENADES > PLAYER_MAX_GRENADES) PLAYER_GRENADES = PLAYER_MAX_GRENADES;\n`;
               actorLogicCode += `                }\n`;
               actorLogicCode += `            }\n`;
             }
@@ -5357,10 +5358,14 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
         const fontColorRgb = hexToRgb(fontColorHex) || { r: 255, g: 255, b: 255 };
         const fontColorIdx = globalSpriteColors.findIndex(c => c && c[0] === fontColorRgb.r && c[1] === fontColorRgb.g && c[2] === fontColorRgb.b);
         const safeFontColorIdx = fontColorIdx !== -1 ? fontColorIdx : 1;
+        const fontR = Math.floor(fontColorRgb.r / 8);
+        const fontG = Math.floor(fontColorRgb.g / 8);
+        const fontB = Math.floor(fontColorRgb.b / 8);
 
         sceneCode += `    bn::sprite_palette_ptr shared_sprite_palette = bn::sprite_items::hud_0.palette_item().create_palette();\n`;
+        sceneCode += `    shared_sprite_palette.set_color(${safeFontColorIdx}, bn::color(${fontR}, ${fontG}, ${fontB}));\n`;
         sceneCode += `    bn::sprite_palette_ptr dialog_text_palette = bn::sprite_items::hud_0.palette_item().create_palette();\n`;
-        sceneCode += `    dialog_text_palette.set_color(${safeFontColorIdx}, bn::color(0, 0, 0));\n`;
+        sceneCode += `    dialog_text_palette.set_color(${safeFontColorIdx}, bn::color(${fontR}, ${fontG}, ${fontB}));\n`;
         sceneCode += `    bn::optional<bn::regular_bg_ptr> scene_dialog_bg;\n`;
         if (hudSettings && hudSettings.enabled && scene.type !== 'INTRO' && scene.type !== 'PAUSE') {
           bgDeclarations += `    bn::regular_bg_ptr hud_bg = bn::regular_bg_items::hud_bg.create_bg(0, 0);\n`;

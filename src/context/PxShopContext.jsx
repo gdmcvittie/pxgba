@@ -372,7 +372,8 @@ export const PxShopProvider = ({ children }) => {
     { id: 8, name: 'PLAYER_XP', type: 'number', initialValue: 0, groupId: 9 },
     { id: 10, name: 'PLAYER_MAX_HP', type: 'number', initialValue: 10, groupId: 9 },
     { id: 11, name: 'PLAYER_MAX_XP', type: 'number', initialValue: 100, groupId: 9 },
-    { id: 12, name: 'PLAYER_MAX_BONUS', type: 'number', initialValue: 100, groupId: 9 }
+    { id: 12, name: 'PLAYER_MAX_BONUS', type: 'number', initialValue: 100, groupId: 9 },
+    { id: 13, name: 'PLAYER_MAX_GRENADES', type: 'number', initialValue: 5, groupId: 9 }
   ]);
 
   // Animations state (Project-wide)
@@ -7342,7 +7343,8 @@ export const PxShopProvider = ({ children }) => {
       { id: 8, name: 'PLAYER_XP', type: 'number', initialValue: 0 },
       { id: 10, name: 'PLAYER_MAX_HP', type: 'number', initialValue: 10 },
       { id: 11, name: 'PLAYER_MAX_XP', type: 'number', initialValue: 100 },
-      { id: 12, name: 'PLAYER_MAX_BONUS', type: 'number', initialValue: 100 }
+      { id: 12, name: 'PLAYER_MAX_BONUS', type: 'number', initialValue: 100 },
+      { id: 13, name: 'PLAYER_MAX_GRENADES', type: 'number', initialValue: 5 }
     ];
 
     defaultPlayerVars.forEach(defaultVar => {
@@ -7807,7 +7809,8 @@ export const PxShopProvider = ({ children }) => {
       { id: 8, name: 'PLAYER_XP', type: 'number', initialValue: 0, groupId: 9 },
       { id: 10, name: 'PLAYER_MAX_HP', type: 'number', initialValue: 10, groupId: 9 },
       { id: 11, name: 'PLAYER_MAX_XP', type: 'number', initialValue: 100, groupId: 9 },
-      { id: 12, name: 'PLAYER_MAX_BONUS', type: 'number', initialValue: 100, groupId: 9 }
+      { id: 12, name: 'PLAYER_MAX_BONUS', type: 'number', initialValue: 100, groupId: 9 },
+      { id: 13, name: 'PLAYER_MAX_GRENADES', type: 'number', initialValue: 5, groupId: 9 }
     ]);
     setAnimations([]);
     setCustomScripts([]);
@@ -8210,7 +8213,8 @@ const handleWizardCreate = () => {
       { id: 8, name: 'PLAYER_XP', type: 'number', initialValue: 0, groupId: 9 },
       { id: 10, name: 'PLAYER_MAX_HP', type: 'number', initialValue: 10, groupId: 9 },
       { id: 11, name: 'PLAYER_MAX_XP', type: 'number', initialValue: 100, groupId: 9 },
-      { id: 12, name: 'PLAYER_MAX_BONUS', type: 'number', initialValue: 100, groupId: 9 }
+      { id: 12, name: 'PLAYER_MAX_BONUS', type: 'number', initialValue: 100, groupId: 9 },
+      { id: 13, name: 'PLAYER_MAX_GRENADES', type: 'number', initialValue: 5, groupId: 9 }
     ]);
     setAnimations([]);
     setCustomScripts([]);
