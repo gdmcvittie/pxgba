@@ -45,7 +45,8 @@ const ACTOR_DEFAULT_TILE_MAP = {
   gravity_flip_zone: 51,
   boost_pad: 56,
   checkpoint_gate: 57,
-  grass_block: 59
+  grass_block: 59,
+  health_pickup: 21
 };
 
 const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, layers, dimensions, animations, onClose, onSave }) => {
@@ -1118,7 +1119,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
     },
     {
       label: 'Items',
-      types: ['key', 'door', 'bonus', 'powerup', 'ammo_pickup', 'xp_orb', 'shield', 'grenade', 'magnet']
+      types: ['key', 'door', 'bonus', 'powerup', 'ammo_pickup', 'xp_orb', 'shield', 'grenade', 'magnet', 'health_pickup']
     },
     {
       label: 'Racing',
@@ -1166,7 +1167,8 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
     magnet: 'Magnet',
     gravity_flip_zone: 'Gravity Flip',
     boost_pad: 'Boost Pad',
-    checkpoint_gate: 'Checkpoint Gate'
+    checkpoint_gate: 'Checkpoint Gate',
+    health_pickup: 'Health Pickup'
   };
 
   const createActorWithType = (type) => {

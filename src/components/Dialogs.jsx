@@ -2841,6 +2841,7 @@ export const TilePreview = ({ tile, size }) => {
 };
 
 export const TileSelector = ({ tiles, value, onChange, label = '', style, hideLabel = false, placeholder = 'Auto-detect' }) => {
+  const { tileGroupNames } = usePxShop();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const containerRef = useRef(null);
@@ -3036,32 +3037,40 @@ export const TileSelector = ({ tiles, value, onChange, label = '', style, hideLa
                     const pos = getTilePosition(tile, cols);
                     sorted[pos] = tile;
                   }
+                  const gName = (tileGroupNames && tileGroupNames[gid]) || '';
                   return (
                     <div
                       key={gid}
                       style={{
-                        display: 'grid',
-                        gridTemplateColumns: `repeat(${cols}, 24px)`,
-                        gap: '2px',
-                        padding: '4px',
-                        background: '#2a2a2a',
-                        border: '1px solid #555',
-                        borderRadius: '4px',
-                        justifyItems: 'center',
-                        alignItems: 'center'
+                        display: 'flex', flexDirection: 'column',
+                        padding: '4px', background: '#2a2a2a', border: '1px solid #555', borderRadius: '4px'
                       }}
-                      title={`Tile group (${cols}x${rows})`}
                     >
-                      {sorted.map((tile, i) => tile ? (
-                        <div
-                          key={tile.id}
-                          onClick={() => { onChange(tile.id); setIsOpen(false); setSearch(''); }}
-                          style={{ cursor: 'pointer' }}
-                          title={tile.name || "Unnamed Tile"}
-                        >
-                          <TilePreview tile={tile} size={24} />
+                      {gName && (
+                        <div style={{ fontSize: '9px', color: '#888', marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {gName}
                         </div>
-                      ) : <div key={`empty-${i}`} style={{ width: '24px', height: '24px' }} />)}
+                      )}
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: `repeat(${cols}, 24px)`,
+                          gap: '2px',
+                          justifyItems: 'center',
+                          alignItems: 'center'
+                        }}
+                      >
+                        {sorted.map((tile, i) => tile ? (
+                          <div
+                            key={tile.id}
+                            onClick={() => { onChange(tile.id); setIsOpen(false); setSearch(''); }}
+                            style={{ cursor: 'pointer' }}
+                            title={tile.name || "Unnamed Tile"}
+                          >
+                            <TilePreview tile={tile} size={24} />
+                          </div>
+                        ) : <div key={`empty-${i}`} style={{ width: '24px', height: '24px' }} />)}
+                      </div>
                     </div>
                   );
                 })}

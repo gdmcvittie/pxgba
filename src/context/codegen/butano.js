@@ -4229,6 +4229,21 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               actorLogicCode += `            }\n`;
             }
             if (scriptCode) actorLogicCode += scriptCode;
+          } else if (a.type === 'health_pickup') {
+            const playerIdx = sActors.findIndex(act => act && act.type === 'player');
+            if (playerIdx !== -1) {
+              actorLogicCode += `            {\n`;
+              actorLogicCode += `                int px = actor_${playerIdx}_x + ${Math.floor((sActors[playerIdx].width || 16) / 2)};\n`;
+              actorLogicCode += `                int py = actor_${playerIdx}_y + ${Math.floor((sActors[playerIdx].height || 16) / 2)};\n`;
+              actorLogicCode += `                bool overlap = (px >= actor_${i}_x && px <= actor_${i}_x + ${a.width || 16} && py >= actor_${i}_y && py <= actor_${i}_y + ${a.height || 16});\n`;
+              actorLogicCode += `                if (overlap) {\n`;
+              actorLogicCode += `                    actor_${playerIdx}_hp = actor_${playerIdx}_max_hp;\n`;
+              actorLogicCode += `                    actor_${i}_active = false;\n`;
+              actorLogicCode += `                    actor_${i}_sprite.set_visible(false);\n`;
+              actorLogicCode += `                }\n`;
+              actorLogicCode += `            }\n`;
+            }
+            if (scriptCode) actorLogicCode += scriptCode;
           } else if (a.type === 'grenade') {
             const playerIdx = sActors.findIndex(act => act && act.type === 'player');
             if (playerIdx !== -1) {

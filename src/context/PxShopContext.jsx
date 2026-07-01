@@ -236,6 +236,7 @@ export const PxShopProvider = ({ children }) => {
 
   // Tiles state
   const [savedTiles, setSavedTiles] = useState(INITIAL_DEFAULT_TILES);
+  const [tileGroupNames, setTileGroupNames] = useState({});
   const [activeSavedTileId, setActiveSavedTileId] = useState(1);
   const tileSheetInputRef = useRef(null);
 
@@ -7002,6 +7003,7 @@ export const PxShopProvider = ({ children }) => {
       recentColors: state.recentColors || recentColors,
       dimensions: state.dimensions,
       savedTiles: state.savedTiles,
+      tileGroupNames: state.tileGroupNames,
       variables: state.variables,
       animations: state.animations,
       customScripts: state.customScripts,
@@ -7064,7 +7066,7 @@ export const PxShopProvider = ({ children }) => {
 
   const exportProjectJSON = () => {
     const projectData = generateProjectData({
-      frames, activeFrameId, layers, scenes, activeSceneId, actors, globalActors, triggers, collisions, dimensions, savedTiles, variables, animations, customScripts, globalScript, musicTracks, activeLayerId, guides, gridSize, isPixelated, onionSkinEnabled,
+      frames, activeFrameId, layers, scenes, activeSceneId, actors, globalActors, triggers, collisions, dimensions, savedTiles, tileGroupNames, variables, animations, customScripts, globalScript, musicTracks, activeLayerId, guides, gridSize, isPixelated, onionSkinEnabled,
       hudSettings, includeCreditsScene, creditsText, includedArtists, creditsBgColor, creditsTextColor, creditsMusicId, creditsEffect,
       recentColors
     });
@@ -7307,6 +7309,7 @@ export const PxShopProvider = ({ children }) => {
       return copiedTile;
     });
     setSavedTiles(loadedTiles.length > 0 ? loadedTiles : fallbackTiles);
+    setTileGroupNames(project.tileGroupNames || {});
     if (loadedTiles.length > 0) {
       setActiveSavedTileId(loadedTiles[0].id);
     } else {
@@ -8376,6 +8379,7 @@ const handleWizardCreate = () => {
     guides, setGuides,
     draggingGuide, setDraggingGuide,
     savedTiles, setSavedTiles,
+    tileGroupNames, setTileGroupNames,
     activeSavedTileId, setActiveSavedTileId,
     showTileImportPaletteDialog, setShowTileImportPaletteDialog,
     pendingTileImportData, setPendingTileImportData,

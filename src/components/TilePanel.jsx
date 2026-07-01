@@ -15,6 +15,7 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
     handleTileSheetUpload,
     saveSelectionAsTile,
     savedTiles, setSavedTiles,
+    tileGroupNames, setTileGroupNames,
     activeSavedTileId, setActiveSavedTileId,
     tool, setTool,
     setActiveDraw,
@@ -46,6 +47,8 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
     return saved && saved !== 'flow' ? parseInt(saved, 10) || 6 : 6;
   });
   const [hasImportedTileSheet, setHasImportedTileSheet] = useState(false);
+  const [editingGroupId, setEditingGroupId] = useState(null);
+  const [editingGroupName, setEditingGroupName] = useState('');
 
   const handleTilesWideFlowChange = (val) => {
     setTilesWideFlow(val);
@@ -600,7 +603,11 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
 
   const filteredTiles = savedTiles.filter(tile => {
     if (!nameFilter.trim()) return true;
-    return (tile.name || '').toLowerCase().includes(nameFilter.toLowerCase());
+    const filterLower = nameFilter.toLowerCase();
+    if ((tile.name || '').toLowerCase().includes(filterLower)) return true;
+    const gid = tile.groupId || tile.id;
+    const groupName = tileGroupNames[gid] || '';
+    return groupName.toLowerCase().includes(filterLower);
   });
 
   return (
@@ -863,6 +870,48 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
                     )}
                     {groupOrder.map(gid => {
                       const group = groupMap[gid];
+                      const groupName = tileGroupNames[gid] || '';
+                      const isEditing = editingGroupId === gid;
+
+                      const renderGroupLabel = () => (
+                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px', gap: '4px' }}>
+                          {isEditing ? (
+                            <input
+                              autoFocus
+                              type="text"
+                              value={editingGroupName}
+                              onChange={(e) => setEditingGroupName(e.target.value)}
+                              onBlur={() => {
+                                setTileGroupNames(prev => ({ ...prev, [gid]: editingGroupName }));
+                                setEditingGroupId(null);
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  setTileGroupNames(prev => ({ ...prev, [gid]: editingGroupName }));
+                                  setEditingGroupId(null);
+                                }
+                                if (e.key === 'Escape') setEditingGroupId(null);
+                              }}
+                              style={{
+                                background: '#111', color: '#ccc', border: '1px solid #555', borderRadius: '2px',
+                                padding: '1px 4px', fontSize: '9px', width: '100%', outline: 'none'
+                              }}
+                            />
+                          ) : (
+                            <span
+                              onDoubleClick={() => { setEditingGroupId(gid); setEditingGroupName(groupName); }}
+                              style={{
+                                fontSize: '9px', color: '#888', cursor: 'text', userSelect: 'none',
+                                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1
+                              }}
+                              title={groupName || 'Double-click to name this group'}
+                            >
+                              {groupName || 'Unnamed group'}
+                            </span>
+                          )}
+                        </div>
+                      );
+
                       if (group.length <= 1 || isFlow) {
                         if (isFlow && group.length > 1) {
                           const { cols, rows } = getSubGridSize(group);
@@ -875,20 +924,23 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
                             <div
                               key={gid}
                               style={{
-                                display: 'grid',
-                                gridTemplateColumns: `repeat(${cols}, 32px)`,
-                                gridTemplateRows: `repeat(${rows}, 32px)`,
-                                gap: '2px',
-                                padding: '4px',
-                                background: '#2a2a2a',
-                                border: '1px solid #555',
-                                borderRadius: '4px',
-                                justifyItems: 'center',
-                                alignItems: 'center'
+                                display: 'flex', flexDirection: 'column',
+                                padding: '4px', background: '#2a2a2a', border: '1px solid #555', borderRadius: '4px'
                               }}
-                              title={`Tile group (${cols}x${rows})`}
                             >
-                              {sorted.map((tile, i) => tile ? renderTile(tile) : <div key={`empty-${i}`} style={{ width: '32px', height: '32px' }} />)}
+                              {renderGroupLabel()}
+                              <div
+                                style={{
+                                  display: 'grid',
+                                  gridTemplateColumns: `repeat(${cols}, 32px)`,
+                                  gridTemplateRows: `repeat(${rows}, 32px)`,
+                                  gap: '2px',
+                                  justifyItems: 'center',
+                                  alignItems: 'center'
+                                }}
+                              >
+                                {sorted.map((tile, i) => tile ? renderTile(tile) : <div key={`empty-${i}`} style={{ width: '32px', height: '32px' }} />)}
+                              </div>
                             </div>
                           );
                         }
@@ -905,20 +957,23 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
                           key={gid}
                           style={{
                             gridColumn: `span ${Math.min(cols, effectiveWidth)}`,
-                            display: 'grid',
-                            gridTemplateColumns: `repeat(${cols}, 32px)`,
-                            gridTemplateRows: `repeat(${rows}, 32px)`,
-                            gap: '2px',
-                            padding: '4px',
-                            background: '#2a2a2a',
-                            border: '1px solid #555',
-                            borderRadius: '4px',
-                            justifyItems: 'center',
-                            alignItems: 'center'
+                            display: 'flex', flexDirection: 'column',
+                            padding: '4px', background: '#2a2a2a', border: '1px solid #555', borderRadius: '4px'
                           }}
-                          title={`Tile group (${cols}x${rows})`}
                         >
-                          {sorted.map((tile, i) => tile ? renderTile(tile) : <div key={`empty-${i}`} style={{ width: '32px', height: '32px' }} />)}
+                          {renderGroupLabel()}
+                          <div
+                            style={{
+                              display: 'grid',
+                              gridTemplateColumns: `repeat(${cols}, 32px)`,
+                              gridTemplateRows: `repeat(${rows}, 32px)`,
+                              gap: '2px',
+                              justifyItems: 'center',
+                              alignItems: 'center'
+                            }}
+                          >
+                            {sorted.map((tile, i) => tile ? renderTile(tile) : <div key={`empty-${i}`} style={{ width: '32px', height: '32px' }} />)}
+                          </div>
                         </div>
                       );
                     })}

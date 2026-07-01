@@ -191,7 +191,7 @@ const CollisionsPanel = ({ isCollapsed, onToggle }) => {
                     cursor: 'pointer'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, overflow: 'hidden', overflowY: 'auto' }}>
                     <div
                       onClick={(e) => {
                         e.stopPropagation();
