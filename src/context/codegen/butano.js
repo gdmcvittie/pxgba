@@ -1245,14 +1245,16 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
           // never collides with another actor's at link time, otherwise butano's
           // bn::sprite_tiles_manager::_find_impl throws "tiles data does not match
           // items tiles data" (line 553) at runtime.
-          // For multi-frame sprites, the defeat pixel is placed at different positions
-          // in each frame. Placed AFTER tile drawing to ensure it's not overwritten.
+          // Defeat pixel is placed at (0, fIdx*validH) for each frame.
+          // If sprite fills entire frame (padX===0 && padY===0), shift by 1px to preserve defeat pixel.
+          const defeatPadX = (padX === 0 && validW === (a.width || 16)) ? 1 : padX;
+          const defeatPadY = (padY === 0 && validH === (a.height || 16)) ? 1 : padY;
 
           if (frameTiles.length === 0 || (frameTiles.length === 1 && frameTiles[0] == null)) {
             sCtx.fillStyle = a.color || '#ff00ff';
-            sCtx.fillRect(padX, padY, a.width || 16, a.height || 16);
+            sCtx.fillRect(defeatPadX, defeatPadY, a.width || 16, a.height || 16);
             
-            // Add defeat pixel for single-frame sprites
+            // Add defeat pixel at (0,0) - safe because sprite was shifted if needed
             sCtx.fillStyle = `rgb(${defeatR}, ${defeatG}, ${defeatB})`;
             sCtx.fillRect(0, 0, 1, 1);
           } else {
@@ -1278,7 +1280,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                               const srcX = flipH ? 7 - px : px;
                               if (tile.data[srcY][srcX]) {
                                 sCtx.fillStyle = tile.data[srcY][srcX];
-                                sCtx.fillRect(padX + c * 8 + px, fY + padY + r * 8 + py, 1, 1);
+                                sCtx.fillRect(defeatPadX + c * 8 + px, fY + defeatPadY + r * 8 + py, 1, 1);
                               }
                             }
                           }
@@ -1305,7 +1307,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                             const srcX = flipH ? 7 - px : px;
                             if (tile.data[srcY][srcX]) {
                               sCtx.fillStyle = tile.data[srcY][srcX];
-                              sCtx.fillRect(padX + c * 8 + px, fY + padY + r * 8 + py, 1, 1);
+                              sCtx.fillRect(defeatPadX + c * 8 + px, fY + defeatPadY + r * 8 + py, 1, 1);
                             }
                           }
                         }
@@ -1317,17 +1319,16 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 const tile = savedTiles.find(t => t && String(t.id) === String(tilePayload));
                 if (tile) {
                   const scaleX = (a.width || 16) / 8; const scaleY = (a.height || 16) / 8;
-                  for (let py = 0; py < 8; py++) for (let px = 0; px < 8; px++) if (tile.data[py][px]) { sCtx.fillStyle = tile.data[py][px]; sCtx.fillRect(padX + px * scaleX, fY + padY + py * scaleY, scaleX, scaleY); }
+                  for (let py = 0; py < 8; py++) for (let px = 0; px < 8; px++) if (tile.data[py][px]) { sCtx.fillStyle = tile.data[py][px]; sCtx.fillRect(defeatPadX + px * scaleX, fY + defeatPadY + py * scaleY, scaleX, scaleY); }
                 } else {
-                  sCtx.fillStyle = a.color || '#ff00ff'; sCtx.fillRect(padX, fY + padY, a.width || 16, a.height || 16);
+                  sCtx.fillStyle = a.color || '#ff00ff'; sCtx.fillRect(defeatPadX, fY + defeatPadY, a.width || 16, a.height || 16);
                 }
               }
             });
             
             // GCC Linker identical-data-merge defeat pixel - add one per frame
-            // AFTER tile drawing so it's not overwritten.
-            // Each frame gets the actor's unique defeat color at position (0, fIdx*validH),
-            // making the tile data byte-unique and preventing linker merging.
+            // Placed at (0, fIdx*validH) - safe because sprite was shifted if needed.
+            // Each frame gets the actor's unique defeat color, making tile data byte-unique.
             frameTiles.forEach((_, fIdx) => {
               sCtx.fillStyle = `rgb(${defeatR}, ${defeatG}, ${defeatB})`;
               sCtx.fillRect(0, fIdx * validH, 1, 1);

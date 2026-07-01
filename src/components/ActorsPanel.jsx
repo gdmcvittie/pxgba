@@ -82,10 +82,15 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
     const defaultFrame = Array(cols * rows).fill(null);
     if (actor.spriteIds) {
       for (let i = 0; i < Math.min(defaultFrame.length, actor.spriteIds.length); i++) {
-        defaultFrame[i] = actor.spriteIds[i];
+        const item = actor.spriteIds[i];
+        if (item) {
+          defaultFrame[i] = typeof item === 'object' 
+            ? { ...item } 
+            : { id: item, flipH: false, flipV: false };
+        }
       }
     } else if (actor.spriteId) {
-      defaultFrame.fill(actor.spriteId);
+      defaultFrame.fill({ id: actor.spriteId, flipH: false, flipV: false });
     }
     return {
       id: Date.now() + Math.random(),
