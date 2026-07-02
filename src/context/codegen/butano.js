@@ -1704,6 +1704,10 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             actorDeclarations += `    int actor_${i}_shield_duration = ${a.shieldDuration ?? 300};\n`;
             actorDeclarations += `    bool actor_${i}_shield_visual = ${a.shieldVisual !== false ? 'true' : 'false'};\n`;
           }
+          if (a.type === 'health_pickup') {
+            // No specific variables needed for health pickup, logic is direct.
+            // This is a placeholder for future properties.
+          }
           if (a.type === 'ice_block') {
             actorDeclarations += `    bn::fixed actor_${i}_slide_dx = 0;\n`;
             actorDeclarations += `    bn::fixed actor_${i}_slide_dy = 0;\n`;
@@ -2627,6 +2631,33 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             actorLogicCode += `                    }\n`;
             actorLogicCode += `                }\n`;
             actorLogicCode += `            }\n`;
+
+            // Shield interaction check
+            for (let j = 0; j < sActors.length; j++) {
+              const shield = sActors[j];
+              if (shield.type === 'shield') {
+                const shCW = shield.collisionW ?? shield.width ?? 16;
+                const shCH = shield.collisionH ?? shield.height ?? 16;
+                const shCX = shield.collisionX ?? 0;
+                const shCY = shield.collisionY ?? 0;
+                actorLogicCode += `            if (actor_${j}_active) {\n`;
+                actorLogicCode += `                int px_l = actor_${i}_float_x.integer() + ${a.collisionX ?? 0};\n`;
+                actorLogicCode += `                int px_r = px_l + ${a.collisionW ?? a.width ?? 16};\n`;
+                actorLogicCode += `                int py_t = actor_${i}_float_y.integer() + ${a.collisionY ?? 0};\n`;
+                actorLogicCode += `                int py_b = py_t + ${a.collisionH ?? a.height ?? 16};\n`;
+                actorLogicCode += `                int shx_l = actor_${j}_x + ${shCX};\n`;
+                actorLogicCode += `                int shx_r = shx_l + ${shCW};\n`;
+                actorLogicCode += `                int shy_t = actor_${j}_y + ${shCY};\n`;
+                actorLogicCode += `                int shy_b = shy_t + ${shCH};\n`;
+                actorLogicCode += `                if (px_r > shx_l && px_l < shx_r && py_b > shy_t && py_t < shy_b) {\n`;
+                actorLogicCode += `                    actor_${j}_active = false;\n`;
+                actorLogicCode += `                    actor_${j}_sprite.set_visible(false);\n`;
+                actorLogicCode += `                    actor_${i}_invincible_timer = actor_${j}_shield_duration;\n`;
+                actorLogicCode += `                    bn::sound_items::snd_square_440_100.play();\n`;
+                actorLogicCode += `                }\n`;
+                actorLogicCode += `            }\n`;
+              }
+            }
 
             // Custom On Hit / On Interact checks for other actors
             for (let j = 0; j < sActors.length; j++) {
@@ -4367,6 +4398,10 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               actorLogicCode += `                    actor_${i}_active = false;\n`;
               actorLogicCode += `                    actor_${i}_sprite.set_visible(false);\n`;
               actorLogicCode += `                    actor_${playerIdx}_invincible_timer = actor_${i}_shield_duration;\n`;
+              actorLogicCode += `                    if (actor_${i}_shield_visual) {\n`;
+              actorLogicCode += `                        // TODO: Add visual effect for shield\n`;
+              actorLogicCode += `                    }\n`;
+              actorLogicCode += `                    bn::sound_items::snd_square_440_100.play();\n`;
               actorLogicCode += `                }\n`;
               actorLogicCode += `            }\n`;
             }
