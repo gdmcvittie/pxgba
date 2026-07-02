@@ -9,6 +9,7 @@
 - save warning in status bar now saves the project when clicked
 - new scenes automatically get actor groups added to actors panel for organization
 - new actors added will automatically be added to the correct group in the actors panel for organization
+- fixed shield pickup
 
 
 0.2.7
