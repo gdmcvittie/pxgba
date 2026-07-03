@@ -623,6 +623,16 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
         
         if (targetActor.walkAnimId && String(targetActor.walkAnimId) === String(animId)) {
           stateId = 1;
+        } else if (targetActor.jumpAnimId && String(targetActor.jumpAnimId) === String(animId)) {
+          stateId = 2;
+          const jumpAnim = animations.find(an => an && an.id === animId);
+          if (jumpAnim) {
+            const fps = jumpAnim.fps > 0 ? jumpAnim.fps : 8;
+            const framesCount = jumpAnim.frames ? jumpAnim.frames.length : 1;
+            lockFrames = framesCount * Math.floor(60 / fps);
+          } else {
+            lockFrames = 60;
+          }
         } else if (targetActor.__customAnimData) {
           const cad = targetActor.__customAnimData.find(c => String(c.animId) === String(animId));
           if (cad) {

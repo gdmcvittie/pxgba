@@ -1330,6 +1330,7 @@ export const PxShopProvider = ({ children }) => {
           isHidden: false,
           hflip: true,
           attackAnimId: null,
+          jumpAnimId: null,
           script: { nodes: [{ id: 'start', position: { x: 250, y: 100 }, data: { label: 'On Update' }, type: 'input' }], edges: [] }
         },
         { id: baseId + 1 + Math.random(), type: 'group', name: 'Pickups', isOpen: true },
@@ -4178,6 +4179,7 @@ export const PxShopProvider = ({ children }) => {
             isHidden: false,
             hflip: true,
             attackAnimId: null,
+          jumpAnimId: null,
             script: { nodes: [{ id: 'start', position: { x: 250, y: 100 }, data: { label: 'On Update' }, type: 'input' }], edges: [] }
           };
           updatedActors = [...updatedActors, newPlayer];
@@ -4944,6 +4946,7 @@ export const PxShopProvider = ({ children }) => {
               isHidden: false,
               hflip: true,
               attackAnimId: null,
+          jumpAnimId: null,
               script: { nodes: [], edges: [] }
             };
             const nextActors = [...actors, newActor];
@@ -4998,6 +5001,7 @@ export const PxShopProvider = ({ children }) => {
             isHidden: false,
             hflip: true,
             attackAnimId: null,
+          jumpAnimId: null,
             script: { nodes: [{ id: 'start', position: { x: 250, y: 100 }, data: { label: 'On Update' }, type: 'input' }], edges: [] }
           };
           const nextActors = [...actors, newActor];
@@ -7787,6 +7791,7 @@ export const PxShopProvider = ({ children }) => {
           isHidden: false,
           hflip: true,
           attackAnimId: null,
+          jumpAnimId: null,
           script: { nodes: [{ id: 'start', position: { x: 250, y: 100 }, data: { label: 'On Update' }, type: 'input' }], edges: [] }
         },
         { id: baseId + 1 + Math.random(), type: 'group', name: 'Pickups', isOpen: true },

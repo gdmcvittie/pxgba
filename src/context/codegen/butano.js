@@ -1173,6 +1173,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
           let defaultIdx = 0;
           let idleIndices = [0];
           let walkIndices = [0];
+          let jumpIndices = [];
           let customAnimData = [];
           const frameTiles = [];
 
@@ -1185,6 +1186,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
 
           let idleAnim = null;
           let walkAnim = null;
+          let jumpAnim = null;
           if (a.type === 'player' && scene.type === 'POINTNCLICK') {
             const ptrSpriteId = scene.pointerSpriteId ?? 22;
             const ptrHoverSpriteId = scene.pointerHoverSpriteId ?? 23;
@@ -1212,16 +1214,18 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             }
             idleAnim = animations.find(anim => anim && anim.id === a.idleAnimId);
             walkAnim = animations.find(anim => anim && anim.id === a.walkAnimId);
+            jumpAnim = animations.find(anim => anim && anim.id === a.jumpAnimId);
 
             defaultIdx = addFrameTile(effectiveSpriteIds && effectiveSpriteIds.length > 0 ? effectiveSpriteIds : effectiveSpriteId);
             idleIndices = idleAnim && idleAnim.frames.length > 0 ? idleAnim.frames.map(addFrameTile) : [defaultIdx];
             walkIndices = walkAnim && walkAnim.frames.length > 0 ? walkAnim.frames.map(addFrameTile) : [defaultIdx];
+            jumpIndices = jumpAnim && jumpAnim.frames.length > 0 ? jumpAnim.frames.map(addFrameTile) : [];
 
             const customAnimIds = Array.from(actorCustomAnims[a.id] || []);
             customAnimData = customAnimIds.map((animId, cIdx) => {
               const anim = animations.find(an => an && an.id === animId);
               return {
-                animId, stateId: cIdx + 2,
+                animId, stateId: cIdx + 3,
                 indices: anim && anim.frames.length > 0 ? anim.frames.map(addFrameTile) : [defaultIdx],
                 fps: anim ? anim.fps : 8
               };
@@ -1391,8 +1395,10 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
           if (isPlatformType) {
             actorDeclarations += `    actor_${i}_sprite.set_z_order(1);\n`;
           }
+          const cacheEntries = frameTiles.map((_, t) => `        bn::sprite_items::${actName}.tiles_item().create_tiles(${t})`);
+          actorDeclarations += `    bn::sprite_tiles_ptr actor_${i}_tiles_cache[] = {\n${cacheEntries.join(',\n')}\n    };\n`;
           if (idleIndices.length > 0) {
-            actorDeclarations += `    actor_${i}_sprite.set_tiles(bn::sprite_items::${actName}.tiles_item().create_tiles(${idleIndices[0]}));\n`;
+            actorDeclarations += `    actor_${i}_sprite.set_tiles(actor_${i}_tiles_cache[${idleIndices[0]}]);\n`;
           }
 
           const sX = a.useVarScaleX && a.varScaleX ? a.varScaleX.replace(/[^a-zA-Z0-9_]/g, '_') : (a.scaleX ?? 1);
@@ -1730,6 +1736,9 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
           if (_needsAnim) {
             actorDeclarations += `    int actor_${i}_idle_frames[] = { ${idleIndices.join(', ')} };\n`;
             actorDeclarations += `    int actor_${i}_walk_frames[] = { ${walkIndices.join(', ')} };\n`;
+            if (jumpIndices.length > 0) {
+              actorDeclarations += `    int actor_${i}_jump_frames[] = { ${jumpIndices.join(', ')} };\n`;
+            }
             customAnimData.forEach(cad => {
               actorDeclarations += `    int actor_${i}_custom_${cad.stateId}_frames[] = { ${cad.indices.join(', ')} };\n`;
             });
@@ -4761,9 +4770,9 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
 
           if (scene.type === 'POINTNCLICK' && a.type === 'player') {
             postTriggerCode += `            if (is_hovering) {\n`;
-            postTriggerCode += `                actor_${i}_sprite.set_tiles(bn::sprite_items::${actName}.tiles_item().create_tiles(1));\n`;
+            postTriggerCode += `                actor_${i}_sprite.set_tiles(actor_${i}_tiles_cache[1]);\n`;
             postTriggerCode += `            } else {\n`;
-            postTriggerCode += `                actor_${i}_sprite.set_tiles(bn::sprite_items::${actName}.tiles_item().create_tiles(0));\n`;
+            postTriggerCode += `                actor_${i}_sprite.set_tiles(actor_${i}_tiles_cache[0]);\n`;
             postTriggerCode += `            }\n`;
           } else {
             actorLogicCode += `            if (actor_${i}_anim_lock > 0) {\n`;
@@ -4777,11 +4786,36 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 }
             actorLogicCode += `                }\n`;
             actorLogicCode += `            } else {\n`;
-            actorLogicCode += `                int next_state_${i} = (actor_${i}_dx != 0 || actor_${i}_dy != 0) ? 1 : 0;\n`;
+            actorLogicCode += `                int next_state_${i} = 0;\n`;
+            if (jumpAnim && walkAnim) {
+              actorLogicCode += `                if (actor_${i}_dy != 0) {\n`;
+              actorLogicCode += `                    next_state_${i} = 2;\n`;
+              actorLogicCode += `                } else if (actor_${i}_dx != 0 || actor_${i}_dy != 0) {\n`;
+              actorLogicCode += `                    next_state_${i} = 1;\n`;
+              actorLogicCode += `                }\n`;
+            } else if (jumpAnim) {
+              actorLogicCode += `                if (actor_${i}_dy != 0) {\n`;
+              actorLogicCode += `                    next_state_${i} = 2;\n`;
+              actorLogicCode += `                }\n`;
+            } else if (walkAnim) {
+              actorLogicCode += `                if (actor_${i}_dx != 0 || actor_${i}_dy != 0) {\n`;
+              actorLogicCode += `                    next_state_${i} = 1;\n`;
+              actorLogicCode += `                }\n`;
+            }
             actorLogicCode += `                if (next_state_${i} != actor_${i}_anim_state) {\n`;
             actorLogicCode += `                    actor_${i}_anim_state = next_state_${i};\n`;
             actorLogicCode += `                    actor_${i}_anim_idx = 0;\n`;
             actorLogicCode += `                    actor_${i}_anim_timer = 0;\n`;
+            actorLogicCode += `                    int state_frame_${i} = 0;\n`;
+            actorLogicCode += `                    if (actor_${i}_anim_state == 0 && ${idleIndices.length} > 0) state_frame_${i} = actor_${i}_idle_frames[0];\n`;
+            actorLogicCode += `                    else if (actor_${i}_anim_state == 1 && ${walkIndices.length} > 0) state_frame_${i} = actor_${i}_walk_frames[0];\n`;
+            if (jumpIndices.length > 0) {
+              actorLogicCode += `                    else if (actor_${i}_anim_state == 2) state_frame_${i} = actor_${i}_jump_frames[0];\n`;
+            }
+            customAnimData.forEach(cad => {
+              actorLogicCode += `                    else if (actor_${i}_anim_state == ${cad.stateId} && ${cad.indices.length} > 0) state_frame_${i} = actor_${i}_custom_${cad.stateId}_frames[0];\n`;
+            });
+            actorLogicCode += `                    actor_${i}_sprite.set_tiles(actor_${i}_tiles_cache[state_frame_${i}]);\n`;
             actorLogicCode += `                }\n`;
             actorLogicCode += `            }\n`;
 
@@ -4803,6 +4837,9 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             actorLogicCode += `            int max_frames_${i} = 1;\n`;
             actorLogicCode += `            if (actor_${i}_anim_state == 0) { fps_${i} = ${idleAnim ? idleAnim.fps : 8}; max_frames_${i} = ${idleIndices.length}; }\n`;
             actorLogicCode += `            else if (actor_${i}_anim_state == 1) { fps_${i} = ${walkAnim ? walkAnim.fps : 8}; max_frames_${i} = ${walkIndices.length}; }\n`;
+            if (jumpIndices.length > 0) {
+              actorLogicCode += `            else if (actor_${i}_anim_state == 2) { fps_${i} = ${jumpAnim ? jumpAnim.fps : 8}; max_frames_${i} = ${jumpIndices.length}; }\n`;
+            }
             customAnimData.forEach(cad => {
               actorLogicCode += `            else if (actor_${i}_anim_state == ${cad.stateId}) { fps_${i} = ${cad.fps}; max_frames_${i} = ${cad.indices.length}; }\n`;
             });
@@ -4814,10 +4851,13 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             actorLogicCode += `                int frame_to_show_${i} = 0;\n`;
             actorLogicCode += `                if (actor_${i}_anim_state == 0) frame_to_show_${i} = actor_${i}_idle_frames[actor_${i}_anim_idx];\n`;
             actorLogicCode += `                else if (actor_${i}_anim_state == 1) frame_to_show_${i} = actor_${i}_walk_frames[actor_${i}_anim_idx];\n`;
+            if (jumpIndices.length > 0) {
+              actorLogicCode += `                else if (actor_${i}_anim_state == 2) frame_to_show_${i} = actor_${i}_jump_frames[actor_${i}_anim_idx];\n`;
+            }
             customAnimData.forEach(cad => {
               actorLogicCode += `                else if (actor_${i}_anim_state == ${cad.stateId}) frame_to_show_${i} = actor_${i}_custom_${cad.stateId}_frames[actor_${i}_anim_idx];\n`;
             });
-            actorLogicCode += `                if (max_frames_${i} > 1 || (actor_${i}_anim_state == 1 && ${walkIndices.length} > 0) || (actor_${i}_anim_state == 0 && ${idleIndices.length} > 0)) actor_${i}_sprite.set_tiles(bn::sprite_items::${actName}.tiles_item().create_tiles(frame_to_show_${i}));\n`;
+            actorLogicCode += `                if (max_frames_${i} > 1 || (actor_${i}_anim_state == 1 && ${walkIndices.length} > 0) || (actor_${i}_anim_state == 0 && ${idleIndices.length} > 0) || actor_${i}_anim_state >= 2) actor_${i}_sprite.set_tiles(actor_${i}_tiles_cache[frame_to_show_${i}]);\n`;
             actorLogicCode += `            }\n`;
 
             if (a.type === 'player' && a.playerAnimOnButton && a.playerAnimId && a.playerAnimFireProjectile) {

@@ -101,6 +101,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
   });
   const [walkAnim, setWalkAnim] = useState(() => cloneAnim(animations.find(a => a.id === actor.walkAnimId)));
   const [attackAnim, setAttackAnim] = useState(() => cloneAnim(animations.find(a => a.id === actor.attackAnimId)));
+  const [jumpAnim, setJumpAnim] = useState(() => cloneAnim(animations.find(a => a.id === actor.jumpAnimId)));
   const [customAnims, setCustomAnims] = useState(() => (actor.customAnimIds || []).map(id => cloneAnim(animations.find(a => a.id === id))).filter(Boolean));
 
   const [activeTab, setActiveTab] = useState('idle');
@@ -119,8 +120,9 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
     if (activeTab === 'idle') return idleAnim;
     if (activeTab === 'walk') return walkAnim;
     if (activeTab === 'attack') return attackAnim;
+    if (activeTab === 'jump') return jumpAnim;
     return customAnims.find(a => a.id === activeTab) || null;
-  }, [activeTab, idleAnim, walkAnim, attackAnim, customAnims]);
+  }, [activeTab, idleAnim, walkAnim, attackAnim, jumpAnim, customAnims]);
 
   const autoFitCollisionBox = useCallback(() => {
     let minX = designerW;
@@ -220,6 +222,12 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
         nextFrames[activeFrameIdx] = next;
         return { ...prev, frames: nextFrames };
       });
+    } else if (activeTab === 'jump') {
+      setJumpAnim(prev => {
+        const nextFrames = [...prev.frames];
+        nextFrames[activeFrameIdx] = next;
+        return { ...prev, frames: nextFrames };
+      });
     } else {
       setCustomAnims(prev => prev.map(a => {
         if (a.id === activeTab) {
@@ -261,6 +269,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
     if (idleAnim) setIdleAnim(prev => ({ ...prev, frames: prev.frames.map(resizeFrame) }));
     if (walkAnim) setWalkAnim(prev => ({ ...prev, frames: prev.frames.map(resizeFrame) }));
     if (attackAnim) setAttackAnim(prev => ({ ...prev, frames: prev.frames.map(resizeFrame) }));
+    if (jumpAnim) setJumpAnim(prev => ({ ...prev, frames: prev.frames.map(resizeFrame) }));
     setCustomAnims(prev => prev.map(a => ({ ...a, frames: a.frames.map(resizeFrame) })));
   };
 
@@ -306,6 +315,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
     collectTileIds(idleAnim);
     collectTileIds(walkAnim);
     collectTileIds(attackAnim);
+    collectTileIds(jumpAnim);
     customAnims.forEach(collectTileIds);
 
     if (activeTileId !== null && activeTileId !== undefined) {
@@ -349,6 +359,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
     collectTileIds(idleAnim);
     collectTileIds(walkAnim);
     collectTileIds(attackAnim);
+    collectTileIds(jumpAnim);
     customAnims.forEach(collectTileIds);
 
     if (activeTileId !== null && activeTileId !== undefined) {
@@ -405,6 +416,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
     collectTileIds(idleAnim);
     collectTileIds(walkAnim);
     collectTileIds(attackAnim);
+    collectTileIds(jumpAnim);
     customAnims.forEach(collectTileIds);
 
     if (activeTileId !== null && activeTileId !== undefined) {
@@ -508,6 +520,12 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
     setActiveTab('attack'); setActiveFrameIdx(0);
   };
 
+  const createJumpAnim = () => {
+    setIsPlayingPreview(false);
+    setJumpAnim({ id: Date.now() + Math.random(), name: `${actor.name} Jump`, frames: [Array(cols * rows).fill(null)], fps: 8 });
+    setActiveTab('jump'); setActiveFrameIdx(0);
+  };
+
   const createCustomAnim = () => {
     setIsPlayingPreview(false);
     const newAnim = { id: Date.now() + Math.random(), name: `${actor.name} Custom ${customAnims.length + 1}`, frames: [Array(cols * rows).fill(null)], fps: 8 };
@@ -521,6 +539,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
     if (activeTab === 'idle') setIdleAnim(updateAnimFrames);
     else if (activeTab === 'walk') setWalkAnim(updateAnimFrames);
     else if (activeTab === 'attack') setAttackAnim(updateAnimFrames);
+    else if (activeTab === 'jump') setJumpAnim(updateAnimFrames);
     else setCustomAnims(prev => prev.map(a => a.id === activeTab ? updateAnimFrames(a) : a));
     
     const currentAnim = getCurrentAnim();
@@ -535,6 +554,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
     if (activeTab === 'idle') setIdleAnim(updateAnimFrames);
     else if (activeTab === 'walk') setWalkAnim(updateAnimFrames);
     else if (activeTab === 'attack') setAttackAnim(updateAnimFrames);
+    else if (activeTab === 'jump') setJumpAnim(updateAnimFrames);
     else setCustomAnims(prev => prev.map(a => a.id === activeTab ? updateAnimFrames(a) : a));
     if (activeFrameIdx >= idx && activeFrameIdx > 0) setActiveFrameIdx(activeFrameIdx - 1);
   };
@@ -901,6 +921,11 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
               ) : (
                 <button onClick={createAttackAnim} style={{ background: '#222', color: '#888', border: '1px dashed #555', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>+ Attack</button>
               )}
+              {jumpAnim ? (
+                <button onClick={() => selectTab('jump')} style={{ background: activeTab === 'jump' ? '#4CAF50' : '#222', color: '#fff', border: '1px solid #444', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>Jump Anim</button>
+              ) : (
+                <button onClick={createJumpAnim} style={{ background: '#222', color: '#888', border: '1px dashed #555', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>+ Jump</button>
+              )}
               {customAnims.map(ca => (
                 <button key={ca.id} onClick={() => selectTab(ca.id)} style={{ background: activeTab === ca.id ? '#4CAF50' : '#222', color: '#fff', border: '1px solid #444', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>{ca.name}</button>
               ))}
@@ -954,6 +979,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
                     if (activeTab === 'idle') setIdleAnim(prev => ({ ...prev, fps }));
                     else if (activeTab === 'walk') setWalkAnim(prev => ({ ...prev, fps }));
                     else if (activeTab === 'attack') setAttackAnim(prev => ({ ...prev, fps }));
+                    else if (activeTab === 'jump') setJumpAnim(prev => ({ ...prev, fps }));
                     else setCustomAnims(prev => prev.map(a => a.id === activeTab ? { ...a, fps } : a));
                   }} style={{ width: '40px', background: '#222', color: '#fff', border: '1px solid #444', padding: '2px', fontSize: '10px', borderRadius: '3px' }} />
                 </div>
@@ -968,7 +994,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button onClick={onClose} style={{ background: 'transparent', border: '1px solid #555', color: '#fff', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
-            <button onClick={() => onSave(idleAnim ? idleAnim.frames[0] : Array(cols * rows).fill(null), designerW, designerH, idleAnim, walkAnim, attackAnim, customAnims, colX, colY, colW, colH, hflip, vflip)} style={{ background: '#4CAF50', border: 'none', color: '#fff', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Save Layout</button>
+            <button onClick={() => onSave(idleAnim ? idleAnim.frames[0] : Array(cols * rows).fill(null), designerW, designerH, idleAnim, walkAnim, attackAnim, jumpAnim, customAnims, colX, colY, colW, colH, hflip, vflip)} style={{ background: '#4CAF50', border: 'none', color: '#fff', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Save Layout</button>
           </div>
         </div>
       </div>
@@ -1220,6 +1246,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
       isHidden: false,
       hflip: true,
       attackAnimId: null,
+      jumpAnimId: null,
       script: { nodes: [], edges: [] },
       ...(type === 'xp_orb' ? { xpVarName: 'PLAYER_XP', xpValue: 1 } : {})
     };
@@ -1333,6 +1360,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
     let newIdleAnimId = actorToDuplicate.idleAnimId;
     let newWalkAnimId = actorToDuplicate.walkAnimId;
     let newAttackAnimId = actorToDuplicate.attackAnimId;
+    let newJumpAnimId = actorToDuplicate.jumpAnimId;
     let newCustomAnimIds = actorToDuplicate.customAnimIds ? [...actorToDuplicate.customAnimIds] : [];
 
     if (actorToDuplicate.idleAnimId) {
@@ -1377,6 +1405,20 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
       }
     }
 
+    if (actorToDuplicate.jumpAnimId) {
+      const originalJump = animations.find(a => a.id === actorToDuplicate.jumpAnimId);
+      if (originalJump) {
+        const clonedJump = {
+          ...originalJump,
+          id: Date.now() + Math.random() + 0.26,
+          name: `${newName} Jump`,
+          frames: originalJump.frames.map(f => Array.isArray(f) ? [...f] : (f ? [f] : []))
+        };
+        newGlobalAnims.push(clonedJump);
+        newJumpAnimId = clonedJump.id;
+      }
+    }
+
     if (actorToDuplicate.customAnimIds && actorToDuplicate.customAnimIds.length > 0) {
       newCustomAnimIds = actorToDuplicate.customAnimIds.map((id, idx) => {
         const originalCustom = animations.find(a => a.id === id);
@@ -1411,6 +1453,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
       idleAnimId: newIdleAnimId,
       walkAnimId: newWalkAnimId,
       attackAnimId: newAttackAnimId,
+      jumpAnimId: newJumpAnimId,
       customAnimIds: newCustomAnimIds,
       script: actorToDuplicate.script ? JSON.parse(JSON.stringify(actorToDuplicate.script)) : { nodes: [], edges: [] }
     };
@@ -1728,6 +1771,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                                 actor.idleAnimId,
                                 actor.walkAnimId,
                                 actor.attackAnimId,
+                                actor.jumpAnimId,
                                 ...(actor.customAnimIds || [])
                               ].filter(Boolean))).map(animId => {
                                 const anim = animations.find(a => a.id === animId);
@@ -3109,7 +3153,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
               dimensions={dimensions}
               animations={animations}
               onClose={() => setDesignerActorId(null)}
-              onSave={(newSpriteIds, newW, newH, newIdle, newWalk, newAttack, newCustoms, newColX, newColY, newColW, newColH, newHFlip, newVFlip) => {
+               onSave={(newSpriteIds, newW, newH, newIdle, newWalk, newAttack, newJump, newCustoms, newColX, newColY, newColW, newColH, newHFlip, newVFlip) => {
                 const expectedLength = Math.max(1, Math.floor(newW / 8) * Math.floor(newH / 8));
                 let trimmedSpriteIds = Array.isArray(newSpriteIds) ? newSpriteIds.slice(0, expectedLength) : Array(expectedLength).fill(null);
                 while (trimmedSpriteIds.length < expectedLength) {
@@ -3133,6 +3177,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                 const trimmedIdle = trimAnim(newIdle);
                 const trimmedWalk = trimAnim(newWalk);
                 const trimmedAttack = trimAnim(newAttack);
+                const trimmedJump = trimAnim(newJump);
                 const trimmedCustoms = newCustoms.map(trimAnim).filter(Boolean);
 
                 const newGlobalAnims = [...animations];
@@ -3147,6 +3192,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                 const idleId = updateOrAddAnim(trimmedIdle);
                 const walkId = updateOrAddAnim(trimmedWalk);
                 const attackId = updateOrAddAnim(trimmedAttack);
+                const jumpId = updateOrAddAnim(trimmedJump);
                 const customIds = trimmedCustoms.map(updateOrAddAnim).filter(Boolean);
 
                 setAnimations(newGlobalAnims);
@@ -3155,7 +3201,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                 if (isGlobal) {
                   const nextGlobal = globalActors.map(a => a.id === designerActorId ? {
                     ...a, spriteIds: trimmedSpriteIds, spriteId: null, width: newW, height: newH,
-                    idleAnimId: idleId, walkAnimId: walkId, attackAnimId: attackId, customAnimIds: customIds,
+                    idleAnimId: idleId, walkAnimId: walkId, attackAnimId: attackId, jumpAnimId: jumpId, customAnimIds: customIds,
                     collisionX: newColX, collisionY: newColY, collisionW: newColW, collisionH: newColH,
                     hflip: newHFlip, vflip: newVFlip
                   } : a);
@@ -3164,7 +3210,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                 } else {
                   const nextActors = actors.map(a => a.id === designerActorId ? {
                     ...a, spriteIds: trimmedSpriteIds, spriteId: null, width: newW, height: newH,
-                    idleAnimId: idleId, walkAnimId: walkId, attackAnimId: attackId, customAnimIds: customIds,
+                    idleAnimId: idleId, walkAnimId: walkId, attackAnimId: attackId, jumpAnimId: jumpId, customAnimIds: customIds,
                     collisionX: newColX, collisionY: newColY, collisionW: newColW, collisionH: newColH,
                     hflip: newHFlip, vflip: newVFlip
                   } : a);
