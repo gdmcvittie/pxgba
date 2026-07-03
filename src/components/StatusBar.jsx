@@ -42,13 +42,6 @@ const StatusBar = () => {
     }
   }, [updateStatus]);
 
-  useEffect(() => {
-    if (updateStatus === 'ready') {
-      const timer = setTimeout(() => window.location.reload(), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [updateStatus]);
-
   const isServerHost = window.location.hostname === 'pxgba.liftedpixel.ca';
 
   useEffect(() => {
@@ -61,6 +54,10 @@ const StatusBar = () => {
   }, []);
 
   const handleUpdate = () => {
+    if (updateStatus === 'ready') {
+      window.location.reload();
+      return;
+    }
     setUpdateStatus('checking');
     checkForUpdates((status, message) => {
       setUpdateStatus(status);
@@ -130,39 +127,6 @@ const StatusBar = () => {
 
       <div style={{ flex: 1 }} />
 
-
-      {!isServerHost && (
-        <button
-          onClick={handleUpdate}
-          disabled={updateStatus === 'checking' || updateStatus === 'downloading'}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px',
-            background: 'transparent',
-            border: 'none',
-            color: updateStatus === 'ready' ? '#4CAF50' : updateStatus === 'error' ? '#f44336' : '#0084ffff',
-            cursor: updateStatus === 'checking' || updateStatus === 'downloading' ? 'default' : 'pointer',
-            padding: '0 4px',
-            fontSize: '11px',
-            opacity: updateStatus === 'checking' || updateStatus === 'downloading' ? 0.6 : 1,
-          }}
-          title={updateStatus === 'ready' ? 'Update downloaded, restarting...' : 'Check for Updates'}
-        >
-          {updateStatus === 'ready' ? null : <GrUpgrade size={12} />}
-          <span>
-            {updateStatus === 'idle' && 'Check for Updates'}
-            {updateStatus === 'checking' && 'Checking...'}
-            {updateStatus === 'downloading' && 'Downloading...'}
-            {updateStatus === 'up-to-date' && 'Up to date'}
-            {updateStatus === 'ready' && 'Updating...'}
-            {updateStatus === 'error' && (updateMessage || 'Update failed')}
-          </span>
-        </button>
-      )}
-
-      <div style={{ flex: 1 }} />
-
       {isOverdue && (
         <button
           onClick={() => { exportProjectJSON(); setSaveWarningShown(false); }}
@@ -187,6 +151,37 @@ const StatusBar = () => {
       <span style={{ whiteSpace: 'nowrap', color: saveColor }}>
         Saved: {timeText}
       </span>
+
+    {!isServerHost && (
+        <button
+          onClick={handleUpdate}
+          disabled={updateStatus === 'checking' || updateStatus === 'downloading'}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            marginLeft: '10px',
+            gap: '4px',
+            background: 'transparent',
+            border: 'none',
+            color: updateStatus === 'ready' ? '#4CAF50' : updateStatus === 'error' ? '#f44336' : '#0084ffff',
+            cursor: updateStatus === 'checking' || updateStatus === 'downloading' ? 'default' : 'pointer',
+            padding: '0 4px',
+            fontSize: '11px',
+            opacity: updateStatus === 'checking' || updateStatus === 'downloading' ? 0.6 : 1,
+          }}
+          title={updateStatus === 'ready' ? 'Restart to apply update' : 'Check for Updates'}
+        >
+          {updateStatus === 'ready' ? null : <GrUpgrade size={12} />}
+          <span>
+            {updateStatus === 'idle' && 'Check for Updates'}
+            {updateStatus === 'checking' && 'Checking...'}
+            {updateStatus === 'downloading' && 'Downloading...'}
+            {updateStatus === 'up-to-date' && 'Up to date'}
+            {updateStatus === 'ready' && 'Restart to update'}
+            {updateStatus === 'error' && (updateMessage || 'Update failed')}
+          </span>
+        </button>
+      )}
     </div>
   );
 };

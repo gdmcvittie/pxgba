@@ -8,4 +8,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.on('compile-status', (_event, data) => callback(data));
   },
   openExternal: (url) => ipcRenderer.invoke('open-external', url),
+  checkVersion: () => ipcRenderer.invoke('check-version'),
+  applyUpdate: () => ipcRenderer.invoke('apply-update'),
 });

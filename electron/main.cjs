@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog } = require('electron');
+const { app, BrowserWindow, dialog, ipcMain } = require('electron');
 const path = require('path');
 const { fork } = require('child_process');
 const fs = require('fs');
@@ -179,7 +179,88 @@ function navigateToApp(retries = 3) {
   });
 }
 
+let updateApplied = false;
+
+function compareVersions(a, b) {
+  const pa = a.split('.').map(Number);
+  const pb = b.split('.').map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const na = pa[i] || 0;
+    const nb = pb[i] || 0;
+    if (na > nb) return 1;
+    if (na < nb) return -1;
+  }
+  return 0;
+}
+
+function getAppRoot() {
+  // In a packaged app, resourcesPath is the real filesystem directory outside the asar
+  if (process.resourcesPath) {
+    const unpacked = path.join(process.resourcesPath, 'app.asar.unpacked');
+    if (fs.existsSync(unpacked)) return unpacked;
+  }
+  // Dev mode: __dirname = electron/ -> app root is one level up
+  return path.resolve(__dirname, '..');
+}
+
 app.whenReady().then(() => {
+  // Check if a newer version exists on the server (main process — no CORS)
+  ipcMain.handle('check-version', async () => {
+    try {
+      if (updateApplied) {
+        return { status: 'up-to-date' };
+      }
+
+      const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+      const localVersion = pkg.version;
+
+      const res = await fetch('https://pxgba.liftedpixel.ca/version.txt');
+      if (!res.ok) return { status: 'error', message: 'Could not fetch version file' };
+
+      const remoteVersion = (await res.text()).trim();
+
+      if (compareVersions(remoteVersion, localVersion) > 0) {
+        return { status: 'update-needed', remoteVersion };
+      }
+
+      return { status: 'up-to-date' };
+    } catch (error) {
+      return { status: 'error', message: error.message };
+    }
+  });
+
+  // Download latest.zip + extract to app root (main process — no CORS)
+  ipcMain.handle('apply-update', async () => {
+    try {
+      const appRoot = getAppRoot();
+
+      const res = await fetch('https://pxgba.liftedpixel.ca/latest.zip');
+      if (!res.ok) throw new Error(`Download failed: ${res.status}`);
+
+      const JSZip = require('jszip');
+      const zip = await JSZip.loadAsync(Buffer.from(await res.arrayBuffer()));
+
+      await Promise.all(
+        Object.keys(zip.files).map(async (filename) => {
+          const file = zip.files[filename];
+          const filePath = path.join(appRoot, filename);
+          if (file.dir) {
+            fs.mkdirSync(filePath, { recursive: true });
+          } else {
+            fs.mkdirSync(path.dirname(filePath), { recursive: true });
+            fs.writeFileSync(filePath, await file.async('nodebuffer'));
+          }
+        })
+      );
+
+      updateApplied = true;
+      console.log('Update applied to:', appRoot);
+      return { status: 'updated' };
+    } catch (error) {
+      return { status: 'error', message: error.message };
+    }
+  });
+
   // Show the window immediately with a loading screen
   createWindow();
 
