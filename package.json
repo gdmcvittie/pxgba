@@ -11,7 +11,7 @@
     "license": "MIT",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
+        "build": "vite build && node -e \"const p=require('./package.json'); require('fs').writeFileSync('dist/version.txt', p.version)\" && powershell -NoProfile -Command \"Remove-Item -Path 'dist/latest.zip' -ErrorAction SilentlyContinue; Compress-Archive -Path 'dist/*' -DestinationPath 'dist/latest.zip'\"",
         "lint": "eslint .",
         "preview": "vite preview",
         "start": "node src/components/server.js",

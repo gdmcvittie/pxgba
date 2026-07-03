@@ -1,3 +1,9 @@
+0.2.9
+- added updating system within the app (in the status bar footer)
+- fixed large player actor sprites crashing on jump with animation
+- added jump animation state to actor designer (is triggered automatically on jump)
+
+0.2.8
 - added health pickup item actor
 - added player variables
 - simplified player actor config

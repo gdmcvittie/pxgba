@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { usePxShop } from '../context/PxShopContext';
 import { BsDownload, BsExclamationTriangleFill } from 'react-icons/bs';
 import { checkForUpdates } from '../utils/updater';
+import { GrUpgrade } from 'react-icons/gr';
 
 const formatBytes = (bytes) => {
   if (bytes < 1024) return `${bytes} B`;
@@ -41,11 +42,25 @@ const StatusBar = () => {
     }
   }, [updateStatus]);
 
-  const handleUpdate = () => {
+  useEffect(() => {
     if (updateStatus === 'ready') {
-      window.location.reload();
-      return;
+      const timer = setTimeout(() => window.location.reload(), 1000);
+      return () => clearTimeout(timer);
     }
+  }, [updateStatus]);
+
+  const isServerHost = window.location.hostname === 'pxgba.liftedpixel.ca';
+
+  useEffect(() => {
+    if (isServerHost) return;
+    setUpdateStatus('checking');
+    checkForUpdates((status, message) => {
+      setUpdateStatus(status);
+      if (message) setUpdateMessage(message);
+    });
+  }, []);
+
+  const handleUpdate = () => {
     setUpdateStatus('checking');
     checkForUpdates((status, message) => {
       setUpdateStatus(status);
@@ -116,33 +131,35 @@ const StatusBar = () => {
       <div style={{ flex: 1 }} />
 
 
-      <button
-        onClick={handleUpdate}
-        disabled={updateStatus === 'checking' || updateStatus === 'downloading'}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '4px',
-          background: 'transparent',
-          border: 'none',
-          color: updateStatus === 'ready' ? '#4CAF50' : updateStatus === 'error' ? '#f44336' : '#0084ffff',
-          cursor: updateStatus === 'checking' || updateStatus === 'downloading' ? 'default' : 'pointer',
-          padding: '0 4px',
-          fontSize: '11px',
-          opacity: updateStatus === 'checking' || updateStatus === 'downloading' ? 0.6 : 1,
-        }}
-        title={updateStatus === 'ready' ? 'Restart the app to apply the update' : 'Check for Updates'}
-      >
-        {updateStatus === 'ready' ? null : <BsDownload size={12} />}
-        <span>
-          {updateStatus === 'idle' && 'Check for Updates'}
-          {updateStatus === 'checking' && 'Checking...'}
-          {updateStatus === 'downloading' && 'Downloading...'}
-          {updateStatus === 'up-to-date' && 'Up to date'}
-          {updateStatus === 'ready' && 'Restart to Update'}
-          {updateStatus === 'error' && (updateMessage || 'Update failed')}
-        </span>
-      </button>
+      {!isServerHost && (
+        <button
+          onClick={handleUpdate}
+          disabled={updateStatus === 'checking' || updateStatus === 'downloading'}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            background: 'transparent',
+            border: 'none',
+            color: updateStatus === 'ready' ? '#4CAF50' : updateStatus === 'error' ? '#f44336' : '#0084ffff',
+            cursor: updateStatus === 'checking' || updateStatus === 'downloading' ? 'default' : 'pointer',
+            padding: '0 4px',
+            fontSize: '11px',
+            opacity: updateStatus === 'checking' || updateStatus === 'downloading' ? 0.6 : 1,
+          }}
+          title={updateStatus === 'ready' ? 'Update downloaded, restarting...' : 'Check for Updates'}
+        >
+          {updateStatus === 'ready' ? null : <GrUpgrade size={12} />}
+          <span>
+            {updateStatus === 'idle' && 'Check for Updates'}
+            {updateStatus === 'checking' && 'Checking...'}
+            {updateStatus === 'downloading' && 'Downloading...'}
+            {updateStatus === 'up-to-date' && 'Up to date'}
+            {updateStatus === 'ready' && 'Updating...'}
+            {updateStatus === 'error' && (updateMessage || 'Update failed')}
+          </span>
+        </button>
+      )}
 
       <div style={{ flex: 1 }} />
 
