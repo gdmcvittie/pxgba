@@ -27,5 +27,17 @@ export default defineConfig({
       'Cross-Origin-Opener-Policy': 'same-origin',
       'Cross-Origin-Embedder-Policy': 'require-corp',
     },
+    proxy: {
+      '/pxgba-proxy': {
+        target: 'https://pxgba.liftedpixel.ca',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/pxgba-proxy/, ''),
+      },
+      '/lp-proxy': {
+        target: 'https://lpbackend.liftedpixel.ca',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/lp-proxy/, ''),
+      },
+    },
   },
 })

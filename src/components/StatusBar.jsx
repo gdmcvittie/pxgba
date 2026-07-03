@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { usePxShop } from '../context/PxShopContext';
-import { BsExclamationTriangleFill } from 'react-icons/bs';
+import { BsDownload, BsExclamationTriangleFill } from 'react-icons/bs';
+import { checkForUpdates } from '../utils/updater';
 
 const formatBytes = (bytes) => {
   if (bytes < 1024) return `${bytes} B`;
@@ -22,11 +23,35 @@ const formatTimeSince = (timestamp, now) => {
 const StatusBar = () => {
   const { estimatedRomSize, lastSavedTime, setSaveWarningShown, exportProjectJSON } = usePxShop();
   const [now, setNow] = useState(Date.now());
+  const [updateStatus, setUpdateStatus] = useState('idle');
+  const [updateMessage, setUpdateMessage] = useState('');
 
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (updateStatus === 'up-to-date' || updateStatus === 'error') {
+      const timer = setTimeout(() => {
+        setUpdateStatus('idle');
+        setUpdateMessage('');
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [updateStatus]);
+
+  const handleUpdate = () => {
+    if (updateStatus === 'ready') {
+      window.location.reload();
+      return;
+    }
+    setUpdateStatus('checking');
+    checkForUpdates((status, message) => {
+      setUpdateStatus(status);
+      if (message) setUpdateMessage(message);
+    });
+  };
 
   if (!estimatedRomSize) return null;
 
@@ -57,7 +82,7 @@ const StatusBar = () => {
       userSelect: 'none',
       flexShrink: 0,
     }}>
-      <span style={{ color: '#888', whiteSpace: 'nowrap' }}>ROM</span>
+      <span style={{ color: '#888', whiteSpace: 'nowrap' }}>ROM SIZE</span>
       <div style={{
         flex: 1,
         maxWidth: '200px',
@@ -87,6 +112,37 @@ const StatusBar = () => {
       }}>
         {percent.toFixed(1)}%
       </span>
+
+      <div style={{ flex: 1 }} />
+
+
+      <button
+        onClick={handleUpdate}
+        disabled={updateStatus === 'checking' || updateStatus === 'downloading'}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px',
+          background: 'transparent',
+          border: 'none',
+          color: updateStatus === 'ready' ? '#4CAF50' : updateStatus === 'error' ? '#f44336' : '#0084ffff',
+          cursor: updateStatus === 'checking' || updateStatus === 'downloading' ? 'default' : 'pointer',
+          padding: '0 4px',
+          fontSize: '11px',
+          opacity: updateStatus === 'checking' || updateStatus === 'downloading' ? 0.6 : 1,
+        }}
+        title={updateStatus === 'ready' ? 'Restart the app to apply the update' : 'Check for Updates'}
+      >
+        {updateStatus === 'ready' ? null : <BsDownload size={12} />}
+        <span>
+          {updateStatus === 'idle' && 'Check for Updates'}
+          {updateStatus === 'checking' && 'Checking...'}
+          {updateStatus === 'downloading' && 'Downloading...'}
+          {updateStatus === 'up-to-date' && 'Up to date'}
+          {updateStatus === 'ready' && 'Restart to Update'}
+          {updateStatus === 'error' && (updateMessage || 'Update failed')}
+        </span>
+      </button>
 
       <div style={{ flex: 1 }} />
 
