@@ -181,6 +181,7 @@ export const PxShopProvider = ({ children }) => {
   };
 
   const [zoom, setZoom] = useState(10);
+  const [initialZoomSet, setInitialZoomSet] = useState(false);
   const [isPixelated, setIsPixelated] = useState(true);
   const [activeDraw, setActiveDraw] = useState('pen');
   const [showDrawMenu, setShowDrawMenu] = useState(false);
@@ -473,14 +474,48 @@ export const PxShopProvider = ({ children }) => {
     });
   }, [layers, activeFrameId]);
 
-  // Sync frames, actors, triggers, collisions, dimensions to the active scene
+  // Sync frames, actors, triggers, collisions, dimensions, and view settings to the active scene
   useEffect(() => {
     setScenes(prev => {
       const scene = prev.find(s => s.id === activeSceneId);
-      if (scene && scene.frames === frames && scene.actors === actors && scene.triggers === triggers && scene.collisions === collisions && scene.dimensions === dimensions) return prev;
-      return prev.map(s => s.id === activeSceneId ? { ...s, frames, actors, triggers, collisions, dimensions } : s);
+      if (scene && 
+          scene.frames === frames && 
+          scene.actors === actors && 
+          scene.triggers === triggers && 
+          scene.collisions === collisions && 
+          scene.dimensions === dimensions &&
+          scene.zoom === zoom &&
+          scene.panOffset?.x === panOffset.x &&
+          scene.panOffset?.y === panOffset.y &&
+          scene.showGbaMask === showGbaMask) return prev;
+      return prev.map(s => s.id === activeSceneId ? { ...s, frames, actors, triggers, collisions, dimensions, zoom, panOffset, showGbaMask } : s);
     });
-  }, [frames, actors, triggers, collisions, dimensions, activeSceneId]);
+  }, [frames, actors, triggers, collisions, dimensions, activeSceneId, zoom, panOffset, showGbaMask]);
+
+  // Load view settings when active scene changes
+  useEffect(() => {
+    const activeScene = scenesRef.current.find(s => s.id === activeSceneId);
+    if (!activeScene) return;
+
+    if (activeScene.zoom !== undefined) {
+      setZoom(prev => prev !== activeScene.zoom ? activeScene.zoom : prev);
+      setInitialZoomSet(true);
+    } else {
+      setInitialZoomSet(false);
+    }
+
+    if (activeScene.panOffset !== undefined) {
+      setPanOffset(prev => (prev.x !== activeScene.panOffset.x || prev.y !== activeScene.panOffset.y) ? activeScene.panOffset : prev);
+    } else {
+      setPanOffset(prev => (prev.x !== 0 || prev.y !== 0) ? { x: 0, y: 0 } : prev);
+    }
+
+    if (activeScene.showGbaMask !== undefined) {
+      setShowGbaMask(prev => prev !== activeScene.showGbaMask ? activeScene.showGbaMask : prev);
+    } else {
+      setShowGbaMask(prev => prev !== true ? true : prev);
+    }
+  }, [activeSceneId]);
 
   // Warnings state
   const [warnings, setWarnings] = useState([]);
@@ -7084,7 +7119,10 @@ export const PxShopProvider = ({ children }) => {
         textData: l.textData,
         data: l.data
       })),
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      zoom: state.zoom,
+      panOffset: state.panOffset,
+      showGbaMask: state.showGbaMask
     };
   };
 
@@ -7092,7 +7130,8 @@ export const PxShopProvider = ({ children }) => {
     const projectData = generateProjectData({
       frames, activeFrameId, layers, scenes, activeSceneId, actors, globalActors, triggers, collisions, dimensions, savedTiles, tileGroupNames, variables, animations, customScripts, globalScript, musicTracks, activeLayerId, guides, gridSize, isPixelated, onionSkinEnabled,
       hudSettings, includeCreditsScene, creditsText, includedArtists, creditsBgColor, creditsTextColor, creditsMusicId, creditsEffect,
-      recentColors
+      recentColors,
+      zoom, panOffset, showGbaMask
     });
 
     const blob = new Blob([JSON.stringify(projectData)], { type: 'application/json' });
@@ -7454,8 +7493,17 @@ export const PxShopProvider = ({ children }) => {
     let newLayers = [];
 
     if (project.scenes) {
-      setScenes(project.scenes);
-      activeScene = project.scenes.find(s => s.id === project.activeSceneId) || project.scenes[0];
+      const updatedScenes = project.scenes.map(s => {
+        const isCurrent = s.id === project.activeSceneId;
+        return {
+          ...s,
+          zoom: s.zoom !== undefined ? s.zoom : (isCurrent ? project.zoom : undefined),
+          panOffset: s.panOffset !== undefined ? s.panOffset : (isCurrent ? project.panOffset : undefined),
+          showGbaMask: s.showGbaMask !== undefined ? s.showGbaMask : (isCurrent ? project.showGbaMask : undefined)
+        };
+      });
+      setScenes(updatedScenes);
+      activeScene = updatedScenes.find(s => s.id === project.activeSceneId) || updatedScenes[0];
       setDimensions(activeScene.dimensions);
 
       sceneFrames = activeScene.frames;
@@ -7513,26 +7561,41 @@ export const PxShopProvider = ({ children }) => {
         musicId: null,
         dimensions: project.dimensions,
         worldX: 0,
-        worldY: 0
+        worldY: 0,
+        zoom: project.zoom,
+        panOffset: project.panOffset,
+        showGbaMask: project.showGbaMask
       };
       setScenes([newScene]);
       setActiveSceneId(newScene.id);
-    setActors(newScene.actors);
+      setActors(newScene.actors);
       setTriggers([]);
       setCollisions([]);
       setActiveActorId(null);
       setActiveTriggerId(null);
       setActiveCollisionId(null);
       setActiveLayerId(newLayers.find(l => l.type !== 'group')?.id || newLayers[0].id);
+      activeScene = newScene;
     }
 
-    if (containerRef.current) {
-      const containerW = containerRef.current.clientWidth - 40;
-      const containerH = containerRef.current.clientHeight - 40;
-      const zW = containerW / project.dimensions.w;
-      const zH = containerH / project.dimensions.h;
-      setZoom(Math.max(0.1, Math.min(50, Math.min(zW, zH))));
-      setPanOffset({ x: 0, y: 0 });
+    // Explicitly load active scene's view settings
+    if (activeScene) {
+      if (activeScene.zoom !== undefined) {
+        setZoom(activeScene.zoom);
+        setInitialZoomSet(true);
+      } else {
+        setInitialZoomSet(false);
+      }
+      if (activeScene.panOffset !== undefined) {
+        setPanOffset(activeScene.panOffset);
+      } else {
+        setPanOffset({ x: 0, y: 0 });
+      }
+      if (activeScene.showGbaMask !== undefined) {
+        setShowGbaMask(activeScene.showGbaMask);
+      } else {
+        setShowGbaMask(true);
+      }
     }
 
     setTimeout(() => {
@@ -8398,6 +8461,7 @@ const handleWizardCreate = () => {
     maintainAspectRatio, setMaintainAspectRatio,
     sizeInput, setSizeInput,
     zoom, setZoom,
+    initialZoomSet, setInitialZoomSet,
     showGbaMask, setShowGbaMask,
     isPixelated, setIsPixelated,
     activeDraw, setActiveDraw,

@@ -4,7 +4,6 @@ import { BsUpload } from 'react-icons/bs';
 
 const Canvas = () => {
   const [dragCounter, setDragCounter] = useState(0);
-  const [initialZoomSet, setInitialZoomSet] = useState(false);
 
   const handleDragEnter = (e) => {
     e.preventDefault();
@@ -67,7 +66,8 @@ const Canvas = () => {
     collisions, activeCollisionId, tempPaintedCollisions, tempPaintedTriggers,
     onionSkinEnabled, frames, activeFrameId, setZoom,
     scenes, activeSceneId, hudSettings, variables,
-    showGbaMask
+    showGbaMask,
+    initialZoomSet, setInitialZoomSet
   } = usePxShop();
 
   const activeScene = scenes.find(s => s.id === activeSceneId);
