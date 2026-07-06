@@ -90,6 +90,8 @@ PxGBA operates as an integrated desktop application that bridges modern web tech
 ### 🎨 Colors & Assets
 * **Full 256-Color Palette System**: Robust color pickers and swatch configurations that match GBA color parameters.
 * **Asset Integration**: In-app search client linking directly to OpenGameArt (OGA) for sprites and tiles, and ModArchive for tracker-based `.mod` music compositions.
+* **Tracker Music Search**: Search and import `.mod`/`.s3m` files from ModArchive.org with inline preview player, artist credit tracking, and automatic attribution.
+* **SFX Generator**: Built-in sound effect synthesizer supporting Square, Sine, Sawtooth, and Noise waveforms with configurable frequency, duration, and fade-out envelopes. Save generated SFX as WAV files directly into your project.
 
 ---
 
@@ -228,7 +230,10 @@ pxgba/
 │   │   ├── ActorsPanel.jsx    # Actor configuration panel
 │   │   ├── ScenesPanel.jsx    # Scene configuration and Level Generators
 │   │   ├── ScriptEditor.jsx   # React-Flow visual node scripting
-│   │   └── MusicEditor.jsx    # Tracker-based sequencer & audio controls
+│   │   ├── MusicEditor.jsx    # 4-channel piano roll sequencer with waveform synthesis, BPM control, and ProTracker MOD export
+│   │   └── MusicPanel.jsx     # Music & SFX asset manager, ModArchive search, track organization, and SFX generator
+│   ├── utils/                 # Utility functions
+│   │   └── modSerializer.js   # ProTracker MOD binary serializer for exporting composed tracks
 │   ├── context/               # Global React state and Context wrappers
 │   └── main.jsx               # Entrypoint script
 ├── index.html                 # Main web container

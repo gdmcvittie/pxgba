@@ -1,6 +1,6 @@
 const { app, BrowserWindow, dialog, ipcMain } = require('electron');
 const path = require('path');
-const { fork } = require('child_process');
+const { fork, execSync } = require('child_process');
 const fs = require('fs');
 
 // Disable SUID sandbox on Linux to prevent the chrome-sandbox error in AppImages/sandboxed environments
@@ -55,6 +55,47 @@ function findDevkitPro() {
     );
   }
   return searchPaths.find(p => p && fs.existsSync(p)) || '';
+}
+
+function setupBuildTools() {
+  return new Promise((resolve) => {
+    const platform = process.platform === 'win32' ? 'windows' : 'linux';
+    const makeName = process.platform === 'win32' ? 'make.exe' : 'make';
+    const makePath = path.join(getApiPath(), 'buildTools', platform, 'bin', makeName);
+
+    if (fs.existsSync(makePath)) {
+      console.log('[main] Build tools already installed.');
+      resolve();
+      return;
+    }
+
+    console.log('[main] Build tools not found. Running setup...');
+
+    const scriptPath = path.join(__dirname, '..', 'scripts', 'download-build-tools.cjs');
+    if (!fs.existsSync(scriptPath)) {
+      console.warn('[main] Setup script not found at:', scriptPath);
+      resolve();
+      return;
+    }
+
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.loadURL(
+        'data:text/html,<html><body style="background:#0f172a;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;flex-direction:column"><h1 style="color:#94a3b8;font-family:sans-serif;font-weight:300;font-size:1.5rem">PxGBA</h1><p style="color:#64748b;font-family:sans-serif;font-size:0.875rem">Downloading build tools...</p></body></html>'
+      );
+    }
+
+    try {
+      execSync(`node "${scriptPath}"`, {
+        cwd: path.join(__dirname, '..'),
+        stdio: 'inherit',
+        timeout: 300000,
+      });
+      console.log('[main] Build tools installed successfully.');
+    } catch (err) {
+      console.error('[main] Failed to install build tools:', err.message);
+    }
+    resolve();
+  });
 }
 
 function startServer() {
@@ -264,8 +305,11 @@ app.whenReady().then(() => {
   // Show the window immediately with a loading screen
   createWindow();
 
-  // Start the backend server in background (non-blocking)
-  startServer().then(() => {
+  // Ensure build tools are installed before starting the server
+  setupBuildTools().then(() => {
+    // Start the backend server in background (non-blocking)
+    return startServer();
+  }).then(() => {
     serverReady = true;
     console.log(`Server started on port ${SERVER_PORT}`);
     // Once the server is ready, load the frontend from it

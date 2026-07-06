@@ -5,7 +5,8 @@ import {
   BsGrid3X3GapFill, BsFiles, BsInfoCircle, BsPencilFill, BsBrush, BsEraserFill,
   BsPaintBucket, BsCircleHalf, BsSlashLg, BsSquare, BsSquareFill, BsPersonFill,
   BsCircle, BsCircleFill, BsFullscreen, BsMagic, BsArrowsExpand, BsCrop, BsGeoAltFill, BsLightningChargeFill,
-  BsBorderOuter, BsType, BsUpload, BsBoundingBox, BsStars
+  BsBorderOuter, BsType, BsUpload, BsBoundingBox, BsStars,
+  BsInfo
 } from 'react-icons/bs';
 import { LuStamp as LuStampIcon } from 'react-icons/lu';
 import { GiStamper, GiLasso } from 'react-icons/gi';

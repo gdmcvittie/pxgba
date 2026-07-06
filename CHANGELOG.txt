@@ -1,5 +1,7 @@
 0.3.0
 - saves zoom/pan to project
+- added initial documentation
+- electron app now tries to install all build tools on first launch
 
 
 0.2.9

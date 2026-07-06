@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { usePxShop, INITIAL_DEFAULT_TILES } from '../context/PxShopContext';
-import { BsFolder2Open, BsPlayFill, BsCameraVideo, BsMusicNoteBeamed, BsBrush, BsReddit, BsDiscord, BsStars, BsYoutube } from 'react-icons/bs';
+import { BsFolder2Open, BsPlayFill, BsCameraVideo, BsMusicNoteBeamed, BsBrush, BsReddit, BsDiscord, BsStars, BsYoutube, BsInfo, BsInfoCircle, BsInfoCircleFill } from 'react-icons/bs';
 import { version } from '../../package.json';
 import toast from 'react-hot-toast';
 import { API_BASE_URL, isDesktop } from '../config';
@@ -889,6 +889,7 @@ const Dialogs = () => {
             </div>
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'space-between' }}>
               <a title="Support Development" href="https://paypal.me/gdmcvittie" target='_blank' rel="noreferrer" style={{ fontSize: '12px', flex: 1, padding: '11px', background: '#aa3bff', border: 'none', color: '#fff', borderRadius: '4px', marginRight: '10px', cursor: 'pointer', fontWeight: 'bold', textDecoration: 'none' }}>DONATE</a>
+              <a title="View Documentation" href="/docs/index.html" target='_blank' rel="noreferrer" style={{ padding: '10px 20px', background: '#a6ff00ff', border: 'none', color: '#000000ff', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', textDecoration: 'none' }}><BsInfoCircleFill size={14} /></a>
               <a title="Visit Community Forum" href="https://reddit.com/r/pxgba" target='_blank' rel="noreferrer" style={{ padding: '10px 20px', background: '#FF4500', border: 'none', color: '#fff', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', textDecoration: 'none' }}><BsReddit size={14} /></a>
               <a title="Join Discord" href="https://discord.gg/4zPChaMc" target='_blank' rel="noreferrer" style={{ padding: '10px 20px', background: '#5865F2', border: 'none', color: '#fff', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', textDecoration: 'none' }}><BsDiscord size={14} /></a>
               <a title="YouTube Tutorials" href="https://www.youtube.com/@LiftedPixel_ca/videos" target='_blank' rel="noreferrer" style={{ padding: '10px 20px', background: '#FF0000', border: 'none', color: '#fff', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', textDecoration: 'none' }}><BsYoutube size={14} /></a>
