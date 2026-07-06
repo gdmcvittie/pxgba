@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { usePxShop, INITIAL_DEFAULT_TILES } from '../context/PxShopContext';
-import { BsPlus, BsTrash, BsChevronDown, BsChevronRight, BsCopy, BsPencil, BsSymmetryVertical, BsSymmetryHorizontal, BsFolder2Open, BsFiles } from 'react-icons/bs';
+import { BsPlus, BsTrash, BsChevronDown, BsChevronRight, BsCopy, BsPencil, BsSymmetryVertical, BsSymmetryHorizontal, BsFolder2Open, BsFiles, BsLayers, BsEye, BsEyeSlash } from 'react-icons/bs';
 import { ImMan } from 'react-icons/im';
 import TileIcon from './TileIcon';
 import PaletteColorPicker from './PaletteColorPicker';
@@ -74,9 +74,131 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
     };
   };
 
+  const initialLayers = useMemo(() => {
+    if (actor.designerLayers && Array.isArray(actor.designerLayers) && actor.designerLayers.length > 0) {
+      return actor.designerLayers.map(l => ({ ...l }));
+    }
+    return [{ id: 'layer1', name: 'Layer 1', visible: true }];
+  }, [actor.designerLayers]);
+
+  const [layersMetadata, setLayersMetadata] = useState(initialLayers);
+  const [activeLayerId, setActiveLayerId] = useState(() => initialLayers[0]?.id || 'layer1');
+  const [useGroupStamp, setUseGroupStamp] = useState(false);
+  const [hoveredIdx, setHoveredIdx] = useState(null);
+
+  const getGroupBrushInfo = useCallback((tileId) => {
+    if (tileId === null) return null;
+    const selectedTile = savedTiles.find(t => String(t.id) === String(tileId));
+    if (!selectedTile || !selectedTile.groupId) return null;
+    
+    const groupTiles = savedTiles.filter(t => String(t.groupId) === String(selectedTile.groupId));
+    if (groupTiles.length <= 1) return null;
+    
+    let groupCols = 1, groupRows = 1;
+    const firstName = groupTiles[0].name || '';
+    
+    if (/\(TL\)|\(TR\)|\(BL\)|\(BR\)/.test(firstName)) {
+      groupCols = 2;
+      groupRows = 2;
+    } else if (/\(\d_\d\)/.test(firstName)) {
+      let maxRow = 0;
+      let maxCol = 0;
+      for (const tile of groupTiles) {
+        const gridMatch = (tile.name || '').match(/\((\d)_(\d)\)/);
+        if (gridMatch) {
+          maxRow = Math.max(maxRow, parseInt(gridMatch[1]));
+          maxCol = Math.max(maxCol, parseInt(gridMatch[2]));
+        }
+      }
+      groupCols = maxCol + 1;
+      groupRows = maxRow + 1;
+    } else {
+      return null;
+    }
+    
+    const sortedGroupTiles = new Array(groupCols * groupRows).fill(null);
+    for (const tile of groupTiles) {
+      const name = tile.name || '';
+      const tlMatch = name.match(/\((TL|TR|BL|BR)\)/);
+      if (tlMatch) {
+        const pos = { TL: 0, TR: 1, BL: 2, BR: 3 }[tlMatch[1]];
+        sortedGroupTiles[pos] = tile;
+      } else {
+        const gridMatch = name.match(/\((\d)_(\d)\)/);
+        if (gridMatch) {
+          const row = parseInt(gridMatch[1]);
+          const col = parseInt(gridMatch[2]);
+          sortedGroupTiles[row * groupCols + col] = tile;
+        }
+      }
+    }
+    
+    return {
+      tiles: sortedGroupTiles,
+      cols: groupCols,
+      rows: groupRows
+    };
+  }, [savedTiles]);
+
+  const flattenFrame = useCallback((fl, layersList) => {
+    const flat = Array(cols * rows).fill(null);
+    for (let i = 0; i < cols * rows; i++) {
+      for (const layer of layersList) {
+        if (layer.visible && fl[layer.id] && fl[layer.id][i]) {
+          flat[i] = fl[layer.id][i];
+          break;
+        }
+      }
+    }
+    return flat;
+  }, [cols, rows]);
+
+  const flattenAnim = useCallback((anim, layersList) => {
+    if (!anim) return null;
+    return {
+      ...anim,
+      frames: anim.framesLayers.map(fl => flattenFrame(fl, layersList))
+    };
+  }, [flattenFrame]);
+
+  const initAnim = useCallback((anim) => {
+    if (!anim) return null;
+    const cloned = cloneAnim(anim);
+    let framesLayers = anim.framesLayers;
+    
+    if (!framesLayers || !Array.isArray(framesLayers) || framesLayers.length !== cloned.frames.length) {
+      framesLayers = cloned.frames.map(f => {
+        const fl = {};
+        initialLayers.forEach(layer => {
+          fl[layer.id] = layer.id === initialLayers[0].id 
+            ? (Array.isArray(f) ? [...f] : Array(cols * rows).fill(null))
+            : Array(cols * rows).fill(null);
+        });
+        return fl;
+      });
+    } else {
+      framesLayers = framesLayers.map(fl => {
+        const nextFL = {};
+        initialLayers.forEach(layer => {
+          if (Array.isArray(fl[layer.id])) {
+            nextFL[layer.id] = [...fl[layer.id]];
+          } else {
+            nextFL[layer.id] = Array(cols * rows).fill(null);
+          }
+        });
+        return nextFL;
+      });
+    }
+    
+    return {
+      ...cloned,
+      framesLayers
+    };
+  }, [initialLayers, cols, rows]);
+
   const [idleAnim, setIdleAnim] = useState(() => {
     const original = animations.find(a => a.id === actor.idleAnimId);
-    if (original) return cloneAnim(original);
+    if (original) return initAnim(original);
 
     // Create a new default idle animation using the actor's current base sprite/layout
     const defaultFrame = Array(cols * rows).fill(null);
@@ -92,17 +214,18 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
     } else if (actor.spriteId) {
       defaultFrame.fill({ id: actor.spriteId, flipH: false, flipV: false });
     }
-    return {
+    const defaultAnim = {
       id: Date.now() + Math.random(),
       name: `${actor.name} Idle`,
       frames: [defaultFrame],
       fps: 8
     };
+    return initAnim(defaultAnim);
   });
-  const [walkAnim, setWalkAnim] = useState(() => cloneAnim(animations.find(a => a.id === actor.walkAnimId)));
-  const [attackAnim, setAttackAnim] = useState(() => cloneAnim(animations.find(a => a.id === actor.attackAnimId)));
-  const [jumpAnim, setJumpAnim] = useState(() => cloneAnim(animations.find(a => a.id === actor.jumpAnimId)));
-  const [customAnims, setCustomAnims] = useState(() => (actor.customAnimIds || []).map(id => cloneAnim(animations.find(a => a.id === id))).filter(Boolean));
+  const [walkAnim, setWalkAnim] = useState(() => initAnim(animations.find(a => a.id === actor.walkAnimId)));
+  const [attackAnim, setAttackAnim] = useState(() => initAnim(animations.find(a => a.id === actor.attackAnimId)));
+  const [jumpAnim, setJumpAnim] = useState(() => initAnim(animations.find(a => a.id === actor.jumpAnimId)));
+  const [customAnims, setCustomAnims] = useState(() => (actor.customAnimIds || []).map(id => initAnim(animations.find(a => a.id === id))).filter(Boolean));
 
   const [activeTab, setActiveTab] = useState('idle');
   const [activeFrameIdx, setActiveFrameIdx] = useState(0);
@@ -266,11 +389,29 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
       return nextFrame;
     };
 
-    if (idleAnim) setIdleAnim(prev => ({ ...prev, frames: prev.frames.map(resizeFrame) }));
-    if (walkAnim) setWalkAnim(prev => ({ ...prev, frames: prev.frames.map(resizeFrame) }));
-    if (attackAnim) setAttackAnim(prev => ({ ...prev, frames: prev.frames.map(resizeFrame) }));
-    if (jumpAnim) setJumpAnim(prev => ({ ...prev, frames: prev.frames.map(resizeFrame) }));
-    setCustomAnims(prev => prev.map(a => ({ ...a, frames: a.frames.map(resizeFrame) })));
+    const resizeLayers = (fl) => {
+      const nextFL = {};
+      for (const key in fl) {
+        nextFL[key] = resizeFrame(fl[key]);
+      }
+      return nextFL;
+    };
+
+    const resizeAnim = (anim) => {
+      if (!anim) return null;
+      const nextFramesLayers = anim.framesLayers.map(resizeLayers);
+      return {
+        ...anim,
+        framesLayers: nextFramesLayers,
+        frames: nextFramesLayers.map(fl => flattenFrame(fl, layersMetadata))
+      };
+    };
+
+    if (idleAnim) setIdleAnim(resizeAnim);
+    if (walkAnim) setWalkAnim(resizeAnim);
+    if (attackAnim) setAttackAnim(resizeAnim);
+    if (jumpAnim) setJumpAnim(resizeAnim);
+    setCustomAnims(prev => prev.map(resizeAnim).filter(Boolean));
   };
 
   const [activeTileId, setActiveTileId] = useState(() => {
@@ -444,19 +585,60 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
 
   const applyTile = (idx) => {
     setIsPlayingPreview(false);
-    const next = [...getCurrentSpriteIds()];
-    if (activeTileId === null) {
-      next[idx] = null;
-    } else {
-      next[idx] = { id: activeTileId, flipH: brushFlipH, flipV: brushFlipV };
-    }
-    setCurrentSpriteIds(next);
+    
+    const clickedRow = Math.floor(idx / cols);
+    const clickedCol = idx % cols;
+
+    const updateFrameLayer = (prev) => {
+      if (!prev) return null;
+      
+      const nextFramesLayers = [...prev.framesLayers];
+      const nextFrameLayersData = { ...nextFramesLayers[activeFrameIdx] };
+      const nextLayerTiles = [...(nextFrameLayersData[activeLayerId] || Array(cols * rows).fill(null))];
+      
+      const info = useGroupStamp ? getGroupBrushInfo(activeTileId) : null;
+      if (info) {
+        for (let r = 0; r < info.rows; r++) {
+          for (let c = 0; c < info.cols; c++) {
+            const targetRow = clickedRow + r;
+            const targetCol = clickedCol + c;
+            if (targetRow < rows && targetCol < cols) {
+              const targetIdx = targetRow * cols + targetCol;
+              const brushTile = info.tiles[r * info.cols + c];
+              nextLayerTiles[targetIdx] = brushTile ? { id: brushTile.id, flipH: brushFlipH, flipV: brushFlipV } : null;
+            }
+          }
+        }
+      } else {
+        if (activeTileId === null) {
+          nextLayerTiles[idx] = null;
+        } else {
+          nextLayerTiles[idx] = { id: activeTileId, flipH: brushFlipH, flipV: brushFlipV };
+        }
+      }
+      
+      nextFrameLayersData[activeLayerId] = nextLayerTiles;
+      nextFramesLayers[activeFrameIdx] = nextFrameLayersData;
+      
+      const nextFrames = [...prev.frames];
+      nextFrames[activeFrameIdx] = flattenFrame(nextFrameLayersData, layersMetadata);
+      
+      return {
+        ...prev,
+        frames: nextFrames,
+        framesLayers: nextFramesLayers
+      };
+    };
+
+    if (activeTab === 'idle') setIdleAnim(updateFrameLayer);
+    else if (activeTab === 'walk') setWalkAnim(updateFrameLayer);
+    else if (activeTab === 'attack') setAttackAnim(updateFrameLayer);
+    else if (activeTab === 'jump') setJumpAnim(updateFrameLayer);
+    else setCustomAnims(prev => prev.map(a => a.id === activeTab ? updateFrameLayer(a) : a));
   };
 
-  const flipLayoutHorizontal = () => {
-    setIsPlayingPreview(false);
-    const currentFrame = getCurrentSpriteIds();
-    const next = [...currentFrame];
+  const flipArrayHorizontal = (arr) => {
+    const next = [...arr];
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < Math.floor(cols / 2); c++) {
         const leftIdx = r * cols + c;
@@ -477,13 +659,11 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
         }
       }
     }
-    setCurrentSpriteIds(next);
+    return next;
   };
 
-  const flipLayoutVertical = () => {
-    setIsPlayingPreview(false);
-    const currentFrame = getCurrentSpriteIds();
-    const next = [...currentFrame];
+  const flipArrayVertical = (arr) => {
+    const next = [...arr];
     for (let c = 0; c < cols; c++) {
       for (let r = 0; r < Math.floor(rows / 2); r++) {
         const topIdx = r * cols + c;
@@ -504,38 +684,111 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
         }
       }
     }
-    setCurrentSpriteIds(next);
+    return next;
   };
 
+  const flipLayoutHorizontal = () => {
+    setIsPlayingPreview(false);
+    const updateAnimFlip = (prev) => {
+      if (!prev) return null;
+      const nextFramesLayers = [...prev.framesLayers];
+      const nextFrameLayersData = { ...nextFramesLayers[activeFrameIdx] };
+      for (const key in nextFrameLayersData) {
+        if (Array.isArray(nextFrameLayersData[key])) {
+          nextFrameLayersData[key] = flipArrayHorizontal(nextFrameLayersData[key]);
+        }
+      }
+      nextFramesLayers[activeFrameIdx] = nextFrameLayersData;
+      const nextFrames = [...prev.frames];
+      nextFrames[activeFrameIdx] = flattenFrame(nextFrameLayersData, layersMetadata);
+      return { ...prev, frames: nextFrames, framesLayers: nextFramesLayers };
+    };
+
+    if (activeTab === 'idle') setIdleAnim(updateAnimFlip);
+    else if (activeTab === 'walk') setWalkAnim(updateAnimFlip);
+    else if (activeTab === 'attack') setAttackAnim(updateAnimFlip);
+    else if (activeTab === 'jump') setJumpAnim(updateAnimFlip);
+    else setCustomAnims(prev => prev.map(a => a.id === activeTab ? updateAnimFlip(a) : a));
+  };
+
+  const flipLayoutVertical = () => {
+    setIsPlayingPreview(false);
+    const updateAnimFlip = (prev) => {
+      if (!prev) return null;
+      const nextFramesLayers = [...prev.framesLayers];
+      const nextFrameLayersData = { ...nextFramesLayers[activeFrameIdx] };
+      for (const key in nextFrameLayersData) {
+        if (Array.isArray(nextFrameLayersData[key])) {
+          nextFrameLayersData[key] = flipArrayVertical(nextFrameLayersData[key]);
+        }
+      }
+      nextFramesLayers[activeFrameIdx] = nextFrameLayersData;
+      const nextFrames = [...prev.frames];
+      nextFrames[activeFrameIdx] = flattenFrame(nextFrameLayersData, layersMetadata);
+      return { ...prev, frames: nextFrames, framesLayers: nextFramesLayers };
+    };
+
+    if (activeTab === 'idle') setIdleAnim(updateAnimFlip);
+    else if (activeTab === 'walk') setWalkAnim(updateAnimFlip);
+    else if (activeTab === 'attack') setAttackAnim(updateAnimFlip);
+    else if (activeTab === 'jump') setJumpAnim(updateAnimFlip);
+    else setCustomAnims(prev => prev.map(a => a.id === activeTab ? updateAnimFlip(a) : a));
+  };
+
+  const createNewAnimObject = (name) => {
+    const defaultFrame = Array(cols * rows).fill(null);
+    const fl = {};
+    layersMetadata.forEach(layer => {
+      fl[layer.id] = Array(cols * rows).fill(null);
+    });
+    return {
+      id: Date.now() + Math.random(),
+      name,
+      frames: [defaultFrame],
+      framesLayers: [fl],
+      fps: 8
+    };
+  };
 
   const createWalkAnim = () => {
     setIsPlayingPreview(false);
-    setWalkAnim({ id: Date.now() + Math.random(), name: `${actor.name} Walk`, frames: [Array(cols * rows).fill(null)], fps: 8 });
+    setWalkAnim(createNewAnimObject(`${actor.name} Walk`));
     setActiveTab('walk'); setActiveFrameIdx(0);
   };
 
   const createAttackAnim = () => {
     setIsPlayingPreview(false);
-    setAttackAnim({ id: Date.now() + Math.random(), name: `${actor.name} Attack`, frames: [Array(cols * rows).fill(null)], fps: 8 });
+    setAttackAnim(createNewAnimObject(`${actor.name} Attack`));
     setActiveTab('attack'); setActiveFrameIdx(0);
   };
 
   const createJumpAnim = () => {
     setIsPlayingPreview(false);
-    setJumpAnim({ id: Date.now() + Math.random(), name: `${actor.name} Jump`, frames: [Array(cols * rows).fill(null)], fps: 8 });
+    setJumpAnim(createNewAnimObject(`${actor.name} Jump`));
     setActiveTab('jump'); setActiveFrameIdx(0);
   };
 
   const createCustomAnim = () => {
     setIsPlayingPreview(false);
-    const newAnim = { id: Date.now() + Math.random(), name: `${actor.name} Custom ${customAnims.length + 1}`, frames: [Array(cols * rows).fill(null)], fps: 8 };
+    const newAnim = createNewAnimObject(`${actor.name} Custom ${customAnims.length + 1}`);
     setCustomAnims(prev => [...prev, newAnim]);
     setActiveTab(newAnim.id); setActiveFrameIdx(0);
   };
 
   const addFrame = () => {
     setIsPlayingPreview(false);
-    const updateAnimFrames = (anim) => ({ ...anim, frames: [...anim.frames, Array(cols * rows).fill(null)] });
+    const updateAnimFrames = (anim) => {
+      if (!anim) return null;
+      const newFrameLayersData = {};
+      layersMetadata.forEach(layer => {
+        newFrameLayersData[layer.id] = Array(cols * rows).fill(null);
+      });
+      return {
+        ...anim,
+        frames: [...anim.frames, Array(cols * rows).fill(null)],
+        framesLayers: [...anim.framesLayers, newFrameLayersData]
+      };
+    };
     if (activeTab === 'idle') setIdleAnim(updateAnimFrames);
     else if (activeTab === 'walk') setWalkAnim(updateAnimFrames);
     else if (activeTab === 'attack') setAttackAnim(updateAnimFrames);
@@ -550,7 +803,18 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
 
   const deleteFrame = (idx) => {
     setIsPlayingPreview(false);
-    const updateAnimFrames = (anim) => { const next = [...anim.frames]; next.splice(idx, 1); return { ...anim, frames: next }; };
+    const updateAnimFrames = (anim) => {
+      if (!anim) return null;
+      const nextFrames = [...anim.frames];
+      nextFrames.splice(idx, 1);
+      const nextFramesLayers = [...anim.framesLayers];
+      nextFramesLayers.splice(idx, 1);
+      return {
+        ...anim,
+        frames: nextFrames,
+        framesLayers: nextFramesLayers
+      };
+    };
     if (activeTab === 'idle') setIdleAnim(updateAnimFrames);
     else if (activeTab === 'walk') setWalkAnim(updateAnimFrames);
     else if (activeTab === 'attack') setAttackAnim(updateAnimFrames);
@@ -561,84 +825,185 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
 
   const handleTileSelect = (tileId) => {
     setActiveTileId(tileId);
-    
-    if (tileId === null) return;
-    
-    const selectedTile = savedTiles.find(t => String(t.id) === String(tileId));
-    if (!selectedTile || !selectedTile.groupId) return;
-    
-    // Find all tiles in the same group
-    const groupTiles = savedTiles.filter(t => String(t.groupId) === String(selectedTile.groupId));
-    
-    // Only auto-populate if it's a multi-tile group (16x16 or 32x32)
-    if (groupTiles.length <= 1) return;
-    
-    // Determine group size from tile names
-    let groupCols = 1, groupRows = 1;
-    const firstName = groupTiles[0].name || '';
-    
-    if (/\(TL\)|\(TR\)|\(BL\)|\(BR\)/.test(firstName)) {
-      // 16x16 tile group (2x2 sub-tiles)
-      groupCols = 2;
-      groupRows = 2;
-    } else if (/\(\d_\d\)/.test(firstName)) {
-      // Grid tile group (32x32, 48x48, 64x64, etc.)
-      let maxRow = 0;
-      let maxCol = 0;
-      for (const tile of groupTiles) {
-        const gridMatch = (tile.name || '').match(/\((\d)_(\d)\)/);
-        if (gridMatch) {
-          maxRow = Math.max(maxRow, parseInt(gridMatch[1]));
-          maxCol = Math.max(maxCol, parseInt(gridMatch[2]));
-        }
-      }
-      groupCols = maxCol + 1;
-      groupRows = maxRow + 1;
+    if (tileId === null) {
+      setUseGroupStamp(false);
+      return;
+    }
+    const info = getGroupBrushInfo(tileId);
+    if (info) {
+      setUseGroupStamp(true);
     } else {
-      return; // Unknown group format, don't auto-populate
+      setUseGroupStamp(false);
     }
+  };
+
+  const updateAnimationsWithNewLayers = (nextLayersList) => {
+    setIdleAnim(prev => flattenAnim(prev, nextLayersList));
+    if (walkAnim) setWalkAnim(prev => flattenAnim(prev, nextLayersList));
+    if (attackAnim) setAttackAnim(prev => flattenAnim(prev, nextLayersList));
+    if (jumpAnim) setJumpAnim(prev => flattenAnim(prev, nextLayersList));
+    setCustomAnims(prev => prev.map(a => flattenAnim(a, nextLayersList)).filter(Boolean));
+  };
+
+  const addDesignerLayer = () => {
+    const newId = 'layer_' + Date.now() + Math.random().toString(36).substr(2, 5);
+    const newLayer = { id: newId, name: `Layer ${layersMetadata.length + 1}`, visible: true };
+    const nextLayers = [newLayer, ...layersMetadata];
+    setLayersMetadata(nextLayers);
+    setActiveLayerId(newId);
+
+    const addLayerToAnim = (prev) => {
+      if (!prev) return null;
+      const nextFramesLayers = prev.framesLayers.map(fl => ({
+        ...fl,
+        [newId]: Array(cols * rows).fill(null)
+      }));
+      return {
+        ...prev,
+        framesLayers: nextFramesLayers,
+        frames: nextFramesLayers.map(fl => flattenFrame(fl, nextLayers))
+      };
+    };
+
+    setIdleAnim(addLayerToAnim);
+    if (walkAnim) setWalkAnim(addLayerToAnim);
+    if (attackAnim) setAttackAnim(addLayerToAnim);
+    if (jumpAnim) setJumpAnim(addLayerToAnim);
+    setCustomAnims(prev => prev.map(addLayerToAnim).filter(Boolean));
+  };
+
+  const deleteDesignerLayer = (layerId) => {
+    if (layersMetadata.length <= 1) return;
+    const nextLayers = layersMetadata.filter(l => l.id !== layerId);
+    setLayersMetadata(nextLayers);
+    if (activeLayerId === layerId) {
+      setActiveLayerId(nextLayers[0].id);
+    }
+
+    const removeLayerFromAnim = (prev) => {
+      if (!prev) return null;
+      const nextFramesLayers = prev.framesLayers.map(fl => {
+        const nextFL = { ...fl };
+        delete nextFL[layerId];
+        return nextFL;
+      });
+      return {
+        ...prev,
+        framesLayers: nextFramesLayers,
+        frames: nextFramesLayers.map(fl => flattenFrame(fl, nextLayers))
+      };
+    };
+
+    setIdleAnim(removeLayerFromAnim);
+    if (walkAnim) setWalkAnim(removeLayerFromAnim);
+    if (attackAnim) setAttackAnim(removeLayerFromAnim);
+    if (jumpAnim) setJumpAnim(removeLayerFromAnim);
+    setCustomAnims(prev => prev.map(removeLayerFromAnim).filter(Boolean));
+  };
+
+  const nudgeLayer = useCallback((dx, dy) => {
+    setIsPlayingPreview(false);
     
-    // Resize designer to fit the group
-    const newW = groupCols * 8;
-    const newH = groupRows * 8;
+    const nudgeFrameLayers = (prev) => {
+      if (!prev) return null;
+      const nextFramesLayers = [...prev.framesLayers];
+      const nextFrameLayersData = { ...nextFramesLayers[activeFrameIdx] };
+      const currentLayerTiles = nextFrameLayersData[activeLayerId];
+      if (!currentLayerTiles) return prev;
+      
+      const nextLayerTiles = Array(cols * rows).fill(null);
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const srcIdx = r * cols + c;
+          const tile = currentLayerTiles[srcIdx];
+          if (tile) {
+            const targetR = r + dy;
+            const targetC = c + dx;
+            if (targetR >= 0 && targetR < rows && targetC >= 0 && targetC < cols) {
+              nextLayerTiles[targetR * cols + targetC] = tile;
+            }
+          }
+        }
+      }
+      
+      nextFrameLayersData[activeLayerId] = nextLayerTiles;
+      nextFramesLayers[activeFrameIdx] = nextFrameLayersData;
+      
+      const nextFrames = [...prev.frames];
+      nextFrames[activeFrameIdx] = flattenFrame(nextFrameLayersData, layersMetadata);
+      
+      return {
+        ...prev,
+        frames: nextFrames,
+        framesLayers: nextFramesLayers
+      };
+    };
     
-    // Sort tiles by position in group
-    const sortedTiles = new Array(groupCols * groupRows).fill(null);
-    for (const tile of groupTiles) {
-      const name = tile.name || '';
-      const tlMatch = name.match(/\((TL|TR|BL|BR)\)/);
-      if (tlMatch) {
-        const pos = { TL: 0, TR: 1, BL: 2, BR: 3 }[tlMatch[1]];
-        sortedTiles[pos] = tile;
-      } else {
-        const gridMatch = name.match(/\((\d)_(\d)\)/);
-        if (gridMatch) {
-          const row = parseInt(gridMatch[1]);
-          const col = parseInt(gridMatch[2]);
-          sortedTiles[row * groupCols + col] = tile;
+    if (activeTab === 'idle') setIdleAnim(nudgeFrameLayers);
+    else if (activeTab === 'walk') setWalkAnim(nudgeFrameLayers);
+    else if (activeTab === 'attack') setAttackAnim(nudgeFrameLayers);
+    else if (activeTab === 'jump') setJumpAnim(nudgeFrameLayers);
+    else setCustomAnims(prev => prev.map(a => a.id === activeTab ? nudgeFrameLayers(a) : a));
+  }, [activeFrameIdx, activeLayerId, activeTab, cols, rows, flattenFrame, layersMetadata]);
+
+  const isActiveLayerSmallerThanActor = useMemo(() => {
+    const anim = getCurrentAnim();
+    if (!anim) return false;
+    const frameLayerData = anim.framesLayers[activeFrameIdx];
+    if (!frameLayerData) return false;
+    const layerTiles = frameLayerData[activeLayerId];
+    if (!layerTiles) return false;
+
+    let minR = rows, maxR = -1, minC = cols, maxC = -1;
+    let hasTiles = false;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (layerTiles[r * cols + c]) {
+          hasTiles = true;
+          if (r < minR) minR = r;
+          if (r > maxR) maxR = r;
+          if (c < minC) minC = c;
+          if (c > maxC) maxC = c;
         }
       }
     }
+    if (!hasTiles) return false;
+    const layerW = maxC - minC + 1;
+    const layerH = maxR - minR + 1;
+    return layerW < cols || layerH < rows;
+  }, [getCurrentAnim, activeFrameIdx, activeLayerId, cols, rows]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) {
+        return;
+      }
+      if (!isActiveLayerSmallerThanActor) return;
+      
+      let dx = 0, dy = 0;
+      if (e.key === 'ArrowUp') {
+        dy = -1;
+      } else if (e.key === 'ArrowDown') {
+        dy = 1;
+      } else if (e.key === 'ArrowLeft') {
+        dx = -1;
+      } else if (e.key === 'ArrowRight') {
+        dx = 1;
+      }
+      
+      if (dx !== 0 || dy !== 0) {
+        e.preventDefault();
+        nudgeLayer(dx, dy);
+      }
+    };
     
-    // Resize the designer
-    handleResize(newW, newH);
-    
-    // Fill the current frame with the group tiles
-    const newFrame = sortedTiles.map(tile => tile ? { id: tile.id, flipH: false, flipV: false } : null);
-    
-    // Update the active frame of the active tab/animation with the new group tiles
-    setCurrentSpriteIds(newFrame);
-    
-    // Set collision box to match the full sprite
-    setColX(0);
-    setColY(0);
-    setColW(newW);
-    setColH(newH);
-  };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeLayerId, activeFrameIdx, activeTab, cols, rows, layersMetadata, isActiveLayerSmallerThanActor, nudgeLayer]);
 
   return createPortal(
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 100000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onMouseUp={() => setIsDrawing(false)} onMouseLeave={() => setIsDrawing(false)}>
-      <div style={{ background: '#222', border: '1px solid #4CAF50', borderRadius: '8px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px', width: '50%' }}>
+      <div style={{ background: '#222', border: '1px solid #444', borderRadius: '8px', width: '90%', maxWidth: '1000px', height: '90%', display: 'flex', flexDirection: 'column', padding: '16px', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4CAF50', fontWeight: 'bold', fontSize: '14px', alignItems: 'center' }}>
           <span>Actor Designer: {actor.name}</span>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', fontSize: '11px', color: '#aaa', fontWeight: 'normal' }}>
@@ -673,8 +1038,8 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
             <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#ffffff', cursor: 'pointer', fontSize: '14px', marginLeft: '5px', fontWeight: 'bold' }}>✕</button>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '20px' }}>
-          <div style={{ width: '35%', display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '600px', overflowY: 'auto', paddingRight: '4px' }}>
+        <div style={{ display: 'flex', gap: '20px', flexGrow: 1 }}>
+          <div style={{ width: '35%', display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '84vh', overflowY: 'auto', paddingRight: '4px' }}>
             {activeTab !== 'base' && (
               <div style={{ background: '#151515', border: '1px solid #333', borderRadius: '6px', padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
                 <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#4CAF50', alignSelf: 'flex-start' }}>Animation Preview</div>
@@ -804,6 +1169,136 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
                 Auto-fit to Sprite
               </button>
             </div>
+            
+            {/* Layers List Panel */}
+            <div style={{ background: '#151515', border: '1px solid #333', borderRadius: '6px', padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#4CAF50', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><BsLayers /> Layers</span>
+                <button
+                  onClick={addDesignerLayer}
+                  style={{
+                    background: 'none', border: 'none', color: '#4CAF50', cursor: 'pointer', fontSize: '12px', padding: '0 2px', display: 'flex', alignItems: 'center'
+                  }}
+                  title="Add Layer"
+                >
+                  <BsPlus size={16} />
+                </button>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxHeight: '150px', overflowY: 'auto' }}>
+                {layersMetadata.map((layer, index) => {
+                  const isActive = activeLayerId === layer.id;
+                  return (
+                    <div
+                      key={layer.id}
+                      onClick={() => setActiveLayerId(layer.id)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '4px 6px',
+                        background: isActive ? '#333' : '#1e1e1e',
+                        border: isActive ? '1px solid #4CAF50' : '1px solid #2a2a2a',
+                        borderRadius: '3px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const next = layersMetadata.map(l => l.id === layer.id ? { ...l, visible: !l.visible } : l);
+                          setLayersMetadata(next);
+                          updateAnimationsWithNewLayers(next);
+                        }}
+                        style={{ background: 'none', border: 'none', color: layer.visible ? '#fff' : '#666', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}
+                      >
+                        {layer.visible ? <BsEye size={12} /> : <BsEyeSlash size={12} />}
+                      </button>
+                      <span
+                        onDoubleClick={(e) => {
+                          e.stopPropagation();
+                          const newName = window.prompt(`Rename ${layer.name} to:`, layer.name);
+                          if (newName && newName.trim()) {
+                            const next = layersMetadata.map(l => l.id === layer.id ? { ...l, name: newName.trim() } : l);
+                            setLayersMetadata(next);
+                          }
+                        }}
+                        style={{ fontSize: '10px', color: isActive ? '#fff' : '#aaa', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                        title="Double-click to rename"
+                      >
+                        {layer.name}
+                      </span>
+                      <div style={{ display: 'flex', gap: '2px', alignItems: 'center' }}>
+                        <button
+                          disabled={index === 0}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const next = [...layersMetadata];
+                            const temp = next[index - 1];
+                            next[index - 1] = next[index];
+                            next[index] = temp;
+                            setLayersMetadata(next);
+                            updateAnimationsWithNewLayers(next);
+                          }}
+                          style={{ background: 'none', border: 'none', color: index === 0 ? '#444' : '#aaa', cursor: index === 0 ? 'default' : 'pointer', padding: 0, fontSize: '8px' }}
+                          title="Move Up"
+                        >
+                          ▲
+                        </button>
+                        <button
+                          disabled={index === layersMetadata.length - 1}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const next = [...layersMetadata];
+                            const temp = next[index + 1];
+                            next[index + 1] = next[index];
+                            next[index] = temp;
+                            setLayersMetadata(next);
+                            updateAnimationsWithNewLayers(next);
+                          }}
+                          style={{ background: 'none', border: 'none', color: index === layersMetadata.length - 1 ? '#444' : '#aaa', cursor: index === layersMetadata.length - 1 ? 'default' : 'pointer', padding: 0, fontSize: '8px' }}
+                          title="Move Down"
+                        >
+                          ▼
+                        </button>
+                        {layersMetadata.length > 1 && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (window.confirm(`Delete ${layer.name}?`)) {
+                                deleteDesignerLayer(layer.id);
+                              }
+                            }}
+                            style={{ background: 'none', border: 'none', color: '#ff4444', cursor: 'pointer', padding: 0, display: 'flex', fontStyle: 'normal' }}
+                            title="Delete Layer"
+                          >
+                            <BsTrash size={10} />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Nudge Active Layer Controls */}
+              {isActiveLayerSmallerThanActor && (
+                <div style={{ borderTop: '1px solid #333', paddingTop: '6px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <div style={{ fontSize: '9px', color: '#888', fontWeight: 'bold' }}>Nudge Active Layer:</div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 16px)', gap: '4px', justifyContent: 'center', width: '100%' }}>
+                    <div />
+                    <button onClick={() => nudgeLayer(0, -1)} style={{ background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '3px', cursor: 'pointer', fontSize: '8px', padding: '2px 0', textAlign: 'center', lineHeight: '1' }} title="Nudge Up">▲</button>
+                    <div />
+                    <button onClick={() => nudgeLayer(-1, 0)} style={{ background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '3px', cursor: 'pointer', fontSize: '8px', padding: '2px 0', textAlign: 'center', lineHeight: '1' }} title="Nudge Left">◀</button>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '8px', color: '#666' }}>✥</div>
+                    <button onClick={() => nudgeLayer(1, 0)} style={{ background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '3px', cursor: 'pointer', fontSize: '8px', padding: '2px 0', textAlign: 'center', lineHeight: '1' }} title="Nudge Right">▶</button>
+                    <div />
+                    <button onClick={() => nudgeLayer(0, 1)} style={{ background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '3px', cursor: 'pointer', fontSize: '8px', padding: '2px 0', textAlign: 'center', lineHeight: '1' }} title="Nudge Down">▼</button>
+                    <div />
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <div style={{ fontSize: '11px', color: '#aaa' }}>Select Tile:</div>
               <TileSelector
@@ -830,6 +1325,68 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
                   borderRadius: '3px'
                 }}
               >Eraser</div>
+
+              {/* Group Brush Settings Panel */}
+              {(() => {
+                const brushInfo = getGroupBrushInfo(activeTileId);
+                if (brushInfo) {
+                  return (
+                    <div style={{ background: '#1c1c1c', border: '1px solid #ff9800', borderRadius: '4px', padding: '6px', display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '9px', marginTop: '4px' }}>
+                      <div style={{ color: '#ff9800', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span>Group Brush ({brushInfo.cols * 8}x{brushInfo.rows * 8})</span>
+                        <input
+                          type="checkbox"
+                          checked={useGroupStamp}
+                          onChange={(e) => setUseGroupStamp(e.target.checked)}
+                          id="use-group-stamp"
+                          style={{ cursor: 'pointer' }}
+                        />
+                      </div>
+                      <label htmlFor="use-group-stamp" style={{ color: '#aaa', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        Stamp entire group
+                      </label>
+                      <button
+                        onClick={() => {
+                          if (window.confirm(`Fit canvas to group size (${brushInfo.cols * 8}x${brushInfo.rows * 8}) and overwrite current frame?`)) {
+                            handleResize(brushInfo.cols * 8, brushInfo.rows * 8);
+                            const nextLayerTiles = Array(brushInfo.cols * brushInfo.rows).fill(null);
+                            brushInfo.tiles.forEach((t, i) => {
+                              if (t) nextLayerTiles[i] = { id: t.id, flipH: false, flipV: false };
+                            });
+                            
+                            const updateFrameLayer = (prev) => {
+                              if (!prev) return null;
+                              const nextFramesLayers = [...prev.framesLayers];
+                              const nextFrameLayersData = { ...nextFramesLayers[activeFrameIdx] };
+                              nextFrameLayersData[activeLayerId] = nextLayerTiles;
+                              nextFramesLayers[activeFrameIdx] = nextFrameLayersData;
+                              
+                              const nextFrames = [...prev.frames];
+                              nextFrames[activeFrameIdx] = flattenFrame(nextFrameLayersData, layersMetadata);
+                              return {
+                                ...prev,
+                                frames: nextFrames,
+                                framesLayers: nextFramesLayers
+                              };
+                            };
+                            if (activeTab === 'idle') setIdleAnim(updateFrameLayer);
+                            else if (activeTab === 'walk') setWalkAnim(updateFrameLayer);
+                            else if (activeTab === 'attack') setAttackAnim(updateFrameLayer);
+                            else if (activeTab === 'jump') setJumpAnim(updateFrameLayer);
+                            else setCustomAnims(prev => prev.map(a => a.id === activeTab ? updateFrameLayer(a) : a));
+                          }
+                        }}
+                        style={{
+                          background: '#333', border: '1px solid #555', color: '#fff', borderRadius: '3px', padding: '4px', cursor: 'pointer', fontSize: '9px', fontWeight: 'bold', marginTop: '2px'
+                        }}
+                      >
+                        Fit Canvas & Fill
+                      </button>
+                    </div>
+                  );
+                }
+                return null;
+              })()}
             </div>
             {uniqueColorsInActor.length > 0 && (
               <div style={{
@@ -951,9 +1508,62 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
                   const flipH = tId && typeof tId === 'object' ? tId.flipH : false;
                   const flipV = tId && typeof tId === 'object' ? tId.flipV : false;
                   const tile = actualId ? savedTiles.find(t => String(t.id) === String(actualId)) : null;
+
+                  const isHoveredStampCell = (() => {
+                    if (!useGroupStamp || hoveredIdx === null) return null;
+                    const info = getGroupBrushInfo(activeTileId);
+                    if (!info) return null;
+                    const hoverRow = Math.floor(hoveredIdx / cols);
+                    const hoverCol = hoveredIdx % cols;
+                    const cellRow = Math.floor(idx / cols);
+                    const cellCol = idx % cols;
+                    const dr = cellRow - hoverRow;
+                    const dc = cellCol - hoverCol;
+                    if (dr >= 0 && dr < info.rows && dc >= 0 && dc < info.cols) {
+                      return info.tiles[dr * info.cols + dc];
+                    }
+                    return null;
+                  })();
+
                   return (
-                    <div key={idx} onMouseDown={() => { setIsDrawing(true); applyTile(idx); }} onMouseEnter={() => { if (isDrawing) applyTile(idx); }} style={{ width: '32px', height: '32px', background: 'transparent', cursor: 'crosshair', transform: `scaleX(${flipH ? -1 : 1}) scaleY(${flipV ? -1 : 1})` }}>
-                      {tile && <TileIcon tile={tile} size={32} />}
+                    <div 
+                      key={idx} 
+                      onMouseDown={() => { setIsDrawing(true); applyTile(idx); }} 
+                      onMouseEnter={() => { setHoveredIdx(idx); if (isDrawing) applyTile(idx); }} 
+                      onMouseLeave={() => setHoveredIdx(null)}
+                      style={{ 
+                        width: '32px', 
+                        height: '32px', 
+                        background: 'transparent', 
+                        cursor: 'crosshair', 
+                        position: 'relative',
+                        outline: hoveredIdx === idx ? '1px dashed #4CAF50' : 'none'
+                      }}
+                    >
+                      {tile && (
+                        <div style={{ 
+                          width: '32px', 
+                          height: '32px', 
+                          transform: `scaleX(${flipH ? -1 : 1}) scaleY(${flipV ? -1 : 1})` 
+                        }}>
+                          <TileIcon tile={tile} size={32} />
+                        </div>
+                      )}
+                      
+                      {isHoveredStampCell && (() => {
+                        const previewTile = savedTiles.find(t => String(t.id) === String(isHoveredStampCell.id));
+                        return previewTile ? (
+                          <div style={{ 
+                            position: 'absolute', 
+                            inset: 0, 
+                            opacity: 0.6, 
+                            pointerEvents: 'none',
+                            transform: `scaleX(${brushFlipH ? -1 : 1}) scaleY(${brushFlipV ? -1 : 1})`
+                          }}>
+                            <TileIcon tile={previewTile} size={32} />
+                          </div>
+                        ) : null;
+                      })()}
                     </div>
                   );
                 })}
@@ -994,7 +1604,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button onClick={onClose} style={{ background: 'transparent', border: '1px solid #555', color: '#fff', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
-            <button onClick={() => onSave(idleAnim ? idleAnim.frames[0] : Array(cols * rows).fill(null), designerW, designerH, idleAnim, walkAnim, attackAnim, jumpAnim, customAnims, colX, colY, colW, colH, hflip, vflip)} style={{ background: '#4CAF50', border: 'none', color: '#fff', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Save Layout</button>
+            <button onClick={() => onSave(idleAnim ? idleAnim.frames[0] : Array(cols * rows).fill(null), designerW, designerH, idleAnim, walkAnim, attackAnim, jumpAnim, customAnims, colX, colY, colW, colH, hflip, vflip, layersMetadata)} style={{ background: '#4CAF50', border: 'none', color: '#fff', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Save Layout</button>
           </div>
         </div>
       </div>
@@ -1370,7 +1980,14 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
           ...originalIdle,
           id: Date.now() + Math.random() + 0.1,
           name: `${newName} Idle`,
-          frames: originalIdle.frames.map(f => Array.isArray(f) ? [...f] : (f ? [f] : []))
+          frames: originalIdle.frames.map(f => Array.isArray(f) ? [...f] : (f ? [f] : [])),
+          framesLayers: originalIdle.framesLayers ? originalIdle.framesLayers.map(fl => {
+            const nextFL = {};
+            for (const key in fl) {
+              if (Array.isArray(fl[key])) nextFL[key] = [...fl[key]];
+            }
+            return nextFL;
+          }) : undefined
         };
         newGlobalAnims.push(clonedIdle);
         newIdleAnimId = clonedIdle.id;
@@ -1384,7 +2001,14 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
           ...originalWalk,
           id: Date.now() + Math.random() + 0.2,
           name: `${newName} Walk`,
-          frames: originalWalk.frames.map(f => Array.isArray(f) ? [...f] : (f ? [f] : []))
+          frames: originalWalk.frames.map(f => Array.isArray(f) ? [...f] : (f ? [f] : [])),
+          framesLayers: originalWalk.framesLayers ? originalWalk.framesLayers.map(fl => {
+            const nextFL = {};
+            for (const key in fl) {
+              if (Array.isArray(fl[key])) nextFL[key] = [...fl[key]];
+            }
+            return nextFL;
+          }) : undefined
         };
         newGlobalAnims.push(clonedWalk);
         newWalkAnimId = clonedWalk.id;
@@ -1398,7 +2022,14 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
           ...originalAttack,
           id: Date.now() + Math.random() + 0.25,
           name: `${newName} Attack`,
-          frames: originalAttack.frames.map(f => Array.isArray(f) ? [...f] : (f ? [f] : []))
+          frames: originalAttack.frames.map(f => Array.isArray(f) ? [...f] : (f ? [f] : [])),
+          framesLayers: originalAttack.framesLayers ? originalAttack.framesLayers.map(fl => {
+            const nextFL = {};
+            for (const key in fl) {
+              if (Array.isArray(fl[key])) nextFL[key] = [...fl[key]];
+            }
+            return nextFL;
+          }) : undefined
         };
         newGlobalAnims.push(clonedAttack);
         newAttackAnimId = clonedAttack.id;
@@ -1412,7 +2043,14 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
           ...originalJump,
           id: Date.now() + Math.random() + 0.26,
           name: `${newName} Jump`,
-          frames: originalJump.frames.map(f => Array.isArray(f) ? [...f] : (f ? [f] : []))
+          frames: originalJump.frames.map(f => Array.isArray(f) ? [...f] : (f ? [f] : [])),
+          framesLayers: originalJump.framesLayers ? originalJump.framesLayers.map(fl => {
+            const nextFL = {};
+            for (const key in fl) {
+              if (Array.isArray(fl[key])) nextFL[key] = [...fl[key]];
+            }
+            return nextFL;
+          }) : undefined
         };
         newGlobalAnims.push(clonedJump);
         newJumpAnimId = clonedJump.id;
@@ -1427,7 +2065,14 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
             ...originalCustom,
             id: Date.now() + Math.random() + 0.3 + idx * 0.05,
             name: `${newName} Custom ${idx + 1}`,
-            frames: originalCustom.frames.map(f => Array.isArray(f) ? [...f] : (f ? [f] : []))
+            frames: originalCustom.frames.map(f => Array.isArray(f) ? [...f] : (f ? [f] : [])),
+            framesLayers: originalCustom.framesLayers ? originalCustom.framesLayers.map(fl => {
+              const nextFL = {};
+              for (const key in fl) {
+                if (Array.isArray(fl[key])) nextFL[key] = [...fl[key]];
+              }
+              return nextFL;
+            }) : undefined
           };
           newGlobalAnims.push(clonedCustom);
           return clonedCustom.id;
@@ -1455,6 +2100,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
       attackAnimId: newAttackAnimId,
       jumpAnimId: newJumpAnimId,
       customAnimIds: newCustomAnimIds,
+      designerLayers: actorToDuplicate.designerLayers ? actorToDuplicate.designerLayers.map(l => ({ ...l })) : undefined,
       script: actorToDuplicate.script ? JSON.parse(JSON.stringify(actorToDuplicate.script)) : { nodes: [], edges: [] }
     };
 
@@ -3153,7 +3799,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
               dimensions={dimensions}
               animations={animations}
               onClose={() => setDesignerActorId(null)}
-               onSave={(newSpriteIds, newW, newH, newIdle, newWalk, newAttack, newJump, newCustoms, newColX, newColY, newColW, newColH, newHFlip, newVFlip) => {
+              onSave={(newSpriteIds, newW, newH, newIdle, newWalk, newAttack, newJump, newCustoms, newColX, newColY, newColW, newColH, newHFlip, newVFlip, newLayersMetadata) => {
                 const expectedLength = Math.max(1, Math.floor(newW / 8) * Math.floor(newH / 8));
                 let trimmedSpriteIds = Array.isArray(newSpriteIds) ? newSpriteIds.slice(0, expectedLength) : Array(expectedLength).fill(null);
                 while (trimmedSpriteIds.length < expectedLength) {
@@ -3170,7 +3816,20 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                         trimmed.push(null);
                       }
                       return trimmed;
-                    })
+                    }),
+                    framesLayers: Array.isArray(anim.framesLayers) ? anim.framesLayers.map(fl => {
+                      const nextFL = {};
+                      for (const key in fl) {
+                        if (Array.isArray(fl[key])) {
+                          let trimmed = fl[key].slice(0, expectedLength);
+                          while (trimmed.length < expectedLength) {
+                            trimmed.push(null);
+                          }
+                          nextFL[key] = trimmed;
+                        }
+                      }
+                      return nextFL;
+                    }) : []
                   };
                 };
 
@@ -3203,7 +3862,8 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                     ...a, spriteIds: trimmedSpriteIds, spriteId: null, width: newW, height: newH,
                     idleAnimId: idleId, walkAnimId: walkId, attackAnimId: attackId, jumpAnimId: jumpId, customAnimIds: customIds,
                     collisionX: newColX, collisionY: newColY, collisionW: newColW, collisionH: newColH,
-                    hflip: newHFlip, vflip: newVFlip
+                    hflip: newHFlip, vflip: newVFlip,
+                    designerLayers: newLayersMetadata
                   } : a);
                   setGlobalActors(nextGlobal);
                   saveHistory("Design Actor", layers, dimensions, { globalActors: nextGlobal, animations: newGlobalAnims });
@@ -3212,7 +3872,8 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                     ...a, spriteIds: trimmedSpriteIds, spriteId: null, width: newW, height: newH,
                     idleAnimId: idleId, walkAnimId: walkId, attackAnimId: attackId, jumpAnimId: jumpId, customAnimIds: customIds,
                     collisionX: newColX, collisionY: newColY, collisionW: newColW, collisionH: newColH,
-                    hflip: newHFlip, vflip: newVFlip
+                    hflip: newHFlip, vflip: newVFlip,
+                    designerLayers: newLayersMetadata
                   } : a);
                   setActors(nextActors);
                   saveHistory("Design Actor", layers, dimensions, { actors: nextActors, animations: newGlobalAnims });
@@ -3221,7 +3882,6 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
               }}
             />
           )}
-
           {scriptPrompt && (
             <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100000 }} onClick={() => setScriptPrompt(null)}>
               <div style={{ background: '#1e1e1e', border: '1px solid #444', borderRadius: '8px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '300px' }} onClick={e => e.stopPropagation()}>

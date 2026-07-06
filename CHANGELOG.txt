@@ -1,3 +1,7 @@
+0.3.1
+- added layer support to actor designer
+- added layer nudging to actor designer
+
 0.3.0
 - saves zoom/pan to project
 - added initial documentation
