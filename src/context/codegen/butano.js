@@ -1303,18 +1303,20 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
           // never collides with another actor's at link time, otherwise butano's
           // bn::sprite_tiles_manager::_find_impl throws "tiles data does not match
           // items tiles data" (line 553) at runtime.
-          // Defeat pixel is placed at (0, fIdx*validH) for each frame.
-          // If sprite fills entire frame (padX===0 && padY===0), shift by 1px to preserve defeat pixel.
-          const defeatPadX = (padX === 0 && validW === (a.width || 16)) ? 1 : padX;
-          const defeatPadY = (padY === 0 && validH === (a.height || 16)) ? 1 : padY;
+          // Defeat pixel is placed at the center of each frame.
+          // We no longer shift the sprite to preserve the defeat pixel, as overwriting
+          // a single near-black pixel at the center of the sprite is highly preferred
+          // to shifting the sprite and cropping its edges or bleeding into other frames.
+          const defeatPadX = padX;
+          const defeatPadY = padY;
 
           if (frameTiles.length === 0 || (frameTiles.length === 1 && frameTiles[0] == null)) {
             sCtx.fillStyle = a.color || '#ff00ff';
             sCtx.fillRect(defeatPadX, defeatPadY, a.width || 16, a.height || 16);
             
-            // Add defeat pixel at (0,0) - safe because sprite was shifted if needed
+            // Add defeat pixel at the center of the frame
             sCtx.fillStyle = `rgb(${defeatR}, ${defeatG}, ${defeatB})`;
-            sCtx.fillRect(0, 0, 1, 1);
+            sCtx.fillRect(Math.floor(validW / 2), Math.floor(validH / 2), 1, 1);
           } else {
             frameTiles.forEach((tilePayload, fIdx) => {
               const fY = fIdx * validH;
@@ -1385,11 +1387,11 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             });
             
             // GCC Linker identical-data-merge defeat pixel - add one per frame
-            // Placed at (0, fIdx*validH) - safe because sprite was shifted if needed.
+            // Placed at the center of each frame, overwriting the central pixel.
             // Each frame gets the actor's unique defeat color, making tile data byte-unique.
             frameTiles.forEach((_, fIdx) => {
               sCtx.fillStyle = `rgb(${defeatR}, ${defeatG}, ${defeatB})`;
-              sCtx.fillRect(0, fIdx * validH, 1, 1);
+              sCtx.fillRect(Math.floor(validW / 2), fIdx * validH + Math.floor(validH / 2), 1, 1);
             });
           }
           const imgDataTemp = sCtx.getImageData(0, 0, sCanvas.width, sCanvas.height);
