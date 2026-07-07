@@ -3004,7 +3004,21 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               // }
               actorLogicCode += `                            actor_${i}_dx = 0;\n`;
               actorLogicCode += `                        }\n`;
+              actorLogicCode += `                    }\n`;
+              actorLogicCode += `                }\n`;
+              actorLogicCode += `                if (actor_${i}_dy != 0) {\n`;
+              actorLogicCode += `                    bn::fixed new_y = actor_${i}_float_y + actor_${i}_dy;\n`;
               if (scene.type !== 'PLATFORMER') {
+                actorLogicCode += `                    bool pushed_block_y = false;\n`;
+                actorLogicCode += `                    bool push_blocked_y = false;\n`;
+                actorLogicCode += pushCheckCodeY;
+                actorLogicCode += `                    if (pushed_block_y) {\n`;
+                actorLogicCode += `                        if (!push_blocked_y) {\n`;
+                actorLogicCode += `                            actor_${i}_float_y = new_y;\n`;
+                actorLogicCode += `                        } else {\n`;
+                actorLogicCode += `                            actor_${i}_dy = 0;\n`;
+                actorLogicCode += `                        }\n`;
+                actorLogicCode += `                    } else {\n`;
                 actorLogicCode += `                        bool actor_blocked_y = false;\n`;
                 for (let j = 0; j < sActors.length; j++) {
                   if (i === j) continue;
@@ -3043,27 +3057,6 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                   }
                 }
                 actorLogicCode += `                        if (!check_solid_collision(actor_${i}_float_x, new_y, ${aCX}, ${aCY}, ${aCW}, ${aCH}) && !actor_blocked_y) {\n`;
-                actorLogicCode += `                            actor_${i}_float_y = new_y;\n`;
-                actorLogicCode += `                        } else {\n`;
-                actorLogicCode += `                            actor_${i}_dy = 0;\n`;
-                actorLogicCode += `                        }\n`;
-              }
-              actorLogicCode += `                    }\n`;
-              actorLogicCode += `                }\n`;
-              actorLogicCode += `                if (actor_${i}_dy != 0) {\n`;
-              actorLogicCode += `                    bn::fixed new_y = actor_${i}_float_y + actor_${i}_dy;\n`;
-              if (scene.type !== 'PLATFORMER') {
-                actorLogicCode += `                    bool pushed_block_y = false;\n`;
-                actorLogicCode += `                    bool push_blocked_y = false;\n`;
-                actorLogicCode += pushCheckCodeY;
-                actorLogicCode += `                    if (pushed_block_y) {\n`;
-                actorLogicCode += `                        if (!push_blocked_y) {\n`;
-                actorLogicCode += `                            actor_${i}_float_y = new_y;\n`;
-                actorLogicCode += `                        } else {\n`;
-                actorLogicCode += `                            actor_${i}_dy = 0;\n`;
-                actorLogicCode += `                        }\n`;
-                actorLogicCode += `                    } else {\n`;
-                actorLogicCode += `                        if (!check_solid_collision(actor_${i}_float_x, new_y, ${aCX}, ${aCY}, ${aCW}, ${aCH})) {\n`;
                 actorLogicCode += `                            actor_${i}_float_y = new_y;\n`;
                 actorLogicCode += `                        } else {\n`;
                 actorLogicCode += `                            actor_${i}_dy = 0;\n`;

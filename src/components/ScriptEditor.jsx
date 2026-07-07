@@ -1404,6 +1404,17 @@ const ScriptEditor = () => {
       data
     };
     setNodes((nds) => [...nds, newNode]);
+    if (prevNode && prevNode.data?.actionType !== 'menu') {
+      const edgeId = `e-${prevNode.id}-${newNode.id}`;
+      const newEdge = {
+        id: edgeId,
+        source: prevNode.id,
+        target: newNode.id,
+        sourceHandle: null,
+        targetHandle: null
+      };
+      setEdges((eds) => [...eds, newEdge]);
+    }
   }, [nodes, setNodes, setEdges]);
 
   if ((!editingScriptActorId && !editingScriptTriggerId && !editingCustomScriptId && !editingGlobalScript && !editingScriptSceneId) || !entity) return null;
