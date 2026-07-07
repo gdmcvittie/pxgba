@@ -714,6 +714,74 @@ const Dialogs = () => {
   useEffect(() => {
     if (!emulatorModule) return;
 
+    let gamepadLoopActive = true;
+    let prevGamepadState = {
+      up: false, down: false, left: false, right: false,
+      a: false, b: false, start: false, select: false, l: false, r: false
+    };
+
+    const pollGamepad = () => {
+      if (!gamepadLoopActive) return;
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGamepad = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i].connected) {
+          activeGamepad = gamepads[i];
+          break;
+        }
+      }
+
+      if (activeGamepad) {
+        const currentState = {
+          up: false, down: false, left: false, right: false,
+          a: false, b: false, start: false, select: false, l: false, r: false
+        };
+
+        if (activeGamepad.buttons[12] && activeGamepad.buttons[12].pressed) currentState.up = true;
+        if (activeGamepad.buttons[13] && activeGamepad.buttons[13].pressed) currentState.down = true;
+        if (activeGamepad.buttons[14] && activeGamepad.buttons[14].pressed) currentState.left = true;
+        if (activeGamepad.buttons[15] && activeGamepad.buttons[15].pressed) currentState.right = true;
+
+        if (activeGamepad.axes[0] !== undefined) {
+          if (activeGamepad.axes[0] < -0.5) currentState.left = true;
+          if (activeGamepad.axes[0] > 0.5) currentState.right = true;
+        }
+        if (activeGamepad.axes[1] !== undefined) {
+          if (activeGamepad.axes[1] < -0.5) currentState.up = true;
+          if (activeGamepad.axes[1] > 0.5) currentState.down = true;
+        }
+
+        if (activeGamepad.buttons[0] && activeGamepad.buttons[0].pressed) currentState.a = true;
+        if (activeGamepad.buttons[1] && activeGamepad.buttons[1].pressed) currentState.b = true;
+        if (activeGamepad.buttons[2] && activeGamepad.buttons[2].pressed) currentState.b = true;
+        if (activeGamepad.buttons[3] && activeGamepad.buttons[3].pressed) currentState.a = true;
+
+        if (activeGamepad.buttons[4] && activeGamepad.buttons[4].pressed) currentState.l = true;
+        if (activeGamepad.buttons[5] && activeGamepad.buttons[5].pressed) currentState.r = true;
+
+        if (activeGamepad.buttons[8] && activeGamepad.buttons[8].pressed) currentState.select = true;
+        if (activeGamepad.buttons[9] && activeGamepad.buttons[9].pressed) currentState.start = true;
+
+        Object.keys(currentState).forEach((key) => {
+          const isPressed = currentState[key];
+          const wasPressed = prevGamepadState[key];
+          if (isPressed !== wasPressed) {
+            if (isPressed) {
+              if (typeof emulatorModule.keyDown === 'function') emulatorModule.keyDown(key);
+            } else {
+              if (typeof emulatorModule.keyUp === 'function') emulatorModule.keyUp(key);
+            }
+          }
+        });
+
+        prevGamepadState = currentState;
+      }
+
+      requestAnimationFrame(pollGamepad);
+    };
+
+    requestAnimationFrame(pollGamepad);
+
     const keyMap = {
       'ArrowUp': 'up',
       'ArrowDown': 'down',
@@ -756,6 +824,7 @@ const Dialogs = () => {
     window.addEventListener('keyup', handleKeyUp);
     window.addEventListener('blur', handleBlur);
     return () => {
+      gamepadLoopActive = false;
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
       window.removeEventListener('blur', handleBlur);

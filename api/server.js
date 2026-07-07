@@ -746,6 +746,72 @@ body {
       }
       document.addEventListener('keydown', onKey);
       document.addEventListener('keyup', onKey);
+
+      // Gamepad input polling
+      var prevGamepadState = {
+        'UP': false, 'DOWN': false, 'LEFT': false, 'RIGHT': false,
+        'A': false, 'B': false, 'START': false, 'SELECT': false, 'L': false, 'R': false
+      };
+      function pollGamepad() {
+        if (!iodine) {
+          requestAnimationFrame(pollGamepad);
+          return;
+        }
+        var gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        var activeGamepad = null;
+        for (var i = 0; i < gamepads.length; i++) {
+          if (gamepads[i] && gamepads[i].connected) {
+            activeGamepad = gamepads[i];
+            break;
+          }
+        }
+        if (activeGamepad) {
+          var currentState = {
+            'UP': false, 'DOWN': false, 'LEFT': false, 'RIGHT': false,
+            'A': false, 'B': false, 'START': false, 'SELECT': false, 'L': false, 'R': false
+          };
+
+          if (activeGamepad.buttons[12] && activeGamepad.buttons[12].pressed) currentState['UP'] = true;
+          if (activeGamepad.buttons[13] && activeGamepad.buttons[13].pressed) currentState['DOWN'] = true;
+          if (activeGamepad.buttons[14] && activeGamepad.buttons[14].pressed) currentState['LEFT'] = true;
+          if (activeGamepad.buttons[15] && activeGamepad.buttons[15].pressed) currentState['RIGHT'] = true;
+
+          if (activeGamepad.axes[0] !== undefined) {
+            if (activeGamepad.axes[0] < -0.5) currentState['LEFT'] = true;
+            if (activeGamepad.axes[0] > 0.5) currentState['RIGHT'] = true;
+          }
+          if (activeGamepad.axes[1] !== undefined) {
+            if (activeGamepad.axes[1] < -0.5) currentState['UP'] = true;
+            if (activeGamepad.axes[1] > 0.5) currentState['DOWN'] = true;
+          }
+
+          if (activeGamepad.buttons[0] && activeGamepad.buttons[0].pressed) currentState['A'] = true;
+          if (activeGamepad.buttons[1] && activeGamepad.buttons[1].pressed) currentState['B'] = true;
+          if (activeGamepad.buttons[2] && activeGamepad.buttons[2].pressed) currentState['B'] = true;
+          if (activeGamepad.buttons[3] && activeGamepad.buttons[3].pressed) currentState['A'] = true;
+
+          if (activeGamepad.buttons[4] && activeGamepad.buttons[4].pressed) currentState['L'] = true;
+          if (activeGamepad.buttons[5] && activeGamepad.buttons[5].pressed) currentState['R'] = true;
+
+          if (activeGamepad.buttons[8] && activeGamepad.buttons[8].pressed) currentState['SELECT'] = true;
+          if (activeGamepad.buttons[9] && activeGamepad.buttons[9].pressed) currentState['START'] = true;
+
+          Object.keys(currentState).forEach(function(key) {
+            var isPressed = currentState[key];
+            var wasPressed = prevGamepadState[key];
+            if (isPressed !== wasPressed) {
+              if (isPressed) {
+                if (typeof iodine.keyDown === 'function') iodine.keyDown(key);
+              } else {
+                if (typeof iodine.keyUp === 'function') iodine.keyUp(key);
+              }
+            }
+          });
+          prevGamepadState = currentState;
+        }
+        requestAnimationFrame(pollGamepad);
+      }
+      requestAnimationFrame(pollGamepad);
     } catch (err) {
       console.error('Emulator error:', err);
       overlay.querySelector('.label').textContent = 'Error: ' + err.message;
