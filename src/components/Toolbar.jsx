@@ -14,6 +14,7 @@ import { FaHandPaper, FaMousePointer } from 'react-icons/fa';
 import { ImPacman, ImMan } from "react-icons/im";
 import { RiCheckboxBlankLine, RiCheckboxBlankFill, RiDragMove2Line, RiDragMoveFill } from 'react-icons/ri';
 import { HiAdjustmentsHorizontal } from 'react-icons/hi2';
+import { TbButterfly, TbButterflyFilled } from 'react-icons/tb';
 
 const Toolbar = () => {
   const [showExportGameAssetsMenu, setShowExportGameAssetsMenu] = useState(false);
@@ -285,7 +286,7 @@ const Toolbar = () => {
           style={{ padding: '10px', backgroundColor: symmetryMode !== 'none' ? '#4CAF50' : 'transparent', border: 'none', color: '#fff', cursor: 'pointer', borderRadius: '5px' }}
           title="Symmetry Options (Click again or Right-click for more)"
         >
-          <div style={{ width: '12px', height: '12px', border: '1px solid currentColor', borderRightWidth: (symmetryMode === 'horizontal' || symmetryMode === 'both') ? '2px' : '1px', borderBottomWidth: (symmetryMode === 'vertical' || symmetryMode === 'both') ? '2px' : '1px', borderRightStyle: (symmetryMode === 'horizontal' || symmetryMode === 'both') ? 'dashed' : 'solid', borderBottomStyle: (symmetryMode === 'vertical' || symmetryMode === 'both') ? 'dashed' : 'solid', boxSizing: 'border-box' }} />
+          <TbButterflyFilled size={12}/>
         </button>
         {showSymmetryMenu && (
           <>

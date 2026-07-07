@@ -438,6 +438,101 @@ const CustomActionNode = ({ id, data }) => {
               </select>
             </div>
           </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+            <input
+              type="checkbox"
+              className="nodrag"
+              id={`use-thresh-${id}`}
+              checked={!!data.useThreshold}
+              onChange={(e) => {
+                const nextVal = e.target.checked;
+                const updates = { useThreshold: nextVal };
+                if (!nextVal) {
+                  updates.branchByThreshold = false;
+                  setEdges((eds) => eds.filter(edge => !(edge.source === id && (edge.sourceHandle === 'under' || edge.sourceHandle === 'over'))));
+                }
+                updateData(updates);
+              }}
+              style={{ cursor: 'pointer' }}
+            />
+            <label htmlFor={`use-thresh-${id}`} style={{ fontSize: '10px', color: '#ccc', cursor: 'pointer' }}>Compare duration</label>
+          </div>
+
+          {data.useThreshold && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', borderLeft: '2px solid #4CAF50', paddingLeft: '6px', marginLeft: '4px' }}>
+              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: '9px', color: '#999', display: 'block' }}>Time (ms):</label>
+                  <input
+                    type="number"
+                    className="nodrag"
+                    value={data.threshold ?? 500}
+                    onChange={(e) => updateData({ threshold: parseInt(e.target.value) || 0 })}
+                    style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #444', borderRadius: '3px', padding: '3px', fontSize: '10px', outline: 'none' }}
+                  />
+                </div>
+                {!data.branchByThreshold && (
+                  <div style={{ width: '60px' }}>
+                    <label style={{ fontSize: '9px', color: '#999', display: 'block' }}>Op:</label>
+                    <select
+                      className="nodrag"
+                      value={data.operator || '>='}
+                      onChange={(e) => updateData({ operator: e.target.value })}
+                      style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #444', borderRadius: '3px', padding: '3px', fontSize: '10px', outline: 'none' }}
+                    >
+                      <option value="<">&lt;</option>
+                      <option value="<=">&lt;=</option>
+                      <option value=">">&gt;</option>
+                      <option value=">=">&gt;=</option>
+                      <option value="==">==</option>
+                    </select>
+                  </div>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                <input
+                  type="checkbox"
+                  className="nodrag"
+                  id={`branch-thresh-${id}`}
+                  checked={!!data.branchByThreshold}
+                  onChange={(e) => {
+                    const nextVal = e.target.checked;
+                    updateData({ branchByThreshold: nextVal });
+                    if (!nextVal) {
+                      setEdges((eds) => eds.filter(edge => !(edge.source === id && (edge.sourceHandle === 'under' || edge.sourceHandle === 'over'))));
+                    }
+                  }}
+                  style={{ cursor: 'pointer' }}
+                />
+                <label htmlFor={`branch-thresh-${id}`} style={{ fontSize: '10px', color: '#ccc', cursor: 'pointer' }}>Branch (Under/Over)</label>
+              </div>
+            </div>
+          )}
+
+          {data.useThreshold && data.branchByThreshold && (
+            <div style={{ borderTop: '1px solid #555', marginTop: '8px', paddingTop: '6px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ position: 'relative', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', height: '20px', paddingRight: '8px', fontSize: '9px', color: '#aaa' }}>
+                Under ({`<`} {data.threshold ?? 500}ms)
+                <Handle
+                  type="source"
+                  position={Position.Right}
+                  id="under"
+                  style={{ top: '50%', transform: 'translateY(-50%)', right: '-14px', background: '#e0a800' }}
+                />
+              </div>
+              <div style={{ position: 'relative', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', height: '20px', paddingRight: '8px', fontSize: '9px', color: '#aaa' }}>
+                Over/Equal ({`>=`} {data.threshold ?? 500}ms)
+                <Handle
+                  type="source"
+                  position={Position.Right}
+                  id="over"
+                  style={{ top: '50%', transform: 'translateY(-50%)', right: '-14px', background: '#008000' }}
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -1104,7 +1199,7 @@ const CustomActionNode = ({ id, data }) => {
         </div>
       )}
 
-      {data.actionType !== 'menu' && (
+      {data.actionType !== 'menu' && !(data.actionType === 'check_input' && data.useThreshold && data.branchByThreshold) && (
         <Handle type="source" position={Position.Right} />
       )}
     </div>

@@ -939,12 +939,39 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
     } else if (label === 'Check Input') {
       const keyState = currentNode.data.keyState || 'held';
       const keyName = currentNode.data.keyName || 'a';
-      if (keyState === 'pressed') {
-        code += `${indent}if (bn::keypad::${keyName}_pressed()) {\n`; openBraces++;
-      } else if (keyState === 'released') {
-        code += `${indent}if (bn::keypad::${keyName}_released()) {\n`; openBraces++;
+      const useThreshold = !!currentNode.data.useThreshold;
+      const branchByThreshold = useThreshold && !!currentNode.data.branchByThreshold;
+      const threshold = currentNode.data.threshold || 500;
+      const thresholdFrames = Math.round(threshold * 60 / 1000);
+      const operator = currentNode.data.operator || '>=';
+
+      if (branchByThreshold) {
+        const condition = `bn::keypad::${keyName}_${keyState}()`;
+        code += `${indent}if (${condition}) {\n`;
+        const underEdge = (script.edges || []).find(e => e && e.source === currentNode.id && e.sourceHandle === 'under');
+        if (underEdge) {
+          code += `${indent}    if (cur_held_${keyName} < ${thresholdFrames}) {\n`;
+          const underBranch = generateScriptLogic(script, actorIndex, actorWidth, actorHeight, baseIndent + openBraces + 2, callStack, { ...options, startNodeId: underEdge.target });
+          code += underBranch;
+          code += `${indent}    }\n`;
+        }
+        
+        const overEdge = (script.edges || []).find(e => e && e.source === currentNode.id && e.sourceHandle === 'over');
+        if (overEdge) {
+          code += `${indent}    if (cur_held_${keyName} >= ${thresholdFrames}) {\n`;
+          const overBranch = generateScriptLogic(script, actorIndex, actorWidth, actorHeight, baseIndent + openBraces + 2, callStack, { ...options, startNodeId: overEdge.target });
+          code += overBranch;
+          code += `${indent}    }\n`;
+        }
+        code += `${indent}}\n`;
+        continue;
       } else {
-        code += `${indent}if (bn::keypad::${keyName}_held()) {\n`; openBraces++;
+        let condStr = `bn::keypad::${keyName}_${keyState}()`;
+        if (useThreshold) {
+          condStr += ` && cur_held_${keyName} ${operator} ${thresholdFrames}`;
+        }
+        code += `${indent}if (${condStr}) {\n`;
+        openBraces++;
       }
     } else if (label === 'Set Scroll Speed') {
       const parseScrollSpeed = (val) => {

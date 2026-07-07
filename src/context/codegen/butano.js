@@ -5119,6 +5119,16 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
         sceneCode += `    bn::fixed camera_speed = 2;\n`;
         sceneCode += `    bool camera_instant = false;\n`;
         sceneCode += `    global_spawn_x = -1;\n    global_spawn_y = -1;\n`;
+        sceneCode += `    int key_held_up = 0; int cur_held_up = 0;\n`;
+        sceneCode += `    int key_held_down = 0; int cur_held_down = 0;\n`;
+        sceneCode += `    int key_held_left = 0; int cur_held_left = 0;\n`;
+        sceneCode += `    int key_held_right = 0; int cur_held_right = 0;\n`;
+        sceneCode += `    int key_held_a = 0; int cur_held_a = 0;\n`;
+        sceneCode += `    int key_held_b = 0; int cur_held_b = 0;\n`;
+        sceneCode += `    int key_held_l = 0; int cur_held_l = 0;\n`;
+        sceneCode += `    int key_held_r = 0; int cur_held_r = 0;\n`;
+        sceneCode += `    int key_held_start = 0; int cur_held_start = 0;\n`;
+        sceneCode += `    int key_held_select = 0; int cur_held_select = 0;\n`;
 
         // Check if scene has a player with HUD enabled (before any HUD code)
         const playerIdx = sActors.findIndex(a => a && a.type === 'player');
@@ -5821,6 +5831,16 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
         }
 
         sceneCode += `    while(true) {\n`;
+        sceneCode += `        cur_held_up = key_held_up; if (bn::keypad::up_held()) key_held_up++; else key_held_up = 0;\n`;
+        sceneCode += `        cur_held_down = key_held_down; if (bn::keypad::down_held()) key_held_down++; else key_held_down = 0;\n`;
+        sceneCode += `        cur_held_left = key_held_left; if (bn::keypad::left_held()) key_held_left++; else key_held_left = 0;\n`;
+        sceneCode += `        cur_held_right = key_held_right; if (bn::keypad::right_held()) key_held_right++; else key_held_right = 0;\n`;
+        sceneCode += `        cur_held_a = key_held_a; if (bn::keypad::a_held()) key_held_a++; else key_held_a = 0;\n`;
+        sceneCode += `        cur_held_b = key_held_b; if (bn::keypad::b_held()) key_held_b++; else key_held_b = 0;\n`;
+        sceneCode += `        cur_held_l = key_held_l; if (bn::keypad::l_held()) key_held_l++; else key_held_l = 0;\n`;
+        sceneCode += `        cur_held_r = key_held_r; if (bn::keypad::r_held()) key_held_r++; else key_held_r = 0;\n`;
+        sceneCode += `        cur_held_start = key_held_start; if (bn::keypad::start_held()) key_held_start++; else key_held_start = 0;\n`;
+        sceneCode += `        cur_held_select = key_held_select; if (bn::keypad::select_held()) key_held_select++; else key_held_select = 0;\n`;
         if (scene.type === 'RACING' && scene.showCountdown) {
           sceneCode += `        if (!_countdown_done) {\n`;
           sceneCode += `            _countdown_done = true;\n`;
