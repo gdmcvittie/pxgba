@@ -159,6 +159,16 @@ async function run() {
       console.error(`[setup] Error processing ${tool.name}:`, err.message);
     }
   }
+  
+  // Create true.bat to prevent Windows GNU Make shell bypass issues
+  const trueBatPath = path.join(winBinDir, 'true.bat');
+  try {
+    fs.writeFileSync(trueBatPath, '@exit /b 0\n');
+    console.log('[setup] Created true.bat utility successfully.');
+  } catch (err) {
+    console.error('[setup] Failed to create true.bat utility:', err.message);
+  }
+
   console.log('[setup] Build tools setup completed successfully.');
 }
 

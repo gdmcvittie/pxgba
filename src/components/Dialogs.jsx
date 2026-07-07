@@ -883,7 +883,7 @@ const Dialogs = () => {
                 Gage <br />
                 Grant2 <br />
                 Cool Man Chiu <br />
-                Phred.er.rick <br/>
+                Xalo <br/>
                 Bucko91
               </div>
             </div>

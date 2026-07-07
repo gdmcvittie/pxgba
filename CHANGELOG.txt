@@ -1,3 +1,6 @@
+0.3.2.1
+- fixed windows compile error (hopefully it works for everyone!)
+
 0.3.2
 - fixed movement/facing projectile direction bug 
 - fixed sliced actor sprites 
