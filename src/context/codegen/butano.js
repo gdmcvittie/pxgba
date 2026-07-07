@@ -246,6 +246,57 @@ bn::optional<bn::sprite_item> get_char_sprite_item(char c) {
     }
 }
 
+bn::optional<bn::sprite_item> get_dialog_char_sprite_item(char c) {
+    switch(c) {
+        case 'a': case 'A': return bn::sprite_items::dialog_hud_a;
+        case 'b': case 'B': return bn::sprite_items::dialog_hud_b;
+        case 'c': case 'C': return bn::sprite_items::dialog_hud_c;
+        case 'd': case 'D': return bn::sprite_items::dialog_hud_d;
+        case 'e': case 'E': return bn::sprite_items::dialog_hud_e;
+        case 'f': case 'F': return bn::sprite_items::dialog_hud_f;
+        case 'g': case 'G': return bn::sprite_items::dialog_hud_g;
+        case 'h': case 'H': return bn::sprite_items::dialog_hud_h;
+        case 'i': case 'I': return bn::sprite_items::dialog_hud_i;
+        case 'j': case 'J': return bn::sprite_items::dialog_hud_j;
+        case 'k': case 'K': return bn::sprite_items::dialog_hud_k;
+        case 'l': case 'L': return bn::sprite_items::dialog_hud_l;
+        case 'm': case 'M': return bn::sprite_items::dialog_hud_m;
+        case 'n': case 'N': return bn::sprite_items::dialog_hud_n;
+        case 'o': case 'O': return bn::sprite_items::dialog_hud_o;
+        case 'p': case 'P': return bn::sprite_items::dialog_hud_p;
+        case 'q': case 'Q': return bn::sprite_items::dialog_hud_q;
+        case 'r': case 'R': return bn::sprite_items::dialog_hud_r;
+        case 's': case 'S': return bn::sprite_items::dialog_hud_s;
+        case 't': case 'T': return bn::sprite_items::dialog_hud_t;
+        case 'u': case 'U': return bn::sprite_items::dialog_hud_u;
+        case 'v': case 'V': return bn::sprite_items::dialog_hud_v;
+        case 'w': case 'W': return bn::sprite_items::dialog_hud_w;
+        case 'x': case 'X': return bn::sprite_items::dialog_hud_x;
+        case 'y': case 'Y': return bn::sprite_items::dialog_hud_y;
+        case 'z': case 'Z': return bn::sprite_items::dialog_hud_z;
+        case '0': return bn::sprite_items::dialog_hud_0;
+        case '1': return bn::sprite_items::dialog_hud_1;
+        case '2': return bn::sprite_items::dialog_hud_2;
+        case '3': return bn::sprite_items::dialog_hud_3;
+        case '4': return bn::sprite_items::dialog_hud_4;
+        case '5': return bn::sprite_items::dialog_hud_5;
+        case '6': return bn::sprite_items::dialog_hud_6;
+        case '7': return bn::sprite_items::dialog_hud_7;
+        case '8': return bn::sprite_items::dialog_hud_8;
+        case '9': return bn::sprite_items::dialog_hud_9;
+        case ':': return bn::sprite_items::dialog_hud_colon;
+        case '/': return bn::sprite_items::dialog_hud_slash;
+        case '-': return bn::sprite_items::dialog_hud_minus;
+        case '+': return bn::sprite_items::dialog_hud_plus;
+        case '!': return bn::sprite_items::dialog_hud_excl;
+        case '?': return bn::sprite_items::dialog_hud_question;
+        case '.': return bn::sprite_items::dialog_hud_dot;
+        case ',': return bn::sprite_items::dialog_hud_comma;
+        case '>': return bn::sprite_items::dialog_hud_gt;
+        default: return bn::nullopt;
+    }
+}
+
 void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 128>& text_sprites, const bn::sprite_palette_ptr& palette) {
     int start_x = -110;
     int start_y = 26;
@@ -262,7 +313,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             cur_x += 8;
             continue;
         }
-        auto item_opt = get_char_sprite_item(c);
+        auto item_opt = get_dialog_char_sprite_item(c);
         if (item_opt) {
             if (text_sprites.size() < text_sprites.max_size()) {
                 bn::sprite_ptr sprite = item_opt->create_sprite(cur_x, cur_y);
@@ -5474,8 +5525,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
 
         sceneCode += `    bn::sprite_palette_ptr shared_sprite_palette = bn::sprite_items::hud_0.palette_item().create_palette();\n`;
         sceneCode += `    shared_sprite_palette.set_color(${safeFontColorIdx}, bn::color(${fontR}, ${fontG}, ${fontB}));\n`;
-        sceneCode += `    bn::sprite_palette_ptr dialog_text_palette = bn::sprite_items::hud_0.palette_item().create_palette();\n`;
-        sceneCode += `    dialog_text_palette.set_color(${safeFontColorIdx}, bn::color(${fontR}, ${fontG}, ${fontB}));\n`;
+        sceneCode += `    bn::sprite_palette_ptr dialog_text_palette = shared_sprite_palette;\n`;
         sceneCode += `    bn::optional<bn::regular_bg_ptr> scene_dialog_bg;\n`;
         if (hudSettings && hudSettings.enabled && scene.type !== 'INTRO' && scene.type !== 'PAUSE') {
           bgDeclarations += `    bn::regular_bg_ptr hud_bg = bn::regular_bg_items::hud_bg.create_bg(0, 0);\n`;
@@ -6643,6 +6693,16 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
 
       // Export expanded 8x8 character font
 
+      // Export expanded 8x8 character font
+
+        const dialogPalette = recentColors && recentColors.length > 1 ? recentColors : DEFAULT_16_PALETTE;
+        const dialogColors = dialogPalette.map(hex => {
+          const rgb = hexToRgbLocal(hex);
+          return { hex, r: rgb?.r ?? 0, g: rgb?.g ?? 0, b: rgb?.b ?? 0 };
+        });
+        const dialogLuminance = c => 0.299 * c.r + 0.587 * c.g + 0.114 * c.b;
+        const dialogDarkest = dialogColors.reduce((a, b) => dialogLuminance(a) < dialogLuminance(b) ? a : b, { hex: '#000000', r: 0, g: 0, b: 0 });
+
         for (const [char, bytes] of Object.entries(fontBytes)) {
           const cCanvas = document.createElement('canvas'); cCanvas.width = 8; cCanvas.height = 8;
           const cCtx = cCanvas.getContext('2d', { willReadFrequently: true });
@@ -6665,17 +6725,6 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
             }
           }
 
-          const imgDataTemp = cCtx.getImageData(0, 0, 8, 8);
-          const uniqueColorsSet = new Set();
-          for (let idx = 0; idx < imgDataTemp.data.length; idx += 4) {
-            if (imgDataTemp.data[idx + 3] >= 128) {
-              uniqueColorsSet.add(`${imgDataTemp.data[idx]},${imgDataTemp.data[idx + 1]},${imgDataTemp.data[idx + 2]}`);
-            }
-          }
-          const uniqueCount = uniqueColorsSet.size + 1;
-          const colorsCount = Math.min(256, Math.max(16, Math.ceil(uniqueCount / 16) * 16));
-          const bppMode = colorsCount > 16 ? "bpp_8" : "bpp_4";
-
           const forceBpp = globalBppMode === 'bpp_8' ? 8 : 4;
           const bmpBlob = canvasToIndexedBmpBlob(cCanvas, globalSpriteColors, forceBpp);
           const name = getCharSpriteItemName(char);
@@ -6690,6 +6739,29 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
             }, null, 2));
             zip.file(`graphics/${name}.grit`, `-m!`);
             mainCppIncludes += `#include "bn_sprite_items_${name}.h"\n`;
+
+            // Export dialog font duplicate
+            const dCanvas = document.createElement('canvas'); dCanvas.width = 8; dCanvas.height = 8;
+            const dCtx = dCanvas.getContext('2d', { willReadFrequently: true });
+            for (let py = 0; py < 8; py++) {
+              for (let px = 0; px < 8; px++) {
+                if (rowData[py][px]) {
+                  dCtx.fillStyle = dialogDarkest.hex;
+                  dCtx.fillRect(px, py, 1, 1);
+                }
+              }
+            }
+            const dBmpBlob = canvasToIndexedBmpBlob(dCanvas, globalSpriteColors, forceBpp);
+            zip.file(`graphics/dialog_${name}.bmp`, dBmpBlob);
+            zip.file(`graphics/dialog_${name}.json`, JSON.stringify({
+              type: "sprite",
+              width: 8,
+              height: 8,
+              bpp_mode: globalBppMode,
+              colors_count: globalColorsCount
+            }, null, 2));
+            zip.file(`graphics/dialog_${name}.grit`, `-m!`);
+            mainCppIncludes += `#include "bn_sprite_items_dialog_${name}.h"\n`;
           }
         }
 
