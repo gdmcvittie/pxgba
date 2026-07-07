@@ -6311,6 +6311,10 @@ export const PxShopProvider = ({ children }) => {
   const importTilesDirectly = useCallback((importData, choice, tileSize = 8) => {
     const { imageData, w, h, filename, dominantColors, uniqueColors, loadingToastId, maskColorHex } = importData;
     
+    const importGroupId = generateUniqueId();
+    const cleanFilename = filename ? filename.replace(/\.[^/.]+$/, "") : "Imported Tiles";
+    setTileGroupNames(prev => ({ ...prev, [importGroupId]: cleanFilename }));
+
     let finalPalette;
     let dominantColorsList = [...dominantColors];
 
@@ -6526,6 +6530,7 @@ export const PxShopProvider = ({ children }) => {
                 newTiles.push({
                   id: generateUniqueId(),
                   groupId,
+                  importGroupId,
                   name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${offset.suffix})`,
                   collisionType: "none",
                   data: tileData
@@ -6581,6 +6586,7 @@ export const PxShopProvider = ({ children }) => {
                 newTiles.push({
                   id: generateUniqueId(),
                   groupId,
+                  importGroupId,
                   name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${offset.suffix})`,
                   collisionType: "none",
                   data: tileData
@@ -6636,6 +6642,7 @@ export const PxShopProvider = ({ children }) => {
                 newTiles.push({
                   id: generateUniqueId(),
                   groupId,
+                  importGroupId,
                   name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${offset.suffix})`,
                   collisionType: "none",
                   data: tileData
@@ -6691,6 +6698,7 @@ export const PxShopProvider = ({ children }) => {
                 newTiles.push({
                   id: generateUniqueId(),
                   groupId,
+                  importGroupId,
                   name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${offset.suffix})`,
                   collisionType: "none",
                   data: tileData
@@ -6734,6 +6742,7 @@ export const PxShopProvider = ({ children }) => {
               newTiles.push({
                 id: generateUniqueId(),
                 groupId,
+                importGroupId,
                 name: `Tile ${currentSavedTiles.length + newTiles.length + 1}`,
                 collisionType: "none",
                 data: tileData
@@ -6763,7 +6772,7 @@ export const PxShopProvider = ({ children }) => {
     } else {
       toast.success("No new unique tiles found.", { id: loadingToastId });
     }
-  }, [savedTiles, scenes, layers, recentColors, dimensions, saveHistory, currentColor, secondaryColor, hudSettings, creditsBgColor, creditsTextColor, textSettings, setCurrentColor, setSecondaryColor, setHudSettings, setCreditsBgColor, setCreditsTextColor, setTextSettings, removeDuplicates]);
+  }, [savedTiles, scenes, layers, recentColors, dimensions, saveHistory, currentColor, secondaryColor, hudSettings, creditsBgColor, creditsTextColor, textSettings, setCurrentColor, setSecondaryColor, setHudSettings, setCreditsBgColor, setCreditsTextColor, setTextSettings, removeDuplicates, setTileGroupNames]);
 
   const executeTileImport = useCallback((choice) => {
     if (!pendingTileImportData) return;

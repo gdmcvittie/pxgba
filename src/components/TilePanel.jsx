@@ -49,6 +49,7 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
   const [hasImportedTileSheet, setHasImportedTileSheet] = useState(false);
   const [editingGroupId, setEditingGroupId] = useState(null);
   const [editingGroupName, setEditingGroupName] = useState('');
+  const [collapsedFolders, setCollapsedFolders] = useState({});
 
   const handleTilesWideFlowChange = (val) => {
     setTilesWideFlow(val);
@@ -616,7 +617,7 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
         onClick={onToggle}
         style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
       >
-        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: 'px' }}>
           <BsBorder /> Tiles
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onClick={e => { if (isCollapsed) { onToggle(); } e.stopPropagation(); }}>
@@ -780,15 +781,17 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
             const defaultTiles = filteredTiles.filter(t => defaultTileIds.has(t.id));
             const customTiles = filteredTiles.filter(t => !defaultTileIds.has(t.id));
 
-            const groupOrder = [];
-            const groupMap = {};
+            // Group custom tiles by importGroupId
+            const foldersMap = {};
+            const foldersOrder = [];
+
             for (const tile of customTiles) {
-              const gid = tile.groupId || tile.id;
-              if (!groupMap[gid]) {
-                groupMap[gid] = [];
-                groupOrder.push(gid);
+              const fid = tile.importGroupId || 'captured';
+              if (!foldersMap[fid]) {
+                foldersMap[fid] = [];
+                foldersOrder.push(fid);
               }
-              groupMap[gid].push(tile);
+              foldersMap[fid].push(tile);
             }
 
             const getSubGridSize = (group) => {
@@ -841,144 +844,225 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
             const isFlow = effectiveTilesWide === 'flow';
             const effectiveWidth = isFlow ? 999 : effectiveTilesWide;
 
-            return (
-              <div style={{
-                padding: '10px',
-                display: isFlow ? 'flex' : 'grid',
-                ...(isFlow ? { flexWrap: 'wrap' } : { gridTemplateColumns: `repeat(${effectiveTilesWide}, 32px)` }),
-                gap: '4px',
-                flex: 1,
-                overflowY: 'auto',
-                alignContent: 'flex-start',
-                minHeight: '100px',
-                ...(isFlow ? {} : { justifyItems: 'center' })
-              }}>
-                {filteredTiles.length === 0 ? (
+            // Gather folders to render
+            const folders = [];
+            if (defaultTiles.length > 0) {
+              folders.push({
+                id: 'default',
+                name: 'Default Tiles',
+                tiles: defaultTiles,
+                isDefault: true
+              });
+            }
+
+            for (const fid of foldersOrder) {
+              const tilesInFolder = foldersMap[fid];
+              if (tilesInFolder && tilesInFolder.length > 0) {
+                folders.push({
+                  id: fid,
+                  name: fid === 'captured' ? (tileGroupNames['captured'] || 'Captured Tiles') : (tileGroupNames[fid] || 'Imported Tiles'),
+                  tiles: tilesInFolder,
+                  isDefault: false
+                });
+              }
+            }
+
+            if (filteredTiles.length === 0) {
+              return (
+                <div style={{
+                  padding: '10px',
+                  flex: 1,
+                  overflowY: 'auto',
+                  minHeight: '100px'
+                }}>
                   <div style={{ color: '#aaa', fontSize: '11px', padding: '10px', width: '100%', textAlign: 'center' }}>
                     No matching tiles found
                   </div>
-                ) : (
-                  <>
-                    {defaultTiles.map(tile => renderTile(tile))}
-                    {customTiles.length > 0 && defaultTiles.length > 0 && (
-                      <div style={{
-                        ...(isFlow ? { width: '100%' } : { gridColumn: '1 / -1' }),
-                        height: '0',
-                        borderTop: '1px dashed #555',
-                        margin: '4px 0'
-                      }} />
-                    )}
-                    {groupOrder.map(gid => {
-                      const group = groupMap[gid];
-                      const groupName = tileGroupNames[gid] || '';
-                      const isEditing = editingGroupId === gid;
+                </div>
+              );
+            }
 
-                      const renderGroupLabel = () => (
-                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px', gap: '4px' }}>
-                          {isEditing ? (
+            return (
+              <div style={{
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0px',
+                flex: 1,
+                overflowY: 'auto',
+                alignContent: 'flex-start',
+                minHeight: '100px'
+              }}>
+                {folders.map(folder => {
+                  const isCollapsed = collapsedFolders[folder.id] || false;
+                  
+                  return (
+                    <div key={folder.id} style={{ display: 'flex', flexDirection: 'column' }}>
+                      {/* Folder Header */}
+                      <div
+                        onClick={() => {
+                          setCollapsedFolders(prev => ({ ...prev, [folder.id]: !isCollapsed }));
+                        }}
+                        style={{
+                          background: '#282828',
+                          border: '1px solid #3c3c3c',
+                          borderRadius: '4px',
+                          padding: '6px 8px',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          cursor: 'pointer',
+                          userSelect: 'none',
+                          marginBottom: '4px'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flex: 1, minWidth: 0 }} onClick={e => e.stopPropagation()}>
+                          {/* Chevron Icon toggles collapse */}
+                          <div 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCollapsedFolders(prev => ({ ...prev, [folder.id]: !isCollapsed }));
+                            }}
+                            style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', paddingRight: '2px' }}
+                          >
+                            {isCollapsed ? <BsChevronRight style={{ color: '#aaa', fontSize: '10px' }} /> : <BsChevronDown style={{ color: '#aaa', fontSize: '10px' }} />}
+                          </div>
+                          
+                          {/* Rename Input or Label */}
+                          {editingGroupId === folder.id && !folder.isDefault ? (
                             <input
                               autoFocus
                               type="text"
                               value={editingGroupName}
                               onChange={(e) => setEditingGroupName(e.target.value)}
                               onBlur={() => {
-                                setTileGroupNames(prev => ({ ...prev, [gid]: editingGroupName }));
+                                setTileGroupNames(prev => ({ ...prev, [folder.id]: editingGroupName }));
                                 setEditingGroupId(null);
                               }}
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
-                                  setTileGroupNames(prev => ({ ...prev, [gid]: editingGroupName }));
+                                  setTileGroupNames(prev => ({ ...prev, [folder.id]: editingGroupName }));
                                   setEditingGroupId(null);
                                 }
                                 if (e.key === 'Escape') setEditingGroupId(null);
                               }}
                               style={{
-                                background: '#111', color: '#ccc', border: '1px solid #555', borderRadius: '2px',
-                                padding: '1px 4px', fontSize: '9px', width: '100%', outline: 'none'
+                                background: '#111',
+                                color: '#fff',
+                                border: '1px solid #555',
+                                borderRadius: '2px',
+                                padding: '1px 4px',
+                                fontSize: '11px',
+                                width: '80%',
+                                outline: 'none'
                               }}
                             />
                           ) : (
                             <span
-                              onDoubleClick={() => { setEditingGroupId(gid); setEditingGroupName(groupName); }}
-                              style={{
-                                fontSize: '9px', color: '#888', cursor: 'text', userSelect: 'none',
-                                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1
+                              onDoubleClick={(e) => {
+                                if (folder.isDefault) return;
+                                setEditingGroupId(folder.id);
+                                setEditingGroupName(folder.name);
                               }}
-                              title={groupName || 'Double-click to name this group'}
+                              style={{
+                                fontSize: '11px',
+                                fontWeight: 'bold',
+                                color: '#ccc',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                cursor: folder.isDefault ? 'default' : 'text',
+                                userSelect: 'none'
+                              }}
+                              title={folder.isDefault ? folder.name : `${folder.name} (Double-click to rename)`}
                             >
-                              {groupName || 'Unnamed group'}
+                              📁 {folder.name}
                             </span>
                           )}
                         </div>
-                      );
+                        <span style={{ fontSize: '9px', color: '#888', paddingLeft: '4px', flexShrink: 0 }}>{folder.tiles.length} tiles</span>
+                      </div>
 
-                      if (group.length <= 1 || isFlow) {
-                        if (isFlow && group.length > 1) {
-                          const { cols, rows } = getSubGridSize(group);
-                          const sorted = new Array(cols * rows).fill(null);
-                          for (const tile of group) {
-                            const pos = getTilePosition(tile, cols);
-                            sorted[pos] = tile;
-                          }
-                          return (
-                            <div
-                              key={gid}
-                              style={{
-                                display: 'flex', flexDirection: 'column',
-                                padding: '4px', background: '#2a2a2a', border: '1px solid #555', borderRadius: '4px'
-                              }}
-                            >
-                              {renderGroupLabel()}
-                              <div
-                                style={{
-                                  display: 'grid',
-                                  gridTemplateColumns: `repeat(${cols}, 32px)`,
-                                  gridTemplateRows: `repeat(${rows}, 32px)`,
-                                  gap: '2px',
-                                  justifyItems: 'center',
-                                  alignItems: 'center'
-                                }}
-                              >
-                                {sorted.map((tile, i) => tile ? renderTile(tile) : <div key={`empty-${i}`} style={{ width: '32px', height: '32px' }} />)}
-                              </div>
+                      {/* Folder Content */}
+                      {!isCollapsed && (
+                        <div style={{ paddingLeft: '4px', paddingBottom: '8px' }}>
+                          {folder.isDefault ? (
+                            <div style={{
+                              display: isFlow ? 'flex' : 'grid',
+                              ...(isFlow ? { flexWrap: 'wrap' } : { gridTemplateColumns: `repeat(${effectiveTilesWide}, 32px)` }),
+                              gap: '4px'
+                            }}>
+                              {folder.tiles.map(tile => renderTile(tile))}
                             </div>
-                          );
-                        }
-                        return renderTile(group[0]);
-                      }
-                      const { cols, rows } = getSubGridSize(group);
-                      const sorted = new Array(cols * rows).fill(null);
-                      for (const tile of group) {
-                        const pos = getTilePosition(tile, cols);
-                        sorted[pos] = tile;
-                      }
-                      return (
-                        <div
-                          key={gid}
-                          style={{
-                            gridColumn: `span ${Math.min(cols, effectiveWidth)}`,
-                            display: 'flex', flexDirection: 'column',
-                            padding: '4px', background: '#2a2a2a', border: '1px solid #555', borderRadius: '4px'
-                          }}
-                        >
-                          {renderGroupLabel()}
-                          <div
-                            style={{
-                              display: 'grid',
-                              gridTemplateColumns: `repeat(${cols}, 32px)`,
-                              gridTemplateRows: `repeat(${rows}, 32px)`,
-                              gap: '2px',
-                              justifyItems: 'center',
-                              alignItems: 'center'
-                            }}
-                          >
-                            {sorted.map((tile, i) => tile ? renderTile(tile) : <div key={`empty-${i}`} style={{ width: '32px', height: '32px' }} />)}
-                          </div>
+                          ) : (() => {
+                            // Group custom tiles inside this folder by groupId
+                            const groupOrder = [];
+                            const groupMap = {};
+                            for (const tile of folder.tiles) {
+                              const gid = tile.groupId || tile.id;
+                              if (!groupMap[gid]) {
+                                groupMap[gid] = [];
+                                groupOrder.push(gid);
+                              }
+                              groupMap[gid].push(tile);
+                            }
+
+                            return (
+                              <div style={{
+                                display: isFlow ? 'flex' : 'grid',
+                                ...(isFlow ? { flexWrap: 'wrap' } : { gridTemplateColumns: `repeat(${effectiveTilesWide}, 32px)` }),
+                                gap: '6px',
+                                ...(isFlow ? {} : { justifyItems: 'center' })
+                              }}>
+                                {groupOrder.map(gid => {
+                                  const group = groupMap[gid];
+                                  if (group.length <= 1) {
+                                    return renderTile(group[0]);
+                                  }
+
+                                  const { cols, rows } = getSubGridSize(group);
+                                  const sorted = new Array(cols * rows).fill(null);
+                                  for (const tile of group) {
+                                    const pos = getTilePosition(tile, cols);
+                                    sorted[pos] = tile;
+                                  }
+
+                                  return (
+                                    <div
+                                      key={gid}
+                                      style={{
+                                        ...(isFlow ? {} : { gridColumn: `span ${Math.min(cols, effectiveWidth)}` }),
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        padding: '4px',
+                                        background: '#202020',
+                                        border: '1px solid #444',
+                                        borderRadius: '4px'
+                                      }}
+                                    >
+                                      <div
+                                        style={{
+                                          display: 'grid',
+                                          gridTemplateColumns: `repeat(${cols}, 32px)`,
+                                          gridTemplateRows: `repeat(${rows}, 32px)`,
+                                          gap: '2px',
+                                          justifyItems: 'center',
+                                          alignItems: 'center'
+                                        }}
+                                      >
+                                        {sorted.map((tile, i) => tile ? renderTile(tile) : <div key={`empty-${i}`} style={{ width: '32px', height: '32px' }} />)}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            );
+                          })()}
                         </div>
-                      );
-                    })}
-                  </>
-                )}
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             );
           })()}
