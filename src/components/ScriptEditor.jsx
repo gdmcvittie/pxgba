@@ -1499,7 +1499,8 @@ const ScriptEditor = () => {
       data
     };
     setNodes((nds) => [...nds, newNode]);
-    if (prevNode && prevNode.data?.actionType !== 'menu') {
+    const hasBranchingNode = nodes.some(n => n.data?.actionType === 'menu' || n.data?.actionType === 'check_input');
+    if (prevNode && !hasBranchingNode) {
       const edgeId = `e-${prevNode.id}-${newNode.id}`;
       const newEdge = {
         id: edgeId,
