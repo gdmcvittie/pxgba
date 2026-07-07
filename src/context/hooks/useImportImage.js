@@ -24,6 +24,8 @@ export function useImportImage({
   const [paletteImportFileName, setPaletteImportFileName] = useState('');
   const [showPaletteConvertDialog, setShowPaletteConvertDialog] = useState(false);
   const [pendingConvertData, setPendingConvertData] = useState(null);
+  const [sliceOffset, setSliceOffset] = useState(0);
+  const [sliceSpacing, setSliceSpacing] = useState(0);
 
   const applyPaletteConversion = (data, w, h) => {
     const colorCounts = {};
@@ -122,20 +124,28 @@ export function useImportImage({
     }
 
     if (importMode === 'tiles') {
-      const cols = Math.floor(w / 8);
-      const rows = Math.floor(h / 8);
+      const offset = parseInt(sliceOffset) || 0;
+      const spacing = parseInt(sliceSpacing) || 0;
       const newTiles = [];
       const currentTiles = savedTiles || [];
       const existingFingerprints = new Set(currentTiles.map(t => JSON.stringify(t.data)));
 
-      for (let ty = 0; ty < rows; ty++) {
-        for (let tx = 0; tx < cols; tx++) {
+      let ty = 0;
+      while (true) {
+        const tileStartY = offset + ty * (8 + spacing);
+        if (tileStartY + 8 > h) break;
+
+        let tx = 0;
+        while (true) {
+          const tileStartX = offset + tx * (8 + spacing);
+          if (tileStartX + 8 > w) break;
+
           const tileData = Array(8).fill(null).map(() => Array(8).fill(null));
           let hasPixels = false;
           for (let py = 0; py < 8; py++) {
             for (let px = 0; px < 8; px++) {
-              const y = ty * 8 + py;
-              const x = tx * 8 + px;
+              const y = tileStartY + py;
+              const x = tileStartX + px;
               const color = originalData[y]?.[x];
               if (color) {
                 tileData[py][px] = color;
@@ -143,6 +153,7 @@ export function useImportImage({
               }
             }
           }
+
           if (hasPixels) {
             const fingerprint = JSON.stringify(tileData);
             if (!existingFingerprints.has(fingerprint)) {
@@ -155,7 +166,9 @@ export function useImportImage({
               existingFingerprints.add(fingerprint);
             }
           }
+          tx++;
         }
+        ty++;
       }
 
       if (newTiles.length > 0) {
@@ -799,6 +812,7 @@ export function useImportImage({
     showPaletteConvertDialog, setShowPaletteConvertDialog,
     pendingConvertData, setPendingConvertData,
     handleImageUpload, handlePaletteUpload, confirmPaletteImport,
-    confirmPaletteConvert, importFileAsLayer, handleImportToLayer
+    confirmPaletteConvert, importFileAsLayer, handleImportToLayer,
+    sliceOffset, setSliceOffset, sliceSpacing, setSliceSpacing
   };
 }

@@ -770,7 +770,8 @@ export const PxShopProvider = ({ children }) => {
     showPaletteConvertDialog, setShowPaletteConvertDialog,
     pendingConvertData, setPendingConvertData,
     handleImageUpload, handlePaletteUpload, confirmPaletteImport,
-    confirmPaletteConvert, importFileAsLayer, handleImportToLayer
+    confirmPaletteConvert, importFileAsLayer, handleImportToLayer,
+    sliceOffset, setSliceOffset, sliceSpacing, setSliceSpacing
   } = useImportImage({
     dimensions, layers, activeLayerId, recentColors,
     setDimensions, setLayers, setActiveLayerId, setZoom, setPanOffset,
@@ -6489,12 +6490,20 @@ export const PxShopProvider = ({ children }) => {
     const currentSavedTiles = updatedTiles;
     const existingTileFingerprints = new Set(currentSavedTiles.map(tile => JSON.stringify(tile.data)));
 
+    const offset = parseInt(sliceOffset) || 0;
+    const spacing = parseInt(sliceSpacing) || 0;
+
     if (tileSize === 16) {
-      const cols16 = Math.floor(w / 16);
-      const rows16 = Math.floor(h / 16);
-      
-      for (let ty = 0; ty < rows16; ty++) {
-        for (let tx = 0; tx < cols16; tx++) {
+      let ty = 0;
+      while (true) {
+        const tileStartY = offset + ty * (16 + spacing);
+        if (tileStartY + 16 > h) break;
+
+        let tx = 0;
+        while (true) {
+          const tileStartX = offset + tx * (16 + spacing);
+          if (tileStartX + 16 > w) break;
+
           const groupId = generateUniqueId();
           const subTileOffsets = [
             { dx: 0, dy: 0, suffix: 'TL' },
@@ -6503,14 +6512,14 @@ export const PxShopProvider = ({ children }) => {
             { dx: 8, dy: 8, suffix: 'BR' }
           ];
 
-          for (const offset of subTileOffsets) {
+          for (const subOffset of subTileOffsets) {
             const tileData = Array(8).fill(null).map(() => Array(8).fill(null));
             let hasPixels = false;
 
             for (let py = 0; py < 8; py++) {
               for (let px = 0; px < 8; px++) {
-                const srcX = tx * 16 + offset.dx + px;
-                const srcY = ty * 16 + offset.dy + py;
+                const srcX = tileStartX + subOffset.dx + px;
+                const srcY = tileStartY + subOffset.dy + py;
                 const i = (srcY * w + srcX) * 4;
                 const r = imageData[i], g = imageData[i + 1], b = imageData[i + 2], a = imageData[i + 3];
                 const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
@@ -6531,7 +6540,7 @@ export const PxShopProvider = ({ children }) => {
                   id: generateUniqueId(),
                   groupId,
                   importGroupId,
-                  name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${offset.suffix})`,
+                  name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${subOffset.suffix})`,
                   collisionType: "none",
                   data: tileData
                 });
@@ -6539,14 +6548,21 @@ export const PxShopProvider = ({ children }) => {
               }
             }
           }
+          tx++;
         }
+        ty++;
       }
     } else if (tileSize === 32) {
-      const cols32 = Math.floor(w / 32);
-      const rows32 = Math.floor(h / 32);
+      let ty = 0;
+      while (true) {
+        const tileStartY = offset + ty * (32 + spacing);
+        if (tileStartY + 32 > h) break;
 
-      for (let ty = 0; ty < rows32; ty++) {
-        for (let tx = 0; tx < cols32; tx++) {
+        let tx = 0;
+        while (true) {
+          const tileStartX = offset + tx * (32 + spacing);
+          if (tileStartX + 32 > w) break;
+
           const groupId = generateUniqueId();
           const subTileOffsets = [];
           for (let sY = 0; sY < 4; sY++) {
@@ -6559,14 +6575,14 @@ export const PxShopProvider = ({ children }) => {
             }
           }
 
-          for (const offset of subTileOffsets) {
+          for (const subOffset of subTileOffsets) {
             const tileData = Array(8).fill(null).map(() => Array(8).fill(null));
             let hasPixels = false;
 
             for (let py = 0; py < 8; py++) {
               for (let px = 0; px < 8; px++) {
-                const srcX = tx * 32 + offset.dx + px;
-                const srcY = ty * 32 + offset.dy + py;
+                const srcX = tileStartX + subOffset.dx + px;
+                const srcY = tileStartY + subOffset.dy + py;
                 const i = (srcY * w + srcX) * 4;
                 const r = imageData[i], g = imageData[i + 1], b = imageData[i + 2], a = imageData[i + 3];
                 const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
@@ -6587,7 +6603,7 @@ export const PxShopProvider = ({ children }) => {
                   id: generateUniqueId(),
                   groupId,
                   importGroupId,
-                  name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${offset.suffix})`,
+                  name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${subOffset.suffix})`,
                   collisionType: "none",
                   data: tileData
                 });
@@ -6595,14 +6611,21 @@ export const PxShopProvider = ({ children }) => {
               }
             }
           }
+          tx++;
         }
+        ty++;
       }
     } else if (tileSize === 48) {
-      const cols48 = Math.floor(w / 48);
-      const rows48 = Math.floor(h / 48);
+      let ty = 0;
+      while (true) {
+        const tileStartY = offset + ty * (48 + spacing);
+        if (tileStartY + 48 > h) break;
 
-      for (let ty = 0; ty < rows48; ty++) {
-        for (let tx = 0; tx < cols48; tx++) {
+        let tx = 0;
+        while (true) {
+          const tileStartX = offset + tx * (48 + spacing);
+          if (tileStartX + 48 > w) break;
+
           const groupId = generateUniqueId();
           const subTileOffsets = [];
           for (let sY = 0; sY < 6; sY++) {
@@ -6615,14 +6638,14 @@ export const PxShopProvider = ({ children }) => {
             }
           }
 
-          for (const offset of subTileOffsets) {
+          for (const subOffset of subTileOffsets) {
             const tileData = Array(8).fill(null).map(() => Array(8).fill(null));
             let hasPixels = false;
 
             for (let py = 0; py < 8; py++) {
               for (let px = 0; px < 8; px++) {
-                const srcX = tx * 48 + offset.dx + px;
-                const srcY = ty * 48 + offset.dy + py;
+                const srcX = tileStartX + subOffset.dx + px;
+                const srcY = tileStartY + subOffset.dy + py;
                 const i = (srcY * w + srcX) * 4;
                 const r = imageData[i], g = imageData[i + 1], b = imageData[i + 2], a = imageData[i + 3];
                 const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
@@ -6643,7 +6666,7 @@ export const PxShopProvider = ({ children }) => {
                   id: generateUniqueId(),
                   groupId,
                   importGroupId,
-                  name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${offset.suffix})`,
+                  name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${subOffset.suffix})`,
                   collisionType: "none",
                   data: tileData
                 });
@@ -6651,14 +6674,21 @@ export const PxShopProvider = ({ children }) => {
               }
             }
           }
+          tx++;
         }
+        ty++;
       }
     } else if (tileSize === 64) {
-      const cols64 = Math.floor(w / 64);
-      const rows64 = Math.floor(h / 64);
+      let ty = 0;
+      while (true) {
+        const tileStartY = offset + ty * (64 + spacing);
+        if (tileStartY + 64 > h) break;
 
-      for (let ty = 0; ty < rows64; ty++) {
-        for (let tx = 0; tx < cols64; tx++) {
+        let tx = 0;
+        while (true) {
+          const tileStartX = offset + tx * (64 + spacing);
+          if (tileStartX + 64 > w) break;
+
           const groupId = generateUniqueId();
           const subTileOffsets = [];
           for (let sY = 0; sY < 8; sY++) {
@@ -6671,14 +6701,14 @@ export const PxShopProvider = ({ children }) => {
             }
           }
 
-          for (const offset of subTileOffsets) {
+          for (const subOffset of subTileOffsets) {
             const tileData = Array(8).fill(null).map(() => Array(8).fill(null));
             let hasPixels = false;
 
             for (let py = 0; py < 8; py++) {
               for (let px = 0; px < 8; px++) {
-                const srcX = tx * 64 + offset.dx + px;
-                const srcY = ty * 64 + offset.dy + py;
+                const srcX = tileStartX + subOffset.dx + px;
+                const srcY = tileStartY + subOffset.dy + py;
                 const i = (srcY * w + srcX) * 4;
                 const r = imageData[i], g = imageData[i + 1], b = imageData[i + 2], a = imageData[i + 3];
                 const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
@@ -6699,7 +6729,7 @@ export const PxShopProvider = ({ children }) => {
                   id: generateUniqueId(),
                   groupId,
                   importGroupId,
-                  name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${offset.suffix})`,
+                  name: `Tile ${currentSavedTiles.length + newTiles.length + 1} (${subOffset.suffix})`,
                   collisionType: "none",
                   data: tileData
                 });
@@ -6707,22 +6737,29 @@ export const PxShopProvider = ({ children }) => {
               }
             }
           }
+          tx++;
         }
+        ty++;
       }
     } else {
-      const cols = Math.floor(w / 8);
-      const rows = Math.floor(h / 8);
+      let ty = 0;
+      while (true) {
+        const tileStartY = offset + ty * (8 + spacing);
+        if (tileStartY + 8 > h) break;
 
-      for (let ty = 0; ty < rows; ty++) {
-        for (let tx = 0; tx < cols; tx++) {
+        let tx = 0;
+        while (true) {
+          const tileStartX = offset + tx * (8 + spacing);
+          if (tileStartX + 8 > w) break;
+
           const groupId = generateUniqueId();
           const tileData = Array(8).fill(null).map(() => Array(8).fill(null));
           let hasPixels = false;
 
           for (let py = 0; py < 8; py++) {
             for (let px = 0; px < 8; px++) {
-              const srcX = tx * 8 + px;
-              const srcY = ty * 8 + py;
+              const srcX = tileStartX + px;
+              const srcY = tileStartY + py;
               const i = (srcY * w + srcX) * 4;
               const r = imageData[i], g = imageData[i + 1], b = imageData[i + 2], a = imageData[i + 3];
               const hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
@@ -6750,7 +6787,9 @@ export const PxShopProvider = ({ children }) => {
               existingTileFingerprints.add(fingerprint);
             }
           }
+          tx++;
         }
+        ty++;
       }
     }
 
@@ -8676,6 +8715,8 @@ const handleWizardCreate = () => {
     showPaletteConvertDialog, setShowPaletteConvertDialog,
     pendingConvertData, setPendingConvertData,
     confirmPaletteConvert,
+    sliceOffset, setSliceOffset,
+    sliceSpacing, setSliceSpacing,
     exportLayerAsPNG,
     exportPNG,
     exportAllLayersZipped,

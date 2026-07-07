@@ -342,6 +342,7 @@ const MapOverviewDialog = () => {
 };
 
 const Dialogs = () => {
+  const [selectedImportTileSize, setSelectedImportTileSize] = useState(8);
   const {
     showAboutDialog, setShowAboutDialog,
     showNewProjectDialog, setShowNewProjectDialog,
@@ -391,6 +392,8 @@ const Dialogs = () => {
     showPaletteConvertDialog, setShowPaletteConvertDialog,
     pendingConvertData,
     confirmPaletteConvert,
+    sliceOffset, setSliceOffset,
+    sliceSpacing, setSliceSpacing,
 
     // Tile Import Palette Choice Dialog
     showTileImportPaletteDialog, setShowTileImportPaletteDialog,
@@ -1710,6 +1713,35 @@ const Dialogs = () => {
                 Image: <strong style={{ color: '#fff' }}>{pendingConvertData.sourceWidth || pendingConvertData.w}×{pendingConvertData.sourceHeight || pendingConvertData.h}</strong> pixels
               </div>
 
+              {/* Slicing Settings for Tiles */}
+              <div style={{ background: '#1a1a1a', padding: '10px', borderRadius: '4px', border: '1px solid #444', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ fontSize: '11px', color: '#aaa', fontWeight: 'bold', textTransform: 'uppercase' }}>
+                  Tile Slicing Settings (for "As Tiles")
+                </div>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ fontSize: '10px', color: '#ccc', display: 'block', marginBottom: '2px' }}>Start Offset (px):</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={sliceOffset}
+                      onChange={(e) => setSliceOffset(Math.max(0, parseInt(e.target.value) || 0))}
+                      style={{ width: '100%', background: '#2a2a2a', color: '#fff', border: '1px solid #555', borderRadius: '3px', padding: '4px 6px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}
+                    />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ fontSize: '10px', color: '#ccc', display: 'block', marginBottom: '2px' }}>Border Spacing (px):</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={sliceSpacing}
+                      onChange={(e) => setSliceSpacing(Math.max(0, parseInt(e.target.value) || 0))}
+                      style={{ width: '100%', background: '#2a2a2a', color: '#fff', border: '1px solid #555', borderRadius: '3px', padding: '4px 6px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}
+                    />
+                  </div>
+                </div>
+              </div>
+
               {/* Row 1: Quick actions — Palette or Tiles */}
               <div>
                 <div style={{ display: 'flex', gap: '6px' }}>
@@ -2508,167 +2540,95 @@ const Dialogs = () => {
               </label>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '10px' }}>
-              <button
-                onClick={() => {
-                  if (pendingOgaImportData) {
-                    importTilesDirectly(pendingOgaImportData, 'keep', 8);
-                    setOgaImportTilesWide(Math.floor(pendingOgaImportData.w / 8));
-                    setPendingOgaImportData(null);
-                  } else {
-                    processTileImport(pendingTileImportFile, 8);
-                    setPendingTileImportFile(null);
-                  }
-                  setShowTileImportSizeDialog(false);
-                }}
-                style={{
-                  background: '#4CAF50',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '12px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  fontSize: '12px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                  transition: 'background 0.2s',
-                  flexGrow: 1,
-                  minWidth: '120px'
-                }}
-                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#45a049'}
-                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#4CAF50'}
-              >
-                8x8 Tiles
-              </button>
-
-              <button
-                onClick={() => {
-                  if (pendingOgaImportData) {
-                    importTilesDirectly(pendingOgaImportData, 'keep', 16);
-                    setOgaImportTilesWide(Math.floor(pendingOgaImportData.w / 8));
-                    setPendingOgaImportData(null);
-                  } else {
-                    processTileImport(pendingTileImportFile, 16);
-                    setPendingTileImportFile(null);
-                  }
-                  setShowTileImportSizeDialog(false);
-                }}
-                style={{
-                  background: '#0078d4',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '12px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  fontSize: '12px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                  transition: 'background 0.2s',
-                  flexGrow: 1,
-                  minWidth: '120px'
-                }}
-                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#005a9e'}
-                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#0078d4'}
-              >
-                16x16 Tiles
-              </button>
-
-              <button
-                onClick={() => {
-                  if (pendingOgaImportData) {
-                    importTilesDirectly(pendingOgaImportData, 'keep', 32);
-                    setOgaImportTilesWide(Math.floor(pendingOgaImportData.w / 8));
-                    setPendingOgaImportData(null);
-                  } else {
-                    processTileImport(pendingTileImportFile, 32);
-                    setPendingTileImportFile(null);
-                  }
-                  setShowTileImportSizeDialog(false);
-                }}
-                style={{
-                  background: '#ff9800',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '12px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  fontSize: '12px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                  transition: 'background 0.2s',
-                  flexGrow: 1,
-                  minWidth: '120px'
-                }}
-                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#e68a00'}
-                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#ff9800'}
-              >
-                32x32 Tiles
-              </button>
-
-              <button
-                onClick={() => {
-                  if (pendingOgaImportData) {
-                    importTilesDirectly(pendingOgaImportData, 'keep', 48);
-                    setOgaImportTilesWide(Math.floor(pendingOgaImportData.w / 8));
-                    setPendingOgaImportData(null);
-                  } else {
-                    processTileImport(pendingTileImportFile, 48);
-                    setPendingTileImportFile(null);
-                  }
-                  setShowTileImportSizeDialog(false);
-                }}
-                style={{
-                  background: '#9c27b0',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '12px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  fontSize: '12px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                  transition: 'background 0.2s',
-                  flexGrow: 1,
-                  minWidth: '120px'
-                }}
-                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#7b1fa2'}
-                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#9c27b0'}
-              >
-                48x48 Tiles
-              </button>
-
-              <button
-                onClick={() => {
-                  if (pendingOgaImportData) {
-                    importTilesDirectly(pendingOgaImportData, 'keep', 64);
-                    setOgaImportTilesWide(Math.floor(pendingOgaImportData.w / 8));
-                    setPendingOgaImportData(null);
-                  } else {
-                    processTileImport(pendingTileImportFile, 64);
-                    setPendingTileImportFile(null);
-                  }
-                  setShowTileImportSizeDialog(false);
-                }}
-                style={{
-                  background: '#e91e63',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '12px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  fontSize: '12px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                  transition: 'background 0.2s',
-                  flexGrow: 1,
-                  minWidth: '120px'
-                }}
-                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#c2185b'}
-                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#e91e63'}
-              >
-                64x64 Tiles
-              </button>
+            {/* Slicing Settings for OGA/file spritesheets */}
+            <div style={{ background: '#1a1a1a', padding: '10px', borderRadius: '4px', border: '1px solid #444', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ fontSize: '11px', color: '#aaa', fontWeight: 'bold', textTransform: 'uppercase' }}>
+                Tile Slicing Settings
+              </div>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: '10px', color: '#ccc', display: 'block', marginBottom: '2px' }}>Start Offset (px):</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={sliceOffset}
+                    onChange={(e) => setSliceOffset(Math.max(0, parseInt(e.target.value) || 0))}
+                    style={{ width: '100%', background: '#2a2a2a', color: '#fff', border: '1px solid #555', borderRadius: '3px', padding: '4px 6px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: '10px', color: '#ccc', display: 'block', marginBottom: '2px' }}>Border Spacing (px):</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={sliceSpacing}
+                    onChange={(e) => setSliceSpacing(Math.max(0, parseInt(e.target.value) || 0))}
+                    style={{ width: '100%', background: '#2a2a2a', color: '#fff', border: '1px solid #555', borderRadius: '3px', padding: '4px 6px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}
+                  />
+                </div>
+              </div>
             </div>
+
+            <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '8px' }}>
+              {[8, 16, 32, 48, 64].map((size) => {
+                const isSelected = selectedImportTileSize === size;
+                return (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedImportTileSize(size)}
+                    style={{
+                      flex: 1,
+                      padding: '10px',
+                      background: isSelected ? '#4CAF50' : '#3a3a3c',
+                      color: '#fff',
+                      border: isSelected ? '1px solid #fff' : '1px solid #555',
+                      borderRadius: '4px',
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                      fontSize: '12px',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                      minWidth: '70px',
+                      textAlign: 'center',
+                      transition: 'background-color 0.2s'
+                    }}
+                  >
+                    {size}x{size}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              onClick={() => {
+                if (pendingOgaImportData) {
+                  importTilesDirectly(pendingOgaImportData, 'keep', selectedImportTileSize);
+                  setOgaImportTilesWide(Math.floor(pendingOgaImportData.w / 8));
+                  setPendingOgaImportData(null);
+                } else {
+                  processTileImport(pendingTileImportFile, selectedImportTileSize);
+                  setPendingTileImportFile(null);
+                }
+                setShowTileImportSizeDialog(false);
+              }}
+              style={{
+                width: '100%',
+                background: '#4CAF50',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '4px',
+                padding: '12px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                fontSize: '14px',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+                transition: 'background 0.2s',
+                marginTop: '10px'
+              }}
+              onMouseEnter={e => e.currentTarget.style.backgroundColor = '#45a049'}
+              onMouseLeave={e => e.currentTarget.style.backgroundColor = '#4CAF50'}
+            >
+              Slice & Import Tiles
+            </button>
           </div>
         </div>
       )}
