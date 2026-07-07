@@ -287,6 +287,10 @@ function getAppRoot() {
   return path.resolve(__dirname, '..');
 }
 
+function getDistDir() {
+  return path.join(getAppRoot(), 'dist');
+}
+
 app.whenReady().then(() => {
   // Check if a newer version exists on the server (main process — no CORS)
   ipcMain.handle('check-version', async () => {
@@ -295,8 +299,14 @@ app.whenReady().then(() => {
         return { status: 'up-to-date' };
       }
 
-      const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
-      const localVersion = pkg.version;
+      let localVersion;
+      const distVersionPath = path.join(getDistDir(), 'version.txt');
+      if (fs.existsSync(distVersionPath)) {
+        localVersion = fs.readFileSync(distVersionPath, 'utf8').trim();
+      } else {
+        const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'));
+        localVersion = pkg.version;
+      }
 
       const res = await fetch('https://pxgba.liftedpixel.ca/version.txt');
       if (!res.ok) return { status: 'error', message: 'Could not fetch version file' };
@@ -313,10 +323,10 @@ app.whenReady().then(() => {
     }
   });
 
-  // Download latest.zip + extract to app root (main process — no CORS)
+  // Download latest.zip + extract to dist folder (main process — no CORS)
   ipcMain.handle('apply-update', async () => {
     try {
-      const appRoot = getAppRoot();
+      const distDir = getDistDir();
 
       const res = await fetch('https://pxgba.liftedpixel.ca/latest.zip');
       if (!res.ok) throw new Error(`Download failed: ${res.status}`);
@@ -327,7 +337,7 @@ app.whenReady().then(() => {
       await Promise.all(
         Object.keys(zip.files).map(async (filename) => {
           const file = zip.files[filename];
-          const filePath = path.join(appRoot, filename);
+          const filePath = path.join(distDir, filename);
           if (file.dir) {
             fs.mkdirSync(filePath, { recursive: true });
           } else {
@@ -338,7 +348,7 @@ app.whenReady().then(() => {
       );
 
       updateApplied = true;
-      console.log('Update applied to:', appRoot);
+      console.log('Update applied to:', distDir);
       return { status: 'updated' };
     } catch (error) {
       return { status: 'error', message: error.message };
