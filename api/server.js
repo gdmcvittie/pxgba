@@ -113,6 +113,36 @@ app.post('/compile', upload.single('project'), (req, res) => {
           buildToolsPath = path.resolve(__dirname, '../..', 'buildTools');
         }
       }
+
+      // If we are on Windows, we create/ensure a space-free directory junction to buildTools
+      if (isWindows) {
+        const junctionPath = 'C:\\Users\\Public\\pxgba-build-tools';
+        try {
+          let shouldCreate = true;
+          if (fs.existsSync(junctionPath)) {
+            try {
+              const currentTarget = fs.readlinkSync(junctionPath);
+              if (path.resolve(currentTarget) === path.resolve(buildToolsPath)) {
+                shouldCreate = false;
+              } else {
+                fs.rmdirSync(junctionPath);
+              }
+            } catch (readErr) {
+              try {
+                fs.rmdirSync(junctionPath);
+              } catch (rmErr) {}
+            }
+          }
+          if (shouldCreate) {
+            fs.symlinkSync(buildToolsPath, junctionPath, 'junction');
+          }
+          buildToolsPath = junctionPath;
+          console.log(`[server] Using buildTools directory junction at ${junctionPath}`);
+        } catch (e) {
+          console.error('[server] Failed to setup buildTools directory junction:', e.message);
+        }
+      }
+
       // Resolve devkitARM and devkitPRO paths strictly from the bundled buildTools folder
       const devkitarmPath = isWindows
         ? path.join(buildToolsPath, 'windows', 'devkitpro', 'devkitARM')

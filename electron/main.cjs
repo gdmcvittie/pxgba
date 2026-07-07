@@ -23,7 +23,43 @@ function getApiPath() {
   return path.join(process.resourcesPath, 'api');
 }
 
+function ensureBuildToolsJunction() {
+  if (process.platform !== 'win32') return;
+  const buildToolsPath = path.join(getApiPath(), 'buildTools');
+  const junctionPath = 'C:\\Users\\Public\\pxgba-build-tools';
+  try {
+    let shouldCreate = true;
+    if (fs.existsSync(junctionPath)) {
+      try {
+        const currentTarget = fs.readlinkSync(junctionPath);
+        if (path.resolve(currentTarget) === path.resolve(buildToolsPath)) {
+          shouldCreate = false;
+        } else {
+          fs.rmdirSync(junctionPath);
+        }
+      } catch (readErr) {
+        try {
+          fs.rmdirSync(junctionPath);
+        } catch (rmErr) {}
+      }
+    }
+    if (shouldCreate && fs.existsSync(buildToolsPath)) {
+      fs.symlinkSync(buildToolsPath, junctionPath, 'junction');
+    }
+    console.log(`[main] Ensure buildTools junction: success at ${junctionPath}`);
+  } catch (e) {
+    console.error('[main] Failed to setup buildTools directory junction:', e.message);
+  }
+}
+
 function findDevkitArm() {
+  if (process.platform === 'win32') {
+    const junctionPath = 'C:\\Users\\Public\\pxgba-build-tools';
+    const dka = path.join(junctionPath, 'windows', 'devkitpro', 'devkitARM');
+    if (fs.existsSync(dka)) {
+      return dka;
+    }
+  }
   const apiPath = getApiPath();
   const searchPaths = [];
   if (process.platform === 'win32') {
@@ -41,6 +77,13 @@ function findDevkitArm() {
 }
 
 function findDevkitPro() {
+  if (process.platform === 'win32') {
+    const junctionPath = 'C:\\Users\\Public\\pxgba-build-tools';
+    const dkp = path.join(junctionPath, 'windows', 'devkitpro');
+    if (fs.existsSync(dkp)) {
+      return dkp;
+    }
+  }
   const apiPath = getApiPath();
   const searchPaths = [];
   if (process.platform === 'win32') {
@@ -304,6 +347,9 @@ app.whenReady().then(() => {
 
   // Show the window immediately with a loading screen
   createWindow();
+
+  // Ensure build tools directory junction is set up (Windows only, space-free path bypass)
+  ensureBuildToolsJunction();
 
   // Ensure build tools are installed before starting the server
   setupBuildTools().then(() => {
