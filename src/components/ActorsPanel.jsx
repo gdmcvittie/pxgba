@@ -1003,7 +1003,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
 
   return createPortal(
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 100000, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onMouseUp={() => setIsDrawing(false)} onMouseLeave={() => setIsDrawing(false)}>
-      <div style={{ background: '#222', border: '1px solid #444', borderRadius: '8px', width: '90%', maxWidth: '1000px', height: '90%', display: 'flex', flexDirection: 'column', padding: '16px', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
+      <div style={{ background: '#222', border: '1px solid #444', borderRadius: '8px', width: '90%', height: '90%', display: 'flex', flexDirection: 'column', padding: '16px', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4CAF50', fontWeight: 'bold', fontSize: '14px', alignItems: 'center' }}>
           <span>Actor Designer: {actor.name}</span>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', fontSize: '11px', color: '#aaa', fontWeight: 'normal' }}>
@@ -1039,7 +1039,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
           </div>
         </div>
         <div style={{ display: 'flex', gap: '20px', flexGrow: 1 }}>
-          <div style={{ width: '35%', display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '84vh', overflowY: 'auto', paddingRight: '4px' }}>
+          <div style={{ width: '15%', minWidth: '220px', display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '84vh', overflowY: 'auto', paddingRight: '4px' }}>
             {activeTab !== 'base' && (
               <div style={{ background: '#151515', border: '1px solid #333', borderRadius: '6px', padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
                 <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#4CAF50', alignSelf: 'flex-start' }}>Animation Preview</div>
@@ -1170,6 +1170,291 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
               </button>
             </div>
             
+
+
+
+          </div>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ display: 'flex', gap: '4px', overflowX: 'auto', borderBottom: '1px solid #444', paddingBottom: '4px' }}>
+              <button onClick={() => selectTab('idle')} style={{ background: activeTab === 'idle' ? '#4CAF50' : '#222', color: '#fff', border: '1px solid #444', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>Idle Anim</button>
+              {walkAnim ? (
+                <button onClick={() => selectTab('walk')} style={{ background: activeTab === 'walk' ? '#4CAF50' : '#222', color: '#fff', border: '1px solid #444', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>Walk Anim</button>
+              ) : (
+                <button onClick={createWalkAnim} style={{ background: '#222', color: '#888', border: '1px dashed #555', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>+ Walk</button>
+              )}
+              {attackAnim ? (
+                <button onClick={() => selectTab('attack')} style={{ background: activeTab === 'attack' ? '#4CAF50' : '#222', color: '#fff', border: '1px solid #444', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>Attack Anim</button>
+              ) : (
+                <button onClick={createAttackAnim} style={{ background: '#222', color: '#888', border: '1px dashed #555', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>+ Attack</button>
+              )}
+              {jumpAnim ? (
+                <button onClick={() => selectTab('jump')} style={{ background: activeTab === 'jump' ? '#4CAF50' : '#222', color: '#fff', border: '1px solid #444', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>Jump Anim</button>
+              ) : (
+                <button onClick={createJumpAnim} style={{ background: '#222', color: '#888', border: '1px dashed #555', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>+ Jump</button>
+              )}
+              {customAnims.map(ca => (
+                <button key={ca.id} onClick={() => selectTab(ca.id)} style={{ background: activeTab === ca.id ? '#4CAF50' : '#222', color: '#fff', border: '1px solid #444', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>{ca.name}</button>
+              ))}
+              <button onClick={createCustomAnim} style={{ background: '#222', color: '#888', border: '1px dashed #555', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>+ Custom</button>
+            </div>
+            <div style={{ flex: 1, position: 'relative', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#111', border: '1px solid #333', borderRadius: '4px', padding: '20px', overflow: 'auto', width: '100%', height: '100%', boxSizing: 'border-box' }}>
+                <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: `repeat(${cols}, 32px)`, gridTemplateRows: `repeat(${rows}, 32px)`, gap: '1px', background: '#444', border: '1px solid #444' }}>
+                  <div style={{
+                    position: 'absolute',
+                    left: `${colX * 4}px`,
+                    top: `${colY * 4}px`,
+                    width: `${colW * 4}px`,
+                    height: `${colH * 4}px`,
+                    border: '2px solid #4CAF50',
+                    background: 'rgba(76, 175, 80, 0.15)',
+                    pointerEvents: 'none',
+                    zIndex: 10,
+                    boxSizing: 'border-box',
+                    transition: 'all 0.1s ease-out'
+                  }} />
+                  {getCurrentSpriteIds().map((tId, idx) => {
+                    const actualId = tId ? (typeof tId === 'object' ? tId.id : tId) : null;
+                    const flipH = tId && typeof tId === 'object' ? tId.flipH : false;
+                    const flipV = tId && typeof tId === 'object' ? tId.flipV : false;
+                    const tile = actualId ? savedTiles.find(t => String(t.id) === String(actualId)) : null;
+
+                    const isHoveredStampCell = (() => {
+                      if (!useGroupStamp || hoveredIdx === null) return null;
+                      const info = getGroupBrushInfo(activeTileId);
+                      if (!info) return null;
+                      const hoverRow = Math.floor(hoveredIdx / cols);
+                      const hoverCol = hoveredIdx % cols;
+                      const cellRow = Math.floor(idx / cols);
+                      const cellCol = idx % cols;
+                      const dr = cellRow - hoverRow;
+                      const dc = cellCol - hoverCol;
+                      if (dr >= 0 && dr < info.rows && dc >= 0 && dc < info.cols) {
+                        return info.tiles[dr * info.cols + dc];
+                      }
+                      return null;
+                    })();
+
+                    return (
+                      <div 
+                        key={idx} 
+                        onMouseDown={() => { setIsDrawing(true); applyTile(idx); }} 
+                        onMouseEnter={() => { setHoveredIdx(idx); if (isDrawing) applyTile(idx); }} 
+                        onMouseLeave={() => setHoveredIdx(null)}
+                        style={{ 
+                          width: '32px', 
+                          height: '32px', 
+                          background: 'transparent', 
+                          cursor: 'crosshair', 
+                          position: 'relative',
+                          outline: hoveredIdx === idx ? '1px dashed #4CAF50' : 'none'
+                        }}
+                      >
+                        {tile && (
+                          <div style={{ 
+                            width: '32px', 
+                            height: '32px', 
+                            transform: `scaleX(${flipH ? -1 : 1}) scaleY(${flipV ? -1 : 1})` 
+                          }}>
+                            <TileIcon tile={tile} size={32} />
+                          </div>
+                        )}
+                        
+                        {isHoveredStampCell && (() => {
+                          const previewTile = savedTiles.find(t => String(t.id) === String(isHoveredStampCell.id));
+                          return previewTile ? (
+                            <div style={{ 
+                              position: 'absolute', 
+                              inset: 0, 
+                              opacity: 0.6, 
+                              pointerEvents: 'none',
+                              transform: `scaleX(${brushFlipH ? -1 : 1}) scaleY(${brushFlipV ? -1 : 1})`
+                            }}>
+                              <TileIcon tile={previewTile} size={32} />
+                            </div>
+                          ) : null;
+                        })()}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Nudge Active Layer Controls overlay */}
+              {isActiveLayerSmallerThanActor && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: '10px',
+                  right: '10px',
+                  background: 'rgba(20, 20, 20, 0.85)',
+                  backdropFilter: 'blur(4px)',
+                  border: '1px solid #444',
+                  borderRadius: '6px',
+                  padding: '8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                  zIndex: 20
+                }}>
+                  <div style={{ fontSize: '9px', color: '#888', fontWeight: 'bold', textAlign: 'center' }}>Nudge Layer</div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 18px)', gap: '4px', justifyContent: 'center' }}>
+                    <div />
+                    <button
+                      onClick={() => nudgeLayer(0, -1)}
+                      style={{ background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '3px', cursor: 'pointer', fontSize: '8px', padding: '2px 0', textAlign: 'center', lineHeight: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.background = '#333'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#444'; e.currentTarget.style.background = '#222'; }}
+                      title="Nudge Up"
+                    >▲</button>
+                    <div />
+                    <button
+                      onClick={() => nudgeLayer(-1, 0)}
+                      style={{ background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '3px', cursor: 'pointer', fontSize: '8px', padding: '2px 0', textAlign: 'center', lineHeight: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.background = '#333'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#444'; e.currentTarget.style.background = '#222'; }}
+                      title="Nudge Left"
+                    >◀</button>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '8px', color: '#666' }}>✥</div>
+                    <button
+                      onClick={() => nudgeLayer(1, 0)}
+                      style={{ background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '3px', cursor: 'pointer', fontSize: '8px', padding: '2px 0', textAlign: 'center', lineHeight: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.background = '#333'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#444'; e.currentTarget.style.background = '#222'; }}
+                      title="Nudge Right"
+                    >▶</button>
+                    <div />
+                    <button
+                      onClick={() => nudgeLayer(0, 1)}
+                      style={{ background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '3px', cursor: 'pointer', fontSize: '8px', padding: '2px 0', textAlign: 'center', lineHeight: '1', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.background = '#333'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#444'; e.currentTarget.style.background = '#222'; }}
+                      title="Nudge Down"
+                    >▼</button>
+                    <div />
+                  </div>
+                </div>
+              )}
+            </div>
+            {activeTab !== 'base' && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px', background: '#111', border: '1px solid #333', borderRadius: '4px', overflowX: 'auto' }}>
+                {getCurrentAnim()?.frames.map((frame, idx) => (
+                  <div key={idx} onClick={() => { setIsPlayingPreview(false); setActiveFrameIdx(idx); }} style={{ width: '32px', height: '32px', border: activeFrameIdx === idx ? '2px solid #4CAF50' : '1px solid #444', background: 'transparent', cursor: 'pointer', display: 'flex', flexWrap: 'wrap', position: 'relative', flexShrink: 0 }}>
+                    <div style={{ width: '100%', height: '100%', display: 'flex', flexWrap: 'wrap' }}>
+                      <div style={{ color: '#fff', fontSize: '10px', width: '100%', textAlign: 'center', lineHeight: '32px' }}>F{idx + 1}</div>
+                    </div>
+                    {getCurrentAnim().frames.length > 1 && (
+                      <div onClick={(e) => { e.stopPropagation(); deleteFrame(idx); }} style={{ position: 'absolute', top: -4, right: -4, background: '#ff4444', color: '#fff', fontSize: '8px', width: '12px', height: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%' }}>✕</div>
+                    )}
+                  </div>
+                ))}
+                <button onClick={addFrame} style={{ width: '32px', height: '32px', background: '#222', border: '1px dashed #555', color: '#888', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>+</button>
+                <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <label style={{ fontSize: '10px', color: '#aaa' }}>FPS:</label>
+                  <input type="number" min="1" max="60" value={getCurrentAnim()?.fps || 8} onChange={(e) => {
+                    const fps = parseInt(e.target.value) || 8;
+                    if (activeTab === 'idle') setIdleAnim(prev => ({ ...prev, fps }));
+                    else if (activeTab === 'walk') setWalkAnim(prev => ({ ...prev, fps }));
+                    else if (activeTab === 'attack') setAttackAnim(prev => ({ ...prev, fps }));
+                    else if (activeTab === 'jump') setJumpAnim(prev => ({ ...prev, fps }));
+                    else setCustomAnims(prev => prev.map(a => a.id === activeTab ? { ...a, fps } : a));
+                  }} style={{ width: '40px', background: '#222', color: '#fff', border: '1px solid #444', padding: '2px', fontSize: '10px', borderRadius: '3px' }} />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Right Panel: Layers, Tile Selector & Remove BG color */}
+          <div style={{ width: '25%', minWidth: '220px', display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '84vh', overflowY: 'auto', paddingLeft: '4px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ fontSize: '11px', color: '#aaa' }}>Select Tile:</div>
+              <TileSelector
+                tiles={savedTiles}
+                value={activeTileId}
+                onChange={handleTileSelect}
+                hideLabel={true}
+                placeholder="Eraser"
+                style={{ width: '100%' }}
+              />
+              <div
+                onClick={() => handleTileSelect(null)}
+                style={{ 
+                  padding: '6px', 
+                  border: activeTileId === null ? '2px solid #4CAF50' : '1px solid #444', 
+                  cursor: 'pointer', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  fontSize: '10px', 
+                  color: '#ff4444', 
+                  background: '#111',
+                  borderRadius: '3px'
+                }}
+              >Eraser</div>
+
+              {/* Group Brush Settings Panel */}
+              {(() => {
+                const brushInfo = getGroupBrushInfo(activeTileId);
+                if (brushInfo) {
+                  return (
+                    <div style={{ background: '#1c1c1c', border: '1px solid #ff9800', borderRadius: '4px', padding: '6px', display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '9px', marginTop: '4px' }}>
+                      <div style={{ color: '#ff9800', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span>Group Brush ({brushInfo.cols * 8}x{brushInfo.rows * 8})</span>
+                        <input
+                          type="checkbox"
+                          checked={useGroupStamp}
+                          onChange={(e) => setUseGroupStamp(e.target.checked)}
+                          id="use-group-stamp"
+                          style={{ cursor: 'pointer' }}
+                        />
+                      </div>
+                      <label htmlFor="use-group-stamp" style={{ color: '#aaa', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        Stamp entire group
+                      </label>
+                      <button
+                        onClick={() => {
+                          if (window.confirm(`Fit canvas to group size (${brushInfo.cols * 8}x${brushInfo.rows * 8}) and overwrite current frame?`)) {
+                            handleResize(brushInfo.cols * 8, brushInfo.rows * 8);
+                            const nextLayerTiles = Array(brushInfo.cols * brushInfo.rows).fill(null);
+                            brushInfo.tiles.forEach((t, i) => {
+                              if (t) nextLayerTiles[i] = { id: t.id, flipH: false, flipV: false };
+                            });
+                            
+                            const updateFrameLayer = (prev) => {
+                              if (!prev) return null;
+                              const nextFramesLayers = [...prev.framesLayers];
+                              const nextFrameLayersData = { ...nextFramesLayers[activeFrameIdx] };
+                              nextFrameLayersData[activeLayerId] = nextLayerTiles;
+                              nextFramesLayers[activeFrameIdx] = nextFrameLayersData;
+                              
+                              const nextFrames = [...prev.frames];
+                              nextFrames[activeFrameIdx] = flattenFrame(nextFrameLayersData, layersMetadata);
+                              return {
+                                ...prev,
+                                frames: nextFrames,
+                                framesLayers: nextFramesLayers
+                              };
+                            };
+                            if (activeTab === 'idle') setIdleAnim(updateFrameLayer);
+                            else if (activeTab === 'walk') setWalkAnim(updateFrameLayer);
+                            else if (activeTab === 'attack') setAttackAnim(updateFrameLayer);
+                            else if (activeTab === 'jump') setJumpAnim(updateFrameLayer);
+                            else setCustomAnims(prev => prev.map(a => a.id === activeTab ? updateFrameLayer(a) : a));
+                          }
+                        }}
+                        style={{
+                          background: '#333', border: '1px solid #555', color: '#fff', borderRadius: '3px', padding: '4px', cursor: 'pointer', fontSize: '9px', fontWeight: 'bold', marginTop: '2px'
+                        }}
+                      >
+                        Fit Canvas & Fill
+                      </button>
+                    </div>
+                  );
+                }
+                return null;
+              })()}
+            </div>
+
             {/* Layers List Panel */}
             <div style={{ background: '#151515', border: '1px solid #333', borderRadius: '6px', padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#4CAF50', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -1279,114 +1564,6 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
                   );
                 })}
               </div>
-
-              {/* Nudge Active Layer Controls */}
-              {isActiveLayerSmallerThanActor && (
-                <div style={{ borderTop: '1px solid #333', paddingTop: '6px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <div style={{ fontSize: '9px', color: '#888', fontWeight: 'bold' }}>Nudge Active Layer:</div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 16px)', gap: '4px', justifyContent: 'center', width: '100%' }}>
-                    <div />
-                    <button onClick={() => nudgeLayer(0, -1)} style={{ background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '3px', cursor: 'pointer', fontSize: '8px', padding: '2px 0', textAlign: 'center', lineHeight: '1' }} title="Nudge Up">▲</button>
-                    <div />
-                    <button onClick={() => nudgeLayer(-1, 0)} style={{ background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '3px', cursor: 'pointer', fontSize: '8px', padding: '2px 0', textAlign: 'center', lineHeight: '1' }} title="Nudge Left">◀</button>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '8px', color: '#666' }}>✥</div>
-                    <button onClick={() => nudgeLayer(1, 0)} style={{ background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '3px', cursor: 'pointer', fontSize: '8px', padding: '2px 0', textAlign: 'center', lineHeight: '1' }} title="Nudge Right">▶</button>
-                    <div />
-                    <button onClick={() => nudgeLayer(0, 1)} style={{ background: '#222', border: '1px solid #444', color: '#fff', borderRadius: '3px', cursor: 'pointer', fontSize: '8px', padding: '2px 0', textAlign: 'center', lineHeight: '1' }} title="Nudge Down">▼</button>
-                    <div />
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <div style={{ fontSize: '11px', color: '#aaa' }}>Select Tile:</div>
-              <TileSelector
-                tiles={savedTiles}
-                value={activeTileId}
-                onChange={handleTileSelect}
-                hideLabel={true}
-                placeholder="Eraser"
-                style={{ width: '100%' }}
-              />
-              <div
-                onClick={() => handleTileSelect(null)}
-                style={{ 
-                  width: '100%', 
-                  padding: '6px', 
-                  border: activeTileId === null ? '2px solid #4CAF50' : '1px solid #444', 
-                  cursor: 'pointer', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  fontSize: '10px', 
-                  color: '#ff4444', 
-                  background: '#111',
-                  borderRadius: '3px'
-                }}
-              >Eraser</div>
-
-              {/* Group Brush Settings Panel */}
-              {(() => {
-                const brushInfo = getGroupBrushInfo(activeTileId);
-                if (brushInfo) {
-                  return (
-                    <div style={{ background: '#1c1c1c', border: '1px solid #ff9800', borderRadius: '4px', padding: '6px', display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '9px', marginTop: '4px' }}>
-                      <div style={{ color: '#ff9800', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span>Group Brush ({brushInfo.cols * 8}x{brushInfo.rows * 8})</span>
-                        <input
-                          type="checkbox"
-                          checked={useGroupStamp}
-                          onChange={(e) => setUseGroupStamp(e.target.checked)}
-                          id="use-group-stamp"
-                          style={{ cursor: 'pointer' }}
-                        />
-                      </div>
-                      <label htmlFor="use-group-stamp" style={{ color: '#aaa', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        Stamp entire group
-                      </label>
-                      <button
-                        onClick={() => {
-                          if (window.confirm(`Fit canvas to group size (${brushInfo.cols * 8}x${brushInfo.rows * 8}) and overwrite current frame?`)) {
-                            handleResize(brushInfo.cols * 8, brushInfo.rows * 8);
-                            const nextLayerTiles = Array(brushInfo.cols * brushInfo.rows).fill(null);
-                            brushInfo.tiles.forEach((t, i) => {
-                              if (t) nextLayerTiles[i] = { id: t.id, flipH: false, flipV: false };
-                            });
-                            
-                            const updateFrameLayer = (prev) => {
-                              if (!prev) return null;
-                              const nextFramesLayers = [...prev.framesLayers];
-                              const nextFrameLayersData = { ...nextFramesLayers[activeFrameIdx] };
-                              nextFrameLayersData[activeLayerId] = nextLayerTiles;
-                              nextFramesLayers[activeFrameIdx] = nextFrameLayersData;
-                              
-                              const nextFrames = [...prev.frames];
-                              nextFrames[activeFrameIdx] = flattenFrame(nextFrameLayersData, layersMetadata);
-                              return {
-                                ...prev,
-                                frames: nextFrames,
-                                framesLayers: nextFramesLayers
-                              };
-                            };
-                            if (activeTab === 'idle') setIdleAnim(updateFrameLayer);
-                            else if (activeTab === 'walk') setWalkAnim(updateFrameLayer);
-                            else if (activeTab === 'attack') setAttackAnim(updateFrameLayer);
-                            else if (activeTab === 'jump') setJumpAnim(updateFrameLayer);
-                            else setCustomAnims(prev => prev.map(a => a.id === activeTab ? updateFrameLayer(a) : a));
-                          }
-                        }}
-                        style={{
-                          background: '#333', border: '1px solid #555', color: '#fff', borderRadius: '3px', padding: '4px', cursor: 'pointer', fontSize: '9px', fontWeight: 'bold', marginTop: '2px'
-                        }}
-                      >
-                        Fit Canvas & Fill
-                      </button>
-                    </div>
-                  );
-                }
-                return null;
-              })()}
             </div>
             {uniqueColorsInActor.length > 0 && (
               <div style={{
@@ -1406,7 +1583,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
                 </div>
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  gridTemplateColumns: 'repeat(12, 1fr)',
                   gap: '6px',
                   maxHeight: '100px',
                   overflowY: 'auto',
@@ -1426,7 +1603,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
                           width: '100%',
                           aspectRatio: '1',
                           backgroundColor: color,
-                          border: isSuggested ? '2px solid #4CAF50' : '1px solid #444',
+                          border: isSuggested ? '1px solid #4CAF50' : '1px solid #444',
                           borderRadius: '4px',
                           cursor: 'pointer',
                           padding: 0,
@@ -1435,7 +1612,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
                           boxShadow: '0 1px 2px rgba(0,0,0,0.3)'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.1)';
+                          e.currentTarget.style.transform = 'scale(1)';
                           if (!isSuggested) e.currentTarget.style.borderColor = '#4CAF50';
                         }}
                         onMouseLeave={(e) => {
@@ -1461,137 +1638,6 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
                       </button>
                     );
                   })}
-                </div>
-              </div>
-            )}
-          </div>
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div style={{ display: 'flex', gap: '4px', overflowX: 'auto', borderBottom: '1px solid #444', paddingBottom: '4px' }}>
-              <button onClick={() => selectTab('idle')} style={{ background: activeTab === 'idle' ? '#4CAF50' : '#222', color: '#fff', border: '1px solid #444', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>Idle Anim</button>
-              {walkAnim ? (
-                <button onClick={() => selectTab('walk')} style={{ background: activeTab === 'walk' ? '#4CAF50' : '#222', color: '#fff', border: '1px solid #444', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>Walk Anim</button>
-              ) : (
-                <button onClick={createWalkAnim} style={{ background: '#222', color: '#888', border: '1px dashed #555', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>+ Walk</button>
-              )}
-              {attackAnim ? (
-                <button onClick={() => selectTab('attack')} style={{ background: activeTab === 'attack' ? '#4CAF50' : '#222', color: '#fff', border: '1px solid #444', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>Attack Anim</button>
-              ) : (
-                <button onClick={createAttackAnim} style={{ background: '#222', color: '#888', border: '1px dashed #555', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>+ Attack</button>
-              )}
-              {jumpAnim ? (
-                <button onClick={() => selectTab('jump')} style={{ background: activeTab === 'jump' ? '#4CAF50' : '#222', color: '#fff', border: '1px solid #444', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>Jump Anim</button>
-              ) : (
-                <button onClick={createJumpAnim} style={{ background: '#222', color: '#888', border: '1px dashed #555', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>+ Jump</button>
-              )}
-              {customAnims.map(ca => (
-                <button key={ca.id} onClick={() => selectTab(ca.id)} style={{ background: activeTab === ca.id ? '#4CAF50' : '#222', color: '#fff', border: '1px solid #444', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>{ca.name}</button>
-              ))}
-              <button onClick={createCustomAnim} style={{ background: '#222', color: '#888', border: '1px dashed #555', padding: '4px 8px', fontSize: '11px', borderRadius: '3px', cursor: 'pointer', whiteSpace: 'nowrap' }}>+ Custom</button>
-            </div>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#111', border: '1px solid #333', borderRadius: '4px', padding: '20px', overflow: 'auto' }}>
-              <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: `repeat(${cols}, 32px)`, gridTemplateRows: `repeat(${rows}, 32px)`, gap: '1px', background: '#444', border: '1px solid #444' }}>
-                <div style={{
-                  position: 'absolute',
-                  left: `${colX * 4}px`,
-                  top: `${colY * 4}px`,
-                  width: `${colW * 4}px`,
-                  height: `${colH * 4}px`,
-                  border: '2px solid #4CAF50',
-                  background: 'rgba(76, 175, 80, 0.15)',
-                  pointerEvents: 'none',
-                  zIndex: 10,
-                  boxSizing: 'border-box',
-                  transition: 'all 0.1s ease-out'
-                }} />
-                {getCurrentSpriteIds().map((tId, idx) => {
-                  const actualId = tId ? (typeof tId === 'object' ? tId.id : tId) : null;
-                  const flipH = tId && typeof tId === 'object' ? tId.flipH : false;
-                  const flipV = tId && typeof tId === 'object' ? tId.flipV : false;
-                  const tile = actualId ? savedTiles.find(t => String(t.id) === String(actualId)) : null;
-
-                  const isHoveredStampCell = (() => {
-                    if (!useGroupStamp || hoveredIdx === null) return null;
-                    const info = getGroupBrushInfo(activeTileId);
-                    if (!info) return null;
-                    const hoverRow = Math.floor(hoveredIdx / cols);
-                    const hoverCol = hoveredIdx % cols;
-                    const cellRow = Math.floor(idx / cols);
-                    const cellCol = idx % cols;
-                    const dr = cellRow - hoverRow;
-                    const dc = cellCol - hoverCol;
-                    if (dr >= 0 && dr < info.rows && dc >= 0 && dc < info.cols) {
-                      return info.tiles[dr * info.cols + dc];
-                    }
-                    return null;
-                  })();
-
-                  return (
-                    <div 
-                      key={idx} 
-                      onMouseDown={() => { setIsDrawing(true); applyTile(idx); }} 
-                      onMouseEnter={() => { setHoveredIdx(idx); if (isDrawing) applyTile(idx); }} 
-                      onMouseLeave={() => setHoveredIdx(null)}
-                      style={{ 
-                        width: '32px', 
-                        height: '32px', 
-                        background: 'transparent', 
-                        cursor: 'crosshair', 
-                        position: 'relative',
-                        outline: hoveredIdx === idx ? '1px dashed #4CAF50' : 'none'
-                      }}
-                    >
-                      {tile && (
-                        <div style={{ 
-                          width: '32px', 
-                          height: '32px', 
-                          transform: `scaleX(${flipH ? -1 : 1}) scaleY(${flipV ? -1 : 1})` 
-                        }}>
-                          <TileIcon tile={tile} size={32} />
-                        </div>
-                      )}
-                      
-                      {isHoveredStampCell && (() => {
-                        const previewTile = savedTiles.find(t => String(t.id) === String(isHoveredStampCell.id));
-                        return previewTile ? (
-                          <div style={{ 
-                            position: 'absolute', 
-                            inset: 0, 
-                            opacity: 0.6, 
-                            pointerEvents: 'none',
-                            transform: `scaleX(${brushFlipH ? -1 : 1}) scaleY(${brushFlipV ? -1 : 1})`
-                          }}>
-                            <TileIcon tile={previewTile} size={32} />
-                          </div>
-                        ) : null;
-                      })()}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-            {activeTab !== 'base' && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px', background: '#111', border: '1px solid #333', borderRadius: '4px', overflowX: 'auto' }}>
-                {getCurrentAnim()?.frames.map((frame, idx) => (
-                  <div key={idx} onClick={() => { setIsPlayingPreview(false); setActiveFrameIdx(idx); }} style={{ width: '32px', height: '32px', border: activeFrameIdx === idx ? '2px solid #4CAF50' : '1px solid #444', background: 'transparent', cursor: 'pointer', display: 'flex', flexWrap: 'wrap', position: 'relative', flexShrink: 0 }}>
-                    <div style={{ width: '100%', height: '100%', display: 'flex', flexWrap: 'wrap' }}>
-                      <div style={{ color: '#fff', fontSize: '10px', width: '100%', textAlign: 'center', lineHeight: '32px' }}>F{idx + 1}</div>
-                    </div>
-                    {getCurrentAnim().frames.length > 1 && (
-                      <div onClick={(e) => { e.stopPropagation(); deleteFrame(idx); }} style={{ position: 'absolute', top: -4, right: -4, background: '#ff4444', color: '#fff', fontSize: '8px', width: '12px', height: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%' }}>✕</div>
-                    )}
-                  </div>
-                ))}
-                <button onClick={addFrame} style={{ width: '32px', height: '32px', background: '#222', border: '1px dashed #555', color: '#888', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>+</button>
-                <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <label style={{ fontSize: '10px', color: '#aaa' }}>FPS:</label>
-                  <input type="number" min="1" max="60" value={getCurrentAnim()?.fps || 8} onChange={(e) => {
-                    const fps = parseInt(e.target.value) || 8;
-                    if (activeTab === 'idle') setIdleAnim(prev => ({ ...prev, fps }));
-                    else if (activeTab === 'walk') setWalkAnim(prev => ({ ...prev, fps }));
-                    else if (activeTab === 'attack') setAttackAnim(prev => ({ ...prev, fps }));
-                    else if (activeTab === 'jump') setJumpAnim(prev => ({ ...prev, fps }));
-                    else setCustomAnims(prev => prev.map(a => a.id === activeTab ? { ...a, fps } : a));
-                  }} style={{ width: '40px', background: '#222', color: '#fff', border: '1px solid #444', padding: '2px', fontSize: '10px', borderRadius: '3px' }} />
                 </div>
               </div>
             )}
