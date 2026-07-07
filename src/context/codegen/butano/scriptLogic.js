@@ -279,10 +279,16 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
             code += `${indent}                else if (bn::keypad::right_held()) dx_dir = 1;\n`;
             code += `${indent}                else if (bn::keypad::up_held()) dy_dir = -1;\n`;
             code += `${indent}                else if (bn::keypad::down_held()) dy_dir = 1;\n`;
-            code += `${indent}                else dx_dir = 1;\n`;
+            code += `${indent}                else {\n`;
+            code += `${indent}                    dx_dir = actor_${actorIndex}_last_dx_dir;\n`;
+            code += `${indent}                    dy_dir = actor_${actorIndex}_last_dy_dir;\n`;
+            code += `${indent}                }\n`;
             code += `${indent}            }\n`;
           } else {
-            code += `${indent}            if (dx_dir == 0 && dy_dir == 0) dx_dir = 1;\n`;
+            code += `${indent}            if (dx_dir == 0 && dy_dir == 0) {\n`;
+            code += `${indent}                dx_dir = actor_${actorIndex}_last_dx_dir;\n`;
+            code += `${indent}                dy_dir = actor_${actorIndex}_last_dy_dir;\n`;
+            code += `${indent}            }\n`;
           }
           code += `${indent}            if (dx_dir != 0 && dy_dir != 0) {\n`;
           code += `${indent}                proj_dx[p] = (dx_dir * bn::fixed(${speed}) * 707) / 1000;\n`;

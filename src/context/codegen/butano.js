@@ -1511,7 +1511,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
           if (isHidden) {
             actorDeclarations += `    actor_${i}_sprite.set_visible(false);\n`;
           }
-          actorDeclarations += `    int actor_${i}_timer = 0;\n    bn::fixed actor_${i}_dx = 0;\n    bn::fixed actor_${i}_dy = 0;\n    bool actor_${i}_active = ${isHidden ? 'false' : 'true'};\n`;
+          actorDeclarations += `    int actor_${i}_timer = 0;\n    bn::fixed actor_${i}_dx = 0;\n    bn::fixed actor_${i}_dy = 0;\n    int actor_${i}_last_dx_dir = 1;\n    int actor_${i}_last_dy_dir = 0;\n    bool actor_${i}_active = ${isHidden ? 'false' : 'true'};\n`;
           if (a.type === 'player' && scene.type === 'RACING') {
             actorDeclarations += `    bn::fixed actor_${i}_speed = 0;\n`;
             let racingStartAngle = 270;
@@ -1608,7 +1608,10 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 deferredFireProjLambdas += `                if (dx_dir == 0 && dy_dir == 0) {\n`;
                 deferredFireProjLambdas += `                    if (bn::keypad::left_held()) dx_dir = -1; else if (bn::keypad::right_held()) dx_dir = 1;\n`;
                 deferredFireProjLambdas += `                    else if (bn::keypad::up_held()) dy_dir = -1; else if (bn::keypad::down_held()) dy_dir = 1;\n`;
-                deferredFireProjLambdas += `                    else dx_dir = 1;\n`;
+                deferredFireProjLambdas += `                    else {\n`;
+                deferredFireProjLambdas += `                        dx_dir = actor_${i}_last_dx_dir;\n`;
+                deferredFireProjLambdas += `                        dy_dir = actor_${i}_last_dy_dir;\n`;
+                deferredFireProjLambdas += `                    }\n`;
                 deferredFireProjLambdas += `                }\n`;
                 deferredFireProjLambdas += `                if (dx_dir != 0 && dy_dir != 0) {\n`;
                 deferredFireProjLambdas += `                    proj_dx[p] = (dx_dir * bn::fixed(${speed}) * 707) / 1000;\n`;
@@ -1654,7 +1657,10 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 deferredFireProjLambdas += `                    if (dx_dir == 0 && dy_dir == 0) {\n`;
                 deferredFireProjLambdas += `                        if (bn::keypad::left_held()) dx_dir = -1; else if (bn::keypad::right_held()) dx_dir = 1;\n`;
                 deferredFireProjLambdas += `                        else if (bn::keypad::up_held()) dy_dir = -1; else if (bn::keypad::down_held()) dy_dir = 1;\n`;
-                deferredFireProjLambdas += `                        else dx_dir = 1;\n`;
+                deferredFireProjLambdas += `                        else {\n`;
+                deferredFireProjLambdas += `                            dx_dir = actor_${i}_last_dx_dir;\n`;
+                deferredFireProjLambdas += `                            dy_dir = actor_${i}_last_dy_dir;\n`;
+                deferredFireProjLambdas += `                        }\n`;
                 deferredFireProjLambdas += `                    }\n`;
                 deferredFireProjLambdas += `                    if (dx_dir != 0 && dy_dir != 0) {\n`;
                 deferredFireProjLambdas += `                        proj_dx[p] = (dx_dir * bn::fixed(${speed}) * 707) / 1000;\n`;
@@ -4944,6 +4950,10 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             actorLogicCode += `            if (actor_${i}_dy < 0) actor_${i}_sprite.set_vertical_flip(true);\n`;
             actorLogicCode += `            else if (actor_${i}_dy > 0) actor_${i}_sprite.set_vertical_flip(false);\n`;
           }
+          actorLogicCode += `            if (actor_${i}_dx < 0) { actor_${i}_last_dx_dir = -1; if (actor_${i}_dy == 0) actor_${i}_last_dy_dir = 0; }\n`;
+          actorLogicCode += `            else if (actor_${i}_dx > 0) { actor_${i}_last_dx_dir = 1; if (actor_${i}_dy == 0) actor_${i}_last_dy_dir = 0; }\n`;
+          actorLogicCode += `            if (actor_${i}_dy < 0) { actor_${i}_last_dy_dir = -1; if (actor_${i}_dx == 0) actor_${i}_last_dx_dir = 0; }\n`;
+          actorLogicCode += `            else if (actor_${i}_dy > 0) { actor_${i}_last_dy_dir = 1; if (actor_${i}_dx == 0) actor_${i}_last_dx_dir = 0; }\n`;
           actorLogicCode += `        }\n`;
         }
 
