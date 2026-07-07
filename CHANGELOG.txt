@@ -1,3 +1,9 @@
+0.3.2
+- fixed movement/facing projectile direction bug 
+- fixed sliced actor sprites 
+- fixed dialog and hud text colors (again, pesky bug!)
+- fixed updater issue on desktop builds 
+
 0.3.1
 - added layer support to actor designer
 - added layer nudging to actor designer
