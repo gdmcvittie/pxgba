@@ -1444,7 +1444,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
           actorDeclarations += `    bn::sprite_ptr actor_${i}_sprite = bn::sprite_items::${actName}.create_sprite(${initX}, ${initY});\n`;
           actorDeclarations += `    actor_${i}_sprite.set_palette(shared_sprite_palette);
     actor_${i}_sprite.set_bg_priority(1);\n`;
-          const isPlatformType = ['platform', 'staticPlatform', 'movingPlatform', 'conveyor', 'pushable', 'destructible', 'door', 'ladder', 'one_way_wall', 'ice_block', 'crumbling_platform'].includes(a.type);
+          const isPlatformType = ['platform', 'staticPlatform', 'movingPlatform', 'conveyor', 'pushable', 'destructible', 'door', 'ladder', 'one_way_wall', 'ice_block', 'crumbling_platform', 'pass_wall'].includes(a.type);
           if (isPlatformType) {
             actorDeclarations += `    actor_${i}_sprite.set_z_order(1);\n`;
           }
@@ -1731,6 +1731,16 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             actorDeclarations += `    bool actor_${i}_crumbling = false;\n`;
             actorDeclarations += `    bool actor_${i}_respawning = false;\n`;
             actorDeclarations += `    int actor_${i}_respawn_timer = 0;\n`;
+          }
+          if (a.type === 'pass_wall') {
+            const passWallMode = a.passWallMode || 'passes';
+            const initialPassCount = passWallMode === 'frames' ? ((a.solidAfterFrames || 60) > 0 ? 1 : 0) : (a.passCount ?? 0);
+            const passWallStartOnTouch = a.passWallStartOnTouch || false;
+            const initTimerVal = passWallMode === 'frames' && !passWallStartOnTouch ? (a.solidAfterFrames || 60) : -1;
+            console.log(`[DECLARATIONS] pass_wall actor ${i}: mode=${passWallMode}, initialPassCount=${initialPassCount}, solidAfterFrames=${a.solidAfterFrames}, startOnTouch=${passWallStartOnTouch}, initTimerVal=${initTimerVal}`);
+            actorDeclarations += `    int actor_${i}_pass_count = ${initialPassCount};\n`;
+            actorDeclarations += `    bool actor_${i}_player_overlapping = false;\n`;
+            actorDeclarations += `    int actor_${i}_solid_timer = ${initTimerVal};\n`;
           }
           if (a.type === 'push_target') {
             actorDeclarations += `    bool actor_${i}_filled = false;\n`;
@@ -2050,20 +2060,21 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               for (let j = 0; j < sActors.length; j++) {
                 if (i === j) continue;
                 const platform = sActors[j];
-                if (platform.type === 'platform' || platform.type === 'staticPlatform' || platform.type === 'movingPlatform' || platform.type === 'destructible' || platform.type === 'door' || platform.type === 'pushable' || platform.type === 'conveyor' || platform.type === 'ice_block' || platform.type === 'crumbling_platform' || (platform.type === 'one_way_wall' && platform.oneWayDirection === 'down')) {
+                if (platform.type === 'platform' || platform.type === 'staticPlatform' || platform.type === 'movingPlatform' || platform.type === 'destructible' || platform.type === 'door' || platform.type === 'pushable' || platform.type === 'conveyor' || platform.type === 'ice_block' || platform.type === 'crumbling_platform' || platform.type === 'pass_wall' || (platform.type === 'one_way_wall' && platform.oneWayDirection === 'down')) {
                   const pCW = platform.collisionW ?? platform.width ?? 16;
                   const pCH = platform.collisionH ?? platform.height ?? 16;
                   const pCX = platform.collisionX ?? 0;
                   const pCY = platform.collisionY ?? 0;
 
+                  const activeCond = platform.type === 'pass_wall' ? `actor_${j}_active && actor_${j}_pass_count == 0` : `actor_${j}_active`;
                   if (platform.jumpThrough && platform.jumpThroughDown) {
-                    actorLogicCode += `            if (actor_${j}_active && actor_${i}_dy >= 0 && actor_${i}_drop_through_timer == 0) {\n`;
+                    actorLogicCode += `            if (${activeCond} && actor_${i}_dy >= 0 && actor_${i}_drop_through_timer == 0) {\n`;
                     actorLogicCode += `                if (bn::keypad::down_held() && bn::keypad::a_pressed()) {\n`;
                     actorLogicCode += `                    actor_${i}_drop_through_timer = 15;\n`;
                     actorLogicCode += `                    actor_${i}_float_y += 4;\n`;
                     actorLogicCode += `                } else {\n`;
                   } else {
-                    actorLogicCode += `            if (actor_${j}_active && actor_${i}_dy >= 0) {\n`;
+                    actorLogicCode += `            if (${activeCond} && actor_${i}_dy >= 0) {\n`;
                   }
 
                   actorLogicCode += `                int px = actor_${i}_float_x.integer() + ${a.collisionX ?? 0} + ${Math.floor((a.collisionW ?? a.width ?? 16) / 2)};\n`;
@@ -2823,12 +2834,13 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 for (let k = 0; k < sActors.length; k++) {
                   if (k === j || k === i) continue;
                   const other = sActors[k];
-                  if (other.type === 'platform' || other.type === 'staticPlatform' || other.type === 'movingPlatform' || other.type === 'destructible' || other.type === 'door' || other.type === 'pushable' || other.type === 'conveyor' || other.type === 'ice_block' || other.type === 'crumbling_platform') {
+                  if (other.type === 'platform' || other.type === 'staticPlatform' || other.type === 'movingPlatform' || other.type === 'destructible' || other.type === 'door' || other.type === 'pushable' || other.type === 'conveyor' || other.type === 'ice_block' || other.type === 'crumbling_platform' || other.type === 'pass_wall') {
                     const oCW = other.collisionW ?? other.width ?? 16;
                     const oCH = other.collisionH ?? other.height ?? 16;
                     const oCX = other.collisionX ?? 0;
                     const oCY = other.collisionY ?? 0;
-                    pushCheckCode += `                            if (actor_${k}_active && !b_blocked) {\n`;
+                    const activeCond = other.type === 'pass_wall' ? `actor_${k}_active && actor_${k}_pass_count == 0` : `actor_${k}_active`;
+                    pushCheckCode += `                            if (${activeCond} && !b_blocked) {\n`;
                     pushCheckCode += `                                int bx_l2 = block_new_x.integer() + ${bCX};\n`;
                     pushCheckCode += `                                int bx_r2 = bx_l2 + ${bCW};\n`;
                     pushCheckCode += `                                int by_t2 = actor_${j}_y + ${bCY};\n`;
@@ -2880,12 +2892,13 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                   for (let k = 0; k < sActors.length; k++) {
                     if (k === j || k === i) continue;
                     const other = sActors[k];
-                    if (other.type === 'platform' || other.type === 'staticPlatform' || other.type === 'movingPlatform' || other.type === 'destructible' || other.type === 'door' || other.type === 'pushable' || other.type === 'conveyor' || other.type === 'ice_block' || other.type === 'crumbling_platform') {
+                    if (other.type === 'platform' || other.type === 'staticPlatform' || other.type === 'movingPlatform' || other.type === 'destructible' || other.type === 'door' || other.type === 'pushable' || other.type === 'conveyor' || other.type === 'ice_block' || other.type === 'crumbling_platform' || other.type === 'pass_wall') {
                       const oCW = other.collisionW ?? other.width ?? 16;
                       const oCH = other.collisionH ?? other.height ?? 16;
                       const oCX = other.collisionX ?? 0;
                       const oCY = other.collisionY ?? 0;
-                      pushCheckCodeY += `                            if (actor_${k}_active && !b_blocked) {\n`;
+                      const activeCond = other.type === 'pass_wall' ? `actor_${k}_active && actor_${k}_pass_count == 0` : `actor_${k}_active`;
+                      pushCheckCodeY += `                            if (${activeCond} && !b_blocked) {\n`;
                       pushCheckCodeY += `                                int bx_l2 = actor_${j}_x + ${bCX};\n`;
                       pushCheckCodeY += `                                int bx_r2 = bx_l2 + ${bCW};\n`;
                       pushCheckCodeY += `                                int by_t2 = block_new_y.integer() + ${bCY};\n`;
@@ -2940,12 +2953,13 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               for (let j = 0; j < sActors.length; j++) {
                 if (i === j) continue;
                 const other = sActors[j];
-                if (['platform', 'staticPlatform', 'movingPlatform', 'destructible', 'door', 'conveyor', 'ice_block', 'crumbling_platform', 'one_way_wall', 'wall_jump_surface'].includes(other.type)) {
+                if (['platform', 'staticPlatform', 'movingPlatform', 'destructible', 'door', 'conveyor', 'ice_block', 'crumbling_platform', 'one_way_wall', 'wall_jump_surface', 'pass_wall'].includes(other.type)) {
                   const oCW = other.collisionW ?? other.width ?? 16;
                   const oCH = other.collisionH ?? other.height ?? 16;
                   const oCX = other.collisionX ?? 0;
                   const oCY = other.collisionY ?? 0;
-                  actorLogicCode += `                        if (actor_${j}_active && !actor_blocked) {\n`;
+                  const activeCond = other.type === 'pass_wall' ? `actor_${j}_active && actor_${j}_pass_count == 0` : `actor_${j}_active`;
+                  actorLogicCode += `                        if (${activeCond} && !actor_blocked) {\n`;
                   actorLogicCode += `                            int px_l = new_x.integer() + ${aCX} + (actor_${i}_dx > 0 ? 1 : -1);\n`;
                   actorLogicCode += `                            int px_r = px_l + ${aCW};\n`;
                   actorLogicCode += `                            int py_t = actor_${i}_float_y.integer() + ${aCY};\n`;
@@ -3023,12 +3037,13 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 for (let j = 0; j < sActors.length; j++) {
                   if (i === j) continue;
                   const other = sActors[j];
-                  if (['platform', 'staticPlatform', 'movingPlatform', 'destructible', 'door', 'conveyor', 'ice_block', 'crumbling_platform', 'one_way_wall'].includes(other.type)) {
+                  if (['platform', 'staticPlatform', 'movingPlatform', 'destructible', 'door', 'conveyor', 'ice_block', 'crumbling_platform', 'one_way_wall', 'pass_wall'].includes(other.type)) {
                     const oCW = other.collisionW ?? other.width ?? 16;
                     const oCH = other.collisionH ?? other.height ?? 16;
                     const oCX = other.collisionX ?? 0;
                     const oCY = other.collisionY ?? 0;
-                    actorLogicCode += `                        if (actor_${j}_active && !actor_blocked_y) {\n`;
+                    const activeCond = other.type === 'pass_wall' ? `actor_${j}_active && actor_${j}_pass_count == 0` : `actor_${j}_active`;
+                    actorLogicCode += `                        if (${activeCond} && !actor_blocked_y) {\n`;
                     actorLogicCode += `                            int px_l = actor_${i}_float_x.integer() + ${aCX};\n`;
                     actorLogicCode += `                            int px_r = px_l + ${aCW};\n`;
                     actorLogicCode += `                            int py_t = new_y.integer() + ${aCY};\n`;
@@ -3074,7 +3089,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               for (let j = 0; j < sActors.length; j++) {
                 if (i === j) continue;
                 const platform = sActors[j];
-                if (platform.type === 'platform' || platform.type === 'staticPlatform' || platform.type === 'movingPlatform' || platform.type === 'destructible' || platform.type === 'door' || platform.type === 'pushable' || platform.type === 'conveyor' || (platform.type === 'one_way_wall' && ((platform.oneWayDirection || 'right') === 'up' || (platform.oneWayDirection || 'right') === 'down')) || platform.type === 'ice_block' || platform.type === 'crumbling_platform') {
+                if (platform.type === 'platform' || platform.type === 'staticPlatform' || platform.type === 'movingPlatform' || platform.type === 'destructible' || platform.type === 'door' || platform.type === 'pushable' || platform.type === 'conveyor' || platform.type === 'pass_wall' || (platform.type === 'one_way_wall' && ((platform.oneWayDirection || 'right') === 'up' || (platform.oneWayDirection || 'right') === 'down')) || platform.type === 'ice_block' || platform.type === 'crumbling_platform') {
                   const pCW = platform.collisionW ?? platform.width ?? 16;
                   const pCH = platform.collisionH ?? platform.height ?? 16;
                   const pCX = platform.collisionX ?? 0;
@@ -3103,7 +3118,8 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                       actorLogicCode += `                        }\n`;
                     }
                   } else {
-                    actorLogicCode += `                        if (actor_${j}_active) {\n`;
+                    const activeCond = platform.type === 'pass_wall' ? `actor_${j}_active && actor_${j}_pass_count == 0` : `actor_${j}_active`;
+                    actorLogicCode += `                        if (${activeCond}) {\n`;
                     actorLogicCode += `                            int px_l = actor_${i}_float_x.integer() + ${aCX};\n`;
                     actorLogicCode += `                            int px_r = actor_${i}_float_x.integer() + ${aCX} + ${aCW};\n`;
                     actorLogicCode += `                            int py_t = new_y.integer() + ${aCY};\n`;
@@ -3360,12 +3376,13 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 for (let j = 0; j < sActors.length; j++) {
                   if (i === j) continue;
                   const platform = sActors[j];
-                  if (platform.type === 'platform' || platform.type === 'staticPlatform' || platform.type === 'movingPlatform' || platform.type === 'destructible' || platform.type === 'door' || platform.type === 'pushable' || platform.type === 'conveyor' || platform.type === 'ice_block' || platform.type === 'crumbling_platform' || (platform.type === 'one_way_wall' && platform.oneWayDirection === 'down')) {
+                  if (platform.type === 'platform' || platform.type === 'staticPlatform' || platform.type === 'movingPlatform' || platform.type === 'destructible' || platform.type === 'door' || platform.type === 'pushable' || platform.type === 'conveyor' || platform.type === 'ice_block' || platform.type === 'crumbling_platform' || platform.type === 'pass_wall' || (platform.type === 'one_way_wall' && platform.oneWayDirection === 'down')) {
                     const pCW = platform.collisionW ?? platform.width ?? 16;
                     const pCH = platform.collisionH ?? platform.height ?? 16;
                     const pCX = platform.collisionX ?? 0;
                     const pCY = platform.collisionY ?? 0;
-                    actorLogicCode += `                    if (actor_${j}_active && actor_${i}_dy >= 0) {\n`;
+                    const activeCond = platform.type === 'pass_wall' ? `actor_${j}_active && actor_${j}_pass_count == 0` : `actor_${j}_active`;
+                    actorLogicCode += `                    if (${activeCond} && actor_${i}_dy >= 0) {\n`;
                     actorLogicCode += `                        int px_l = actor_${i}_float_x.integer() + ${a.collisionX ?? 0};\n`;
                     actorLogicCode += `                        int px_r = actor_${i}_float_x.integer() + ${a.collisionX ?? 0} + ${a.collisionW ?? a.width ?? 16};\n`;
                     actorLogicCode += `                        int py_t = new_y.integer() + ${a.collisionY ?? 0};\n`;
@@ -3701,12 +3718,13 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               for (let j = 0; j < sActors.length; j++) {
                 if (i === j) continue;
                 const platform = sActors[j];
-                if (platform.type === 'platform' || platform.type === 'staticPlatform' || platform.type === 'movingPlatform' || platform.type === 'destructible' || platform.type === 'door' || platform.type === 'pushable' || platform.type === 'conveyor' || platform.type === 'ice_block' || platform.type === 'crumbling_platform' || (platform.type === 'one_way_wall' && platform.oneWayDirection === 'down')) {
+                if (platform.type === 'platform' || platform.type === 'staticPlatform' || platform.type === 'movingPlatform' || platform.type === 'destructible' || platform.type === 'door' || platform.type === 'pushable' || platform.type === 'conveyor' || platform.type === 'ice_block' || platform.type === 'crumbling_platform' || platform.type === 'pass_wall' || (platform.type === 'one_way_wall' && platform.oneWayDirection === 'down')) {
                   const pCW = platform.collisionW ?? platform.width ?? 16;
                   const pCH = platform.collisionH ?? platform.height ?? 16;
                   const pCX = platform.collisionX ?? 0;
                   const pCY = platform.collisionY ?? 0;
-                  actorLogicCode += `            if (actor_${j}_active && actor_${i}_dy >= 0) {\n`;
+                  const activeCond = platform.type === 'pass_wall' ? `actor_${j}_active && actor_${j}_pass_count == 0` : `actor_${j}_active`;
+                  actorLogicCode += `            if (${activeCond} && actor_${i}_dy >= 0) {\n`;
                   actorLogicCode += `                int px = actor_${i}_float_x.integer() + ${a.collisionX ?? 0} + ${Math.floor((a.collisionW ?? a.width ?? 16) / 2)};\n`;
                   actorLogicCode += `                int py = actor_${i}_float_y.integer() + ${a.collisionY ?? 0} + ${a.collisionH ?? a.height ?? 16};\n`;
                   actorLogicCode += `                int plat_l = actor_${j}_x + ${pCX};\n`;
@@ -4310,6 +4328,64 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               actorLogicCode += `            }\n`;
             }
             if (scriptCode) actorLogicCode += scriptCode;
+          } else if (a.type === 'pass_wall') {
+            const playerIdx = sActors.findIndex(act => act && act.type === 'player');
+            if (playerIdx !== -1) {
+              const pCW = sActors[playerIdx].collisionW ?? sActors[playerIdx].width ?? 16;
+              const pCH = sActors[playerIdx].collisionH ?? sActors[playerIdx].height ?? 16;
+              const pCX = sActors[playerIdx].collisionX ?? 0;
+              const pCY = sActors[playerIdx].collisionY ?? 0;
+              const wallCW = a.collisionW ?? a.width ?? 16;
+              const wallCH = a.collisionH ?? a.height ?? 16;
+              const wallCX = a.collisionX ?? 0;
+              const wallCY = a.collisionY ?? 0;
+
+              const passWallMode = a.passWallMode || 'passes';
+              const solidFrames = passWallMode === 'frames' ? (a.solidAfterFrames || 60) : 0;
+              const passWallStartOnTouch = a.passWallStartOnTouch || false;
+              console.log(`[CODEGEN] pass_wall actor ${i}: mode=${passWallMode}, solidFrames=${solidFrames}, passCount=${a.passCount}, startOnTouch=${passWallStartOnTouch}`);
+              actorLogicCode += `            if (actor_${i}_active) {\n`;
+              actorLogicCode += `                int px_l = actor_${playerIdx}_x + ${pCX};\n`;
+              actorLogicCode += `                int px_r = px_l + ${pCW};\n`;
+              actorLogicCode += `                int py_t = actor_${playerIdx}_y + ${pCY};\n`;
+              actorLogicCode += `                int py_b = py_t + ${pCH};\n`;
+              actorLogicCode += `                int wall_l = actor_${i}_x + ${wallCX};\n`;
+              actorLogicCode += `                int wall_r = wall_l + ${wallCW};\n`;
+              actorLogicCode += `                int wall_t = actor_${i}_y + ${wallCY};\n`;
+              actorLogicCode += `                int wall_b = wall_t + ${wallCH};\n`;
+              actorLogicCode += `                bool overlap = (px_r > wall_l && px_l < wall_r && py_b > wall_t && py_t < wall_b);\n`;
+              actorLogicCode += `                if (overlap) {\n`;
+              actorLogicCode += `                    if (!actor_${i}_player_overlapping) {\n`;
+              actorLogicCode += `                        actor_${i}_player_overlapping = true;\n`;
+              if (solidFrames > 0 && passWallStartOnTouch) {
+                actorLogicCode += `                        if (actor_${i}_solid_timer == -1) {\n`;
+                actorLogicCode += `                            actor_${i}_solid_timer = ${solidFrames};\n`;
+                actorLogicCode += `                        }\n`;
+              }
+              actorLogicCode += `                    }\n`;
+              actorLogicCode += `                } else {\n`;
+              actorLogicCode += `                    if (actor_${i}_player_overlapping) {\n`;
+              actorLogicCode += `                        actor_${i}_player_overlapping = false;\n`;
+              if (passWallMode === 'passes') {
+                actorLogicCode += `                        if (actor_${i}_pass_count > 0) {\n`;
+                actorLogicCode += `                            actor_${i}_pass_count--;\n`;
+                actorLogicCode += `                            bn::sound_items::snd_square_440_100.play();\n`;
+                actorLogicCode += `                        }\n`;
+              }
+              actorLogicCode += `                    }\n`;
+              actorLogicCode += `                }\n`;
+              if (solidFrames > 0) {
+                actorLogicCode += `                if (actor_${i}_solid_timer > 0) {\n`;
+                actorLogicCode += `                    actor_${i}_solid_timer--;\n`;
+                actorLogicCode += `                    if (actor_${i}_solid_timer == 0) {\n`;
+                actorLogicCode += `                        actor_${i}_pass_count = 0;\n`;
+                actorLogicCode += `                        bn::sound_items::snd_square_440_100.play();\n`;
+                actorLogicCode += `                    }\n`;
+                actorLogicCode += `                }\n`;
+              }
+              actorLogicCode += `            }\n`;
+            }
+            if (scriptCode) actorLogicCode += scriptCode;
           } else if (a.type === 'chest') {
             const playerIdx = sActors.findIndex(act => act && act.type === 'player');
             if (playerIdx !== -1) {
@@ -4753,12 +4829,13 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               for (let j = 0; j < sActors.length; j++) {
                 if (i === j) continue;
                 const platform = sActors[j];
-                if (platform.type === 'platform' || platform.type === 'staticPlatform' || platform.type === 'movingPlatform' || platform.type === 'destructible' || platform.type === 'door' || platform.type === 'pushable' || platform.type === 'conveyor' || platform.type === 'ice_block' || platform.type === 'crumbling_platform' || (platform.type === 'one_way_wall' && platform.oneWayDirection === 'down')) {
+                if (platform.type === 'platform' || platform.type === 'staticPlatform' || platform.type === 'movingPlatform' || platform.type === 'destructible' || platform.type === 'door' || platform.type === 'pushable' || platform.type === 'conveyor' || platform.type === 'ice_block' || platform.type === 'crumbling_platform' || platform.type === 'pass_wall' || (platform.type === 'one_way_wall' && platform.oneWayDirection === 'down')) {
                   const pCW = platform.collisionW ?? platform.width ?? 16;
                   const pCH = platform.collisionH ?? platform.height ?? 16;
                   const pCX = platform.collisionX ?? 0;
                   const pCY = platform.collisionY ?? 0;
-                  actorLogicCode += `            if (actor_${j}_active && actor_${i}_dy >= 0) {\n`;
+                  const activeCond = platform.type === 'pass_wall' ? `actor_${j}_active && actor_${j}_pass_count == 0` : `actor_${j}_active`;
+                  actorLogicCode += `            if (${activeCond} && actor_${i}_dy >= 0) {\n`;
                   actorLogicCode += `                int px = actor_${i}_float_x.integer() + ${a.collisionX ?? 0} + ${Math.floor((a.collisionW ?? a.width ?? 16) / 2)};\n`;
                   actorLogicCode += `                int py = actor_${i}_float_y.integer() + ${a.collisionY ?? 0} + ${a.collisionH ?? a.height ?? 16};\n`;
                   actorLogicCode += `                int plat_l = actor_${j}_x + ${pCX};\n`;
@@ -4838,7 +4915,20 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 }
             actorLogicCode += `                }\n`;
             actorLogicCode += `            } else {\n`;
-            actorLogicCode += `                int next_state_${i} = 0;\n`;
+            if (a.type === 'pass_wall') {
+              const getAnimState = (val) => {
+                if (val === 'idle') return 0;
+                if (val === 'walk') return 1;
+                if (val === 'jump') return 2;
+                const found = customAnimData.find(c => String(c.animId) === String(val));
+                return found ? found.stateId : 0;
+              };
+              const passState = getAnimState(a.passWallPassAnim || 'idle');
+              const solidState = getAnimState(a.passWallSolidAnim || 'idle');
+              actorLogicCode += `                int next_state_${i} = (actor_${i}_pass_count > 0) ? ${passState} : ${solidState};\n`;
+            } else {
+              actorLogicCode += `                int next_state_${i} = 0;\n`;
+            }
             if (jumpAnim && walkAnim) {
               actorLogicCode += `                if (actor_${i}_dy != 0) {\n`;
               actorLogicCode += `                    next_state_${i} = 2;\n`;
@@ -5104,7 +5194,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
           if (a.type === 'player') return false;
           if (a.type === 'enemy' && (a.enemyBehavior || 'patrol') === 'random') return true;
           if (a.type === 'enemy') return false;
-          if (['platform','staticPlatform','movingPlatform','ladder','coin','bonus','spring','hazard','destructible','key','door','powerup','sign','conveyor','checkpoint','turret','spawner','companion','pressure_plate','push_target','teleporter','crumbling_platform','ice_block','chest','torch','save_point','xp_orb','shield','ammo_pickup','grenade','wall_jump_surface','one_way_wall','magnet','gravity_flip_zone','boost_pad','checkpoint_gate'].includes(a.type)) return false;
+          if (['platform','staticPlatform','movingPlatform','ladder','coin','bonus','spring','hazard','destructible','key','door','powerup','sign','conveyor','checkpoint','turret','spawner','companion','pressure_plate','push_target','teleporter','crumbling_platform','ice_block','chest','torch','save_point','xp_orb','shield','ammo_pickup','grenade','wall_jump_surface','one_way_wall','magnet','gravity_flip_zone','boost_pad','checkpoint_gate','pass_wall'].includes(a.type)) return false;
           const nb = a.npcBehavior || 'wander';
           return nb === 'wander' || nb === 'random' || (nb === 'follow' && (parseInt(a.followProximity) || 0) > 0);
         });

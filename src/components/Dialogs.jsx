@@ -3025,7 +3025,7 @@ export const TileSelector = ({ tiles, value, onChange, label = '', style, hideLa
               width: `${coords.width}px`,
               zIndex: 999999,
               background: '#1a1a1a', border: '1px solid #555', borderRadius: '3px',
-              maxHeight: '200px', overflow: 'hidden', display: 'flex', flexDirection: 'column',
+              maxHeight: '400px', overflow: 'hidden', display: 'flex', flexDirection: 'column',
               boxShadow: '0 4px 12px rgba(0,0,0,0.5)'
             }}
           >

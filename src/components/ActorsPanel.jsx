@@ -46,7 +46,8 @@ const ACTOR_DEFAULT_TILE_MAP = {
   boost_pad: 56,
   checkpoint_gate: 57,
   grass_block: 59,
-  health_pickup: 21
+  health_pickup: 21,
+  pass_wall: 15
 };
 
 const ACTOR_TYPE_TO_GROUP = {
@@ -55,7 +56,7 @@ const ACTOR_TYPE_TO_GROUP = {
   health_pickup: 'Pickups',
   enemy: 'Enemies', turret: 'Enemies',
   hazard: 'Hazards',
-  platform: 'Platforms', ladder: 'Platforms', crumbling_platform: 'Platforms',
+  platform: 'Platforms', ladder: 'Platforms', crumbling_platform: 'Platforms', pass_wall: 'Platforms',
   npc: 'NPCs', companion: 'NPCs',
 };
 
@@ -1808,7 +1809,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
     },
     {
       label: 'Terrain',
-      types: ['platform', 'ladder', 'conveyor', 'ice_block', 'crumbling_platform']
+      types: ['platform', 'ladder', 'conveyor', 'ice_block', 'crumbling_platform', 'pass_wall']
     },
     {
       label: 'Level Elements',
@@ -1865,7 +1866,8 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
     gravity_flip_zone: 'Gravity Flip',
     boost_pad: 'Boost Pad',
     checkpoint_gate: 'Checkpoint Gate',
-    health_pickup: 'Health Pickup'
+    health_pickup: 'Health Pickup',
+    pass_wall: 'Pass Wall'
   };
 
   const createActorWithType = (type) => {
@@ -1904,7 +1906,8 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
       attackAnimId: null,
       jumpAnimId: null,
       script: { nodes: [], edges: [] },
-      ...(type === 'xp_orb' ? { xpVarName: 'PLAYER_XP', xpValue: 1 } : {})
+      ...(type === 'xp_orb' ? { xpVarName: 'PLAYER_XP', xpValue: 1 } : {}),
+      ...(type === 'pass_wall' ? { passCount: 0, passWallPassAnim: 'idle', passWallSolidAnim: 'idle', solidAfterFrames: 60, passWallMode: 'passes', passWallStartOnTouch: false } : {})
     };
 
     const targetGroupName = ACTOR_TYPE_TO_GROUP[type];
@@ -3061,6 +3064,65 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                       </div>
                     </div>
                   )}
+
+                  {actor.type === 'pass_wall' && (() => {
+                    const animOptions = [{ value: 'idle', label: 'Idle' }];
+                    if (actor.walkAnimId) animOptions.push({ value: 'walk', label: 'Walk' });
+                    if (actor.jumpAnimId) animOptions.push({ value: 'jump', label: 'Jump' });
+                    if (actor.customAnimIds) {
+                      actor.customAnimIds.forEach(id => {
+                        const anim = animations.find(a => a && a.id === id);
+                        if (anim) animOptions.push({ value: String(id), label: anim.name || `Custom (${id})` });
+                      });
+                    }
+                    return (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '4px', background: '#222', padding: '8px', borderRadius: '4px', border: '1px solid #444' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <label style={{ fontSize: '11px', color: '#aaa', width: '90px' }}>Solid Mode:</label>
+                          <select value={actor.passWallMode || 'passes'} onChange={(e) => {
+                            const val = e.target.value;
+                            updateActor(actor.id, 'passWallMode', val);
+                            if (val === 'frames' && !actor.solidAfterFrames) {
+                              updateActor(actor.id, 'solidAfterFrames', 60);
+                            }
+                          }} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }}>
+                            <option value="passes">Solid after X passes</option>
+                            <option value="frames">Solid after X frames</option>
+                          </select>
+                        </div>
+                        {(actor.passWallMode || 'passes') === 'passes' ? (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <label style={{ fontSize: '11px', color: '#aaa', width: '90px' }}>Pass Count:</label>
+                            <input type="number" min="0" value={actor.passCount ?? 0} onChange={(e) => updateActor(actor.id, 'passCount', parseInt(e.target.value) || 0)} style={{ width: '60px', background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }} />
+                            <span style={{ fontSize: '9px', color: '#888' }}>(0 = solid wall)</span>
+                          </div>
+                        ) : (
+                          <>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <label style={{ fontSize: '11px', color: '#aaa', width: '90px' }}>Frames:</label>
+                              <input type="number" min="1" value={actor.solidAfterFrames ?? 60} onChange={(e) => updateActor(actor.id, 'solidAfterFrames', parseInt(e.target.value) || 60)} style={{ width: '60px', background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }} />
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <input type="checkbox" id={`startTouch-${actor.id}`} checked={actor.passWallStartOnTouch || false} onChange={(e) => updateActor(actor.id, 'passWallStartOnTouch', e.target.checked)} style={{ cursor: 'pointer' }} />
+                              <label htmlFor={`startTouch-${actor.id}`} style={{ fontSize: '11px', color: '#aaa', cursor: 'pointer' }}>Start timer on touch</label>
+                            </div>
+                          </>
+                        )}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <label style={{ fontSize: '11px', color: '#aaa', width: '90px' }}>Passable Anim:</label>
+                          <select value={actor.passWallPassAnim || 'idle'} onChange={(e) => updateActor(actor.id, 'passWallPassAnim', e.target.value)} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }}>
+                            {animOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                          </select>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <label style={{ fontSize: '11px', color: '#aaa', width: '90px' }}>Solid Anim:</label>
+                          <select value={actor.passWallSolidAnim || 'idle'} onChange={(e) => updateActor(actor.id, 'passWallSolidAnim', e.target.value)} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }}>
+                            {animOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                          </select>
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {actor.type === 'ice_block' && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '4px', background: '#222', padding: '8px', borderRadius: '4px', border: '1px solid #444' }}>
