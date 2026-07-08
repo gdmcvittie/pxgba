@@ -1,5 +1,9 @@
-0.3.2.1
+0.3.3
 - fixed windows compile error (hopefully it works for everyone!)
+- extended check input script node options
+- script nodes auto connect UNTIL you have added a menu or check input node (then you have to manually connect them)
+- adds controller support to play test and html export
+
 
 0.3.2
 - fixed movement/facing projectile direction bug 
