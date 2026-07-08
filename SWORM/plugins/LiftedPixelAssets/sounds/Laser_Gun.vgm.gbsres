@@ -1,0 +1,9 @@
+{
+  "_resourceType": "sound",
+  "id": "2d00292d-719b-4540-9bc3-6c78f0cff404",
+  "plugin": "LiftedPixelAssets",
+  "name": "Laser_Gun.vgm",
+  "symbol": "sound_laser_gun_vgm",
+  "type": "vgm",
+  "filename": "Laser_Gun.vgm"
+}

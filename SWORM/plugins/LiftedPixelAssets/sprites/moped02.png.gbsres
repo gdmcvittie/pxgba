@@ -1,0 +1,184 @@
+{
+  "_resourceType": "sprite",
+  "id": "f8f79a10-c535-459a-aacc-4b83e3081cef",
+  "plugin": "LiftedPixelAssets",
+  "name": "moped02",
+  "symbol": "sprite_moped02",
+  "states": [
+    {
+      "id": "690869fa-4fd7-48ac-a04b-7cd0c494f30c",
+      "name": "",
+      "animationType": "multi",
+      "flipLeft": true,
+      "animations": [
+        {
+          "id": "fbfefa20-b9ea-44a0-b373-fd73d16bf5a3",
+          "frames": [
+            {
+              "id": "0911478f-78ab-4d2c-9747-e3cc2c8bd33b",
+              "tiles": [
+                {
+                  "id": "ceefaf71-c0e9-4f9a-9c92-e5ced9d04d3f",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 32,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "22aaa321-6d14-45bb-9a8a-834eea551691",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 40,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "4430b078-9908-4d85-bc18-d3a1b67f7f63",
+          "frames": [
+            {
+              "id": "4ccacc2b-2614-4c4b-9033-86931ec4b700",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "a1b209c3-2432-438b-adb4-59b543119717",
+          "frames": [
+            {
+              "id": "705664d0-9307-4399-9ffb-dab760acd154",
+              "tiles": [
+                {
+                  "id": "8b9f745a-e021-45c2-869f-23dce68db515",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 16,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "e6d48e3b-0e6e-4113-a933-a43d2c2620db",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 24,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "166e6de7-a02e-4072-a885-798460ebd6f8",
+          "frames": [
+            {
+              "id": "313038dd-bf63-4486-bf9e-26f6a4dfb372",
+              "tiles": [
+                {
+                  "id": "25dc97b0-a382-4b08-b065-a5430ddac4af",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "dbe86398-32b2-4fef-8026-8a5f292d6e27",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "7c4677f6-c43f-4751-8b8c-f00c15fc79f9",
+          "frames": [
+            {
+              "id": "fc469561-75ce-47fa-9073-3cedd4d225f7",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "f28b065e-77d9-47a7-a489-650ea7022524",
+          "frames": [
+            {
+              "id": "e7bde642-9c1d-4e86-bf1d-a2387676d67e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "64a24989-79fe-4695-98f6-4f5678bfd02e",
+          "frames": [
+            {
+              "id": "0013d09b-65e1-4a91-8dd2-f7baea37f8f4",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "8c454736-fce1-4a8f-944b-1a91560d87cc",
+          "frames": [
+            {
+              "id": "768f6d8b-2e25-4428-a6e5-8be118e29bea",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 6,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "moped02.png",
+  "width": 48,
+  "height": 16,
+  "checksum": "e1df1be7fee519ce905df64c8025728cca353cf3"
+}

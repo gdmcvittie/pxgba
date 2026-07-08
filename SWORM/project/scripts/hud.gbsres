@@ -1,0 +1,23 @@
+{
+  "_resourceType": "script",
+  "id": "08fa1f17-010b-4d18-9a71-75018365b380",
+  "name": "HUD",
+  "description": "",
+  "variables": {},
+  "actors": {},
+  "symbol": "script_5",
+  "script": [
+    {
+      "command": "EVENT_TEXT_DRAW",
+      "args": {
+        "text": "$01$ XP$06$ $$07$ L$09$",
+        "x": 1,
+        "y": 0,
+        "location": "background",
+        "__collapse": false,
+        "__comment": false
+      },
+      "id": "19546d0e-b6cd-44b8-82de-7a1ce97590a8"
+    }
+  ]
+}

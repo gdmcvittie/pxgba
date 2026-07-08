@@ -1,0 +1,133 @@
+{
+  "_resourceType": "scene",
+  "id": "1471abcd-e604-4169-a76e-c53b7626f2a0",
+  "_index": 2,
+  "name": "DEAD",
+  "backgroundId": "3fced27f-9087-415c-9b2c-19bf39c0b90e",
+  "tilesetId": "",
+  "width": 20,
+  "height": 18,
+  "type": "TOPDOWN",
+  "colorModeOverride": "none",
+  "paletteIds": [],
+  "spritePaletteIds": [],
+  "collisions": "00168+",
+  "autoFadeSpeed": 1,
+  "symbol": "scene_3",
+  "x": 688,
+  "y": 30,
+  "script": [
+    {
+      "command": "EVENT_MUSIC_STOP",
+      "args": {
+        "__collapse": true
+      },
+      "id": "beb39ffd-040c-449a-a462-0a8f41411d8d"
+    },
+    {
+      "command": "EVENT_MUSIC_PLAY",
+      "args": {
+        "musicId": "e4121ae1-c3b4-4983-8150-6f475d1eb5f9",
+        "__collapse": true
+      },
+      "id": "0e481113-6483-4fea-b505-ddb167bf949a"
+    },
+    {
+      "command": "EVENT_ACTOR_HIDE",
+      "args": {
+        "actorId": "$self$",
+        "__collapse": true
+      },
+      "id": "edcddad5-ae26-4894-816e-127e4804dfc4"
+    },
+    {
+      "command": "EVENT_TEXT",
+      "args": {
+        "text": [
+          "WHOMP WHOMP!\nWORM FOOD!"
+        ],
+        "__section": "text",
+        "avatarId": "",
+        "minHeight": 4,
+        "maxHeight": 7,
+        "textX": 2,
+        "textY": 1,
+        "textHeight": 5,
+        "position": "bottom",
+        "clearPrevious": true,
+        "showFrame": "true",
+        "speedIn": -1,
+        "speedOut": -1,
+        "closeWhen": "key",
+        "closeButton": "a",
+        "closeDelayTime": 0.5,
+        "closeDelayFrames": 30,
+        "__collapse": true
+      },
+      "id": "426af781-1042-48b5-a019-125160459c24"
+    },
+    {
+      "command": "EVENT_CHOICE",
+      "args": {
+        "variable": "L0",
+        "trueText": "TRY AGAIN",
+        "falseText": "QUIT",
+        "__collapse": true
+      },
+      "id": "137e748e-32a3-4f27-8aba-f80325340c38"
+    },
+    {
+      "command": "EVENT_IF",
+      "args": {
+        "condition": {
+          "type": "eq",
+          "valueA": {
+            "type": "variable",
+            "value": "L0"
+          },
+          "valueB": {
+            "type": "true"
+          }
+        },
+        "__collapseElse": false,
+        "__collapse": false
+      },
+      "children": {
+        "true": [
+          {
+            "command": "EVENT_CALL_CUSTOM_EVENT",
+            "args": {
+              "customEventId": "ea6753e1-25b0-4356-9610-c0748d0a7256",
+              "__collapse": true
+            },
+            "id": "eff88c34-5d53-49c6-9389-48ccf4322806"
+          },
+          {
+            "command": "EVENT_SWITCH_SCENE",
+            "args": {
+              "sceneId": "337fc584-0ad0-42c1-a45f-c044f3f05d50",
+              "x": {
+                "type": "number",
+                "value": 5
+              },
+              "y": {
+                "type": "number",
+                "value": 5
+              },
+              "direction": "down",
+              "fadeSpeed": "2",
+              "__collapse": true
+            },
+            "id": "dc545c57-37df-4a48-9a22-687ace79212d"
+          }
+        ],
+        "false": []
+      },
+      "id": "2febff09-50d0-4b53-a7e4-509aa26220f5"
+    }
+  ],
+  "playerHit1Script": [],
+  "playerHit2Script": [],
+  "playerHit3Script": [],
+  "autoFadeEventCollapse": true
+}

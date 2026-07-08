@@ -1,0 +1,161 @@
+{
+  "_resourceType": "sprite",
+  "id": "bb27cd14-e2fc-4c30-8ef7-47b852f12f69",
+  "plugin": "LiftedPixelAssets",
+  "name": "cylinder_01",
+  "symbol": "sprite_cylinder_01",
+  "states": [
+    {
+      "id": "c6e2f04d-594f-4ab2-98a4-7d8da4d3f6b8",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "b1119bb8-5999-4a49-a08d-17ba5d76b304",
+          "frames": [
+            {
+              "id": "39fba034-6513-476b-ad8c-10fc3b14904c",
+              "tiles": [
+                {
+                  "id": "0c0f661f-f638-490a-b368-4c7b2f5bd1bf",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "9ad6b5a6-f904-48b1-9068-779f00a9c34b",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            },
+            {
+              "id": "84dc2665-268c-4331-96ae-06ada85b2c7e",
+              "tiles": [
+                {
+                  "id": "2f443d6a-46d6-48c6-9c1e-e0a54e9bf51f",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 16,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "753cbe1e-e076-45ff-837b-b10987240d33",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 24,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "60b03083-4c1f-4a75-b230-3f55b74339bf",
+          "frames": [
+            {
+              "id": "32e1bc14-c4c8-4ee5-8403-da81947bb934",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "b2101244-9610-4cef-bfe3-7893a325f1e3",
+          "frames": [
+            {
+              "id": "d94c0582-acb9-45cc-b473-1f052ce28b81",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "524ccf25-68d2-4b53-ac93-dec367273786",
+          "frames": [
+            {
+              "id": "80a19753-e032-4420-bea3-0df7180ecd4c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "54767aa6-bda5-4d9e-8df7-91fcb8fcc5f2",
+          "frames": [
+            {
+              "id": "a32e729e-d0a0-4d21-8959-10d403483f78",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "dc922db5-295b-4b0c-beb9-d6563921ad03",
+          "frames": [
+            {
+              "id": "1c21ac33-d51e-4330-92a0-e84ad3e208cc",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "b4a1b3e3-d150-4da6-91e9-01692696aa93",
+          "frames": [
+            {
+              "id": "90d84bd2-ee7e-462f-a17a-2d7f362b27e1",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "cf2f90f1-ed8d-4f37-880d-3809a7efb614",
+          "frames": [
+            {
+              "id": "2c6c8912-240f-4538-86c0-51d956392d5a",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 4,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "cylinder_01.png",
+  "width": 32,
+  "height": 16,
+  "checksum": "e214fa7d7e741e88ebef28c4f11a57c57180170d"
+}

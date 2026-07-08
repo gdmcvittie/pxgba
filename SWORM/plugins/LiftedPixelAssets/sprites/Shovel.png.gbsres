@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "c6ce597e-f29c-4a53-98fd-f004784a3fd7",
+  "plugin": "LiftedPixelAssets",
+  "name": "Shovel",
+  "symbol": "sprite_shovel",
+  "states": [
+    {
+      "id": "42fd8276-db05-454d-9bc5-a12f4c9b746f",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "a20acc0e-5e00-4ac3-bf96-e58d79e615e6",
+          "frames": [
+            {
+              "id": "562e6a05-03fc-4888-847b-5ddb46f1c50b",
+              "tiles": [
+                {
+                  "id": "306a8e3f-85cf-48f1-935a-ace3e7bf7f29",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "548eaab3-d297-4643-9076-5e24ec2a3919",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "bc3b7e85-c98d-40bf-907b-24b717c8c31d",
+          "frames": [
+            {
+              "id": "14f24e9b-1c13-4ef4-b02c-6f89ec0582f1",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "11de6065-30be-4f9e-bcec-8da4dc1a067f",
+          "frames": [
+            {
+              "id": "78c563db-0e92-4215-bf54-15cd1d2339a1",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "22455585-eaa3-4e72-9313-724cfe48a8aa",
+          "frames": [
+            {
+              "id": "10b54694-55c4-46ba-8b97-2018cf0a4e84",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "a8ec9958-05b1-407d-9bf1-5b77dabd63d4",
+          "frames": [
+            {
+              "id": "57201897-19d2-479a-b5eb-e60d2b37631c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "7daf98f3-ac2a-43f0-9952-6711afd52737",
+          "frames": [
+            {
+              "id": "baf6d498-5f52-4414-b1b8-5821a6bbe92c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "b6c395ab-1c5c-4eb7-89e7-e86124091593",
+          "frames": [
+            {
+              "id": "c36528e9-2b35-42f7-a374-7fc77f6d0ad8",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "d20a683e-9664-448f-9cbb-75f9d940dcf1",
+          "frames": [
+            {
+              "id": "6f6c9dba-4781-4c00-b6e6-89452eb500ae",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Shovel.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "6a0aca872cc2875ce05c6c967aa606b4e961c2d6"
+}

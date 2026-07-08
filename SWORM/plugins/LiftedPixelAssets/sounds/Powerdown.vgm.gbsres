@@ -1,0 +1,9 @@
+{
+  "_resourceType": "sound",
+  "id": "b0f4e4e4-d4d6-4923-bd48-af315aa5a1bf",
+  "plugin": "LiftedPixelAssets",
+  "name": "Powerdown.vgm",
+  "symbol": "sound_powerdown_vgm",
+  "type": "vgm",
+  "filename": "Powerdown.vgm"
+}

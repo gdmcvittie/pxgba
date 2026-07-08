@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "b5423be4-008c-4520-886b-bfe578f73a56",
+  "plugin": "LiftedPixelAssets",
+  "name": "Treasure Box 2",
+  "symbol": "sprite_treasure_box_2",
+  "states": [
+    {
+      "id": "319c98c6-1cb6-46ff-a4b1-007b8c007bb3",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "9f304f3f-e6ec-4d7f-99ea-4e1a7b5b681e",
+          "frames": [
+            {
+              "id": "d3fa0de0-2346-46b2-9c17-d84bf648bd15",
+              "tiles": [
+                {
+                  "id": "b379380f-5e74-4a1f-b238-bd7c2fd2b15d",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "1a557fd7-dd7f-408c-adc2-d4484bc99e98",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e05c365c-12c0-4c26-ad09-3c82b2f7bc82",
+          "frames": [
+            {
+              "id": "4d70ed7a-449a-468e-bd6f-3ba479158805",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "3e2ff396-e083-4d20-b2b3-f33bdaa2c7f2",
+          "frames": [
+            {
+              "id": "55e1a4e9-8550-425b-9e40-202198c56967",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "fbe6871d-d19d-4d38-981a-7cdf5976e5ef",
+          "frames": [
+            {
+              "id": "1f4f2c48-dbd7-49fb-83ab-213babbfd3e4",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "f7296dbb-5503-414d-a4dc-fa00bc6d13d5",
+          "frames": [
+            {
+              "id": "3ec8a1bd-35c6-42b6-9817-234c4cb96549",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "dab4d34c-3aeb-42f8-a128-e686482cf6dc",
+          "frames": [
+            {
+              "id": "8ab9f339-aeb6-460b-8c66-b3bd942cd73c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "ecc130be-d896-4ec7-aec8-0add93d1ff7d",
+          "frames": [
+            {
+              "id": "47a8d4ff-f142-4296-ac38-9c902d124dd5",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "3f6c235a-349f-434b-88de-6e751c251608",
+          "frames": [
+            {
+              "id": "b9903bb6-15fe-4576-a01d-f4782839a929",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Treasure Box 2.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "6d311e9886ab4a956ec05e0e26777f1c863da665"
+}

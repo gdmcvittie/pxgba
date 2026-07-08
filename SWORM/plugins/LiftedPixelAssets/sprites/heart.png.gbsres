@@ -1,0 +1,161 @@
+{
+  "_resourceType": "sprite",
+  "id": "6717e0a2-244a-4e88-a573-0d6a2b50a845",
+  "plugin": "LiftedPixelAssets",
+  "name": "heart",
+  "symbol": "sprite_heart",
+  "states": [
+    {
+      "id": "508e2653-494b-4e00-849c-bd4463ad6adb",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "f3aa8b17-b1aa-4c54-b993-9103450e18bb",
+          "frames": [
+            {
+              "id": "db1c55d3-4da9-4af2-806e-3c692a6116ab",
+              "tiles": [
+                {
+                  "id": "61e415d0-328b-4b4c-9deb-f91071d10242",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "59651663-91c8-478f-9d1a-d71675eaf672",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            },
+            {
+              "id": "0e7610ff-b655-4a07-9cf8-382f09a6118b",
+              "tiles": [
+                {
+                  "id": "71e515f1-410e-4754-b8b4-ef323ddb8168",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 16,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "508bf3aa-e7c2-4f26-a23f-df4fd51fceb0",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 24,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "3f52a16f-5e20-4fe3-8e45-99a2950cd9fb",
+          "frames": [
+            {
+              "id": "1ef8df9a-7b6f-44ec-b6fe-6d61d6620c0c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "1dba0a25-0d94-4bc0-a74f-c1db72ef9d07",
+          "frames": [
+            {
+              "id": "b4f01a6a-b4d5-4320-b782-31eaab58c516",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "654e544b-fc1e-4a6b-a23e-e129f9025543",
+          "frames": [
+            {
+              "id": "75d65e1e-44cc-4d11-ab22-26187211ca24",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "73bd7e20-aba3-4143-a0d0-fc86f0eca384",
+          "frames": [
+            {
+              "id": "e3a6c334-3980-42ec-b565-c5a43331ab6c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "fafab405-a6fb-42da-ad09-3166693e4154",
+          "frames": [
+            {
+              "id": "055afa9c-78ef-4974-a1ba-4c172eb7e394",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "7d07b3b1-edf9-4b73-a13f-c6a1f0ff5e20",
+          "frames": [
+            {
+              "id": "b6784655-ee6b-4903-b06e-30e3bb5c37a5",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "bbfb3f63-0ccb-4803-a7fe-79a31ae86ece",
+          "frames": [
+            {
+              "id": "b7e129fb-3b5d-485b-b00d-0095f580c9ab",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 4,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "heart.png",
+  "width": 32,
+  "height": 16,
+  "checksum": "dc3a6414bf70f85414ec400de2b728003baae8a3"
+}

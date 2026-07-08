@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "c26a2019-4ace-4390-8c96-0cee1b82aafe",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-mt-reptileLair",
+  "symbol": "song_bs_mt_reptilelair",
+  "settings": {},
+  "filename": "bs-mt-reptileLair.uge",
+  "type": "uge"
+}

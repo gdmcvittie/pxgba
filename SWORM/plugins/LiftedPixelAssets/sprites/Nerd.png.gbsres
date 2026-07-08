@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "fd5620db-a943-4d62-bae4-c14df6e34c0f",
+  "plugin": "LiftedPixelAssets",
+  "name": "Nerd",
+  "symbol": "sprite_nerd",
+  "states": [
+    {
+      "id": "32867580-aad7-466e-a152-decd5b2fd9c3",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "15d44cb2-33d6-481a-beae-1f932cf61575",
+          "frames": [
+            {
+              "id": "4707cb07-ab71-4cb0-8487-10646f0373f8",
+              "tiles": [
+                {
+                  "id": "d769393e-9993-45c9-bbc1-a7352a279651",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "b7cdcfe9-997a-4eab-aedc-ba6237770115",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "49b991c4-ecfc-4b77-aa45-78738a2301d1",
+          "frames": [
+            {
+              "id": "a41d70e3-472f-4d2f-954f-313748bd2988",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "166f126a-118d-4eef-9a6c-188136758028",
+          "frames": [
+            {
+              "id": "c9f9e5ac-8517-4cd0-bdd0-2ca35ffb895a",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "327e8ded-d5cc-411e-bf66-dbd36cb4b66e",
+          "frames": [
+            {
+              "id": "6109519f-163e-416e-8c42-982a3aa5f72b",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "0f708833-5f89-47ca-8cf3-7322269b819f",
+          "frames": [
+            {
+              "id": "6e31f2b0-43ab-465b-8779-0a6502edcd76",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "1b2eb2ce-77cf-4867-9144-c4691a52a311",
+          "frames": [
+            {
+              "id": "1b5ff451-3fc0-4529-bb14-7662271370eb",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "9e120acb-504c-4378-9c35-24784a5a7e45",
+          "frames": [
+            {
+              "id": "8dcf3a1b-9bc2-416e-bf3d-6c6cf216b74c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "85b243a3-ee9d-4869-bf16-fcb8b2402a9e",
+          "frames": [
+            {
+              "id": "cb655271-8130-4da7-8314-9faf13646d00",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 1,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Nerd.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "8484b0dc3c8330147e0628f8a701b973effc6467"
+}

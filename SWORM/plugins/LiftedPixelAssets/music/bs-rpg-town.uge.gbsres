@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "c46254ac-c865-4731-91e7-92530e085403",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-rpg-town",
+  "symbol": "song_bs_rpg_town",
+  "settings": {},
+  "filename": "bs-rpg-town.uge",
+  "type": "uge"
+}

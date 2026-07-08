@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "1c09bf57-4c57-4b06-aa81-9c07dc8d57e8",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-cyb-tokyo-freelancer",
+  "symbol": "song_bs_cyb_tokyo_freelance",
+  "settings": {},
+  "filename": "bs-cyb-tokyo-freelancer.uge",
+  "type": "uge"
+}

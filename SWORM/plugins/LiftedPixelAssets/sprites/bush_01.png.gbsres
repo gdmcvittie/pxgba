@@ -1,0 +1,161 @@
+{
+  "_resourceType": "sprite",
+  "id": "d2ebd104-be8f-4b0d-bbf8-c973985f6727",
+  "plugin": "LiftedPixelAssets",
+  "name": "bush_01",
+  "symbol": "sprite_bush_01",
+  "states": [
+    {
+      "id": "397ab52b-d1a4-4c68-a8b5-5f563d2785ed",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "f8646f3c-f9cf-4cc2-ace1-0824dd24a342",
+          "frames": [
+            {
+              "id": "741be94f-fb7d-4939-864a-69dfc8d9ac97",
+              "tiles": [
+                {
+                  "id": "30207941-c7a6-4a88-ae58-739541d45d0a",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "5c720ab9-f580-4fca-8797-12e4e00e0730",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            },
+            {
+              "id": "cd28077f-6d13-4472-b17b-39f144bf9a77",
+              "tiles": [
+                {
+                  "id": "754c99d2-1739-4595-91ff-388a56f60b72",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 16,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "0a642fc6-214c-4a04-86fb-11ac0c1dc7fa",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 24,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "72d361b9-057c-4f82-91e9-5c2875f9ca0a",
+          "frames": [
+            {
+              "id": "83e74723-b4d4-4150-aa2b-2698b59ead20",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "0ebdcb94-ea32-4227-b481-16a5f2d23371",
+          "frames": [
+            {
+              "id": "b5582b3d-0192-499a-b238-3f2f751da6ed",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "c31b8eee-8bd9-43c4-9723-3cb7636e0002",
+          "frames": [
+            {
+              "id": "e0a24fe1-6b82-46cb-b0c0-8999ef841ee0",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "c5da4d99-0e44-41d8-b453-13bc317e59bd",
+          "frames": [
+            {
+              "id": "8f039bb5-85c7-45be-8376-ec8574183f24",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "a429110c-f73c-45d7-8d0a-ef4055265599",
+          "frames": [
+            {
+              "id": "408f09e3-4a08-4d69-ae92-ee6339c501c5",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "40d08e6f-d49f-4e63-a5eb-fe193159ef9f",
+          "frames": [
+            {
+              "id": "010a9d4a-9448-40ed-b418-b3cb93e7430b",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "f74b1689-d232-4159-8c23-3dcde82fee9d",
+          "frames": [
+            {
+              "id": "a5bf8262-62a0-40ea-bb31-7fcd324c7343",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 4,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "bush_01.png",
+  "width": 32,
+  "height": 16,
+  "checksum": "2e83799fe4d2bacf61e4a0a68be1d043664e7136"
+}

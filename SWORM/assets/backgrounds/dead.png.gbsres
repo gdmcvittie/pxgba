@@ -1,0 +1,12 @@
+{
+  "_resourceType": "background",
+  "id": "3fced27f-9087-415c-9b2c-19bf39c0b90e",
+  "name": "dead",
+  "symbol": "bg_dead",
+  "tileColors": "",
+  "filename": "dead.png",
+  "width": 20,
+  "height": 18,
+  "imageWidth": 160,
+  "imageHeight": 144
+}

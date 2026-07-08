@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "9669e990-fba2-4ba9-a2e3-b3a1b5978695",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-p2-mblaster",
+  "symbol": "song_bs_p2_mblaster",
+  "settings": {},
+  "filename": "bs-p2-mblaster.uge",
+  "type": "uge"
+}

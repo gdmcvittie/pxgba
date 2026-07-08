@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "cebe8426-a422-41f1-b60d-f00054690624",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-rpg-cave",
+  "symbol": "song_bs_rpg_cave",
+  "settings": {},
+  "filename": "bs-rpg-cave.uge",
+  "type": "uge"
+}

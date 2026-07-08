@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "8b763fad-af63-49e6-8043-8b8d8edc400e",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-p2-mountianzone",
+  "symbol": "song_bs_p2_mountianzone",
+  "settings": {},
+  "filename": "bs-p2-mountianzone.uge",
+  "type": "uge"
+}

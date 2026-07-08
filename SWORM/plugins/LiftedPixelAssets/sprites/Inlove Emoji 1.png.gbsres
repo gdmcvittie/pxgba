@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "b43f24a8-d1ac-4e0f-b303-0db3f2287aae",
+  "plugin": "LiftedPixelAssets",
+  "name": "Inlove Emoji 1",
+  "symbol": "sprite_inlove_emoji_1",
+  "states": [
+    {
+      "id": "5be3e112-a431-40d5-9cd0-0ad43bce5cb3",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "f083a6c4-a93e-4266-a7ae-45ce6c64a725",
+          "frames": [
+            {
+              "id": "65c77a83-af15-4d5e-8445-72826d735a2c",
+              "tiles": [
+                {
+                  "id": "ee4a5ec4-3b21-43c9-8ae3-6b5d82e657aa",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "8bd52ca4-8e57-49f8-8e30-47fb2115a3ac",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "217ea546-884b-466a-a1e9-911e114d645a",
+          "frames": [
+            {
+              "id": "8662f1d7-2756-44ac-bb2a-9be64c8eb949",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "b488c95a-0ba5-4cb1-a62c-5fc97b44babc",
+          "frames": [
+            {
+              "id": "9188dd93-fb77-4da3-93e9-dabb64ce3824",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "8230f309-5c5f-41e8-8e89-e510c59a0428",
+          "frames": [
+            {
+              "id": "7998ad37-e1a5-4b01-8d74-9a59e6eff38c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "ff10f8f9-7654-4878-b0bb-07ede173c06d",
+          "frames": [
+            {
+              "id": "7a022555-9fc8-4f39-8149-a3b622e78007",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "195721e4-32bc-4d81-ab71-067791488268",
+          "frames": [
+            {
+              "id": "e387a4ff-d670-49c2-ae4f-f812a439ed55",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "0280dcce-6a71-4d18-a967-836c001cccac",
+          "frames": [
+            {
+              "id": "b697302c-34cd-4cd1-b736-97f7b2f2667b",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "96316298-ea96-4c72-9013-9da1d297ccfb",
+          "frames": [
+            {
+              "id": "4070b156-e57e-4eff-9912-a2d8d91fb1e3",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 1,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Inlove Emoji 1.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "3e3c26f96ebf04dba97bc91420adcdb96be0f994"
+}

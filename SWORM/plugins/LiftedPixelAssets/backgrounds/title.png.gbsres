@@ -1,0 +1,13 @@
+{
+  "_resourceType": "background",
+  "id": "351962e6-1e53-4138-9fa8-53711762a5fc",
+  "plugin": "LiftedPixelAssets",
+  "name": "title",
+  "symbol": "bg_title",
+  "tileColors": "",
+  "filename": "title.png",
+  "width": 20,
+  "height": 18,
+  "imageWidth": 160,
+  "imageHeight": 144
+}

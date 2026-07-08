@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "9bad622b-2199-4daa-a780-d38992fe09c8",
+  "plugin": "LiftedPixelAssets",
+  "name": "Think About It",
+  "symbol": "song_think_about_it",
+  "settings": {},
+  "filename": "Think About It.mod",
+  "type": "mod"
+}

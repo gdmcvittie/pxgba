@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "b9ddd582-7055-427e-a1f0-505c2c5a3258",
+  "plugin": "LiftedPixelAssets",
+  "name": "strawberry copy",
+  "symbol": "sprite_strawberry_copy",
+  "states": [
+    {
+      "id": "815f7585-b336-4bc1-b90b-13477ff0c469",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "854ada56-b4fd-4bb6-be19-4bb284cf8ac9",
+          "frames": [
+            {
+              "id": "546a099a-fd2a-4deb-9546-eaf96cd6b76e",
+              "tiles": [
+                {
+                  "id": "7516b79b-a493-4898-b938-2b5981fe1f97",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "64db82f8-023b-426e-8608-c1b290ea0312",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "254b1c99-91aa-411a-8d34-f60f3b566f34",
+          "frames": [
+            {
+              "id": "3bd69574-695b-4242-ae55-bdad156f8fef",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "ab0058b9-6359-4e61-b022-5a03cf4b437b",
+          "frames": [
+            {
+              "id": "fbe4d5d7-632f-4293-bee9-15e5cf1f81b5",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "07e375cb-aa9c-4201-ba5c-48eb6e6045f3",
+          "frames": [
+            {
+              "id": "4c184254-e703-4b29-8d48-8fa9022f3d83",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "5897e9fb-5d45-4a6d-9cc7-6fecba057e21",
+          "frames": [
+            {
+              "id": "f1304e7c-abd1-4210-9a68-25f15b1baf6e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "ad4d7e7c-5ebb-4f4a-bbe7-f7b8f2edfe64",
+          "frames": [
+            {
+              "id": "78c3cc68-bb41-4453-83f1-d6d34e337af3",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "80108f89-c57e-4d7b-baa0-77067d912478",
+          "frames": [
+            {
+              "id": "e0faa87f-69a6-4a73-b647-d63cdeb82a64",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "666d3608-3b7a-4e31-a24b-330c233af734",
+          "frames": [
+            {
+              "id": "79fad9f4-5e9e-4f9e-ac92-2160b9502a5d",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "strawberry copy.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "fed2494908dd986d40ad10457c7e90107863d112"
+}

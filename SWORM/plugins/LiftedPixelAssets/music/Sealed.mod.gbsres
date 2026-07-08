@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "49a7444f-0776-4725-9512-afeb6c5304e5",
+  "plugin": "LiftedPixelAssets",
+  "name": "Sealed",
+  "symbol": "song_sealed",
+  "settings": {},
+  "filename": "Sealed.mod",
+  "type": "mod"
+}

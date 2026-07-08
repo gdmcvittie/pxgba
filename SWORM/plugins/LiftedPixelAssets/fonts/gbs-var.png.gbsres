@@ -1,0 +1,11 @@
+{
+  "_resourceType": "font",
+  "id": "2b0e8315-fda4-4354-ac0f-411144214e35",
+  "plugin": "LiftedPixelAssets",
+  "name": "GBS Variable Width",
+  "symbol": "font_gbs_variable_width_0",
+  "width": 128,
+  "height": 112,
+  "mapping": {},
+  "filename": "gbs-var.png"
+}

@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "3e2e99e2-5a2b-486a-9c2b-b1f92bc98660",
+  "plugin": "LiftedPixelAssets",
+  "name": "music",
+  "symbol": "emote_music_0",
+  "width": 16,
+  "height": 16,
+  "filename": "music.png"
+}

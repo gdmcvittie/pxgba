@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "1dde9ece-f85f-4eee-9fd2-0d3fe0260a65",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-p1-eps-mapSwing",
+  "symbol": "song_bs_p1_eps_mapswing",
+  "settings": {},
+  "filename": "bs-p1-eps-mapSwing.uge",
+  "type": "uge"
+}

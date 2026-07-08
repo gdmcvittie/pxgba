@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "47b34f27-ea5f-4a7b-b881-d089d8d2a23c",
+  "plugin": "LiftedPixelAssets",
+  "name": "Feather Pen 1",
+  "symbol": "sprite_feather_pen_1",
+  "states": [
+    {
+      "id": "8c34fe32-864c-4139-8826-04678a9e0f15",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "6dea0a5c-8c5e-46d3-8638-33514eeeed9e",
+          "frames": [
+            {
+              "id": "5279d501-4b66-4dab-a08e-21a63e28dc49",
+              "tiles": [
+                {
+                  "id": "e655ab8f-fb3c-42d9-89cc-dc291502db7f",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "de529a57-c5c6-4ea8-bda8-7aea48629a84",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "85267bfc-5e40-4423-aa8a-4430d7944036",
+          "frames": [
+            {
+              "id": "96d120c5-6fb5-4a60-a382-f86d84c24aee",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "02c86f23-c3d3-4666-a18a-61c700b691c1",
+          "frames": [
+            {
+              "id": "b89c0f66-d5d9-48e0-8a91-0dc433bba8aa",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "da8b9361-8dc8-4b69-a39e-d61c94eff93b",
+          "frames": [
+            {
+              "id": "ac538ea0-3826-4cca-b35c-e195b20b3b41",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "4a213703-8b61-4a38-91dc-099cf1035fa8",
+          "frames": [
+            {
+              "id": "64292dd5-878c-4718-9e27-bf0ed5eee134",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "81e1049d-c5e8-4116-8af3-3936d16db5b2",
+          "frames": [
+            {
+              "id": "d891fad8-e781-419c-b5da-4fd7b67a9b82",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "701b837f-2288-4e0a-bcef-303e7dd78d3d",
+          "frames": [
+            {
+              "id": "bcab3df8-34af-4774-89e6-0093076be16e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "d8520b6a-92f6-499c-a8e8-e1bdcbee0784",
+          "frames": [
+            {
+              "id": "7fa6295e-1823-4638-beb3-d209ae76b18b",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Feather Pen 1.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "ca4743b99b379a6c03baf62324c8bbdbb0ffb324"
+}

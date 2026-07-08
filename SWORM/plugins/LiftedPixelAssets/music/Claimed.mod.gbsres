@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "532f8b8e-d1fb-42e7-96a6-8ea0fb5c51c7",
+  "plugin": "LiftedPixelAssets",
+  "name": "Claimed",
+  "symbol": "song_claimed",
+  "settings": {},
+  "filename": "Claimed.mod",
+  "type": "mod"
+}

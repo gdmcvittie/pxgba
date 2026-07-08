@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "1b61cdc1-fb04-4cbc-91af-7503a13b956e",
+  "plugin": "LiftedPixelAssets",
+  "name": "ReClaimed",
+  "symbol": "song_reclaimed",
+  "settings": {},
+  "filename": "ReClaimed.mod",
+  "type": "mod"
+}

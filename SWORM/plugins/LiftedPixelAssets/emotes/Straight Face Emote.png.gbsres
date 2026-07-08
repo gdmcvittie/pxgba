@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "5210f362-e76a-4e4f-a4f7-d8e5d8eca347",
+  "plugin": "LiftedPixelAssets",
+  "name": "Straight Face Emote",
+  "symbol": "emote_straight_face_emote",
+  "width": 16,
+  "height": 16,
+  "filename": "Straight Face Emote.png"
+}

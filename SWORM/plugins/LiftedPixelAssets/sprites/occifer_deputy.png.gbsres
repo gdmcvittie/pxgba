@@ -1,0 +1,184 @@
+{
+  "_resourceType": "sprite",
+  "id": "edee3246-3428-4f0c-b560-dc5d1a4c197c",
+  "plugin": "LiftedPixelAssets",
+  "name": "occifer_deputy",
+  "symbol": "sprite_occifer_deputy",
+  "states": [
+    {
+      "id": "84620775-12c0-4fd7-ae9f-00d38d09c2ee",
+      "name": "",
+      "animationType": "multi",
+      "flipLeft": true,
+      "animations": [
+        {
+          "id": "9beec549-69d5-493e-9b93-337a73010d69",
+          "frames": [
+            {
+              "id": "5000c0cb-479c-48a5-8283-55c949059ff8",
+              "tiles": [
+                {
+                  "id": "138c295e-ae96-4089-9fa0-fe1e1cfbd8f0",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 32,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "97aaebe3-aa30-4bc7-97ce-af6157dd0eb7",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 40,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b34e117e-28b5-4fcd-8e6b-a4e9eb6fb222",
+          "frames": [
+            {
+              "id": "9302848a-90d4-4aec-8915-45b416878db4",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "8ca6a0d3-fbe9-4851-8e43-954cc0065c08",
+          "frames": [
+            {
+              "id": "93d10af9-e02e-45fc-8773-fdc7efb179d2",
+              "tiles": [
+                {
+                  "id": "c5b4adcc-e39e-40c0-9b9f-6f1bbadb9b2a",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 16,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "a1e85af1-72f1-43d5-b329-f210a49633e1",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 24,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "0de8c107-d09e-4111-85d4-2665fd60f270",
+          "frames": [
+            {
+              "id": "b6cfe8d5-151c-4eb4-be45-c4db16280eaa",
+              "tiles": [
+                {
+                  "id": "fd8dce02-608f-4665-9439-0eebec0ea4be",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "d3b38234-59a4-4efc-bd43-4fb325e4c300",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "7e6d199f-5b14-4b3d-af6d-6731aa1f5856",
+          "frames": [
+            {
+              "id": "037807e7-46f3-40cd-80f8-e783fb0ca2b3",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "0ad2bc3d-0f83-4a5f-a7da-603e2f459f23",
+          "frames": [
+            {
+              "id": "c7c82abc-2abc-4ad9-9f1e-b785c62cc551",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "a127b789-c18e-4ca2-b180-8894d8563dda",
+          "frames": [
+            {
+              "id": "9e1e098b-46e8-47c7-848b-9afc6aa8af68",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "0f5dc166-54d2-4a6d-b02a-81e955cd34a0",
+          "frames": [
+            {
+              "id": "6e05146a-c4cf-4e21-b0f3-ed302bf6583e",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 6,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "occifer_deputy.png",
+  "width": 48,
+  "height": 16,
+  "checksum": "7a0a54c06a0a0bc4349fef5f4625c50543d700e8"
+}

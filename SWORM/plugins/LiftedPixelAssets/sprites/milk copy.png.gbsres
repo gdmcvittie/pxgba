@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "0ecaf17d-c4f7-470f-8831-6026c367e006",
+  "plugin": "LiftedPixelAssets",
+  "name": "milk copy",
+  "symbol": "sprite_milk_copy",
+  "states": [
+    {
+      "id": "11d5f788-770e-408e-a132-6fcc8503ee5a",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "de8ac33b-92fc-43bc-97eb-a8b4f9caee76",
+          "frames": [
+            {
+              "id": "863e6f2f-055a-48e9-b40e-793d5a0bdc09",
+              "tiles": [
+                {
+                  "id": "80a51154-0207-4434-ae21-8dbfd8201f2e",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "e1747cbc-4361-4fb8-8c18-33fe1ce07d50",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "0c077acc-18db-4a31-9128-8e1ea30919d0",
+          "frames": [
+            {
+              "id": "4edc9971-1566-489e-85a7-6d1922951bf2",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "1696ea52-baa6-4ab5-88b9-b88c87102429",
+          "frames": [
+            {
+              "id": "04905e47-68b8-4852-81b4-50350efa443e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "cd03043a-f0b5-4625-b8e5-a5a8610d4337",
+          "frames": [
+            {
+              "id": "87d4a84e-e0f3-4e0b-895a-8f09ffe5aafb",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "6f1ecaa8-a599-4090-a4b7-4f6b9320da86",
+          "frames": [
+            {
+              "id": "9a69dc5b-2cee-42a0-8af4-fa162d98fe57",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "39e473ac-dcd1-4baf-9086-0dd8cf1562d5",
+          "frames": [
+            {
+              "id": "68c452ac-fc76-4693-8ae7-5e8ce678e194",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "510401d4-de4b-4b03-be31-8499f5682af8",
+          "frames": [
+            {
+              "id": "1fcdc32c-a4d0-4acd-94bd-01f65c2f3d73",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "dc082e14-2af5-429b-905c-178cfa18d3b5",
+          "frames": [
+            {
+              "id": "0fec0d2c-7201-4878-8abf-a0732c340eb8",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 1,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "milk copy.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "cc768461a293563f21f540a5a21a024ad2c874f8"
+}

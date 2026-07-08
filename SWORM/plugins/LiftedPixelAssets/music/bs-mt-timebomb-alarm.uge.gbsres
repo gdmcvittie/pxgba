@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "182d5eed-8b52-48e4-9d94-15598e850b3a",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-mt-timebomb-alarm",
+  "symbol": "song_bs_mt_timebomb_alarm",
+  "settings": {},
+  "filename": "bs-mt-timebomb-alarm.uge",
+  "type": "uge"
+}

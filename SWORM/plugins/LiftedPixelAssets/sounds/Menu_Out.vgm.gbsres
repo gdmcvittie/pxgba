@@ -1,0 +1,9 @@
+{
+  "_resourceType": "sound",
+  "id": "dd6d9469-0ace-4527-8ab3-7c386a0e57ef",
+  "plugin": "LiftedPixelAssets",
+  "name": "Menu_Out.vgm",
+  "symbol": "sound_menu_out_vgm",
+  "type": "vgm",
+  "filename": "Menu_Out.vgm"
+}

@@ -1,0 +1,103 @@
+{
+  "_resourceType": "sprite",
+  "id": "24d146dd-fa68-40b8-b4ad-4312680fa7e7",
+  "plugin": "LiftedPixelAssets",
+  "name": "gbstudio_vehicles_tileset",
+  "symbol": "sprite_gbstudio_vehicles_ti",
+  "states": [
+    {
+      "id": "ced125bf-5576-4c5a-bbea-5e4af22c80c4",
+      "name": "",
+      "animationType": "multi_movement",
+      "flipLeft": true,
+      "animations": [
+        {
+          "id": "f764c085-9b57-40ec-8441-0b172ce1d2d2",
+          "frames": [
+            {
+              "id": "b1d253e6-27c8-4dca-9b0c-11848283140b",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "df1acbaf-8b9a-4681-852e-1de139091c10",
+          "frames": [
+            {
+              "id": "c57ee6b8-1448-4ad5-8a9b-79f8e16b926d",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "3ada357b-c7e9-44be-8a7b-62f20be254ad",
+          "frames": [
+            {
+              "id": "d762a63b-3e67-421f-a544-a6134ebdb2e2",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "ca5e7400-c793-4da5-9ac2-80fdc7b30493",
+          "frames": [
+            {
+              "id": "8ffa07fc-cf2b-4495-9ab9-0542b7693fcc",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "7c7ad7b5-0f8f-4d78-b8d5-49b16f50b5bf",
+          "frames": [
+            {
+              "id": "b62e0956-94db-467d-9d49-324307ab9b12",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "19a63926-c4c8-4020-a611-8979e93de8b6",
+          "frames": [
+            {
+              "id": "ba9d2bf5-8d0d-409d-bb38-841af5cfe42c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "752f6a99-9cc0-49f2-b4d2-d83337b7e1d6",
+          "frames": [
+            {
+              "id": "b884aeb3-4abb-422f-829c-e8aa6b01d932",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "99278a12-b679-43be-8fb9-ac84be3e968e",
+          "frames": [
+            {
+              "id": "c50992b0-09c3-441b-b61f-ac8c17aae5f6",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 0,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 32,
+  "canvasHeight": 32,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "gbstudio_vehicles_tileset.png",
+  "width": 88,
+  "height": 160,
+  "checksum": "ee77bf4957284537b622558f1cccbace1eff1d47"
+}

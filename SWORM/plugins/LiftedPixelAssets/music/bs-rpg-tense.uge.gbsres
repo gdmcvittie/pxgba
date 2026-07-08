@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "1c58468e-dfcb-40ce-ba5c-5c22fe10a96e",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-rpg-tense",
+  "symbol": "song_bs_rpg_tense",
+  "settings": {},
+  "filename": "bs-rpg-tense.uge",
+  "type": "uge"
+}

@@ -1,0 +1,38 @@
+{
+  "_resourceType": "scene",
+  "id": "f4164a1e-8615-4777-a1ea-d9f255ece10c",
+  "_index": 3,
+  "name": "LEVEL 3",
+  "backgroundId": "896df4c8-3a82-4cb8-a403-266f02067f78",
+  "tilesetId": "",
+  "width": 20,
+  "height": 18,
+  "type": "TOPDOWN",
+  "colorModeOverride": "none",
+  "paletteIds": [],
+  "spritePaletteIds": [],
+  "collisions": "0f78+0010+0f4+0010+0f12+002+0f12+002+0f7+00d+0f7+00d+0f7+00d+0f7+00d+0f7+00d+0f7+00d+0f7+002+0f12+002+0ff+",
+  "autoFadeSpeed": 1,
+  "symbol": "scene_4",
+  "x": 656,
+  "y": 400,
+  "script": [
+    {
+      "command": "EVENT_CALL_CUSTOM_EVENT",
+      "args": {
+        "customEventId": "fcb438d7-f88d-4a95-b9fd-0e5418f741bf",
+        "$variable[V0]$": {
+          "type": "number",
+          "value": 3
+        },
+        "__collapse": true
+      },
+      "id": "4d74b1ae-1a1d-416d-a369-31348e7a0d6a"
+    }
+  ],
+  "playerHit1Script": [],
+  "playerHit2Script": [],
+  "playerHit3Script": [],
+  "playerSpriteSheetId": "cf1cb7cf-68fe-4c29-8371-9ec086884a53",
+  "autoFadeEventCollapse": true
+}

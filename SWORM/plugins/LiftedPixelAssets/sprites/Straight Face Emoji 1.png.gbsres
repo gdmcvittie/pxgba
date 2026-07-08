@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "9d897118-901e-463b-a22f-7811964facab",
+  "plugin": "LiftedPixelAssets",
+  "name": "Straight Face Emoji 1",
+  "symbol": "sprite_straight_face_emoji_",
+  "states": [
+    {
+      "id": "97263fa0-22f6-4827-a4ed-63604aa575e0",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "7e2c7305-64ab-4a2e-af4a-499a5e6af344",
+          "frames": [
+            {
+              "id": "351e2b16-74ee-489d-b91c-2c67aaf570b5",
+              "tiles": [
+                {
+                  "id": "9e60a716-36fa-450b-accc-64e7dd7dffd1",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "9cf54ecc-4a8a-4003-9e64-09b58a3a110b",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2b36b2d0-0db6-4101-88d9-b54f472f7836",
+          "frames": [
+            {
+              "id": "fa4567ee-03fc-44de-bfe4-6fb37e075ca7",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "695ef75e-4f85-48f3-b3ae-e978a222f98b",
+          "frames": [
+            {
+              "id": "8e359146-9a98-47e6-b5b0-c03cab27f9f5",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "3de3c1fd-3ed2-41e1-9a4f-43ef6c5e1d4b",
+          "frames": [
+            {
+              "id": "1d4c672c-0a9c-4545-bc23-ed4889656826",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "520963e5-8b92-4aab-9193-1c647554626c",
+          "frames": [
+            {
+              "id": "aaab5a49-dcd1-4bc5-885c-4e0c7fec580c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "d21e50a8-76b1-4cf3-ad7d-2a6a810c75a4",
+          "frames": [
+            {
+              "id": "a9ca24c2-4e2e-45be-ae85-829f92d993a0",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "a231a1b2-90e4-4e6d-a6e0-c63d91253487",
+          "frames": [
+            {
+              "id": "a523699a-5872-4e72-a555-6136f0e8902d",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "850b451c-5c0e-4522-bcff-b4a144f8d776",
+          "frames": [
+            {
+              "id": "bfd886a1-3b04-4e39-88ef-515b96338b52",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 1,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Straight Face Emoji 1.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "37b36f89fc07278256da61d40bbedadc31d68a07"
+}

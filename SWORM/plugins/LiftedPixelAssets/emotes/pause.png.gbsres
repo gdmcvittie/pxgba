@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "ca0af3b9-3cdc-42c1-9cbc-5ecc153a754e",
+  "plugin": "LiftedPixelAssets",
+  "name": "pause",
+  "symbol": "emote_pause_0",
+  "width": 16,
+  "height": 16,
+  "filename": "pause.png"
+}

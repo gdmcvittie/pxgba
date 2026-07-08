@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "0df66732-133a-481d-b255-50653c6aa53a",
+  "plugin": "LiftedPixelAssets",
+  "name": "Money Bag 1",
+  "symbol": "sprite_money_bag_1",
+  "states": [
+    {
+      "id": "44cd8697-48d7-433c-b785-317c9069fc9c",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "66e6d718-ab29-4d2d-92a7-af9fbe8a1744",
+          "frames": [
+            {
+              "id": "9452e0f8-8ae0-4465-8e2f-53ac917e2ae1",
+              "tiles": [
+                {
+                  "id": "270b9067-9900-4f4a-a146-7ccd2e653372",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "1dc54c1e-bdae-4a52-a91a-f7e539026cc7",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "69205c32-6899-41d2-95b6-f707be298995",
+          "frames": [
+            {
+              "id": "2a803a43-df90-4e5a-abc2-a818ed9bc32e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "59fce1e2-be81-4a49-a463-c04b2ae7ddfb",
+          "frames": [
+            {
+              "id": "dd3e3525-8aad-4bc5-b995-ca035ca2c893",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "6f18d6d5-8358-422a-b670-97877a013720",
+          "frames": [
+            {
+              "id": "461c1f45-03bb-4c47-937d-14bccfa05d4c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "3fc46a42-bd1c-45b2-add5-b23cb7d6be0a",
+          "frames": [
+            {
+              "id": "8856e6e2-57a8-4060-a7ef-26c430572a5a",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "a76a3dc3-f7a3-4d3f-bd41-19bb0b1ac5fd",
+          "frames": [
+            {
+              "id": "8aa4ea9a-9330-41e5-b908-f539cb5e2dec",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "f5ad146c-33f2-46de-869b-587c8c9fb1bb",
+          "frames": [
+            {
+              "id": "31bc3242-b23f-41a3-82a1-544b3a813f6a",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "cb24ef65-aa8a-443f-a84d-b53ce91a8c8e",
+          "frames": [
+            {
+              "id": "91071e7e-df68-4362-9236-7ab632ab5fb1",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Money Bag 1.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "570d8ca25d10625287bd1d3a742ad1f632a85dc4"
+}

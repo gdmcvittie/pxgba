@@ -1,0 +1,184 @@
+{
+  "_resourceType": "sprite",
+  "id": "3d9b0cb5-a39e-4941-9e92-e53dd7928d75",
+  "plugin": "LiftedPixelAssets",
+  "name": "wolf_shadow",
+  "symbol": "sprite_wolf_shadow",
+  "states": [
+    {
+      "id": "0ac6ce79-5642-4756-bcd1-3ef64f9f47d1",
+      "name": "",
+      "animationType": "multi",
+      "flipLeft": true,
+      "animations": [
+        {
+          "id": "ba0b25ad-13dd-48ee-abd0-2187929c94c3",
+          "frames": [
+            {
+              "id": "38a289cb-e7e9-4154-846e-8f3d864056a7",
+              "tiles": [
+                {
+                  "id": "987cb424-cf07-4ca6-83cc-bab93d89881a",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 32,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "7f4fa188-510d-4742-a218-4e1902d7b91a",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 40,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2137736f-a7a0-4682-a12f-5858b68a49e8",
+          "frames": [
+            {
+              "id": "5c077afc-c3e8-41ef-87a8-2a2e9feb2fe3",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "b375c610-69f4-441a-931b-ba2ca18369bd",
+          "frames": [
+            {
+              "id": "c5af8251-679b-473d-bf53-7c7fdc82cb0a",
+              "tiles": [
+                {
+                  "id": "eb5abd14-7cc5-4e10-b16b-bfcdc70299a4",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 16,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "add3d86c-6fea-4c29-a035-827d2ee19090",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 24,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "397e1538-bd2e-46f7-aefa-e564a46b63a1",
+          "frames": [
+            {
+              "id": "69724cc8-926d-49c9-90f8-228dd4f2c35d",
+              "tiles": [
+                {
+                  "id": "3fd4883f-5f19-4048-84bc-0d51d056dedb",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "18bece15-4365-4c18-b40c-cce4ef164fec",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "61359afe-68a2-4b1c-88c9-f74718668305",
+          "frames": [
+            {
+              "id": "f7dfa557-2780-48ed-969b-ef5f848f5940",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "1e7b1219-5357-4fe3-8a37-c0117dcbc249",
+          "frames": [
+            {
+              "id": "1d2eee55-ac06-4ed2-9287-791adc1625b2",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "416b3bfb-9a78-48b6-b271-925039f34a32",
+          "frames": [
+            {
+              "id": "5f3a6a27-3513-4999-962b-dd58634cfe97",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "09e9d88a-46b6-499d-bd59-ef1cddb0a873",
+          "frames": [
+            {
+              "id": "a2a75a50-81ff-44a9-a376-99b0972fd67f",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 4,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "wolf_shadow.png",
+  "width": 48,
+  "height": 16,
+  "checksum": "3be312398b68561ec8b2560bc096695a3322927f"
+}

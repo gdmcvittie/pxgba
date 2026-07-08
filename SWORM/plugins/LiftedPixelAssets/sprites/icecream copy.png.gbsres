@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "87f91042-2835-4084-bb21-df6111dc0b12",
+  "plugin": "LiftedPixelAssets",
+  "name": "icecream copy",
+  "symbol": "sprite_icecream_copy",
+  "states": [
+    {
+      "id": "5eb4cf12-6e0a-4652-8d25-266ae8dbbe13",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "23d284f7-1d07-451a-b0df-470d323e6c28",
+          "frames": [
+            {
+              "id": "e9cdd426-d9bd-4305-88ae-c00050f008c1",
+              "tiles": [
+                {
+                  "id": "9ab61702-aa4c-4545-b7de-ed99900b0c61",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "fec61bc7-0f4a-4483-b275-4f580911be9e",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "d77bd1b4-76dc-4716-a32d-10307dca383c",
+          "frames": [
+            {
+              "id": "86001985-9aaa-4539-9187-f16a310ab5f7",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "f6185e64-1e31-4757-a2d7-243299b4fb94",
+          "frames": [
+            {
+              "id": "1d2550d8-115d-4f39-8482-e770517c9a41",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "cabda5fe-8644-470f-916c-7c66fbf521a6",
+          "frames": [
+            {
+              "id": "73e1439b-fb53-492b-9100-35d2a2ddd694",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "50891ec7-2260-4c63-a2ce-39e3b45c34b3",
+          "frames": [
+            {
+              "id": "df26f852-e3ec-4730-856a-9480de3074bd",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "21f35f6a-62e5-42ab-ab95-3b294a96e9fc",
+          "frames": [
+            {
+              "id": "d13ab5b6-84a4-4183-8ce0-43069b558e73",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "d6b2d73d-285e-4716-9552-1202c93f23a8",
+          "frames": [
+            {
+              "id": "175ed6a5-7ced-41e1-93f6-a063946cf5a8",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "8aa96b07-2482-49e1-9adf-97eb46927889",
+          "frames": [
+            {
+              "id": "6bb7f3ea-4068-4f9d-9644-dd0944a17cc5",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "icecream copy.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "8ea74f5ff68541e785c78d70cb7947c3fa9fb012"
+}

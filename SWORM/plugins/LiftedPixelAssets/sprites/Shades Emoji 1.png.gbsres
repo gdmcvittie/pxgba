@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "912c380a-85ed-4765-9d0d-70c209dc8196",
+  "plugin": "LiftedPixelAssets",
+  "name": "Shades Emoji 1",
+  "symbol": "sprite_shades_emoji_1",
+  "states": [
+    {
+      "id": "d9eb7766-f9e2-433e-8bc3-282d706d9228",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "aa5150fb-3fe1-4ec9-ae94-c66fc914e2a4",
+          "frames": [
+            {
+              "id": "1b2ce11e-146f-48ca-a5e6-85feacb8afb6",
+              "tiles": [
+                {
+                  "id": "a2e821da-06c0-422c-88f6-34699940d90f",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "fb97826f-82aa-4d91-ae5e-c767be4dbf1b",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "82ebda66-6721-4058-975e-1611712480cd",
+          "frames": [
+            {
+              "id": "6f5c378b-6cf4-4b74-b9f7-c6dc8751f280",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "7a3e93ca-0920-4946-84ac-c15bbf016ae1",
+          "frames": [
+            {
+              "id": "f59cb19c-510a-4e53-ba49-6f9e4f62a891",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "561f683b-3537-41b1-8224-80d16690a169",
+          "frames": [
+            {
+              "id": "a80b8a34-ea1c-4797-b0f2-401909ef54ed",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "387f6e00-e99d-433e-9a01-69a77da52d04",
+          "frames": [
+            {
+              "id": "3d4979c3-ad52-4115-97b6-538c984f99e1",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "abeef7e7-eacd-4327-81d1-46d71e919f8f",
+          "frames": [
+            {
+              "id": "f600bb1a-79d0-48f1-b600-dccf5295bd0e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "3480019e-30da-44dd-bb3c-3f58e541d80c",
+          "frames": [
+            {
+              "id": "14fe7221-aafd-4320-9088-db013c24c4b1",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "e0fbb175-2252-460e-975e-7ec49ce75853",
+          "frames": [
+            {
+              "id": "4cdfb0cf-fda7-4ad5-b95e-3b4a664a776a",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Shades Emoji 1.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "10641f9712053425ea6d88455d9cadce3146efe4"
+}

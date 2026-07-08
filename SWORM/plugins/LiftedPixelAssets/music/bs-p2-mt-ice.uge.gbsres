@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "2c538063-0cac-49b5-83fd-d0d70b2604eb",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-p2-mt-ice",
+  "symbol": "song_bs_p2_mt_ice",
+  "settings": {},
+  "filename": "bs-p2-mt-ice.uge",
+  "type": "uge"
+}

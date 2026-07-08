@@ -1,0 +1,9 @@
+{
+  "_resourceType": "sound",
+  "id": "f32bafdb-32e5-4afc-9152-abc511c8d92f",
+  "plugin": "LiftedPixelAssets",
+  "name": "Drink.vgm",
+  "symbol": "sound_drink_vgm",
+  "type": "vgm",
+  "filename": "Drink.vgm"
+}

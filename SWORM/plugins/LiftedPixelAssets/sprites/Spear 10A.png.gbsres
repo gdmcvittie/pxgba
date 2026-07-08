@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "f6633999-6dc8-43ad-b612-6588ba8e072e",
+  "plugin": "LiftedPixelAssets",
+  "name": "Spear 10A",
+  "symbol": "sprite_spear_10a",
+  "states": [
+    {
+      "id": "ba8c2fa8-19b8-4868-ab25-b87c1724cdd1",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "258f0f5f-b36f-4dbb-86d3-8d6165b55e31",
+          "frames": [
+            {
+              "id": "b585e13e-3186-473c-ab04-a0d749b7b82c",
+              "tiles": [
+                {
+                  "id": "deb513c0-ea72-4724-bbeb-81b65dfc7216",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "034e89a9-3883-4ff9-a5db-66233917f6af",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "8a883118-6d1a-4b4b-919b-d564080c6aed",
+          "frames": [
+            {
+              "id": "5a221ce6-13ac-40a5-904e-c803b6077503",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "f33716af-4d39-4b82-bbd1-ff2b5c9192f4",
+          "frames": [
+            {
+              "id": "57a15ab1-2d6b-4f47-a5ca-1565fde39037",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "5adc3b00-ae06-41f6-9196-b58ddc7565fc",
+          "frames": [
+            {
+              "id": "0ac07775-dfe5-48db-881d-76cf974550c6",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "f3373ec4-9d03-420c-b6f5-9ec20365a89f",
+          "frames": [
+            {
+              "id": "9f051edc-bd7c-4993-bf46-e3845851903e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "b9f13b9b-0a9d-4211-8c74-067a96166a33",
+          "frames": [
+            {
+              "id": "1c9f3de3-8d9b-436f-93e2-4e5e93c8ca41",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "45b5878f-6cc4-4918-aea5-abd22e39afb1",
+          "frames": [
+            {
+              "id": "9c8b6fdb-05df-4b81-8b5e-bd4ffecbacb0",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "2a312816-8795-4ff9-b7eb-07a114333d15",
+          "frames": [
+            {
+              "id": "6bc1d3e5-842c-464f-89c9-626ffdb23900",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Spear 10A.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "5a5fcc4c5472d414e2e9b3ad189b72dfeeaf9d25"
+}

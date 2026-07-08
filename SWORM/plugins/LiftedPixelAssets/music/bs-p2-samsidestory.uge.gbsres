@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "563281ab-d0c5-4500-b00d-ddff67321d69",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-p2-samsidestory",
+  "symbol": "song_bs_p2_samsidestory",
+  "settings": {},
+  "filename": "bs-p2-samsidestory.uge",
+  "type": "uge"
+}

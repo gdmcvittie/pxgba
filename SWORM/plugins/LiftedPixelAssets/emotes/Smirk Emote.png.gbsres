@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "1f1428f9-7944-4046-96fc-2be3427a79a9",
+  "plugin": "LiftedPixelAssets",
+  "name": "Smirk Emote",
+  "symbol": "emote_smirk_emote",
+  "width": 16,
+  "height": 16,
+  "filename": "Smirk Emote.png"
+}

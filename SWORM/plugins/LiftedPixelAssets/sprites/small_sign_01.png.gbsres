@@ -1,0 +1,103 @@
+{
+  "_resourceType": "sprite",
+  "id": "28c85928-76cf-438d-b9ac-88cb551f5fae",
+  "plugin": "LiftedPixelAssets",
+  "name": "small_sign_01",
+  "symbol": "sprite_small_sign_01",
+  "states": [
+    {
+      "id": "77ef9f9e-5235-4983-a1ac-3b097e8df48d",
+      "name": "",
+      "animationType": "multi_movement",
+      "flipLeft": true,
+      "animations": [
+        {
+          "id": "fb9061c6-3ae6-4424-9444-7877352d957f",
+          "frames": [
+            {
+              "id": "2a8aaf73-ee20-4292-a546-18c4b102b5c9",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "1da523d4-a9fc-402f-a651-3e0e03531c73",
+          "frames": [
+            {
+              "id": "7f714694-6b6c-4b5a-9827-c041779bcd68",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "016f438a-7082-4ff3-b12a-2b0575c63d20",
+          "frames": [
+            {
+              "id": "193730f4-5b35-4b7f-8335-f3552a6fecf0",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "a7582d58-f7cc-4c01-b1d4-dcf95d28b82c",
+          "frames": [
+            {
+              "id": "5b2eca8d-2305-48e5-bb51-dd3f1aea599a",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "18d382a5-890c-4e82-ac42-df61936eb9dc",
+          "frames": [
+            {
+              "id": "dcaadc25-c594-44c6-8be2-b63297e7a64e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "f624b1a1-a5f0-48a8-8197-b54c47022df8",
+          "frames": [
+            {
+              "id": "dcefed44-9af5-44d3-9286-ab24c4b0791c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "e29760a2-7cfd-439f-b704-9aaa0d580bb9",
+          "frames": [
+            {
+              "id": "b7fd513f-5656-4343-95c1-2d98cf769d42",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "7b4a4e45-c433-4baf-b6fc-c41cdd6461a7",
+          "frames": [
+            {
+              "id": "b6be28b5-ee4a-4b03-b6e3-4f5dbe49ccea",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 0,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 32,
+  "canvasHeight": 32,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "small_sign_01.png",
+  "width": 28,
+  "height": 19,
+  "checksum": "014f88b6705fe531a91966834d3bc6d21ea75cc4"
+}

@@ -1,0 +1,103 @@
+{
+  "_resourceType": "sprite",
+  "id": "b416cd9c-b22c-485e-b025-4dfbbd4f4244",
+  "plugin": "LiftedPixelAssets",
+  "name": "BT_KILL_BLOCK",
+  "symbol": "sprite_bt_kill_block",
+  "states": [
+    {
+      "id": "7d30ce1b-8501-4abc-b481-16a669e6bbf1",
+      "name": "",
+      "animationType": "multi_movement",
+      "flipLeft": true,
+      "animations": [
+        {
+          "id": "bb1cb67c-5aa0-463c-959a-6804cad59731",
+          "frames": [
+            {
+              "id": "abdb590c-683f-40f5-8a3d-14993cd62f63",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "fd2dae56-d38e-4da3-be0a-3d3f34e7e640",
+          "frames": [
+            {
+              "id": "fe9884c8-68ad-4afb-a32b-02b1882e83b3",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "02a507b4-2a20-494c-820e-3c1fe8baac24",
+          "frames": [
+            {
+              "id": "0e14ee16-424c-41ad-a6a2-55378464a038",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "66bdbaae-102b-48eb-a17b-4f3f295e0ba5",
+          "frames": [
+            {
+              "id": "06cbdbc6-7efa-47d1-afdf-72ee5ff42ea1",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "28eb1d42-2215-44b1-a1ec-62621d70b052",
+          "frames": [
+            {
+              "id": "bfc0a903-4931-4734-97ce-138430e9b4e9",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "d964bacc-898f-4841-8173-f08bb173b515",
+          "frames": [
+            {
+              "id": "74c0bc54-c083-440f-ab9a-92ee22c90046",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "d05d9458-29b2-48a0-b446-5a360bf392bf",
+          "frames": [
+            {
+              "id": "732ccf50-56b8-4c7d-a2dd-c82ba02a43b9",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "5bf99063-8329-41fb-b391-f078c3266f44",
+          "frames": [
+            {
+              "id": "dfa5046b-e7ae-46c3-9597-d47136af3c2c",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 0,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 32,
+  "canvasHeight": 32,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "BT_KILL_BLOCK.png",
+  "width": 8,
+  "height": 24,
+  "checksum": "bd6182612524a41a08d860d5944c1ced05ad1709"
+}

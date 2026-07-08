@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "8e9439c0-da93-48eb-a604-15a435b5cd14",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-mt-mbboss",
+  "symbol": "song_bs_mt_mbboss",
+  "settings": {},
+  "filename": "bs-mt-mbboss.uge",
+  "type": "uge"
+}

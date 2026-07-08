@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "e13a2b6b-cb66-4911-ba83-9dbd543e6049",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-mt-wind",
+  "symbol": "song_bs_mt_wind",
+  "settings": {},
+  "filename": "bs-mt-wind.uge",
+  "type": "uge"
+}

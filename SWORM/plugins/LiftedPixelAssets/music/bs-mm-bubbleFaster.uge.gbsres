@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "bd11f8f4-a9d5-49f2-8303-84772be0f8e0",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-mm-bubbleFaster",
+  "symbol": "song_bs_mm_bubblefaster",
+  "settings": {},
+  "filename": "bs-mm-bubbleFaster.uge",
+  "type": "uge"
+}

@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "60735016-8221-4fa8-ab90-a8dfbd49dcc7",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-mm-upgrade",
+  "symbol": "song_bs_mm_upgrade",
+  "settings": {},
+  "filename": "bs-mm-upgrade.uge",
+  "type": "uge"
+}

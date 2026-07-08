@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "44e910a5-8416-4f69-a655-92fbf90af8f4",
+  "plugin": "LiftedPixelAssets",
+  "name": "Scythe",
+  "symbol": "sprite_scythe",
+  "states": [
+    {
+      "id": "d5021fd3-11fa-41f5-9da6-3c468ba6aa15",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "aa146b74-a1ed-46ea-bd30-a937ed541bc0",
+          "frames": [
+            {
+              "id": "153296a2-7e9b-49bc-bb69-41e38f69b5fb",
+              "tiles": [
+                {
+                  "id": "8ab0b4b3-a314-4ad0-abd1-6304339decc4",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "38c1bf1d-1f16-4ff6-af81-e348641f9cbd",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2826242c-c1c2-42c5-97ba-08bd30bb5fad",
+          "frames": [
+            {
+              "id": "c7f4b0f2-6380-46c6-b572-df16d020048e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "c887cffa-ca37-4178-8531-6c6681df53a6",
+          "frames": [
+            {
+              "id": "17bfdc26-da37-46c8-95d5-3e9c113a5072",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "67732a4e-7973-4708-b84a-0a71af619ef6",
+          "frames": [
+            {
+              "id": "c0f2e6c0-1957-444d-a48d-9501d872b9d2",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "1f8abbbc-6bfd-4dc4-962f-48cde0fc29ea",
+          "frames": [
+            {
+              "id": "5ade908d-dd85-4c74-8874-168c007bad48",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "6bc83dd6-4bac-4069-babe-ad6a21086c3d",
+          "frames": [
+            {
+              "id": "5a00b6ed-f698-48ed-b974-c42980732592",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "1f120cff-1e4f-4c07-aff8-99eab2d892d9",
+          "frames": [
+            {
+              "id": "56b45f04-9578-41b1-8718-c7fab0cfd17c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "3a81df5d-ecb0-4f3f-857c-fd3e571105b4",
+          "frames": [
+            {
+              "id": "58b2cafd-016c-4406-ba97-9092b3747e7c",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Scythe.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "10c09c5ed7d38e0ca457f17571f6b2da8f8a9763"
+}

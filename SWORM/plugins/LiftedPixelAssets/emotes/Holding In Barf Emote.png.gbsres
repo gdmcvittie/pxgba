@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "f3329e4d-a284-4fdc-9eef-02af216013c8",
+  "plugin": "LiftedPixelAssets",
+  "name": "Holding In Barf Emote",
+  "symbol": "emote_holding_in_barf_emote",
+  "width": 16,
+  "height": 16,
+  "filename": "Holding In Barf Emote.png"
+}

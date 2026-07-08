@@ -1,0 +1,9 @@
+{
+  "_resourceType": "sound",
+  "id": "9ba6a223-cf36-4f8d-ba15-af7dd3c56024",
+  "plugin": "LiftedPixelAssets",
+  "name": "Sword_Slash.vgm",
+  "symbol": "sound_sword_slash_vgm",
+  "type": "vgm",
+  "filename": "Sword_Slash.vgm"
+}

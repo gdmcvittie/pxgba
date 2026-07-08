@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "3614ec5d-4949-4d08-a644-9cb0aa290ae3",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-cyb-server-room",
+  "symbol": "song_bs_cyb_server_room",
+  "settings": {},
+  "filename": "bs-cyb-server-room.uge",
+  "type": "uge"
+}

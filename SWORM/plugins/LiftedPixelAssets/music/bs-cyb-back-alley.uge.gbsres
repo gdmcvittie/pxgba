@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "07f6edfb-f6dc-46d0-bf6e-c4e4be7a0469",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-cyb-back-alley",
+  "symbol": "song_bs_cyb_back_alley",
+  "settings": {},
+  "filename": "bs-cyb-back-alley.uge",
+  "type": "uge"
+}

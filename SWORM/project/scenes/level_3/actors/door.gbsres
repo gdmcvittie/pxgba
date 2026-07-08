@@ -1,0 +1,89 @@
+{
+  "_resourceType": "actor",
+  "id": "35933b10-28e7-42ba-9608-d2c39e72721f",
+  "name": "DOOR",
+  "frame": 0,
+  "animate": false,
+  "spriteSheetId": "dec2d296-1718-4974-b5b9-13a997fa9c8b",
+  "prefabId": "",
+  "direction": "down",
+  "moveSpeed": 1,
+  "animSpeed": 255,
+  "paletteId": "",
+  "isPinned": false,
+  "persistent": false,
+  "collisionGroup": "1",
+  "collisionExtraFlags": [],
+  "prefabScriptOverrides": {},
+  "symbol": "actor_11",
+  "script": [],
+  "startScript": [],
+  "updateScript": [
+    {
+      "command": "EVENT_IF",
+      "args": {
+        "condition": {
+          "type": "lte",
+          "valueA": {
+            "type": "variable",
+            "value": "3"
+          },
+          "valueB": {
+            "type": "number",
+            "value": 9
+          }
+        },
+        "__collapseElse": false,
+        "__collapse": true
+      },
+      "children": {
+        "true": [
+          {
+            "command": "EVENT_ACTOR_SET_FRAME",
+            "args": {
+              "actorId": "$self$",
+              "frame": {
+                "type": "variable",
+                "value": "3"
+              },
+              "__collapse": true
+            },
+            "id": "942d57be-d510-45c6-9e20-ad58e8ecc0bc"
+          }
+        ],
+        "false": [
+          {
+            "command": "EVENT_SOUND_PLAY_EFFECT",
+            "args": {
+              "type": "a66d818e-b30d-49b6-8b06-1d9339d6b9e5",
+              "priority": "medium",
+              "pitch": 4,
+              "frequency": 200,
+              "duration": 0.5,
+              "wait": true,
+              "effect": 0,
+              "__collapse": true
+            },
+            "id": "4ec3772b-bd54-4e68-a5ca-56a154fd8cf7"
+          },
+          {
+            "command": "EVENT_ACTOR_DEACTIVATE",
+            "args": {
+              "actorId": "$self$",
+              "__collapse": true
+            },
+            "id": "ea8db68d-15a0-4619-9a11-39b27b8acf3b"
+          }
+        ]
+      },
+      "id": "8970af24-35da-4046-89c8-9e7758f8b4c3"
+    }
+  ],
+  "hit1Script": [],
+  "hit2Script": [],
+  "hit3Script": [],
+  "coordinateType": "tiles",
+  "x": 3,
+  "y": 17,
+  "_index": 0
+}

@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "0c450ab7-5496-4333-9ef7-0fb44fecffcc",
+  "plugin": "LiftedPixelAssets",
+  "name": "Unknown Caverns",
+  "symbol": "song_unknown_caverns",
+  "settings": {},
+  "filename": "Unknown Caverns.mod",
+  "type": "mod"
+}

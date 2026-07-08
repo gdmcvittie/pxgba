@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "2e86a316-67fb-4ebe-ac99-d95625e8d8b8",
+  "plugin": "LiftedPixelAssets",
+  "name": "bz-cozy-summertown-soft",
+  "symbol": "song_bz_cozy_summertown_sof",
+  "settings": {},
+  "filename": "bz-cozy-summertown-soft.uge",
+  "type": "uge"
+}

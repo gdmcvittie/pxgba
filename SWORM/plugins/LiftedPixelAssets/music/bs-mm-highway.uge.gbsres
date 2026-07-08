@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "b9e2a8e6-8148-49f3-af7f-300186b65550",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-mm-highway",
+  "symbol": "song_bs_mm_highway",
+  "settings": {},
+  "filename": "bs-mm-highway.uge",
+  "type": "uge"
+}

@@ -1,0 +1,184 @@
+{
+  "_resourceType": "sprite",
+  "id": "fbd4270b-6122-4582-9ef5-f465103a4db7",
+  "plugin": "LiftedPixelAssets",
+  "name": "sheep_shorn",
+  "symbol": "sprite_sheep_shorn",
+  "states": [
+    {
+      "id": "0bd8d679-88e1-4dc1-a7b0-037437987615",
+      "name": "",
+      "animationType": "multi",
+      "flipLeft": true,
+      "animations": [
+        {
+          "id": "f1ad1909-8e7e-462b-a78f-f09d0fe4fe04",
+          "frames": [
+            {
+              "id": "edac8a46-1d46-4632-9faa-b553310c31e9",
+              "tiles": [
+                {
+                  "id": "0b1150a9-7ac4-4881-b348-4ea787ac70e4",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 32,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "c0aa3c82-6e04-47c0-b9d1-c6790deb421f",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 40,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "780a3af4-e58d-4790-83a5-2411c9717260",
+          "frames": [
+            {
+              "id": "948f9033-dd6f-429e-b9e9-5d58d2ff0b3c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "5dfb3444-df11-4ddd-b02d-77360d38fcf1",
+          "frames": [
+            {
+              "id": "fa805aef-4349-43cd-a680-1023f2b01b8c",
+              "tiles": [
+                {
+                  "id": "def03e5c-7ba5-4fa1-ad47-8db6e4fd54af",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 16,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "d288f198-3335-4a30-b9df-dbeb15d90a96",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 24,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "1249cbf9-56e7-4a52-9dc0-67dfd70db1f1",
+          "frames": [
+            {
+              "id": "9783cbe5-1146-43e0-bd59-be1a82e5dc68",
+              "tiles": [
+                {
+                  "id": "f09a617d-3b4a-45cd-b69c-354331f6f0ac",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "879efb1f-a834-4cab-b8d3-d0bc82769f54",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b60e946b-5b41-4be9-8d54-65ca832473ba",
+          "frames": [
+            {
+              "id": "637fc0eb-bca4-4c61-89dc-da80b356ca57",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "a4c2fe3f-6bda-4abc-b0f0-6383fb01b024",
+          "frames": [
+            {
+              "id": "2a8cba1f-f2bb-4151-84e2-ba0890360210",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "535597ba-e31f-4a2b-9338-c39fa32446b1",
+          "frames": [
+            {
+              "id": "7337f4fe-b082-4ba8-9c32-d9bd59ff59ee",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "3e3adf26-c912-4aca-96f7-d35fa996a9ec",
+          "frames": [
+            {
+              "id": "001f79d6-4fcb-46c8-8d66-9c2e5e98767c",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 5,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "sheep_shorn.png",
+  "width": 48,
+  "height": 16,
+  "checksum": "0b11c78306db8cb4ccf3706fe29e153f6a719a64"
+}

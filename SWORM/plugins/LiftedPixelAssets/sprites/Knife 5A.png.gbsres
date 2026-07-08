@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "007c266d-d377-44d7-a127-5febb9ff70e8",
+  "plugin": "LiftedPixelAssets",
+  "name": "Knife 5A",
+  "symbol": "sprite_knife_5a",
+  "states": [
+    {
+      "id": "aa8d5c62-e3d0-4bf7-b3f2-47b6ac4fae6a",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "263ede5f-9c2b-4313-8ecb-03409c68f33b",
+          "frames": [
+            {
+              "id": "73c8df27-3319-4348-a1a1-093708514f92",
+              "tiles": [
+                {
+                  "id": "2b59581f-abb0-43c1-9095-a346bab78cd2",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "f507c28e-e139-4674-baae-8ae41eadad0b",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "3541052c-29ed-432c-969b-dc17aa5d7b04",
+          "frames": [
+            {
+              "id": "b9da7407-ea30-4048-9501-c5495fa74461",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "9623ff48-6041-43bf-8049-7a0197ca0b5e",
+          "frames": [
+            {
+              "id": "b87768ec-721c-4c10-a8c3-ae8935595519",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "17fe15fa-aa95-4a28-a9d0-d5eb9c5deee7",
+          "frames": [
+            {
+              "id": "dee4984a-c736-4765-96fc-942a52ed6012",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "fe6e5181-cf46-4c46-ba68-df11b24fa1cc",
+          "frames": [
+            {
+              "id": "c8b12a83-b6a5-411c-92ac-7c07955c90c5",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "aaa30fb0-47aa-4019-adea-3464be58ab8f",
+          "frames": [
+            {
+              "id": "011faac6-07da-4c13-b6d3-907694e96c68",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "75c4c52e-8622-416c-833b-57f8fb9e8f39",
+          "frames": [
+            {
+              "id": "3536ed0e-bd82-4823-9730-5d7400d3ed16",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "15f630c3-307f-4c22-a7e7-e03d593a2a15",
+          "frames": [
+            {
+              "id": "34ae91e1-a263-4842-a879-b360961b96c0",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Knife 5A.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "28c05be3218689720e2046f8e1b9cb51e31714ee"
+}

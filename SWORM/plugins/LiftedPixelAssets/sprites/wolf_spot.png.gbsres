@@ -1,0 +1,184 @@
+{
+  "_resourceType": "sprite",
+  "id": "5781d28a-bb01-4bf7-8ba1-10f9b2c93376",
+  "plugin": "LiftedPixelAssets",
+  "name": "wolf_spot",
+  "symbol": "sprite_wolf_spot",
+  "states": [
+    {
+      "id": "ce970364-55b6-446d-bb8f-d4e17576ea31",
+      "name": "",
+      "animationType": "multi",
+      "flipLeft": true,
+      "animations": [
+        {
+          "id": "840a50f7-4b81-4422-ab2d-788e340447f6",
+          "frames": [
+            {
+              "id": "59bbaf6d-cf2c-4e5b-bdda-a71cd08417f9",
+              "tiles": [
+                {
+                  "id": "8a6f9cf4-cadf-4694-8a35-8b66ceda1f1b",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 32,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "9bb6e71a-409c-4467-99fe-fc254c5b8677",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 40,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2b12ffcd-670d-481c-ab22-b223b8be9ab4",
+          "frames": [
+            {
+              "id": "10e21e96-60e0-4715-a66e-c1756c9175b6",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "e62935be-5881-4a8e-8bc8-812845f850e3",
+          "frames": [
+            {
+              "id": "cf5f7055-7cb3-480c-b829-17046289426e",
+              "tiles": [
+                {
+                  "id": "5704f8b1-86d0-4979-abc9-d12a0538a227",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 16,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "b69828a3-fac1-4513-a1b8-5cb3d9a901a5",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 24,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "89396d8c-39b0-47d5-a262-9b1c3925ad44",
+          "frames": [
+            {
+              "id": "4aca01d1-ef4a-4925-8076-d4d06995287a",
+              "tiles": [
+                {
+                  "id": "ba856d4b-34b6-4c2c-8442-ca2b1d697a5b",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "675b9296-45c7-4f07-94b4-746d4e3f7f92",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "5b7e2b6d-9e14-4d5b-b015-4495be58fe13",
+          "frames": [
+            {
+              "id": "1dacced4-8106-462f-9749-d7d4a19e7571",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "e9b4be2b-6ce3-4771-8468-1c890b6c2b83",
+          "frames": [
+            {
+              "id": "897bea87-82b1-45f8-9d8b-3bc79c59cfda",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "03274a00-1e10-4f8a-8813-cacef63a4db7",
+          "frames": [
+            {
+              "id": "2365de67-4c2b-4f5f-ab97-52741df46a53",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "40433a5b-e7a7-494a-8a6d-b08f48deb811",
+          "frames": [
+            {
+              "id": "a66da7bc-d84a-418c-ba1d-fc26eb9e3957",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 6,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "wolf_spot.png",
+  "width": 48,
+  "height": 16,
+  "checksum": "6cc625b5e7cc682badf5f4b8d6522f44cbeba38a"
+}

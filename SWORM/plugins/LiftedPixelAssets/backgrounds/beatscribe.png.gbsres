@@ -1,0 +1,13 @@
+{
+  "_resourceType": "background",
+  "id": "b822b6e0-9254-4ff5-9a8f-e8ef3ea9d46e",
+  "plugin": "LiftedPixelAssets",
+  "name": "beatscribe",
+  "symbol": "bg_beatscribe",
+  "tileColors": "",
+  "filename": "beatscribe.png",
+  "width": 20,
+  "height": 18,
+  "imageWidth": 160,
+  "imageHeight": 144
+}

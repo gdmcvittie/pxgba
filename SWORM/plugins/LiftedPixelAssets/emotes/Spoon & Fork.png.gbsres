@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "8463e41a-0e69-4610-930f-a02d49cff22e",
+  "plugin": "LiftedPixelAssets",
+  "name": "Spoon & Fork",
+  "symbol": "emote_spoon_fork",
+  "width": 16,
+  "height": 16,
+  "filename": "Spoon & Fork.png"
+}

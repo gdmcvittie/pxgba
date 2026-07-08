@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "2b8e8668-b12c-4089-92c0-aef1e3f81518",
+  "plugin": "LiftedPixelAssets",
+  "name": "Knife 10A",
+  "symbol": "sprite_knife_10a",
+  "states": [
+    {
+      "id": "5690031a-83b6-4694-95de-f490efaf84aa",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "d0093e97-c947-4a89-886f-516e83a02339",
+          "frames": [
+            {
+              "id": "4b783d8e-4cf5-4385-a329-fd5781902b24",
+              "tiles": [
+                {
+                  "id": "6ef3e4a5-503e-4fd4-bf6c-0cd6f52a7f2c",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "97898a82-2a1a-47e6-ad7e-bde4a86191e3",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "57330836-0bca-434b-a90e-0b93a9c215c9",
+          "frames": [
+            {
+              "id": "8f70a87f-dc2e-4f30-8173-e5b260731b82",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "c251ffab-e5e7-4aa9-8acf-7edbb5d53745",
+          "frames": [
+            {
+              "id": "81ca9fe3-a972-4dd6-b891-b89dbd3b73d9",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "0ae530fe-d9be-47aa-88d4-f4b3f924a802",
+          "frames": [
+            {
+              "id": "96e81e42-e7d2-477d-824d-95a2394c9c1d",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "6b736d7c-170c-42bc-9f63-d9722147186e",
+          "frames": [
+            {
+              "id": "67c3d128-054c-4009-9d50-ccbd61747186",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "2ddc7179-8492-4faa-9ce7-bb7b119a666e",
+          "frames": [
+            {
+              "id": "80c385e3-9430-4a0a-9035-1c86cd49f7fd",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "c3bdbc4e-585d-4b7d-b6e5-7a953b195dfe",
+          "frames": [
+            {
+              "id": "73e36ca3-da34-4002-bc39-17428ed09698",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "eb46cc0b-3990-4cc9-b6ae-096711f8af3a",
+          "frames": [
+            {
+              "id": "62622da3-272f-422a-b166-6909ccc93b36",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Knife 10A.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "9d6260b17f5b36c8e397911ae74f2996c818289f"
+}

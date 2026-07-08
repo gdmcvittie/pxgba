@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "2d9a7b87-b5e6-4411-9e5e-0a3b26b33637",
+  "plugin": "LiftedPixelAssets",
+  "name": "Vampire Emote",
+  "symbol": "emote_vampire_emote",
+  "width": 16,
+  "height": 16,
+  "filename": "Vampire Emote.png"
+}

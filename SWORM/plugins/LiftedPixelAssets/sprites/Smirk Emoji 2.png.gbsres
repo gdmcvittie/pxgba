@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "6a77b558-397d-4d7d-b48b-e5b76951186b",
+  "plugin": "LiftedPixelAssets",
+  "name": "Smirk Emoji 2",
+  "symbol": "sprite_smirk_emoji_2",
+  "states": [
+    {
+      "id": "f8aa6f19-c037-433c-af53-29224b039a6a",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "43777cfc-49f6-480f-8899-0ff6791fb7fb",
+          "frames": [
+            {
+              "id": "c38f5ddc-3b2c-4d8d-b4db-1f85d8ef76c2",
+              "tiles": [
+                {
+                  "id": "6afc85ce-edca-4409-b6f9-f8a0a086a721",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "c89572b1-9e25-4e6c-939c-110957737982",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "4eb860d3-683f-41ef-bb46-ca3c137ed17b",
+          "frames": [
+            {
+              "id": "036e3fc0-3943-4bcd-8265-78e38aed72a9",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "bde1ae5f-b679-4209-aeff-b93516806cee",
+          "frames": [
+            {
+              "id": "224fd91e-a866-4f7a-899c-b4b202bc61b1",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "c3821c22-8bc8-41d3-a889-4a495cd18b8a",
+          "frames": [
+            {
+              "id": "97e446b3-1e0f-4410-9b42-cf90310f8905",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "95d62e54-c0c0-4b9d-9329-45705d7aafe6",
+          "frames": [
+            {
+              "id": "b67232df-234d-4d27-b2e1-f398cdd4953e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "fd0a3c99-9491-4116-bfb3-f728644c1f43",
+          "frames": [
+            {
+              "id": "35f64967-ad30-48e5-9625-698b8a8179da",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "0719fd06-06bb-43c7-a810-d0aaedfeadb8",
+          "frames": [
+            {
+              "id": "194a1482-f893-4d9a-ba0b-379e782a89b1",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "05af1fa1-4a71-401f-ae64-3f698d5e29ce",
+          "frames": [
+            {
+              "id": "ceab569d-30b1-4519-b45d-5e028538d377",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Smirk Emoji 2.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "00298237852327d9cbd3af83f18f53a647aebff9"
+}

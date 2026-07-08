@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "205fbd52-244c-4ef2-b32e-b51141e15c34",
+  "plugin": "LiftedPixelAssets",
+  "name": "Nani!?",
+  "symbol": "emote_nani_",
+  "width": 16,
+  "height": 16,
+  "filename": "Nani!?.png"
+}

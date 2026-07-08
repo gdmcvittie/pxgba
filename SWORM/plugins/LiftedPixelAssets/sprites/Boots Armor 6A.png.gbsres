@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "3797a8a5-75ab-4ed0-bac2-131c5f8986eb",
+  "plugin": "LiftedPixelAssets",
+  "name": "Boots Armor 6A",
+  "symbol": "sprite_boots_armor_6a",
+  "states": [
+    {
+      "id": "62a7c396-1b95-4615-b647-b6e8622fbf71",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "9b935ac7-16a3-4a05-b468-4118a4c47f6c",
+          "frames": [
+            {
+              "id": "7897900b-19ad-459e-8f61-6c48081794c9",
+              "tiles": [
+                {
+                  "id": "afb59a20-2b41-4c82-be68-5af5102f61c9",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "eb04c95f-f21a-4d24-8e9e-c74667883b9f",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "7af65f75-04e7-4caf-9c96-5766faae97dd",
+          "frames": [
+            {
+              "id": "f9d3b494-456b-414f-a593-b64540525ac8",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "72635932-5e13-46be-b94d-6fc25328bca4",
+          "frames": [
+            {
+              "id": "6243d6b3-114b-4a44-be17-963ac2cb3504",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "da0632a2-f3a6-4f2f-b1f2-63b1cc631f0a",
+          "frames": [
+            {
+              "id": "17a3807a-ec03-4522-be9a-b602e7d9c712",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "d18aad0f-125b-4b6b-9ce2-1fcc59ed37b3",
+          "frames": [
+            {
+              "id": "a2d8ac72-9f6b-490a-b155-2c1c55f1f985",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "2698c4bc-d506-4cb7-be06-56fbde9940a6",
+          "frames": [
+            {
+              "id": "7a87b7fe-01b0-4e7d-941c-2ab361c20af8",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "932948af-4122-4f80-bf03-63fe89d73ad5",
+          "frames": [
+            {
+              "id": "2295b46b-e365-4dd6-b3ea-9a29d564235b",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "ad6fdf4f-6d56-43dc-81e1-dc74bcbbd9e1",
+          "frames": [
+            {
+              "id": "9a81ce67-9fa1-46e4-95d0-1d6f10435c13",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Boots Armor 6A.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "c5ceecb7a16a12eb104bc64d12ca41bb8a74329c"
+}

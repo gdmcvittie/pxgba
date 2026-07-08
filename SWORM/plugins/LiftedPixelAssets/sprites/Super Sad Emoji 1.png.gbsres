@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "9e3bc793-7b8d-418e-83e2-1d148feee546",
+  "plugin": "LiftedPixelAssets",
+  "name": "Super Sad Emoji 1",
+  "symbol": "sprite_super_sad_emoji_1",
+  "states": [
+    {
+      "id": "25c00835-67cd-48c5-a67c-f5b1aef551ea",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "04a9730d-06dd-44d9-9cf0-065c824260c7",
+          "frames": [
+            {
+              "id": "8569dd05-9410-4a35-adb8-aee9f955631c",
+              "tiles": [
+                {
+                  "id": "ca9d5c2d-d210-4d05-bee7-520a01fafb9e",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "e12f73a2-9522-484d-b619-faf3ca5349c4",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "920b5e3d-ae67-4f5a-a493-ca6722d666fe",
+          "frames": [
+            {
+              "id": "71ad512e-a2ae-4727-9d15-6539e9ca4848",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "d2f2c4f0-a89f-4dcd-adb0-62490061a5de",
+          "frames": [
+            {
+              "id": "8ffcc23c-56c2-4fa6-b0fc-cc8ead5e5374",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "78bb97a3-45f6-4e49-9272-88746bd5d9ee",
+          "frames": [
+            {
+              "id": "8c47516c-909a-4977-b3b1-96781deae1a7",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "3735a9ab-f679-4eae-868b-fec2cd1e3c61",
+          "frames": [
+            {
+              "id": "28ed0fc6-c191-41a1-b2f1-601c76c9c26c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "9b60d88f-b77d-4b90-9340-da84cac18f2a",
+          "frames": [
+            {
+              "id": "5d1eb2b1-3f1b-4f00-9062-f3f08ce01007",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "807c11b4-c1a4-4c36-af32-8d04958c1e67",
+          "frames": [
+            {
+              "id": "463b8424-5d8d-4396-a0c2-227adf3b14ff",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "1eb2274a-0ae8-4067-b602-79e70dff4f7e",
+          "frames": [
+            {
+              "id": "c218c526-3c38-4876-adbe-80da47ce3481",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Super Sad Emoji 1.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "cb1a0596a550c82f7667acc3550bbd6c39ffb14c"
+}

@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "6279855c-4163-4e05-9e5d-64c3af7d471c",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-p1-sports",
+  "symbol": "song_bs_p1_sports",
+  "settings": {},
+  "filename": "bs-p1-sports.uge",
+  "type": "uge"
+}

@@ -1,0 +1,161 @@
+{
+  "_resourceType": "sprite",
+  "id": "175476fe-4970-4fff-a79b-3b60123ebcdb",
+  "plugin": "LiftedPixelAssets",
+  "name": "GuineaPig",
+  "symbol": "sprite_guineapig",
+  "states": [
+    {
+      "id": "dbd3c5bb-3d8e-4d74-a3cd-56b1a39009ca",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "fed93152-7a7d-45f3-8a0d-d187127dd8f4",
+          "frames": [
+            {
+              "id": "8d8779ee-e10e-43fb-8fc6-4636d9f248bd",
+              "tiles": [
+                {
+                  "id": "a4628dd8-29a1-4ad6-a990-6f32baf00ad7",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "6cc5e097-dc00-4ea9-91d8-20bd993e322d",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            },
+            {
+              "id": "b88926ea-37c3-4b4c-8661-e04e6f513ba7",
+              "tiles": [
+                {
+                  "id": "3d912cf7-30b6-4281-a518-2984f013a62e",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 16,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "f95c60a4-cc27-4ec2-9135-8d77d9cc6d57",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 24,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e591beec-7925-4c1f-ba08-4923fdcb07b8",
+          "frames": [
+            {
+              "id": "1fd73983-86f6-4305-8686-bd5990fd5d04",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "cbde4e9c-fc57-4645-87ed-416c7607ec1c",
+          "frames": [
+            {
+              "id": "073d56ec-b89b-4f02-8345-dc90b693cafa",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "bb3a0d33-1914-4d65-b4ae-0587dbdec9fd",
+          "frames": [
+            {
+              "id": "eb220326-035b-44a6-886e-5feedf67a9f2",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "52e0c54c-cb8a-4647-a065-26dbccfebf8d",
+          "frames": [
+            {
+              "id": "1bb6e344-2d7c-4653-b6aa-56d8cac1de44",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "04c3a18e-de52-4211-b463-8bcb30a0173b",
+          "frames": [
+            {
+              "id": "06b04951-3dc9-4f04-a916-531464d0e78b",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "167c5c1f-ca48-4350-8d14-b0008246d4ab",
+          "frames": [
+            {
+              "id": "5150165e-462f-42fd-9a32-28e98ebe7a8e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "61e01778-879c-4418-9f9d-c60393793986",
+          "frames": [
+            {
+              "id": "15806852-658a-4013-a7bc-ede64aa62b82",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 4,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "GuineaPig.png",
+  "width": 32,
+  "height": 16,
+  "checksum": "220ebbd6025842d3b4604d09e0866a74c68405a4"
+}

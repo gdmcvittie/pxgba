@@ -1,0 +1,41 @@
+{
+  "_resourceType": "script",
+  "id": "9e5193ed-3187-4503-a79a-fa471836fe13",
+  "name": "MOVE WORM",
+  "description": "",
+  "variables": {},
+  "actors": {
+    "0": {
+      "id": "0",
+      "name": "Actor A"
+    }
+  },
+  "symbol": "script_2",
+  "script": [
+    {
+      "command": "EVENT_ACTOR_MOVE_TO",
+      "args": {
+        "__section": "movement",
+        "actorId": "0",
+        "x": {
+          "type": "property",
+          "target": "player",
+          "property": "pxpos"
+        },
+        "y": {
+          "type": "property",
+          "target": "player",
+          "property": "pypos"
+        },
+        "collideWith": [
+          "walls"
+        ],
+        "lockDirection": [],
+        "moveType": "horizontal",
+        "units": "pixels",
+        "__collapse": true
+      },
+      "id": "9dacf42e-e745-4da1-9b40-72eebc3dc6d5"
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "9ffd37a3-df37-4dc6-865d-4676c554788c",
+  "plugin": "LiftedPixelAssets",
+  "name": "Watering Can",
+  "symbol": "sprite_watering_can",
+  "states": [
+    {
+      "id": "9095e51c-5560-4335-aa5a-5f08b8021a4e",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "dead2952-3725-49c4-b26a-3013259291ad",
+          "frames": [
+            {
+              "id": "11207a8d-f25b-4e5d-93d0-e2115c4a31dc",
+              "tiles": [
+                {
+                  "id": "417a3255-8824-4333-a824-963b609779f6",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "03fbb52b-5c83-4539-9401-67c68e5ada5e",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "dba8c3db-0f13-4322-a318-1448451d5d59",
+          "frames": [
+            {
+              "id": "86f64f32-0947-4dd5-8bcd-23f86cbfa8f0",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "b68abda6-eb76-47cb-afc1-d3ba036974e1",
+          "frames": [
+            {
+              "id": "3f573897-2123-4f86-91fa-7e30da744323",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "7397cce3-72da-4512-b8a3-788468f71b79",
+          "frames": [
+            {
+              "id": "e6c06e56-ad74-40ae-a768-62bb39fdf51a",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "968aadc1-ec6a-4fe1-8271-2c4d49133110",
+          "frames": [
+            {
+              "id": "03d5d8fd-899b-443c-9c16-030395cddf29",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "68e837d3-6dd3-4759-9669-32775bf97e09",
+          "frames": [
+            {
+              "id": "dd39409c-9b56-41f8-bd77-ae597ff1bb8c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "3f04368f-7c01-40ce-a3a9-3816a9482572",
+          "frames": [
+            {
+              "id": "89dcb67a-87c5-49d6-b0d3-dcbf7e7b0a97",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "5faab0df-1942-46c2-9acc-c97f9c5a4cfa",
+          "frames": [
+            {
+              "id": "18de5c97-fb1c-4c71-8dea-9b8dca8302dd",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Watering Can.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "700b81a5e303d3488b1b1abbe4440ca0f88251b7"
+}

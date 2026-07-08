@@ -1,0 +1,9 @@
+{
+  "_resourceType": "sound",
+  "id": "80132a9a-d152-44c0-b60a-71ee64599295",
+  "plugin": "LiftedPixelAssets",
+  "name": "Siren.vgm",
+  "symbol": "sound_siren_vgm",
+  "type": "vgm",
+  "filename": "Siren.vgm"
+}

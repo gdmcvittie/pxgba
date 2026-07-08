@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "ff989986-0eb1-41e9-8622-711c3ad8ed35",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-p1-eps-map",
+  "symbol": "song_bs_p1_eps_map",
+  "settings": {},
+  "filename": "bs-p1-eps-map.uge",
+  "type": "uge"
+}

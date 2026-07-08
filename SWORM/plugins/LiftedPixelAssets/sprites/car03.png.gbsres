@@ -1,0 +1,103 @@
+{
+  "_resourceType": "sprite",
+  "id": "e692f47f-100c-4f79-9e8c-169009286c83",
+  "plugin": "LiftedPixelAssets",
+  "name": "car03",
+  "symbol": "sprite_car03",
+  "states": [
+    {
+      "id": "618269d7-da1f-4092-b18d-e7c51deea9dd",
+      "name": "",
+      "animationType": "multi_movement",
+      "flipLeft": true,
+      "animations": [
+        {
+          "id": "ddc569e9-f0f9-4811-91dc-cfff1cc6ada7",
+          "frames": [
+            {
+              "id": "98f0de13-0b2b-482d-801c-631388c8a097",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "5f38cb9d-5756-4484-9639-598babd33735",
+          "frames": [
+            {
+              "id": "a178f5e5-19d6-43c0-843f-c784978543b6",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "2f581f3e-09f4-42e4-8bbd-7e1cc31ad7c4",
+          "frames": [
+            {
+              "id": "c55cff34-5148-40dd-813d-3ddada2f4171",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "505224e8-1cce-4a09-9de7-d2dcdfa299e2",
+          "frames": [
+            {
+              "id": "9b26c083-1601-42b4-984c-5aceaabdd247",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "ad7cd33f-beff-4405-ba4a-f954f1410acc",
+          "frames": [
+            {
+              "id": "cba849d4-3f5a-4d22-88e2-c98620cd09c7",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "f4b911f1-55a6-471e-820e-3a7abfcbc531",
+          "frames": [
+            {
+              "id": "d49cc0f6-9786-4b42-8e2e-c15323d6cc5d",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "9605b011-0bfc-45dd-be6c-587a51bb7542",
+          "frames": [
+            {
+              "id": "ebc6f016-09c4-4b0c-9a0e-f0bbedb72e76",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "57a5b76e-c933-47a4-8448-d5c094598dbf",
+          "frames": [
+            {
+              "id": "d047650b-3fed-4841-9563-2e24f74e8847",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 0,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 32,
+  "canvasHeight": 32,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "car03.png",
+  "width": 64,
+  "height": 24,
+  "checksum": "e355b5b2fd97f61b597b8afb865ecf3277379392"
+}

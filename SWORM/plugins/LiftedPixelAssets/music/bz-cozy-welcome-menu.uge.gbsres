@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "0efeab70-785b-43c6-9ae0-b6b7a37cc834",
+  "plugin": "LiftedPixelAssets",
+  "name": "bz-cozy-welcome-menu",
+  "symbol": "song_bz_cozy_welcome_menu",
+  "settings": {},
+  "filename": "bz-cozy-welcome-menu.uge",
+  "type": "uge"
+}

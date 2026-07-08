@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "9829ce40-a947-4c96-a85f-d95393e422b7",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-p2-dungeon",
+  "symbol": "song_bs_p2_dungeon",
+  "settings": {},
+  "filename": "bs-p2-dungeon.uge",
+  "type": "uge"
+}

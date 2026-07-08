@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "b079a4e8-4eaf-497d-b0a5-9dc516a3f296",
+  "plugin": "LiftedPixelAssets",
+  "name": "Crying Emoji 2",
+  "symbol": "sprite_crying_emoji_2",
+  "states": [
+    {
+      "id": "3226e8c0-8301-48d1-8f18-9a03b3504c7a",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "1611bda7-4fc2-4cc8-8328-333c93e2bcea",
+          "frames": [
+            {
+              "id": "f68e344a-9769-49f1-b28b-df64e977a038",
+              "tiles": [
+                {
+                  "id": "ef4c481c-7084-46e4-b8b3-8ccf86f46219",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "5e264524-d4b9-430e-a085-12baefa92192",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "d78ce466-d810-41b9-8d54-e5193690743d",
+          "frames": [
+            {
+              "id": "269030cc-a0bb-4b73-b5dd-e0e9ab2c27fe",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "40348964-f631-41d4-bf51-02d5ee847fd9",
+          "frames": [
+            {
+              "id": "c9bb29cb-c069-4f08-be51-85d114b9efd7",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "eebdecc6-faa1-41c3-a002-b9e31aa86d83",
+          "frames": [
+            {
+              "id": "0ffc63d2-e020-4c3c-9a38-a1081f5f5245",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "f6ffbf1a-18d0-4097-bd65-07f530730aca",
+          "frames": [
+            {
+              "id": "8908c054-543d-4369-874f-90a50b905210",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "6e2b8627-b18d-46b2-944a-e0b757fe662c",
+          "frames": [
+            {
+              "id": "ef294d2c-ddf0-4bf1-a862-d45ed3465400",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "9b95bac9-1d82-4fa7-af5e-19ead87a666d",
+          "frames": [
+            {
+              "id": "ba97226d-abb5-45af-ae8d-575fa98686bb",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "9611aac2-3d2b-4baf-96a0-62bc06e8f83e",
+          "frames": [
+            {
+              "id": "02e18f63-58e2-47fe-a05c-329af845d552",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 1,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Crying Emoji 2.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "9a523d464e9c6ab79feddb7f34f2a18b126e5a64"
+}

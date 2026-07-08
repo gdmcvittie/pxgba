@@ -1,0 +1,9 @@
+{
+  "_resourceType": "sound",
+  "id": "f31b4c19-4589-42f7-b003-f1aaa5556664",
+  "plugin": "LiftedPixelAssets",
+  "name": "Phone_Ring.vgm",
+  "symbol": "sound_phone_ring_vgm",
+  "type": "vgm",
+  "filename": "Phone_Ring.vgm"
+}

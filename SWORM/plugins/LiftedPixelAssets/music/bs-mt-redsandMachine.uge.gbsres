@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "0981b109-e0a0-442d-bd49-728e8457a0a6",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-mt-redsandMachine",
+  "symbol": "song_bs_mt_redsandmachine",
+  "settings": {},
+  "filename": "bs-mt-redsandMachine.uge",
+  "type": "uge"
+}

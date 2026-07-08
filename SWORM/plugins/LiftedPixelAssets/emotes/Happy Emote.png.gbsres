@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "32623362-0392-43ab-b224-3cf33563568b",
+  "plugin": "LiftedPixelAssets",
+  "name": "Happy Emote",
+  "symbol": "emote_happy_emote",
+  "width": 16,
+  "height": 16,
+  "filename": "Happy Emote.png"
+}

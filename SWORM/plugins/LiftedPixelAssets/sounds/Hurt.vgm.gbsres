@@ -1,0 +1,9 @@
+{
+  "_resourceType": "sound",
+  "id": "e0329967-5e11-4df6-ba6a-a3b14b3a576c",
+  "plugin": "LiftedPixelAssets",
+  "name": "Hurt.vgm",
+  "symbol": "sound_hurt_vgm",
+  "type": "vgm",
+  "filename": "Hurt.vgm"
+}

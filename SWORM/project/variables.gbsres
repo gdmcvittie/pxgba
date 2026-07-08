@@ -1,0 +1,91 @@
+{
+  "_resourceType": "variables",
+  "variables": [
+    {
+      "id": "0",
+      "name": "ATTACKING",
+      "symbol": "var_attacking"
+    },
+    {
+      "id": "1",
+      "name": "HEALTH",
+      "symbol": "var_health"
+    },
+    {
+      "id": "2",
+      "name": "ATTACK SPEED",
+      "symbol": "var_attack_speed"
+    },
+    {
+      "id": "3",
+      "name": "KILLS",
+      "symbol": "var_kills"
+    },
+    {
+      "id": "4",
+      "name": "SHOW CHEST",
+      "symbol": "var_show_chest"
+    },
+    {
+      "id": "5",
+      "name": "HEALTH DISPLAY",
+      "symbol": "var_health_display"
+    },
+    {
+      "id": "6",
+      "name": "XP",
+      "symbol": "var_xp"
+    },
+    {
+      "id": "7",
+      "name": "MONEY",
+      "symbol": "var_money"
+    },
+    {
+      "id": "8",
+      "name": "PICKUP TYPE",
+      "symbol": "var_pickup_type"
+    },
+    {
+      "id": "9",
+      "name": "CURRENT_LEVEL",
+      "symbol": "var_current_level"
+    },
+    {
+      "id": "fba1c8e9-a07a-4930-b39c-d58aa7659a2f__L0",
+      "name": "Local 0",
+      "symbol": "var_local_0"
+    },
+    {
+      "id": "f401aa28-44db-45b2-ade1-3816a7f6ce89__L0",
+      "name": "Local 0",
+      "symbol": "var_local_1"
+    },
+    {
+      "id": "690caff5-63e6-4e0c-95dd-d474eca2ef52__L0",
+      "name": "Local 0",
+      "symbol": "var_local_2"
+    },
+    {
+      "id": "15574fba-efc8-4543-af90-e20dabc8a7fc__L0",
+      "name": "Local 0",
+      "symbol": "var_local_3"
+    },
+    {
+      "id": "2d89d703-38e4-4fbd-8d38-b2e0eec07765__L0",
+      "name": "Local 0",
+      "symbol": "var_local_4"
+    },
+    {
+      "id": "13989926-b141-44fd-9b7e-bd4cc654e845__L0",
+      "name": "Local 0",
+      "symbol": "var_local_5"
+    },
+    {
+      "id": "8f95cfea-8875-4a5b-9dfa-fa4c1103c6bf__L0",
+      "name": "Local 0",
+      "symbol": "var_local_6"
+    }
+  ],
+  "constants": []
+}

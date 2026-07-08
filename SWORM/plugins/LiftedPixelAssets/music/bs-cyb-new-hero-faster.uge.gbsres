@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "1c0a33c6-4dae-47b4-8953-a143ae35605f",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-cyb-new-hero-faster",
+  "symbol": "song_bs_cyb_new_hero_faster",
+  "settings": {},
+  "filename": "bs-cyb-new-hero-faster.uge",
+  "type": "uge"
+}

@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "50c849cc-18ed-432d-b3e7-e6987900864a",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-mm-levelselect",
+  "symbol": "song_bs_mm_levelselect",
+  "settings": {},
+  "filename": "bs-mm-levelselect.uge",
+  "type": "uge"
+}

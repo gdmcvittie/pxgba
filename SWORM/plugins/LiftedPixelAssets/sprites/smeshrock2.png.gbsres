@@ -1,0 +1,184 @@
+{
+  "_resourceType": "sprite",
+  "id": "795bb756-e606-4a38-bf0d-baa391045376",
+  "plugin": "LiftedPixelAssets",
+  "name": "smeshrock2",
+  "symbol": "sprite_smeshrock2",
+  "states": [
+    {
+      "id": "f4c7ab96-46d7-458e-ab26-3431eff29e62",
+      "name": "",
+      "animationType": "multi",
+      "flipLeft": true,
+      "animations": [
+        {
+          "id": "fd73959d-1176-444b-aede-2386fe8becd7",
+          "frames": [
+            {
+              "id": "2801103e-6180-4cb0-9853-a67729f9384a",
+              "tiles": [
+                {
+                  "id": "02eaa4b7-2847-40b5-a0a1-de8315dd582b",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 32,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "c082647b-a78f-424b-b6a2-0eeaf15f977e",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 40,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "79e88388-2103-44f8-9f9e-edb7cc38719e",
+          "frames": [
+            {
+              "id": "38253237-c185-483d-b3c3-e08c548e98b5",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "701722bc-9f8d-4703-8750-d162c2e61ac6",
+          "frames": [
+            {
+              "id": "cc928c4a-4583-40c7-a218-295485fdf083",
+              "tiles": [
+                {
+                  "id": "29c890c8-57c7-401f-af02-61b3e4854bdb",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 16,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "6f1e5322-5a50-48e3-8149-e12fffff7f5d",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 24,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "90ec285b-1d3f-4da3-bb0c-5481c5d0cb73",
+          "frames": [
+            {
+              "id": "c56727a4-dada-46d5-a311-096106255315",
+              "tiles": [
+                {
+                  "id": "fefea535-8917-4bbd-8127-3ac07ee3ed72",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "a4af7deb-e994-4439-a613-e953f8c17c15",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "d726dbde-1428-43b2-b2f2-99a6447275a5",
+          "frames": [
+            {
+              "id": "030bcd27-7715-468b-8b39-7e35c7ee1f2f",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "273651b7-f610-42ee-ac1e-ed032ab50cce",
+          "frames": [
+            {
+              "id": "b814c801-6588-43f9-a52b-44f82bed3858",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "7c062f17-5b64-4b65-91a9-9108ff0018cc",
+          "frames": [
+            {
+              "id": "750c6c0c-ec68-4ed7-9046-cd6f092d226d",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "9142c693-4a21-45ce-ac9d-a3d2fcfcb62f",
+          "frames": [
+            {
+              "id": "e03c9558-8584-4d0d-9ab9-89b5c7657784",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 5,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "smeshrock2.png",
+  "width": 48,
+  "height": 16,
+  "checksum": "e7bd5a029e0d1340684aa797a0e0c6e5e527251b"
+}

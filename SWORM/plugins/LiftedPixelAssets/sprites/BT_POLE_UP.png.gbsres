@@ -1,0 +1,103 @@
+{
+  "_resourceType": "sprite",
+  "id": "488a07d4-617e-4440-8a94-2290656ad445",
+  "plugin": "LiftedPixelAssets",
+  "name": "BT_POLE_UP",
+  "symbol": "sprite_bt_pole_up",
+  "states": [
+    {
+      "id": "1030d898-2204-4be5-88d2-4ccf92440c8d",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "570266b7-105c-41bc-a407-52e935ba291a",
+          "frames": [
+            {
+              "id": "114d6f4f-cc63-4954-a0e2-f6b537a86004",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "e2cbb26e-8daf-474a-98fb-b7191ef4f77a",
+          "frames": [
+            {
+              "id": "7a405de0-ce87-4f73-a2a8-9e6fe8eea062",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "9abe8fae-154a-49df-9076-9bc84162e6ca",
+          "frames": [
+            {
+              "id": "656f66ba-cf47-4572-aad0-26d830608d0e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "6f23ac5f-2dfd-4337-92f6-4f25bd09a331",
+          "frames": [
+            {
+              "id": "3d8a8c7d-7b3e-4869-af23-03c5e4af50f9",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "f80d1c20-8df8-454c-a921-86b6ba3b462d",
+          "frames": [
+            {
+              "id": "fa366a7c-183c-4749-9049-e8ca03db6b81",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "35e7e9ec-8723-4372-b4f9-698089c8628b",
+          "frames": [
+            {
+              "id": "b97d9236-b164-4135-91be-304ce410b7b8",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "39c15224-93dd-4b4e-b222-e9b8dcad0d08",
+          "frames": [
+            {
+              "id": "7ac22846-aef0-468e-b239-03e7d32516b5",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "41830ee7-8b9f-4af0-844e-2abdd66a42eb",
+          "frames": [
+            {
+              "id": "bd0df03b-6ea2-4241-9b5c-7f375c8bfa8f",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 0,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "BT_POLE_UP.png",
+  "width": 8,
+  "height": 16,
+  "checksum": "6e541286b9f2c1cbe930c4dbb39bdf05c142335c"
+}

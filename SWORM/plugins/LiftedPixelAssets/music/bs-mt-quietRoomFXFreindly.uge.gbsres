@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "42ad1549-4de3-4ec5-9952-fda3582a3f7f",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-mt-quietRoomFXFreindly",
+  "symbol": "song_bs_mt_quietroomfxfrein",
+  "settings": {},
+  "filename": "bs-mt-quietRoomFXFreindly.uge",
+  "type": "uge"
+}

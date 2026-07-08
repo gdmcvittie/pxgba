@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "9cfabd2c-1c72-4412-99c1-538f25b8e8ae",
+  "plugin": "LiftedPixelAssets",
+  "name": "Mana Potion 8",
+  "symbol": "sprite_mana_potion_8",
+  "states": [
+    {
+      "id": "d11a88bf-7563-4fa5-9a96-1e014f8497e4",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "f40a7af1-a7bc-4a14-b3e9-7da90f225629",
+          "frames": [
+            {
+              "id": "c54b18b5-af9f-4302-a85f-fb4aff19e4cc",
+              "tiles": [
+                {
+                  "id": "8cbd63a7-e0b6-4023-b251-95ba6a70623e",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "cd4b79db-3d56-4268-892c-67bd5e668f07",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "013e54eb-00a9-474c-8813-6486b11ee58b",
+          "frames": [
+            {
+              "id": "a5463d2b-a30d-42b7-a0dd-77106826e261",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "24c41a3f-8c99-43da-a9e5-86443e0b83e5",
+          "frames": [
+            {
+              "id": "c93ac98d-58a9-43ad-a81a-6a21103739f7",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "94b4a3a1-fe0f-47f1-acbb-ae7017b5c611",
+          "frames": [
+            {
+              "id": "2a8f8eb5-e9d9-4e0c-8c8f-a51ceaa2786a",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "1e97604f-473f-414a-83cd-1ca2fe95a1e1",
+          "frames": [
+            {
+              "id": "c1f6e415-12f5-4fd1-8d38-7965271ef810",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "cba497cd-c1c7-4f44-baca-f88be6bf02a9",
+          "frames": [
+            {
+              "id": "77260ef0-a8b9-48b7-96ed-945bd5643577",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "ddb690fa-b0cf-4a65-9413-db9dcabd7584",
+          "frames": [
+            {
+              "id": "31a57584-e670-462b-90b3-4364e691c187",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "ea399657-bbd9-4c78-8aa0-95663fdcbd0e",
+          "frames": [
+            {
+              "id": "a87aedea-98f8-4f8d-924d-fdb481ad44dc",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Mana Potion 8.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "3bb8f35582b07ba10f5a37eaa202b88cb5b9fa56"
+}

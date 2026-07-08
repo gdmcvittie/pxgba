@@ -1,0 +1,9 @@
+{
+  "_resourceType": "sound",
+  "id": "78af3649-8ea3-4039-b704-0b870e5c30a2",
+  "plugin": "LiftedPixelAssets",
+  "name": "Confirm.vgm",
+  "symbol": "sound_confirm_vgm",
+  "type": "vgm",
+  "filename": "Confirm.vgm"
+}

@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "e83910c3-0cff-4ee4-9ce2-cfa3da081c1d",
+  "plugin": "LiftedPixelAssets",
+  "name": "anger",
+  "symbol": "emote_anger_0",
+  "width": 16,
+  "height": 16,
+  "filename": "anger.png"
+}

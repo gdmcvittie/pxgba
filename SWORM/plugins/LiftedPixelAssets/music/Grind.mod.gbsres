@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "732b41fb-01e7-45af-b3fc-35af88784db7",
+  "plugin": "LiftedPixelAssets",
+  "name": "Grind",
+  "symbol": "song_grind",
+  "settings": {},
+  "filename": "Grind.mod",
+  "type": "mod"
+}

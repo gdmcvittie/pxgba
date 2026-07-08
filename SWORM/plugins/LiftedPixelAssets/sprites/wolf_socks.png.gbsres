@@ -1,0 +1,184 @@
+{
+  "_resourceType": "sprite",
+  "id": "b0aead52-f53c-4a32-9e07-462dcd3ae514",
+  "plugin": "LiftedPixelAssets",
+  "name": "wolf_socks",
+  "symbol": "sprite_wolf_socks",
+  "states": [
+    {
+      "id": "dcafdd61-2f34-47ed-8112-e638da000fb5",
+      "name": "",
+      "animationType": "multi",
+      "flipLeft": true,
+      "animations": [
+        {
+          "id": "9ffec2a1-f2f7-470b-8f56-37214322cc82",
+          "frames": [
+            {
+              "id": "a053a706-d537-4ebe-a4f6-1b0456f9532c",
+              "tiles": [
+                {
+                  "id": "b2ed6ebf-39d1-4d15-acf0-542e83f8bdd4",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 32,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "8b48b6e4-5311-459d-922a-27db7fd0bcbb",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 40,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "7dcb8709-713a-4fc6-b109-56c5a5d2fa45",
+          "frames": [
+            {
+              "id": "4239db4e-7c66-4453-bd07-3a726635cc63",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "76697e7e-6b3b-4859-91f5-8f103ddf58bf",
+          "frames": [
+            {
+              "id": "c089acc6-2f72-443d-a722-c91b35c2f491",
+              "tiles": [
+                {
+                  "id": "e79f0267-f760-4a5f-a17a-55426df55db4",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 16,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "40e2deaa-fe04-42b7-8dc1-37adca3051b5",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 24,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e54efabc-0f1a-40ac-90b1-0f66d1c24cd9",
+          "frames": [
+            {
+              "id": "2315c8fa-5a3c-404c-b455-0fdb842f2250",
+              "tiles": [
+                {
+                  "id": "4b62332b-f6c6-45ec-8c03-0662280815a3",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "146a6d61-95dd-4744-ab2c-d77de83cbf36",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "69c88083-4494-425b-b1d8-2c840328caa5",
+          "frames": [
+            {
+              "id": "91acc2eb-5d08-4c4f-9afe-3edf72b91e0d",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "1373506e-5e3e-4666-8d27-aae1cc3af9d7",
+          "frames": [
+            {
+              "id": "9686ed44-c0b6-4c70-b3a6-57e392f2609b",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "00f5cde9-2a66-4d08-92a9-0b3bb9190ba4",
+          "frames": [
+            {
+              "id": "dbf74780-81e0-4d61-a37c-31e5dbdf42c5",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "7672a55c-e8ed-4af2-8841-b21a0a06d7d8",
+          "frames": [
+            {
+              "id": "da7623dd-e65b-4552-b20a-b3b678be2d97",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 4,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "wolf_socks.png",
+  "width": 48,
+  "height": 16,
+  "checksum": "993b429a493b78a1abad19906699bec2a4b6a397"
+}

@@ -18,6 +18,7 @@ import { TbButterfly, TbButterflyFilled } from 'react-icons/tb';
 
 const Toolbar = () => {
   const [showExportGameAssetsMenu, setShowExportGameAssetsMenu] = useState(false);
+  const [showImportSubmenu, setShowImportSubmenu] = useState(false);
   const {
     tool, setTool,
     activeDraw, setActiveDraw,
@@ -41,6 +42,7 @@ const Toolbar = () => {
     // Functions
     setShowNewProjectDialog,
     projectInputRef,
+    gbStudioInputRef,
     imageInputRef,
     paletteInputRef,
     exportProjectJSON,
@@ -101,7 +103,102 @@ const Toolbar = () => {
               <button onClick={() => { projectInputRef.current?.click(); setShowFileMenu(false); }} style={{ background: 'transparent', border: 'none', color: '#fff', padding: '8px 12px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4CAF50'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}><BsFolder2Open size={14} /> Open Project</button>
               <button onClick={() => { exportProjectJSON(); setShowFileMenu(false); }} style={{ background: 'transparent', border: 'none', color: '#fff', padding: '8px 12px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4CAF50'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}><BsFloppy2Fill size={14} /> Save Project</button>
               <div style={{ height: '1px', background: '#444', margin: '4px 0' }} />
-              <button onClick={() => { imageInputRef.current?.click(); setShowFileMenu(false); }} style={{ background: 'transparent', border: 'none', color: '#fff', padding: '8px 12px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4CAF50'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}><BsUpload size={14} /> Import</button>
+              <div
+                style={{ position: 'relative' }}
+                onMouseEnter={() => setShowImportSubmenu(true)}
+                onMouseLeave={() => setShowImportSubmenu(false)}
+              >
+                <button
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#fff',
+                    padding: '8px 12px',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    width: '100%'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4CAF50'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                >
+                  <BsUpload size={14} /> Import <span style={{ marginLeft: 'auto', fontSize: '8px', opacity: 0.7 }}>▶</span>
+                </button>
+                {showImportSubmenu && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: '100%',
+                      paddingLeft: '12px',
+                      marginLeft: '-4px',
+                      zIndex: 101
+                    }}
+                  >
+                    <div
+                      style={{
+                        backgroundColor: '#333',
+                        border: '1px solid #444',
+                        borderRadius: '4px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                        minWidth: '240px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        padding: '4px 0'
+                      }}
+                    >
+                      <button
+                        onClick={() => {
+                          imageInputRef.current?.click();
+                          setShowFileMenu(false);
+                          setShowImportSubmenu(false);
+                        }}
+                        style={{
+                          background: 'transparent',
+                          border: 'none',
+                          color: '#fff',
+                          padding: '8px 12px',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          width: '100%'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4CAF50'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                      >
+                        <BsUpload size={14} /> Import Image / Palette...
+                      </button>
+                      <button
+                        onClick={() => {
+                          gbStudioInputRef.current?.click();
+                          setShowFileMenu(false);
+                          setShowImportSubmenu(false);
+                        }}
+                        style={{
+                          background: 'transparent',
+                          border: 'none',
+                          color: '#fff',
+                          padding: '8px 12px',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          width: '100%'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4CAF50'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                      >
+                        <BsFolder2Open size={14} /> Import GB Studio Project (.zip)...
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
               <button onClick={() => { if (!isBusy) setShowExportDialog(true); setShowFileMenu(false); }} style={{ background: 'transparent', border: 'none', color: isBusy ? '#666' : '#fff', padding: '8px 12px', textAlign: 'left', cursor: isBusy ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '8px', width: '100%', outline: 'none' }} onMouseEnter={(e) => { if (!isBusy) e.currentTarget.style.backgroundColor = '#4CAF50'; }} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}><BsGrid3X3GapFill size={14} /> Export</button>
               <div style={{ height: '1px', background: '#444', margin: '4px 0' }} />
               <button onClick={() => { setShowWelcomeTour(true); setShowFileMenu(false); }} style={{ background: 'transparent', border: 'none', color: '#fff', padding: '8px 12px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4CAF50'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}><BsInfoCircle size={14} /> Welcome Tour</button>

@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "97326bba-d443-4055-87f9-3f0eb274dfd7",
+  "plugin": "LiftedPixelAssets",
+  "name": "item_flower",
+  "symbol": "sprite_item_flower",
+  "states": [
+    {
+      "id": "52187792-9730-4138-a24f-3866cd1dd1d0",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "593c2b35-fcab-47eb-ae05-1b87239fd4d6",
+          "frames": [
+            {
+              "id": "7886838f-a50c-4aa1-baf4-ace4f7296893",
+              "tiles": [
+                {
+                  "id": "3b8a058e-d39b-45b2-ba53-7c594c506d3a",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "a680e8e9-109b-471b-9fb9-1edbafd789fe",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e184f5a9-70b6-4489-926c-45a87c2076ef",
+          "frames": [
+            {
+              "id": "7fa5cbd3-9b43-4ef0-98ec-4fb894e01f8d",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "6695335e-8afe-4335-a815-9039759be895",
+          "frames": [
+            {
+              "id": "67bf82e0-bf2e-41ab-af14-c37af6341b27",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "7f6f8b1b-7e0e-4514-8ab1-a23e9a9d9984",
+          "frames": [
+            {
+              "id": "e90ce6fc-5eca-4e9b-a013-8833c7ac45c7",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "092655fa-e0c2-4426-8a5a-00e6183010dc",
+          "frames": [
+            {
+              "id": "fb4d08bf-95be-4866-9ca1-10207e9a03e1",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "8d154025-31d8-4f71-ad7f-7bda24f25e96",
+          "frames": [
+            {
+              "id": "e9583691-9f81-4320-bf0b-1828357fd2cf",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "6207c518-d7b5-4ce1-b314-2b78d0f11b6a",
+          "frames": [
+            {
+              "id": "5ba73c60-6e75-4e57-b48a-9160fb529ec2",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "43e6ba1c-7f51-4b85-9c64-e5c078e94749",
+          "frames": [
+            {
+              "id": "a7050715-9771-4f7c-8df3-8bfe54a7a304",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "item_flower.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "49b968fd334eb23c4257477961ba6feaf0bbb853"
+}

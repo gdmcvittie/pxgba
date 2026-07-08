@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "1756f3a0-7186-428e-a0bf-789ac6c688a1",
+  "plugin": "LiftedPixelAssets",
+  "name": "BT_MONEY",
+  "symbol": "sprite_bt_money",
+  "states": [
+    {
+      "id": "0a7cdb88-076d-4508-9988-dfeb2e6bfd11",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "318da4be-7d5a-474e-978e-68fe0cb6ff09",
+          "frames": [
+            {
+              "id": "4277c51a-7dfd-4d0d-9f32-86b260172c64",
+              "tiles": [
+                {
+                  "id": "12dfd2b9-340a-42e3-9bfd-f763ef0a09df",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "c64005b1-0d9e-4d9c-a117-900f42819a3a",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "1ee36ba6-8269-4524-8242-54fbe1705be2",
+          "frames": [
+            {
+              "id": "c7a0b5b0-7885-467b-975f-c82eaa4def21",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "12b9f91e-6709-40eb-8a65-9debe3d00397",
+          "frames": [
+            {
+              "id": "a68a0767-c2b1-44eb-832f-003fcc15efff",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "3f4b5606-d255-41ca-ab9a-90049405d8e8",
+          "frames": [
+            {
+              "id": "86b95cb9-2384-4e64-bf5f-958ca24bf855",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "174a039b-74be-47ae-8785-e8948799a319",
+          "frames": [
+            {
+              "id": "c8c34c6c-9361-47de-81a6-2e18ecbbd384",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "2de6a7d2-35f4-4e96-9a6d-2b9dd97f2cd0",
+          "frames": [
+            {
+              "id": "c29a50d0-e51f-47da-ae39-7a0456d3b03e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "118e8fff-a7be-49dd-be3b-28b7c8521797",
+          "frames": [
+            {
+              "id": "3c199f0b-1988-4a02-8a00-63cb98020391",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "fa402c58-0150-4962-b9b5-186ddd808432",
+          "frames": [
+            {
+              "id": "767c052d-9790-4800-b864-a9f591c16cfb",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "BT_MONEY.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "9eba4891e43bbd9aec4431540293bc16f404a659"
+}

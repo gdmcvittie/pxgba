@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "5e942917-230c-4464-a8ba-4f92be65a048",
+  "plugin": "LiftedPixelAssets",
+  "name": "Helmet 6A",
+  "symbol": "sprite_helmet_6a",
+  "states": [
+    {
+      "id": "04351065-26c6-4bc6-807c-fc9c5fe53a7f",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "4e7e096e-4ad2-4533-b4ad-a2ec054ee8b9",
+          "frames": [
+            {
+              "id": "bd0e0556-e35f-4e26-aa04-e6a5fb1d634d",
+              "tiles": [
+                {
+                  "id": "14ea1b9b-2299-4e0a-b013-f9cc70291842",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "142027b7-4312-4224-ba7e-8e8867e17f59",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "e53864c1-fd48-48cb-9ef3-a12bde4adc52",
+          "frames": [
+            {
+              "id": "e73d301e-ad41-4e5b-a970-31bb91336369",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "c3f9e359-2604-4c90-9842-a2bbaf91acd0",
+          "frames": [
+            {
+              "id": "336abb94-c227-4c2e-96d7-552f601525b2",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "c63d74e5-27d2-46cb-82f3-679ab6833ef9",
+          "frames": [
+            {
+              "id": "155e3cd8-1ec4-40a7-b5ce-23b21d66904d",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "292c99b7-03ff-4870-b80a-636cbd14bf0f",
+          "frames": [
+            {
+              "id": "0cc10003-2155-44fa-bd6a-8e350cff6196",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "db807572-7232-4f1e-ac13-95ef4c5b776f",
+          "frames": [
+            {
+              "id": "4469ddd9-570a-4efc-9b78-1ffb59c9d055",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "1e89cd61-092e-4521-9abf-a8f8015b37e6",
+          "frames": [
+            {
+              "id": "c3fe4fbc-646b-4745-aea0-a73dd4e2d3d7",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "5ae9bab2-db5d-43d7-b03f-b5481f1e9a5e",
+          "frames": [
+            {
+              "id": "c1048784-4345-4fb6-b095-fb082ee14a50",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Helmet 6A.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "63b032e1d646fe95d0c1f24bc6f31cde43f6ee89"
+}

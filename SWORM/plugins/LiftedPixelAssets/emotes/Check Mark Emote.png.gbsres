@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "31667e13-a2cb-4eba-b6de-5931dd14298f",
+  "plugin": "LiftedPixelAssets",
+  "name": "Check Mark Emote",
+  "symbol": "emote_check_mark_emote",
+  "width": 16,
+  "height": 16,
+  "filename": "Check Mark Emote.png"
+}

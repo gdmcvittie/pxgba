@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "fb8631f2-edc1-4b04-b822-52fa260dc8ce",
+  "plugin": "LiftedPixelAssets",
+  "name": "ChainsawKiller",
+  "symbol": "sprite_chainsawkiller",
+  "states": [
+    {
+      "id": "8d9f0fff-1d0f-4756-8261-0a8ccf245eb0",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "b1fd3148-b58f-4a80-b4ec-bef597da80a3",
+          "frames": [
+            {
+              "id": "ed3157c3-9e68-4edd-b287-76f78cba0109",
+              "tiles": [
+                {
+                  "id": "962fa18c-93c7-4fb8-ab82-bae5915cf0b6",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "6806df50-a808-4680-813d-e18022a8c391",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "4dcd001e-33f4-4587-a229-9eff53592fc8",
+          "frames": [
+            {
+              "id": "9c8163ca-32ff-4749-8ced-c58b5698da96",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "5f8024fe-ed8d-4509-bc3d-6cd2401db4a9",
+          "frames": [
+            {
+              "id": "62061f6c-f144-4162-9a65-80270dabe3f8",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "3c7a3223-7e0d-4f03-a77a-a8f9b15f45a8",
+          "frames": [
+            {
+              "id": "cc8cbf8c-a1e1-4aad-ade1-10426f933883",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "9cce02e9-54f3-4f4e-805b-e237c7df874d",
+          "frames": [
+            {
+              "id": "d336fd43-9968-4dc5-a611-66875ce29b60",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "d4365f6d-930e-481b-947d-62f49dcd6cf1",
+          "frames": [
+            {
+              "id": "b9ee175e-11e4-4569-92e2-1bf94420f9c6",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "5cd45919-86d6-4d48-876e-3f8363d4736a",
+          "frames": [
+            {
+              "id": "016b2cea-ce8e-4bef-8c7e-85f3cee4d9f5",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "216ccc3b-5d2c-4357-ab4f-ab2b57c6d039",
+          "frames": [
+            {
+              "id": "2c9d1686-26a9-494d-b40b-651b87327b44",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "ChainsawKiller.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "6dcbb52afbb7b45367844ea49fbd51f3af87f652"
+}

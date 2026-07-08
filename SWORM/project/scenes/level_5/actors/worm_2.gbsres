@@ -1,0 +1,174 @@
+{
+  "_resourceType": "actor",
+  "id": "109ddd9b-dc93-4ad9-92ce-2e3deca601bb",
+  "name": "WORM",
+  "frame": 0,
+  "animate": false,
+  "spriteSheetId": "0f62cfb2-9b55-4265-9f32-4be58ac8e7c7",
+  "prefabId": "",
+  "direction": "down",
+  "moveSpeed": 0.5,
+  "animSpeed": 3,
+  "paletteId": "",
+  "isPinned": false,
+  "persistent": false,
+  "collisionGroup": "1",
+  "collisionExtraFlags": [],
+  "prefabScriptOverrides": {},
+  "symbol": "actor_28",
+  "script": [
+    {
+      "command": "EVENT_CALL_CUSTOM_EVENT",
+      "args": {
+        "customEventId": "ba1a4f19-00a3-4432-98ca-335c77d39276",
+        "__collapse": false,
+        "$variable[V0]$": {
+          "type": "variable",
+          "value": "L0"
+        },
+        "$variable[V1]$": {
+          "type": "variable",
+          "value": "L1"
+        },
+        "$variable[V2]$": {
+          "type": "variable",
+          "value": "L2"
+        },
+        "$actor[1]$": "f401aa28-44db-45b2-ade1-3816a7f6ce89",
+        "$actor[2]$": "cb374dc5-328a-4348-8ad7-7f2c26605076"
+      },
+      "id": "2ee1b2d0-4fae-48e9-9ed9-593c4ebc63ba"
+    }
+  ],
+  "startScript": [
+    {
+      "command": "EVENT_CALL_CUSTOM_EVENT",
+      "args": {
+        "customEventId": "1d32355a-1a5a-4217-bdf6-65ed8a43cb46",
+        "__collapse": true,
+        "$variable[V0]$": {
+          "type": "variable",
+          "value": "L0"
+        },
+        "$variable[V1]$": {
+          "type": "variable",
+          "value": "L1"
+        }
+      },
+      "id": "604dfe1a-cad6-45a5-8278-853738e94434"
+    }
+  ],
+  "updateScript": [
+    {
+      "command": "EVENT_CALL_CUSTOM_EVENT",
+      "args": {
+        "customEventId": "9e5193ed-3187-4503-a79a-fa471836fe13",
+        "__collapse": true
+      },
+      "id": "a058ea55-8393-4b04-bbe4-ed2ba426754e"
+    }
+  ],
+  "hit1Script": [],
+  "hit2Script": [],
+  "hit3Script": [
+    {
+      "command": "EVENT_ACTOR_STOP_UPDATE",
+      "args": {
+        "actorId": "0",
+        "__collapse": true
+      },
+      "id": "f4a6daec-262c-4df5-82dd-7d855454b2d4"
+    },
+    {
+      "command": "EVENT_ACTOR_SET_STATE",
+      "args": {
+        "actorId": "0",
+        "spriteStateId": "Dead",
+        "loopAnim": false,
+        "__collapse": true
+      },
+      "id": "c25fe95c-7de7-43a4-8854-e13ee84005a4"
+    },
+    {
+      "command": "EVENT_INC_VALUE",
+      "args": {
+        "variable": "3",
+        "__collapse": true
+      },
+      "id": "acecd1e5-e4e9-49f4-8d98-542cb2d0f549"
+    },
+    {
+      "command": "EVENT_SET_VALUE",
+      "args": {
+        "variable": "7",
+        "value": {
+          "type": "add",
+          "valueA": {
+            "type": "variable",
+            "value": "7"
+          },
+          "valueB": {
+            "type": "rnd",
+            "value": {
+              "type": "number",
+              "value": 10
+            }
+          }
+        },
+        "__collapse": true
+      },
+      "id": "b176e7db-895b-4149-bb57-d3e8cbbbc389"
+    },
+    {
+      "command": "EVENT_SET_VALUE",
+      "args": {
+        "variable": "6",
+        "value": {
+          "type": "add",
+          "valueA": {
+            "type": "variable",
+            "value": "6"
+          },
+          "valueB": {
+            "type": "rnd",
+            "value": {
+              "type": "number",
+              "value": 20
+            }
+          }
+        },
+        "__collapse": true
+      },
+      "id": "88b329c9-225f-4c7a-97e5-3d91bea62f02"
+    },
+    {
+      "command": "EVENT_CALL_CUSTOM_EVENT",
+      "args": {
+        "customEventId": "08fa1f17-010b-4d18-9a71-75018365b380",
+        "__collapse": true
+      },
+      "id": "491fa6b2-e846-4d25-961f-203be6db1452"
+    },
+    {
+      "command": "EVENT_CALL_CUSTOM_EVENT",
+      "args": {
+        "customEventId": "1d32355a-1a5a-4217-bdf6-65ed8a43cb46",
+        "__collapse": true,
+        "$actor[0]$": "0",
+        "$variable[V0]$": {
+          "type": "variable",
+          "value": "L0"
+        },
+        "$variable[V1]$": {
+          "type": "variable",
+          "value": "L1"
+        }
+      },
+      "id": "26d5d274-e1b8-4c8c-b28f-c1b51ee19cdf"
+    }
+  ],
+  "coordinateType": "tiles",
+  "x": 5,
+  "y": 7,
+  "_index": 2
+}

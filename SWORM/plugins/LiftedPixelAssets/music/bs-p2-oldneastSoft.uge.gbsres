@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "8ca45d58-68ae-479e-a0c8-538726edae03",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-p2-oldneastSoft",
+  "symbol": "song_bs_p2_oldneastsoft",
+  "settings": {},
+  "filename": "bs-p2-oldneastSoft.uge",
+  "type": "uge"
+}

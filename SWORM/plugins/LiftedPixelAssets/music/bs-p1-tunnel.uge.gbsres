@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "080abd80-54dc-48c9-95a7-a683bff6c939",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-p1-tunnel",
+  "symbol": "song_bs_p1_tunnel",
+  "settings": {},
+  "filename": "bs-p1-tunnel.uge",
+  "type": "uge"
+}

@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "204cc1ba-73a5-4b35-af9e-1f53f2bb6bd2",
+  "plugin": "LiftedPixelAssets",
+  "name": "Sword 10B",
+  "symbol": "sprite_sword_10b",
+  "states": [
+    {
+      "id": "989fdb9c-02ba-4c63-82db-a1a2833d824f",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "f8d5d632-b29b-46b1-af90-8dc109c28de9",
+          "frames": [
+            {
+              "id": "f5691de7-569b-42dd-b8ea-4a2583065f74",
+              "tiles": [
+                {
+                  "id": "d9363d9b-caba-499b-801a-3eaf77a04313",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "33fd0b0c-af36-4fe2-b9f0-cf1bca0b2a27",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "4472ce3a-1f67-47b6-afe3-5d35a1df437b",
+          "frames": [
+            {
+              "id": "79f839bd-2fd1-4b9d-a7e5-035841b4c24e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "0323a394-b1ac-4f63-9d62-531e0926bfa2",
+          "frames": [
+            {
+              "id": "20950973-aac4-414a-b21a-d217deef8f0f",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "d22a4891-8736-4383-aa55-e7fbbcff27d8",
+          "frames": [
+            {
+              "id": "5d2621d4-eebf-4b64-87ef-08b1b2ae08fe",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "a6e2503c-5ab5-4dca-b5f6-25d5b30042ac",
+          "frames": [
+            {
+              "id": "f4514384-315f-47ac-af93-41f640c3512c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "f209cbdd-ae9a-4cf0-92a3-aa6cc7ce0527",
+          "frames": [
+            {
+              "id": "e4e8e276-ea65-4826-99e8-e3d8024219f0",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "1e4aa711-6ab5-4242-8322-646967e5fdbd",
+          "frames": [
+            {
+              "id": "8ff45204-ae41-4e1d-b98f-47b4f74b7b6a",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "03e70943-805a-4038-a424-4394c39cd882",
+          "frames": [
+            {
+              "id": "190772eb-a1b1-4042-a703-7912aef39a97",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Sword 10B.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "97cbba70c5546400678accae27c9b5e4782f2bc8"
+}

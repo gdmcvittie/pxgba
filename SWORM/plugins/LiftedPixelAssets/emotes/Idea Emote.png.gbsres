@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "f42fc4d3-e2c7-4d9a-a7bb-144ae09b26d4",
+  "plugin": "LiftedPixelAssets",
+  "name": "Idea Emote",
+  "symbol": "emote_idea_emote",
+  "width": 16,
+  "height": 16,
+  "filename": "Idea Emote.png"
+}

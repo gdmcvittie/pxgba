@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "7c8d5221-d153-478d-a703-f67cfe489160",
+  "plugin": "LiftedPixelAssets",
+  "name": "Blushing Emote",
+  "symbol": "emote_blushing_emote",
+  "width": 16,
+  "height": 16,
+  "filename": "Blushing Emote.png"
+}

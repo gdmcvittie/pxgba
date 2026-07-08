@@ -1,0 +1,103 @@
+{
+  "_resourceType": "sprite",
+  "id": "899cbed1-40b5-4ee8-b51a-15d3926e625e",
+  "plugin": "LiftedPixelAssets",
+  "name": "truck02",
+  "symbol": "sprite_truck02",
+  "states": [
+    {
+      "id": "5ac1cf14-70cb-4ffe-8e00-287e02b640fa",
+      "name": "",
+      "animationType": "multi_movement",
+      "flipLeft": true,
+      "animations": [
+        {
+          "id": "7550ea1c-daac-4116-b122-5c23207d7b4c",
+          "frames": [
+            {
+              "id": "3a14dae7-b7a7-4bad-a2a2-fbcaafe84e90",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "c184b7a2-09e9-4e66-9dc7-91f27acc487d",
+          "frames": [
+            {
+              "id": "84b1dc87-9b7f-4944-914e-f513c3151d43",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "56477df4-ac0b-42b0-b18a-a92deedf82c9",
+          "frames": [
+            {
+              "id": "bc4b9715-fe22-465b-8477-eadefb757dd0",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "2615332a-e1bd-475d-b68a-cbb54e6d7a94",
+          "frames": [
+            {
+              "id": "034b6e67-9221-4a4a-b2ce-67e50d601c48",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "81ee572e-1577-42c2-81b3-dc2a8cd059fd",
+          "frames": [
+            {
+              "id": "aef6d10e-be5c-44be-b8c4-07eaf6546161",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "bae749b8-c38c-4e41-a0df-7309915b0e74",
+          "frames": [
+            {
+              "id": "258cbe5b-39a1-4efb-aa2a-19fab043157e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "084d316e-1541-4785-94d0-432665bd7e45",
+          "frames": [
+            {
+              "id": "045fe228-e2d0-4f2b-936e-a6e71722c2d4",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "c0d05c04-d1f4-4125-a556-7f29f15ee2b4",
+          "frames": [
+            {
+              "id": "20713a7e-50cd-49c5-9a99-33280bf55a00",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 0,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 32,
+  "canvasHeight": 32,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "truck02.png",
+  "width": 64,
+  "height": 24,
+  "checksum": "e0c7b2a9c28ed296341936fec0c71eaf2c1773c4"
+}

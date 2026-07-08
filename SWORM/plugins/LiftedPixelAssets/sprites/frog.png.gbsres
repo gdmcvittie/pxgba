@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "25ffd913-6233-412f-a83d-45da0c3da7a1",
+  "plugin": "LiftedPixelAssets",
+  "name": "frog",
+  "symbol": "sprite_frog",
+  "states": [
+    {
+      "id": "f768a9c9-9a77-484f-88ec-16a799ad4635",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "14729488-3244-4dc3-8efe-efd63a5b3d4d",
+          "frames": [
+            {
+              "id": "66be83ea-a32e-4b84-a4e8-01ee9c595a56",
+              "tiles": [
+                {
+                  "id": "c0961529-5a47-468c-af97-41769ee80efe",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "6795bdc1-2a75-495c-a5f0-532ac8081c5f",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "46b73e20-3e5b-4ab3-961e-92399d464dc0",
+          "frames": [
+            {
+              "id": "06366e9c-45c2-4635-ae93-d8abbe1a984c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "a7fb1e4d-be34-4f1a-970f-c3b0ac50dfb7",
+          "frames": [
+            {
+              "id": "c5b620ce-8d68-4818-9b4a-13f941ec9c6c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "cec3d42f-a29b-481c-895f-45e6369892b6",
+          "frames": [
+            {
+              "id": "47ab8dc5-831f-4d82-a409-5672439b7b33",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "bf6763d1-81bf-4827-a420-91831500b4c3",
+          "frames": [
+            {
+              "id": "6a8824c3-7dc8-4a66-80e6-3b3d4a4e8a72",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "52efd8b2-06c2-4e11-b7c5-7b9e0c0ab931",
+          "frames": [
+            {
+              "id": "39b5c029-fc4d-4d31-8257-09a71f812331",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "bcb4e024-ce8d-4104-b32d-0f42be106dd1",
+          "frames": [
+            {
+              "id": "7878832c-2d75-43bd-8cd3-46763382e6e2",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "e5feb813-b403-4c65-906c-fe3ac2303ac6",
+          "frames": [
+            {
+              "id": "a46da0df-0621-40cf-b734-561dadc48d08",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 1,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "frog.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "3fe358479310c19160ba8d8412074108f92e338c"
+}

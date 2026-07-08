@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "c8b90267-b07f-4047-987e-cb7bf156436c",
+  "plugin": "LiftedPixelAssets",
+  "name": "Sad Emote",
+  "symbol": "emote_sad_emote",
+  "width": 16,
+  "height": 16,
+  "filename": "Sad Emote.png"
+}

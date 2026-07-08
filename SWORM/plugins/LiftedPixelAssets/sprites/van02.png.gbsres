@@ -1,0 +1,103 @@
+{
+  "_resourceType": "sprite",
+  "id": "6629c66c-6197-44d4-9fd8-0b3716a8b170",
+  "plugin": "LiftedPixelAssets",
+  "name": "van02",
+  "symbol": "sprite_van02",
+  "states": [
+    {
+      "id": "c5b5d5a8-4e82-443e-9052-953107162d36",
+      "name": "",
+      "animationType": "multi_movement",
+      "flipLeft": true,
+      "animations": [
+        {
+          "id": "9ccc00ed-6d58-4e29-900c-3550d6b813e2",
+          "frames": [
+            {
+              "id": "2afad25a-7ee4-46ce-8966-f2e93ab45f3a",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "65738193-b0a6-4f87-9c4d-12ac21b8a8ca",
+          "frames": [
+            {
+              "id": "134ec7cb-2ac1-498b-a3d7-cbc24114bab6",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "7aff61c0-15fc-456a-96f8-9881e8d6f41e",
+          "frames": [
+            {
+              "id": "613aa6c4-092d-48d9-ad3e-ccfe04f13643",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "ceb8352d-1203-4a69-ad9e-d299e8bad18a",
+          "frames": [
+            {
+              "id": "564fab5e-a78a-4e6b-b974-bd65839b5285",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "1cd0dc9c-9f14-491c-88de-0a9cffcbfa3d",
+          "frames": [
+            {
+              "id": "575599e8-df96-4929-a7a7-e20ee2634e8f",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "841243fe-2bdd-48ed-9ffe-243db9f349b1",
+          "frames": [
+            {
+              "id": "566298b6-ceac-44a0-88df-988cc7d9cf57",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "7eb5f810-8d8f-4f71-ad25-bab156fc821c",
+          "frames": [
+            {
+              "id": "b900f80c-ea01-43bc-9364-90936ccc2ecf",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "15825124-59fd-40e9-9146-82187b4ade94",
+          "frames": [
+            {
+              "id": "c12cd637-81fe-45ce-9ffe-69c949cbfeda",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 0,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 32,
+  "canvasHeight": 32,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "van02.png",
+  "width": 64,
+  "height": 24,
+  "checksum": "d6762e65e3d80e98d344e3fbb3d7583c55f819cb"
+}

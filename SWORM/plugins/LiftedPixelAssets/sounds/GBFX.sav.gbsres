@@ -1,0 +1,10 @@
+{
+  "_resourceType": "sound",
+  "id": "e41a3657-4a62-4eea-a205-05302b5e48b5",
+  "plugin": "LiftedPixelAssets",
+  "name": "GBFX.sav",
+  "symbol": "sound_gbfx_sav",
+  "type": "fxhammer",
+  "filename": "GBFX.sav",
+  "numEffects": 49
+}

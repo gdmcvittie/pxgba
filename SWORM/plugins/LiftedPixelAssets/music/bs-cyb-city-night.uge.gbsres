@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "d1d1f01e-d9fb-4e4d-be1c-3cc090c9b887",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-cyb-city-night",
+  "symbol": "song_bs_cyb_city_night",
+  "settings": {},
+  "filename": "bs-cyb-city-night.uge",
+  "type": "uge"
+}

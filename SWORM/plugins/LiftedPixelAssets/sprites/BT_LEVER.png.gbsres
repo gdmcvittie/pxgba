@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "5711935f-ee33-4e39-91c3-0c378f4453b1",
+  "plugin": "LiftedPixelAssets",
+  "name": "BT_LEVER",
+  "symbol": "sprite_bt_lever",
+  "states": [
+    {
+      "id": "2568d0b7-44f9-499b-9264-c1e43ce10bb6",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "6b1c5a40-e6d7-4e2f-b0f2-b58c69eeeed6",
+          "frames": [
+            {
+              "id": "0f197171-0337-4cf2-8c6c-933229e1bc0f",
+              "tiles": [
+                {
+                  "id": "a50f47a7-4bc8-4e35-a72a-ca10937a6478",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "e631069c-c453-45e5-8cf6-1d850d830dc8",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "305e858c-fd11-465d-ba54-a37605aeb907",
+          "frames": [
+            {
+              "id": "be443e28-5e17-4b26-9e78-1d3069ecbb6e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "d1e01472-7393-4108-bc26-1afd9f58a951",
+          "frames": [
+            {
+              "id": "97a9aa14-8dcc-4f75-97b4-280c62e97951",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "9f8f6000-5c16-4905-9487-de0ca1c7bd33",
+          "frames": [
+            {
+              "id": "91d08569-924f-4d51-bb54-5923eee031db",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "ec897a11-7e67-4098-9191-2183d73cca58",
+          "frames": [
+            {
+              "id": "8d30f34d-da98-4fb5-ab33-0137abce2efb",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "6bc36b89-300a-424a-afc2-bfaf2a9aa6e2",
+          "frames": [
+            {
+              "id": "edbe3ca1-2749-4e09-8925-5cd3e94f115a",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "74aae9c0-4dc6-4ebd-af3b-5f34d04a5b94",
+          "frames": [
+            {
+              "id": "9b2fa4d6-cc2c-4c5c-bd0a-20dbba2dfc69",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "859525c7-5f23-43ae-a9b8-26357ef61559",
+          "frames": [
+            {
+              "id": "a859cfce-77ec-4ce2-93c5-668cab418d33",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "BT_LEVER.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "a87ada3a5810229469b34bbe81250865e222d508"
+}

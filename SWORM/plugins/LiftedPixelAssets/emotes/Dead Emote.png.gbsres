@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "8396f1a5-5fad-436a-834d-2f36676b7ad5",
+  "plugin": "LiftedPixelAssets",
+  "name": "Dead Emote",
+  "symbol": "emote_dead_emote",
+  "width": 16,
+  "height": 16,
+  "filename": "Dead Emote.png"
+}

@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "5b757e46-48dc-4168-adf0-f0b3c32ebc3e",
+  "plugin": "LiftedPixelAssets",
+  "name": "Spear 3A",
+  "symbol": "sprite_spear_3a",
+  "states": [
+    {
+      "id": "ba647554-e102-45ba-b3d5-6a5f5fa16fea",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "40e80843-a28a-4f49-87d6-ea8901110b87",
+          "frames": [
+            {
+              "id": "b9485f92-2c5e-4425-bb22-d35b2dde841c",
+              "tiles": [
+                {
+                  "id": "2cf6d5e3-81c5-4159-accb-69feceadacd8",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "ed00da55-ba87-424c-8e69-b89f3c525f33",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "f20b691a-1116-4106-a539-be487bc688b4",
+          "frames": [
+            {
+              "id": "e576814d-23ca-4791-8703-522c1cea940e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "66751e1e-d413-4206-9304-ad61ec510d8f",
+          "frames": [
+            {
+              "id": "439cec34-f053-40dc-8732-5d00b335ab07",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "16dc4ce9-5f44-45b8-9a44-370872ccb163",
+          "frames": [
+            {
+              "id": "1191ccda-dd38-42f3-8e3f-efe100ee24a5",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "6ff38d63-18ad-43d4-8f6e-23ff1f123d20",
+          "frames": [
+            {
+              "id": "20647b31-4610-4628-995c-5b774fb0d128",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "b38e4222-c6ea-43ef-b130-5de758dd1bc6",
+          "frames": [
+            {
+              "id": "0618a9ff-471e-4fe6-9cf0-d4774c49eb7b",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "614289eb-4ca6-4fbf-852e-f9c825ccaf06",
+          "frames": [
+            {
+              "id": "5ff00385-1767-4a04-919f-5671ed35eb9f",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "6a762ff9-7727-477b-911e-8ad5c34db294",
+          "frames": [
+            {
+              "id": "cff79b6c-5a6f-4500-8e08-73644266bd62",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Spear 3A.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "b7a4382b49d3fc11c5c6fe0a58ca813afc16ebda"
+}

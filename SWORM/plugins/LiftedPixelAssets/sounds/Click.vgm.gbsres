@@ -1,0 +1,9 @@
+{
+  "_resourceType": "sound",
+  "id": "f154393d-2819-438a-ab78-a5cfc78c1b90",
+  "plugin": "LiftedPixelAssets",
+  "name": "Click.vgm",
+  "symbol": "sound_click_vgm",
+  "type": "vgm",
+  "filename": "Click.vgm"
+}

@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "aeb60c02-86ad-45e3-89f6-755a5c8f1adc",
+  "plugin": "LiftedPixelAssets",
+  "name": "Camera 2",
+  "symbol": "emote_camera_2",
+  "width": 16,
+  "height": 16,
+  "filename": "Camera 2.png"
+}

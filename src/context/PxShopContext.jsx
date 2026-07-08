@@ -18,6 +18,7 @@ import { generateFormat, getFormatLabel, getFormatFilename } from './codegen/for
 import { hexToRgbLocal } from './codegen/shared';
 import { useHistory } from './hooks/useHistory';
 import { useImportImage } from './hooks/useImportImage';
+import { importGbStudioProject } from '../utils/gbStudioImporter';
 
 export function getLuminance(hex) {
   if (!hex || hex === 'transparent') return 0;
@@ -761,6 +762,7 @@ export const PxShopProvider = ({ children }) => {
   const selectionRef = useRef(null);
   const containerRef = useRef(null);
   const projectInputRef = useRef(null);
+  const gbStudioInputRef = useRef(null);
 
   const {
     imageInputRef, importLayerInputRef, paletteInputRef,
@@ -7709,6 +7711,33 @@ export const PxShopProvider = ({ children }) => {
     if (projectInputRef.current) projectInputRef.current.value = "";
   };
 
+  const handleGbStudioUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const toastId = toast.loading("Importing GB Studio project... Slicing assets...");
+    setIsBusy(true);
+
+    try {
+      const { project, warnings } = await importGbStudioProject(file, RAW_DEFAULT_TILES, recentColors || DEFAULT_16_PALETTE);
+      
+      loadProjectData(project);
+
+      if (warnings.length > 0) {
+        toast.success("Imported with warnings! See console for skipped custom elements.", { id: toastId, duration: 6000 });
+        console.warn("GB Studio Import Warnings:", warnings);
+      } else {
+        toast.success("GB Studio project imported successfully!", { id: toastId });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to import GB Studio project: " + err.message, { id: toastId });
+    } finally {
+      setIsBusy(false);
+      if (gbStudioInputRef.current) gbStudioInputRef.current.value = "";
+    }
+  };
+
 
   const exportLayerAsPNG = (layer) => {
     const tempCanvas = document.createElement('canvas');
@@ -8621,6 +8650,7 @@ const handleWizardCreate = () => {
     selectionRef,
     containerRef,
     projectInputRef,
+    gbStudioInputRef,
     imageInputRef,
     importLayerInputRef,
     tileSheetInputRef,
@@ -8703,6 +8733,7 @@ const handleWizardCreate = () => {
     exportProjectJSON,
     loadProjectData,
     handleProjectUpload,
+    handleGbStudioUpload,
     handleImageUpload,
     handleImportToLayer,
     importFileAsLayer,

@@ -1,0 +1,161 @@
+{
+  "_resourceType": "sprite",
+  "id": "855db168-43ac-4c6d-b171-175fa90ab320",
+  "plugin": "LiftedPixelAssets",
+  "name": "Hamster",
+  "symbol": "sprite_hamster",
+  "states": [
+    {
+      "id": "41ba35a5-710b-45ad-b1b8-57f533f2b86a",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "bb07abd3-e9e6-47a4-89da-2ec80734d0a1",
+          "frames": [
+            {
+              "id": "4bb7dd41-a7c5-4ca1-9f79-65a464a2e39d",
+              "tiles": [
+                {
+                  "id": "cadd33d8-48e5-47be-b897-faf45227a67b",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "f771f4bd-5919-4b27-b51c-68ea04865c1e",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            },
+            {
+              "id": "e6eb84f8-3348-4a7c-a5f3-691e6eb6fa31",
+              "tiles": [
+                {
+                  "id": "588f79a1-e541-45db-9827-c30813598a70",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 16,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "295ff01e-b00e-461c-a1cc-86a97eb34e97",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 24,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "143e841d-16fe-4611-b919-7128fb603924",
+          "frames": [
+            {
+              "id": "508df89e-19ad-4757-a6a5-c327519f43fd",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "ac4ec7c6-5806-400a-91aa-0cb3dad3513a",
+          "frames": [
+            {
+              "id": "f3a4fc11-8123-4be8-9a84-cb01b11033f9",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "6f5faac9-877f-4c0d-a4b3-2e6c9b82b99a",
+          "frames": [
+            {
+              "id": "7bb8e28b-f4b3-40fe-9faf-a8237c8aa8b7",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "243bd802-6d08-4926-b7c3-d8b61f4d02b9",
+          "frames": [
+            {
+              "id": "8e1cfb81-fe08-4347-894b-70d3e408dfd4",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "a9eb6d73-5d8b-4920-97b3-ecea35e6b2d5",
+          "frames": [
+            {
+              "id": "7fd10ab0-6635-47fc-885e-c08b4c313912",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "23ed3c7f-6174-4f6a-a680-baa638e9b49c",
+          "frames": [
+            {
+              "id": "4eef7c16-932f-4703-b92b-cdae2c9dce35",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "19b396ec-3a11-4106-a815-c1417f4670c2",
+          "frames": [
+            {
+              "id": "55de691f-acd5-4186-8fca-533f7bfc597f",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 4,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Hamster.png",
+  "width": 32,
+  "height": 16,
+  "checksum": "d2870be63dc6b9b5c996b18d1a949f7af63b8697"
+}

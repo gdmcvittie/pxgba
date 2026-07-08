@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "77948ef7-7b95-43c7-8d29-064729287c75",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-mm-metal-faster",
+  "symbol": "song_bs_mm_metal_faster",
+  "settings": {},
+  "filename": "bs-mm-metal-faster.uge",
+  "type": "uge"
+}

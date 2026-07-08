@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "7a46a17e-abcb-43df-96dc-b6d399e9a2f5",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-p2-greenhatwake",
+  "symbol": "song_bs_p2_greenhatwake",
+  "settings": {},
+  "filename": "bs-p2-greenhatwake.uge",
+  "type": "uge"
+}

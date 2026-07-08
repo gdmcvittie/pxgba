@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "2cc3a3da-e7ff-467f-bfd6-785d67f2f056",
+  "plugin": "LiftedPixelAssets",
+  "name": "Shocked Emoji 1",
+  "symbol": "sprite_shocked_emoji_1",
+  "states": [
+    {
+      "id": "2a6006d0-f084-416c-82e8-31cec39260a3",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "55ce686a-4d9d-4354-b9cd-be623d6cafc6",
+          "frames": [
+            {
+              "id": "23aee81d-4467-42eb-9402-c270cfb92079",
+              "tiles": [
+                {
+                  "id": "834d66a7-3a45-431c-9507-d8d764f3f1a8",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "7e6a6b8b-d935-4c21-b70f-d1930b350c4e",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2a8932e4-6bab-4e33-bb6e-969efac03c0f",
+          "frames": [
+            {
+              "id": "6421d67d-3398-4598-ab13-a6ce79bb6b1d",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "82c14653-4686-49fa-acf9-157fe9079c6a",
+          "frames": [
+            {
+              "id": "9b931bce-47c6-4da9-b6ed-623ad544f402",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "ce12d133-4751-4f04-b98a-90f662a64533",
+          "frames": [
+            {
+              "id": "3aeb7f27-3fe4-4879-81a6-dc2722b6ee1c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "2053b68d-7428-4d7e-b0a9-b01e0988c24c",
+          "frames": [
+            {
+              "id": "8ce8382f-eb08-4a06-89e3-cb6b4e86aebb",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "d4486527-1582-461b-bb53-c3914b395a87",
+          "frames": [
+            {
+              "id": "111cc866-e768-44e4-b3c2-4e83799e0159",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "06ba9917-a050-4e3d-aec8-d3936449a3cd",
+          "frames": [
+            {
+              "id": "2b01cfa9-6f00-455a-97b6-c7c21ed65aa2",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "55b50eb4-a445-4181-b131-a5add4f8bd36",
+          "frames": [
+            {
+              "id": "db68966b-a4f1-4ade-9367-471f742d0adf",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 1,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Shocked Emoji 1.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "9b5d106457f5d36b1a714709c98cadbba9774d4d"
+}

@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "2afd893e-1186-44ad-ade5-06832d3912e8",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-rpg-theme",
+  "symbol": "song_bs_rpg_theme",
+  "settings": {},
+  "filename": "bs-rpg-theme.uge",
+  "type": "uge"
+}

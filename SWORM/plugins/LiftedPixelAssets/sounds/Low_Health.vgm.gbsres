@@ -1,0 +1,9 @@
+{
+  "_resourceType": "sound",
+  "id": "ffd34af1-d3c8-4ce0-b2ab-688f1ad570fc",
+  "plugin": "LiftedPixelAssets",
+  "name": "Low_Health.vgm",
+  "symbol": "sound_low_health_vgm",
+  "type": "vgm",
+  "filename": "Low_Health.vgm"
+}

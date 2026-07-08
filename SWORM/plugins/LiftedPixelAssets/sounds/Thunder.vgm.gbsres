@@ -1,0 +1,9 @@
+{
+  "_resourceType": "sound",
+  "id": "63ac794d-2271-4e36-bd72-c315d8a3ded3",
+  "plugin": "LiftedPixelAssets",
+  "name": "Thunder.vgm",
+  "symbol": "sound_thunder_vgm",
+  "type": "vgm",
+  "filename": "Thunder.vgm"
+}

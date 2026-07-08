@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "5f070d74-6a21-4032-b12d-3378f8731c2a",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-cozy-missing_pieces",
+  "symbol": "song_bs_cozy_missing_pieces",
+  "settings": {},
+  "filename": "bs-cozy-missing_pieces.uge",
+  "type": "uge"
+}

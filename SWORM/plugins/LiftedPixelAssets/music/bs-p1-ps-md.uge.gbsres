@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "10504bea-0864-40ff-9656-68f7d2c44e58",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-p1-ps-md",
+  "symbol": "song_bs_p1_ps_md",
+  "settings": {},
+  "filename": "bs-p1-ps-md.uge",
+  "type": "uge"
+}

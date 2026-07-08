@@ -1,0 +1,161 @@
+{
+  "_resourceType": "sprite",
+  "id": "947b8d57-1ad4-4a20-8cc5-bc5597a60f97",
+  "plugin": "LiftedPixelAssets",
+  "name": "Gerbil",
+  "symbol": "sprite_gerbil",
+  "states": [
+    {
+      "id": "d270829a-5da5-45d5-b348-68997cf5917b",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "8907d25c-b15b-416a-ac92-952770fef1d1",
+          "frames": [
+            {
+              "id": "8e24c7c7-25f4-4530-a747-9ab399f244d7",
+              "tiles": [
+                {
+                  "id": "dac53a14-1eea-41e2-a477-f22787b97f1c",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "632a597d-8da9-4935-b0d3-6df17639983d",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            },
+            {
+              "id": "96606a6e-8af6-4b5e-9f9a-ba04ee85b7ea",
+              "tiles": [
+                {
+                  "id": "4a5f21ac-d0f3-49b2-af54-ee7f68f7149d",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 16,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "dc83219c-1732-40f5-90e7-e6e0486e3f55",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 24,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "90c0b327-b973-4558-b93d-ad4dcd697800",
+          "frames": [
+            {
+              "id": "eb94d85e-8839-45e3-9723-c6180f127371",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "3d1362e7-5f86-4fd1-8c42-3f373b2b4a6c",
+          "frames": [
+            {
+              "id": "542f2969-3769-4384-8c6c-9508aa6e329f",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "c5c16394-a775-4d04-9790-c00ff8a3f71c",
+          "frames": [
+            {
+              "id": "59b3ad9a-31d5-4ba9-8eb9-8c23972dc028",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "93c96ad9-18b6-4e52-a292-18f85e187ef5",
+          "frames": [
+            {
+              "id": "27705709-40d8-4b2c-8400-5aee9f8a25a5",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "b7d6f2b3-aa3b-4d62-a331-d10a4b3eb10b",
+          "frames": [
+            {
+              "id": "cb20f184-1418-4634-98bf-d6823ea513e8",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "ac15f1bd-5ebd-4aff-8b8f-dc931ebf0548",
+          "frames": [
+            {
+              "id": "ce074d34-e50a-492d-b193-bc916a79b267",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "f9432ea7-3778-491c-80ba-eda1733899c4",
+          "frames": [
+            {
+              "id": "f6dc7963-befb-4574-b5e7-d8b7a8554fee",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 4,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Gerbil.png",
+  "width": 32,
+  "height": 16,
+  "checksum": "8aa7cf7a52b5730460134ce6e7246f959b1286fe"
+}

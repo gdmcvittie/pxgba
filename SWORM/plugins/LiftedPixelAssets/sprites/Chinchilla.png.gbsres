@@ -1,0 +1,161 @@
+{
+  "_resourceType": "sprite",
+  "id": "fd0a8051-4a61-4209-8310-6b97d8cb3e87",
+  "plugin": "LiftedPixelAssets",
+  "name": "Chinchilla",
+  "symbol": "sprite_chinchilla",
+  "states": [
+    {
+      "id": "0a9efa56-ed4d-4141-a462-8cc6766dce60",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "6e45fe1d-a1eb-4199-9550-9b36f7cb6216",
+          "frames": [
+            {
+              "id": "4340ebc6-4785-4630-a0cd-9bb0517e9d55",
+              "tiles": [
+                {
+                  "id": "6123967e-ccfc-43a7-829c-4b237da124b6",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "3e0bad58-f8f7-4d16-a113-4957485a26c3",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            },
+            {
+              "id": "dbd0e402-c84a-4034-b1f4-56c0502a13c5",
+              "tiles": [
+                {
+                  "id": "bca660ff-2b51-43d5-ba52-8c11dd886421",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 16,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "282667b7-efc1-4cb6-bd3b-f12f838218bd",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 24,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fbfa0719-1198-4aec-abe9-6958b58a9349",
+          "frames": [
+            {
+              "id": "67a4fb9a-f832-4177-a97d-6928d8217829",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "0c01df1e-002d-404d-808d-ffdbf13caf6c",
+          "frames": [
+            {
+              "id": "e6bb4bad-35eb-4b6b-9a43-e99acffc88e6",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "298e84c1-e491-4ea0-8317-8994793e5b75",
+          "frames": [
+            {
+              "id": "2c4c49d9-3d13-4646-9e97-fefd5a4eca14",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "b10b459d-18c0-4fe5-a57c-9c9d5ee44146",
+          "frames": [
+            {
+              "id": "a9d5aaab-9fbc-432a-9cb5-380b0aec3b6d",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "8963cab7-a9ba-4cf0-81d6-6ecf0594fe6a",
+          "frames": [
+            {
+              "id": "02c9abf7-ca71-4367-9ea1-ad5a3bb94f73",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "4647bc8a-f59e-4fce-845f-e010e6a826ed",
+          "frames": [
+            {
+              "id": "7813a202-f075-46c7-803a-d82923041180",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "7a63d3d0-e3da-46aa-8eff-335cb8d34ac1",
+          "frames": [
+            {
+              "id": "bb2ba402-c797-461f-b869-c5582aa55283",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 4,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Chinchilla.png",
+  "width": 32,
+  "height": 16,
+  "checksum": "d757129a0437c122f539c8c0f16bc439a4cc7d81"
+}

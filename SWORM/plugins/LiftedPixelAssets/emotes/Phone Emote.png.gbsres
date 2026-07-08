@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "c7b6fb76-3fc2-418e-ac6c-953463f3feff",
+  "plugin": "LiftedPixelAssets",
+  "name": "Phone Emote",
+  "symbol": "emote_phone_emote",
+  "width": 16,
+  "height": 16,
+  "filename": "Phone Emote.png"
+}

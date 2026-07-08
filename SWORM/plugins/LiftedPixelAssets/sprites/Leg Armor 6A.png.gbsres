@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "65ac4a0f-6416-4dbc-b253-d848bd1452e1",
+  "plugin": "LiftedPixelAssets",
+  "name": "Leg Armor 6A",
+  "symbol": "sprite_leg_armor_6a",
+  "states": [
+    {
+      "id": "7b40d366-9569-4deb-9c83-374d41082375",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "a4d1b5b5-f726-4ebe-b109-fbb3c545fa5f",
+          "frames": [
+            {
+              "id": "becdeaca-e150-4f09-a69c-404cc86baeac",
+              "tiles": [
+                {
+                  "id": "26f09088-21a6-4a98-b30c-ae39b6f0b62e",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "45439efc-4d8f-48e8-995d-2c591e0d9e55",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2071a6dc-324d-4799-abfe-02b70277cff7",
+          "frames": [
+            {
+              "id": "fa3b4005-30e7-4d80-9fc9-7ba6eec44b48",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "dffc03fb-40d8-4960-b4d1-76145605533f",
+          "frames": [
+            {
+              "id": "2753f09e-a856-4ff3-bf5f-9c489486af23",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "88650c2f-ca40-4cb2-bfb6-8be59300a2de",
+          "frames": [
+            {
+              "id": "76d5b64c-0619-4b72-91e7-fab1de92adcc",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "8c7f5b42-19d5-4377-9ae3-dedaf98bd019",
+          "frames": [
+            {
+              "id": "8c8833b6-d622-4220-80d2-41a1a2d0b04e",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "427760fb-2e72-4b90-8a0b-3285f4eb7d17",
+          "frames": [
+            {
+              "id": "8a459cfd-5021-4a43-b100-43a2f3967101",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "bdc34935-2903-4d48-8c2e-d47f41f79f90",
+          "frames": [
+            {
+              "id": "8ab83671-03c5-44ba-97ec-1dcac53e3cfd",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "629bce98-acbd-4407-baea-64203249926e",
+          "frames": [
+            {
+              "id": "52892699-4809-4dcc-8b7e-06773c9210d0",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Leg Armor 6A.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "63f0c0fa4d6c8bf3727e002468bcbb613659a39a"
+}

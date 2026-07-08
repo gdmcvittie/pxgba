@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "1b274bc3-8b1e-4cb1-b695-d1b7ed6a8f2a",
+  "plugin": "LiftedPixelAssets",
+  "name": "Umbrella Emote",
+  "symbol": "emote_umbrella_emote",
+  "width": 16,
+  "height": 16,
+  "filename": "Umbrella Emote.png"
+}

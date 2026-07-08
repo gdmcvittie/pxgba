@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "d7be8f5e-a2cb-4941-9467-69dbf8946492",
+  "plugin": "LiftedPixelAssets",
+  "name": "Magnifying Glass",
+  "symbol": "emote_magnifying_glass",
+  "width": 16,
+  "height": 16,
+  "filename": "Magnifying Glass.png"
+}

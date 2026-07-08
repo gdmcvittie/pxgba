@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "3e98946d-864c-4abf-b3d2-cb7ef66f0c88",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-p1-kpuff-nd",
+  "symbol": "song_bs_p1_kpuff_nd",
+  "settings": {},
+  "filename": "bs-p1-kpuff-nd.uge",
+  "type": "uge"
+}

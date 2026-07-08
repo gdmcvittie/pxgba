@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "07370cce-ab67-4afb-ba2d-126df593ac01",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-p1-capn-lite",
+  "symbol": "song_bs_p1_capn_lite",
+  "settings": {},
+  "filename": "bs-p1-capn-lite.uge",
+  "type": "uge"
+}

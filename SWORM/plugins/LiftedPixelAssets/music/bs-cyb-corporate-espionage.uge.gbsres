@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "0fdf0032-4a85-48e0-a521-01caafdbf394",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-cyb-corporate-espionage",
+  "symbol": "song_bs_cyb_corporate_espio",
+  "settings": {},
+  "filename": "bs-cyb-corporate-espionage.uge",
+  "type": "uge"
+}

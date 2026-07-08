@@ -1,0 +1,9 @@
+{
+  "_resourceType": "sound",
+  "id": "d6927071-9e8f-4e20-8f25-3cf02a255950",
+  "plugin": "LiftedPixelAssets",
+  "name": "Bottle_Break.vgm",
+  "symbol": "sound_bottle_break_vgm",
+  "type": "vgm",
+  "filename": "Bottle_Break.vgm"
+}

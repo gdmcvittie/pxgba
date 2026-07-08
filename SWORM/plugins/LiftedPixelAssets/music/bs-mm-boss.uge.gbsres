@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "92ef3065-fbb1-423b-a6e2-c1b6589d8af6",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-mm-boss",
+  "symbol": "song_bs_mm_boss",
+  "settings": {},
+  "filename": "bs-mm-boss.uge",
+  "type": "uge"
+}

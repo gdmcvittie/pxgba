@@ -1,0 +1,184 @@
+{
+  "_resourceType": "sprite",
+  "id": "71083ec8-1a3b-4ffc-b2ae-2bb81a909525",
+  "plugin": "LiftedPixelAssets",
+  "name": "mohawk_person",
+  "symbol": "sprite_mohawk_person",
+  "states": [
+    {
+      "id": "ec8a7980-3d63-4c52-89f9-d70607b7fd14",
+      "name": "",
+      "animationType": "multi_movement",
+      "flipLeft": true,
+      "animations": [
+        {
+          "id": "ac1756c8-6331-4e08-b820-828eff25c908",
+          "frames": [
+            {
+              "id": "eb5839d6-dafd-4ed0-a8f1-6254d8326979",
+              "tiles": [
+                {
+                  "id": "c80f730c-1221-48e8-8d0b-8e9654ff2a5e",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 32,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "6d03e36e-798d-4adf-a771-71889311d32e",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 40,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "1cba944a-c074-438f-8545-300460e9570c",
+          "frames": [
+            {
+              "id": "493ce1ff-e44a-4c95-9408-397f06f36d91",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "3ec1754f-76c8-4aeb-8cab-0268dd769027",
+          "frames": [
+            {
+              "id": "daa529b9-6b36-4698-acd8-86d889b337f2",
+              "tiles": [
+                {
+                  "id": "04cba79b-f447-4ef2-9c35-3d9c97202324",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 16,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "fde598d7-7414-4d12-a604-498067535453",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 24,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fabaf44b-a351-4b84-b930-a7b99b9f45a9",
+          "frames": [
+            {
+              "id": "74aa6480-5cee-44bb-83d2-372b239e04ba",
+              "tiles": [
+                {
+                  "id": "6e4ec5bd-4ac6-4ba6-b1b3-dbc5b33673d9",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "f3087f9f-efd5-4151-bf31-9f2dcf8191be",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "07d9944e-0f55-44bd-b451-d52455b60264",
+          "frames": [
+            {
+              "id": "220e4b66-cc50-4611-948f-bc665c886be9",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "de42055a-322d-4db2-884a-a34fa92e0ff5",
+          "frames": [
+            {
+              "id": "fe5300a2-5b5c-450b-b8f2-61a53104fd86",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "627ec2b2-99d3-47e0-b4eb-cfecdf868657",
+          "frames": [
+            {
+              "id": "23c4ac50-b35a-48df-91ef-1ba56f49adfe",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "8822a2cc-5158-43bc-a12a-3e8e23d6ad50",
+          "frames": [
+            {
+              "id": "fb335ef0-a91d-4b9f-ad36-f4bef51e3a69",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 6,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "mohawk_person.png",
+  "width": 48,
+  "height": 16,
+  "checksum": "0d5e960e9c203fc4552e5216e975a2ffa6c48d03"
+}

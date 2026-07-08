@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "f7a7e8ab-00d2-472a-86ed-51de9b79d820",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-mt-fireDirge",
+  "symbol": "song_bs_mt_firedirge",
+  "settings": {},
+  "filename": "bs-mt-fireDirge.uge",
+  "type": "uge"
+}

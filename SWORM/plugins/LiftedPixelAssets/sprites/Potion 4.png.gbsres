@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "870b2086-9ff7-4e9e-8097-1d3c8b1b69a7",
+  "plugin": "LiftedPixelAssets",
+  "name": "Potion 4",
+  "symbol": "sprite_potion_4",
+  "states": [
+    {
+      "id": "ab2edf12-39ac-4c10-a00b-b9f828212f46",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "49181fa3-a7e8-4101-929b-bb2cdca89d1b",
+          "frames": [
+            {
+              "id": "46d239f8-edf6-4aa0-9e22-e571683bd1d7",
+              "tiles": [
+                {
+                  "id": "26722869-bb1a-4762-a961-0ca4ea402d4b",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "ac37d1e8-74e2-4a79-b2ba-edad7e5f1e7f",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "f0de9f51-4269-474f-8823-a58c50a26e8d",
+          "frames": [
+            {
+              "id": "127c07ba-b5b5-4782-bf1c-9de3d57a5c94",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "43b7b3ef-f02b-46e6-9b58-e14f033f99d2",
+          "frames": [
+            {
+              "id": "1f2b7ed1-b1d3-4ae9-afc5-e55a30e0e709",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "423f47bf-421a-44d9-b055-350d9b8c2cca",
+          "frames": [
+            {
+              "id": "ce2d12d8-9044-4134-8e8d-8fa27f72206a",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "0dc3b02c-1293-4c82-86c7-986b5ed9e077",
+          "frames": [
+            {
+              "id": "3e1c1f46-ddc4-4869-961b-7c8ef63653e2",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "9ba7a25e-1990-47ee-8927-4de078ef82ed",
+          "frames": [
+            {
+              "id": "11ac148a-cd07-4204-aa75-b3c80e1b5936",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "56941647-8e24-41ca-9f7b-b2bf8f5a0bb7",
+          "frames": [
+            {
+              "id": "95854e2b-9400-459e-bb1d-1c34f8220a38",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "82fb9f08-5464-4fa6-9ad8-eda7e5ce6c00",
+          "frames": [
+            {
+              "id": "05176ebc-d8d7-4b73-916f-d7ece2575045",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Potion 4.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "fa3db286e2f5f7681972d27fa454078a70f946bf"
+}

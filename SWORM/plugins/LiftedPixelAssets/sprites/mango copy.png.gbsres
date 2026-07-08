@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "5a8374a6-0d41-4ac7-81f2-f57925eccd89",
+  "plugin": "LiftedPixelAssets",
+  "name": "mango copy",
+  "symbol": "sprite_mango_copy",
+  "states": [
+    {
+      "id": "701d8370-ee77-46bb-ba31-0e3b77581e86",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "ec3b9664-6357-4d86-a42f-aa8d860fae8c",
+          "frames": [
+            {
+              "id": "93f09e1f-8294-4175-ab72-5501827ca36b",
+              "tiles": [
+                {
+                  "id": "5ef142ee-e938-4bf5-b3c9-b8b896e9ead3",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "a5a4463d-1ee2-418d-a3c1-68194508893e",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "21e30fdb-fb25-465c-a5d4-31fc8f0aa97b",
+          "frames": [
+            {
+              "id": "68fa93da-673f-4d64-ba31-c5f899a5bb8a",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "44dd10a8-b698-476e-b365-54036d9b5fdd",
+          "frames": [
+            {
+              "id": "16f34a18-896e-4984-8b7e-ca98bcb1b38d",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "c435b67e-b251-44c0-b5d6-ebcffa27a647",
+          "frames": [
+            {
+              "id": "11e6d84d-81d5-4eb8-ba91-3ff3a536418f",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "1d1c92ea-c997-40ed-af63-4192bd0a0aa2",
+          "frames": [
+            {
+              "id": "9abdd44e-f96e-4e8a-a39d-f4ccd48d545b",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "bd641517-9383-4dfb-8a64-a52d6e9bc167",
+          "frames": [
+            {
+              "id": "f5954b1d-ff58-40c2-b9e3-34a64c6bdda3",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "259b6c6f-0767-49bc-beed-148e18eea336",
+          "frames": [
+            {
+              "id": "87129ff7-5cd2-4063-b977-60763d7e0456",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "65140f15-4d3a-47af-8cea-95f600c0b5c6",
+          "frames": [
+            {
+              "id": "0b346b3a-455c-4c9a-b39d-6b2096084ba4",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "mango copy.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "0a6d09c9acc8e6ae508b896017005d6f9e67be02"
+}

@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "988d4921-f3cc-4f6a-9c8d-77d77edae908",
+  "plugin": "LiftedPixelAssets",
+  "name": "Hammer 4A",
+  "symbol": "sprite_hammer_4a",
+  "states": [
+    {
+      "id": "df3e1e11-7e70-4c25-a098-a77e1d59ba87",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "f78a2427-4d80-4b28-bcfa-91d97419e032",
+          "frames": [
+            {
+              "id": "2ee53c5d-e559-40dd-958b-c7fea2069b81",
+              "tiles": [
+                {
+                  "id": "16504eb1-f03f-49df-946c-c39374af0de4",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "f2a17c9a-f0c4-42d6-8b2d-e7e8371e1ecd",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "33a3bbf7-a823-4325-af9a-fe86eea567fe",
+          "frames": [
+            {
+              "id": "3eaf254b-b453-4ea3-8d19-0a16f0a3645b",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "43ddca11-9cf3-433d-ad45-5c66126cb54b",
+          "frames": [
+            {
+              "id": "e896d346-95f4-44d4-98b5-ca83edc63ac3",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "7d59eff7-5148-4940-9c26-575355dd8346",
+          "frames": [
+            {
+              "id": "2514205c-34ce-4369-a01f-20e8871bc224",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "f22ee7b3-3735-4164-9706-07a9b40e8bdf",
+          "frames": [
+            {
+              "id": "2fb5a1a9-c95a-44a8-81e1-a627572420ea",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "6b1eb473-862b-4595-8ecc-3dda338af89e",
+          "frames": [
+            {
+              "id": "9eea5bc9-2b23-411f-88e8-95908dc21251",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "9874adea-2a26-419b-8aac-99fe264d55bf",
+          "frames": [
+            {
+              "id": "e2405c27-f27b-4f55-a497-bfcd98ba9437",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "006bead5-193c-4209-8b15-54dc19f194d5",
+          "frames": [
+            {
+              "id": "c770b1cc-bf72-492b-a949-40127f6ec952",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Hammer 4A.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "fa52cbdc4346859b567d512caad8d655b07e70ed"
+}

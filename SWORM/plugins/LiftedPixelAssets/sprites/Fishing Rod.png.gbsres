@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "8d87389f-0827-4bd5-904b-c90b6e572506",
+  "plugin": "LiftedPixelAssets",
+  "name": "Fishing Rod",
+  "symbol": "sprite_fishing_rod",
+  "states": [
+    {
+      "id": "18ecc1e1-80a3-4237-90de-c27837985a3f",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "51bf8826-b557-497a-bb2e-fd549c7c7501",
+          "frames": [
+            {
+              "id": "e92d4930-418d-44b8-94df-2a7f8500f355",
+              "tiles": [
+                {
+                  "id": "8c44435b-e928-4742-a7cf-233e1d4800e7",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "1c9bc9e6-4623-486f-bebb-8996b17689cb",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "9924df42-e1fe-4717-b678-76321aac1fb1",
+          "frames": [
+            {
+              "id": "b460900e-e8cf-48c1-a812-3c9719606b68",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "44316bcc-fc94-4ca1-bcb9-fb5a839b5379",
+          "frames": [
+            {
+              "id": "e184c3c8-04ac-4515-b912-a794ec0fa8a1",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "ac4c1a09-5405-405f-9500-96dc2b241089",
+          "frames": [
+            {
+              "id": "653e0b8c-cc27-4090-bb10-a1444377ef38",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "4eb42f12-1fdd-4964-b7df-5a79aca8546b",
+          "frames": [
+            {
+              "id": "7de1430c-7188-401b-a752-7e2857a352e0",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "e1a74033-ae85-4b75-93bd-3f2a1e14c031",
+          "frames": [
+            {
+              "id": "69685208-9698-47fc-8c93-aa3ffe4815d2",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "e84120df-c255-49c2-b112-9cf4dc53771f",
+          "frames": [
+            {
+              "id": "ab885a5f-410c-43e7-b80c-997ea1502eb1",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "35cb3ebb-6fa0-4e88-92e3-74664398c975",
+          "frames": [
+            {
+              "id": "9669faa7-a676-4023-b6ff-2bfaa8d60aa6",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Fishing Rod.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "39d7f053793f83137c5fcc9bb8c0d13244ede2e0"
+}

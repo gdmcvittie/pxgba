@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "5e2e2e48-95f7-4ff9-b198-41aa88f16ea8",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-cyb-corporate-extraction",
+  "symbol": "song_bs_cyb_corporate_extra",
+  "settings": {},
+  "filename": "bs-cyb-corporate-extraction.uge",
+  "type": "uge"
+}

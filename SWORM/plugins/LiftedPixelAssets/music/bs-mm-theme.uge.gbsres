@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "75d94bcd-1a42-4fcb-8337-787c6b4529b4",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-mm-theme",
+  "symbol": "song_bs_mm_theme",
+  "settings": {},
+  "filename": "bs-mm-theme.uge",
+  "type": "uge"
+}

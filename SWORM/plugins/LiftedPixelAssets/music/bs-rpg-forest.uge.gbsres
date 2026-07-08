@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "0b3538ef-9c01-4999-a13d-06ff2405ada1",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-rpg-forest",
+  "symbol": "song_bs_rpg_forest",
+  "settings": {},
+  "filename": "bs-rpg-forest.uge",
+  "type": "uge"
+}

@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "e8ef2283-2efe-4bd1-81cd-3602ebf32e9f",
+  "plugin": "LiftedPixelAssets",
+  "name": "Axe 1A",
+  "symbol": "sprite_axe_1a",
+  "states": [
+    {
+      "id": "fcedca93-84dd-4596-855a-3d3a6052e274",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "5a6af146-dd87-459e-a2b9-63c2599818c8",
+          "frames": [
+            {
+              "id": "fbee1d24-74f4-4b25-ba7b-df6c6b449965",
+              "tiles": [
+                {
+                  "id": "424465e0-4325-46c2-ae70-270067f50ffc",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "08353412-1ee9-41c6-907b-f44dbaa7dfc3",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "3c94b640-8e26-4bb5-aa8e-90c8c587983a",
+          "frames": [
+            {
+              "id": "75eb5ec9-c224-4aba-b9e7-5da77a4b4be2",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "0e4f5eeb-2cbe-474a-9c60-b21033aed29c",
+          "frames": [
+            {
+              "id": "d547abcd-b27f-4f0d-a59b-9b1db5c4d5f7",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "cf4bd85f-f2de-4452-9aa0-2b1b1b371371",
+          "frames": [
+            {
+              "id": "8550d0c5-b222-47f9-a516-adf093e767b7",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "a083c533-484e-4680-869d-21790131c4ac",
+          "frames": [
+            {
+              "id": "7285bbcc-9b0e-4a60-9466-146767630dd3",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "4e1c3181-1916-4d89-b8f5-e3d22b392382",
+          "frames": [
+            {
+              "id": "5481d5cf-e141-462a-8d13-e2e0a97e736c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "93a2aafb-6cdb-45dc-98fb-6f36c18713ac",
+          "frames": [
+            {
+              "id": "13df9f74-0529-4208-b6dd-8a5f38e3cd1d",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "f43e28f2-671b-47c6-8ed8-48e6cc6cbf4b",
+          "frames": [
+            {
+              "id": "067b5d62-1e64-4c4e-b98e-1a6c3d2e2132",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Axe 1A.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "643875db145742ba30b95fd1c03a0e19973be15f"
+}

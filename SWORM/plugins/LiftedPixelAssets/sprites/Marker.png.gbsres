@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "0c5c4e51-f9f5-4889-918b-42d049743398",
+  "plugin": "LiftedPixelAssets",
+  "name": "Marker",
+  "symbol": "sprite_marker",
+  "states": [
+    {
+      "id": "d10d80fc-e1bf-4b03-84f1-4002608d6e28",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "f08e93a2-dbd7-48f9-adf8-7d92f134fdf6",
+          "frames": [
+            {
+              "id": "ae6972b2-e80d-46e6-b5b1-9f7d0085b1b7",
+              "tiles": [
+                {
+                  "id": "3fa693a4-4263-4c5c-9def-da86226600ac",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "ad4f44eb-cb5e-4ad0-83e7-6fcd08b365e1",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "3c64e5d7-2f01-43f1-baeb-6916121dbb40",
+          "frames": [
+            {
+              "id": "73cf6b42-784f-4fc7-94e8-f8ceaec5b682",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "b1c6f7c1-7a56-4042-a0f0-2bbb2d34edca",
+          "frames": [
+            {
+              "id": "325d7646-6e58-47e5-8bca-4ffc6615cdd8",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "83fa88ea-326d-4dff-8920-a450b0a02fc4",
+          "frames": [
+            {
+              "id": "8184b445-c07c-45eb-9262-531a7bea891f",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "96d2ede7-d336-48c3-a608-045ddfc44170",
+          "frames": [
+            {
+              "id": "ead0619d-30e7-4b6c-aede-2d02941314b3",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "4c8ac7af-12dd-48f5-a368-589f18eb4b77",
+          "frames": [
+            {
+              "id": "52c2c392-4585-469b-bce7-c21f6071293c",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "75b5c88e-44a4-4e75-a545-838273211755",
+          "frames": [
+            {
+              "id": "6808eec3-183c-45f3-8cba-143758290ed9",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "9ea0b918-f79a-44cb-b964-80923cb84f7c",
+          "frames": [
+            {
+              "id": "f74b6651-795b-45b1-a59a-f5df1a31e046",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "Marker.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "55533001b18ac2caa1e202dd97153454745140e8"
+}

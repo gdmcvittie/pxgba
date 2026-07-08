@@ -1,0 +1,13 @@
+{
+  "_resourceType": "background",
+  "id": "c5e96442-c55a-4994-98f5-8082ccf1c089",
+  "plugin": "LiftedPixelAssets",
+  "name": "placeholder",
+  "symbol": "bg_placeholder_0",
+  "tileColors": "",
+  "filename": "placeholder.png",
+  "width": 20,
+  "height": 18,
+  "imageWidth": 160,
+  "imageHeight": 144
+}

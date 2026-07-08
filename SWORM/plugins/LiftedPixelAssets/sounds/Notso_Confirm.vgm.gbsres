@@ -1,0 +1,9 @@
+{
+  "_resourceType": "sound",
+  "id": "7536b7fb-605f-4cbb-a62e-1a12280fa683",
+  "plugin": "LiftedPixelAssets",
+  "name": "Notso_Confirm.vgm",
+  "symbol": "sound_notso_confirm_vgm",
+  "type": "vgm",
+  "filename": "Notso_Confirm.vgm"
+}

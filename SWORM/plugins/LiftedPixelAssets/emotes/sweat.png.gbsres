@@ -1,0 +1,10 @@
+{
+  "_resourceType": "emote",
+  "id": "8565a93c-c5ff-4c4a-8aaa-2d5e66fe60cd",
+  "plugin": "LiftedPixelAssets",
+  "name": "sweat",
+  "symbol": "emote_sweat_0",
+  "width": 16,
+  "height": 16,
+  "filename": "sweat.png"
+}

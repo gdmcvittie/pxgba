@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "36941332-3f20-45c2-b084-bbfeef14a5d8",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-mt-ruins",
+  "symbol": "song_bs_mt_ruins",
+  "settings": {},
+  "filename": "bs-mt-ruins.uge",
+  "type": "uge"
+}

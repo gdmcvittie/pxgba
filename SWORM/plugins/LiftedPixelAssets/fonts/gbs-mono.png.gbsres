@@ -1,0 +1,11 @@
+{
+  "_resourceType": "font",
+  "id": "29d4d6c8-dd5d-4836-acf1-579913f7432f",
+  "plugin": "LiftedPixelAssets",
+  "name": "GBS Mono",
+  "symbol": "font_gbs_mono_0",
+  "width": 128,
+  "height": 112,
+  "mapping": {},
+  "filename": "gbs-mono.png"
+}

@@ -1,0 +1,10 @@
+{
+  "_resourceType": "music",
+  "id": "7159d37b-6f8c-4c40-bc70-519b443e7124",
+  "plugin": "LiftedPixelAssets",
+  "name": "bs-p1-p64-wharf",
+  "symbol": "song_bs_p1_p64_wharf",
+  "settings": {},
+  "filename": "bs-p1-p64-wharf.uge",
+  "type": "uge"
+}

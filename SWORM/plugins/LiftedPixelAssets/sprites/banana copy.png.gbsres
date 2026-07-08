@@ -1,0 +1,130 @@
+{
+  "_resourceType": "sprite",
+  "id": "44f5a3ee-1031-4059-94ed-f1b3661769f0",
+  "plugin": "LiftedPixelAssets",
+  "name": "banana copy",
+  "symbol": "sprite_banana_copy",
+  "states": [
+    {
+      "id": "eae65b48-cdb8-4718-9f28-9b155d80c6bc",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "d13695ba-5353-433a-8ae7-7adfaf375d20",
+          "frames": [
+            {
+              "id": "f2a7f114-51f4-42b4-80ad-f5398d2f2b8f",
+              "tiles": [
+                {
+                  "id": "5c615f6b-d582-4251-b4c5-9245b076a312",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "47d8beb5-3512-4930-bb53-6dca774c1991",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "7c91c3fc-8429-44cd-bc07-1cd44badca37",
+          "frames": [
+            {
+              "id": "48b91462-3b00-4ae9-a3bc-b55f927b5d54",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "04b71e77-dab2-4f90-bb5b-35c0b8448342",
+          "frames": [
+            {
+              "id": "3d941fa5-e6e8-44f1-8188-1541db70c4e6",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "63da2cc4-c0d3-4f4d-a629-3959c6037584",
+          "frames": [
+            {
+              "id": "407ada9c-2f39-47e2-b5b1-dfc515f80939",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "287b8e90-8532-43c4-84b1-00e73b351771",
+          "frames": [
+            {
+              "id": "01dbc925-6ec2-41c4-95d2-0b613a2cc4be",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "54b65048-8983-4d36-a5d3-9a943dbd8760",
+          "frames": [
+            {
+              "id": "6f18ae2f-f70e-49b9-9bfa-4fb41112a155",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "3f472de7-593a-4ede-8ca7-2d3b8c8fd114",
+          "frames": [
+            {
+              "id": "05ac73fb-b396-42a2-a8d8-4d7b7399aba9",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "991eb861-0476-48ba-ad5f-0dd1c5358828",
+          "frames": [
+            {
+              "id": "196aca43-3560-4b97-8050-4f625213799c",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "banana copy.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "dc00b38f6ff26669a263a28fdffa6322a5753979"
+}
