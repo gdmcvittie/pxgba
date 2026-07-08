@@ -1258,129 +1258,108 @@ function translateEventList(events, sceneIdMap, variableIdMap) {
           break;
 
         case 'EVENT_INC_VALUE':
-          label = 'Increment Variable';
-          actionType = 'inc_var';
+          label = 'Math Operation';
+          actionType = 'math_op';
           data = {
             label,
             actionType,
-            varName: variableIdMap[ev.args?.variable] || `VAR_${ev.args?.variable || 'UNKNOWN'}`
+            varName: variableIdMap[ev.args?.variable] || `VAR_${ev.args?.variable || 'UNKNOWN'}`,
+            operator: '+=',
+            value: '1'
           };
           isMapped = true;
           break;
 
         case 'EVENT_DEC_VALUE':
-          label = 'Decrement Variable';
-          actionType = 'dec_var';
+          label = 'Math Operation';
+          actionType = 'math_op';
           data = {
             label,
             actionType,
-            varName: variableIdMap[ev.args?.variable] || `VAR_${ev.args?.variable || 'UNKNOWN'}`
+            varName: variableIdMap[ev.args?.variable] || `VAR_${ev.args?.variable || 'UNKNOWN'}`,
+            operator: '-=',
+            value: '1'
           };
           isMapped = true;
           break;
 
         case 'EVENT_IF':
-          label = 'If Condition';
-          actionType = 'condition';
+          label = 'Check Variable';
+          actionType = 'check_var';
           const cond = ev.args?.condition || {};
+          const opMap = { 'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'lte': '<=', 'gte': '>=' };
           data = {
             label,
             actionType,
-            condition: `${resolveValue(cond.valueA)} ${cond.type || 'eq'} ${resolveValue(cond.valueB)}`
+            varName: resolveValue(cond.valueA),
+            varValue: resolveValue(cond.valueB),
+            operator: opMap[cond.type] || '=='
           };
           isMapped = true;
           break;
 
         case 'EVENT_CHOICE':
-          label = 'Choice';
-          actionType = 'choice';
+          label = 'Show Menu';
+          actionType = 'menu';
           data = {
             label,
             actionType,
-            trueText: ev.args?.trueText || 'Yes',
-            falseText: ev.args?.falseText || 'No',
-            variable: ev.args?.variable || 'L0'
+            options: [{ text: ev.args?.trueText || 'Yes' }, { text: ev.args?.falseText || 'No' }]
           };
           isMapped = true;
           break;
 
         case 'EVENT_MUSIC_PLAY':
-          label = 'Play Music';
-          actionType = 'play_music';
-          data = { label, actionType };
+          label = 'Music Control';
+          actionType = 'music_control';
+          data = { label, actionType, musicAction: 'resume' };
           isMapped = true;
           break;
 
         case 'EVENT_MUSIC_STOP':
-          label = 'Stop Music';
-          actionType = 'stop_music';
-          data = { label, actionType };
+          label = 'Music Control';
+          actionType = 'music_control';
+          data = { label, actionType, musicAction: 'stop' };
           isMapped = true;
           break;
 
         case 'EVENT_MUSIC_PLAY_EFFECT':
-          label = 'Play Effect';
-          actionType = 'play_effect';
-          data = { label, actionType };
+          label = 'Play Sound';
+          actionType = 'play_sound';
+          data = { label, actionType, computedSoundName: ev.args?.sound || 'snd_square_440_100' };
           isMapped = true;
           break;
 
         case 'EVENT_ACTOR_HIDE':
-          label = 'Hide Actor';
-          actionType = 'actor_hide';
-          data = { label, actionType, actorId: ev.args?.actorId || '$self$' };
+          label = 'Destroy Actor';
+          actionType = 'destroy_actor';
+          data = { label, actionType, targetActorId: ev.args?.actorId || '$self$' };
           isMapped = true;
           break;
 
         case 'EVENT_ACTOR_SHOW':
-          label = 'Show Actor';
-          actionType = 'actor_show';
-          data = { label, actionType, actorId: ev.args?.actorId || '$self$' };
+          label = 'Spawn Actor';
+          actionType = 'spawn_actor';
+          data = { label, actionType, targetActorId: ev.args?.actorId || '$self$', useCurrentPos: true };
           isMapped = true;
           break;
 
         case 'EVENT_ACTOR_SET_FRAME':
-          label = 'Set Actor Frame';
-          actionType = 'actor_set_frame';
+          label = 'Play Animation';
+          actionType = 'play_animation';
           data = {
             label,
             actionType,
-            actorId: ev.args?.actorId || '$self$',
-            frame: resolveValue(ev.args?.frame)
+            targetActorId: ev.args?.actorId || '$self$',
+            animId: resolveValue(ev.args?.frame) || '0'
           };
           isMapped = true;
           break;
 
-        case 'EVENT_ACTOR_SET_STATE':
-          label = 'Set Actor State';
-          actionType = 'actor_set_state';
-          data = {
-            label,
-            actionType,
-            actorId: ev.args?.actorId || '0',
-            state: ev.args?.spriteStateId || ''
-          };
-          isMapped = true;
-          break;
-
-        case 'EVENT_ACTOR_STOP_UPDATE':
-          label = 'Stop Actor Update';
-          actionType = 'actor_stop_update';
-          data = { label, actionType, actorId: ev.args?.actorId || '0' };
-          isMapped = true;
-          break;
-
-        case 'EVENT_ACTOR_ACTIVATE':
-          label = 'Activate Actor';
-          actionType = 'actor_activate';
-          data = { label, actionType, actorId: ev.args?.actorId || '' };
-          isMapped = true;
-          break;
-
-        case 'EVENT_ACTOR_DEACTIVATE':
-          label = 'Deactivate Actor';
-          actionType = 'actor_deactivate';
-          data = { label, actionType, actorId: ev.args?.actorId || '$self$' };
+        case 'EVENT_SOUND_PLAY_EFFECT':
+          label = 'Play Sound';
+          actionType = 'play_sound';
+          data = { label, actionType, computedSoundName: ev.args?.sound || 'snd_square_440_100' };
           isMapped = true;
           break;
 
@@ -1396,13 +1375,6 @@ function translateEventList(events, sceneIdMap, variableIdMap) {
           isMapped = true;
           break;
 
-        case 'EVENT_SOUND_PLAY_EFFECT':
-          label = 'Play Sound Effect';
-          actionType = 'play_sound';
-          data = { label, actionType };
-          isMapped = true;
-          break;
-
         case 'EVENT_SET_TIMER_SCRIPT':
           label = 'Set Timer';
           actionType = 'set_timer';
@@ -1415,17 +1387,6 @@ function translateEventList(events, sceneIdMap, variableIdMap) {
           isMapped = true;
           break;
 
-        case 'EVENT_CALL_CUSTOM_EVENT':
-          label = 'Custom Event';
-          actionType = 'custom_event';
-          data = {
-            label,
-            actionType,
-            customEventId: ev.args?.customEventId || ''
-          };
-          isMapped = true;
-          break;
-
         case 'EVENT_RNG_SEED':
           label = 'Seed RNG';
           actionType = 'rng_seed';
@@ -1433,15 +1394,88 @@ function translateEventList(events, sceneIdMap, variableIdMap) {
           isMapped = true;
           break;
 
+        case 'EVENT_CALL_CUSTOM_EVENT':
+          label = 'Run Script';
+          actionType = 'run_script';
+          data = { label, actionType, scriptId: ev.args?.customEventId || '' };
+          isMapped = true;
+          break;
+
         case 'EVENT_ACTOR_MOVE_TO':
-          label = 'Move Actor To';
-          actionType = 'actor_move_to';
+          label = 'Move Actor';
+          actionType = 'move';
           data = {
             label,
             actionType,
-            actorId: ev.args?.actorId || '$self$',
+            targetActorId: ev.args?.actorId || '$self$',
             x: resolveValue(ev.args?.x),
             y: resolveValue(ev.args?.y)
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_ACTOR_SET_POSITION':
+          label = 'Move Actor';
+          actionType = 'move';
+          data = {
+            label,
+            actionType,
+            targetActorId: ev.args?.actorId || '$self$',
+            x: resolveValue(ev.args?.x),
+            y: resolveValue(ev.args?.y)
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_VARIABLE_MATH_EVALUATE':
+          label = 'Math Equation';
+          actionType = 'math_equation';
+          data = {
+            label,
+            actionType,
+            targetVar: variableIdMap[ev.args?.variable] || `VAR_${ev.args?.variable || 'UNKNOWN'}`,
+            equation: ev.args?.expression || ''
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_ACTOR_SET_STATE':
+          label = 'Play Animation';
+          actionType = 'play_animation';
+          data = {
+            label,
+            actionType,
+            targetActorId: ev.args?.actorId || '$self$',
+            animId: ev.args?.spriteStateId || ''
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_ACTOR_ACTIVATE':
+          label = 'Spawn Actor';
+          actionType = 'spawn_actor';
+          data = { label, actionType, targetActorId: ev.args?.actorId || '$self$', useCurrentPos: true };
+          isMapped = true;
+          break;
+
+        case 'EVENT_ACTOR_DEACTIVATE':
+          label = 'Destroy Actor';
+          actionType = 'destroy_actor';
+          data = { label, actionType, targetActorId: ev.args?.actorId || '$self$' };
+          isMapped = true;
+          break;
+
+        case 'EVENT_LAUNCH_PROJECTILE':
+          label = 'Shoot Projectile';
+          actionType = 'shoot_projectile';
+          data = {
+            label,
+            actionType,
+            targetActorId: ev.args?.actorId || '$self$',
+            dirMode: ev.args?.direction === 'fixed' ? 'vector' : 'facing',
+            dx: ev.args?.x || 0,
+            dy: ev.args?.y || -1,
+            speed: 3
           };
           isMapped = true;
           break;
