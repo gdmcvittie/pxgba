@@ -1370,7 +1370,7 @@ const ScriptEditor = () => {
             node = { ...node, type: 'customStart', data: { ...node.data, options } };
           }
 
-          if (node.type === 'default' || (node.type === 'customAction' && !node.data?.actionType)) {
+          if (node.type === 'default' || node.type === 'action' || (node.type === 'customAction' && !node.data?.actionType)) {
             const actionType = node.data.label === 'Show Dialog' ? 'dialog'
               : node.data.label === 'Show Menu' ? 'menu'
                 : node.data.label === 'Show Image' ? 'show_image'

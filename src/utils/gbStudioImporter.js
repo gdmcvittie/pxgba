@@ -217,10 +217,11 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       const parsed = JSON.parse(text);
       if (parsed && parsed._resourceType === 'script') {
         customEventScripts[parsed.id] = parsed;
+        const translatedScript = translateEventList(parsed.script || [], sceneIdMap, variableIdMap);
         customScripts.push({
           id: parsed.id,
           name: parsed.name || 'Unnamed Script',
-          script: parsed.script || [],
+          script: translatedScript,
           groupId: customScriptsGroup.id
         });
       }
@@ -1173,7 +1174,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
  * Translates a GB Studio script array into a PxGBA React Flow node sequence.
  */
 function translateEventList(events, sceneIdMap, variableIdMap) {
-  const nodes = [{ id: 'start', position: { x: 250, y: 100 }, data: { label: 'On Update' }, type: 'input' }];
+  const nodes = [{ id: 'start', position: { x: 420, y: 20 }, data: { label: 'On Update' }, type: 'customStart' }];
   const edges = [];
 
   if (!events || !Array.isArray(events)) {
@@ -1181,7 +1182,7 @@ function translateEventList(events, sceneIdMap, variableIdMap) {
   }
 
   let lastNodeId = 'start';
-  let yOffset = 250;
+  let xOffset = 640;
   let nodeCount = 0;
 
   function resolveValue(val) {
@@ -1487,8 +1488,8 @@ function translateEventList(events, sceneIdMap, variableIdMap) {
       if (isMapped) {
         nodes.push({
           id: nodeId,
-          position: { x: 250, y: yOffset },
-          type: 'action',
+          position: { x: xOffset, y: 20 },
+          type: 'customAction',
           data
         });
 
@@ -1499,7 +1500,7 @@ function translateEventList(events, sceneIdMap, variableIdMap) {
         });
 
         lastNodeId = nodeId;
-        yOffset += 150;
+        xOffset += 260;
       }
 
       // Recursively flatten children if present
