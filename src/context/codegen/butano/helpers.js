@@ -14,7 +14,7 @@ export function autoDeclare(variables, customScripts, globalScript, scenes) {
       var target = t;
       if (t.groupId) {
         for (var gi = 0; gi < trigs.length; gi++) {
-          if (trigs[gi].isGroup && trigs[gi].id === t.groupId) { target = trigs[gi]; break; }
+          if (trigs[gi].isGroup && trigs[gi].id === t.groupId && (trigs[gi].script || trigs[gi].scriptId)) { target = trigs[gi]; break; }
         }
       }
       if (target.scriptId) {
@@ -70,13 +70,14 @@ export function getTriggerScript(t, currentTriggersList, customScripts) {
   let target = t;
   if (t.groupId && currentTriggersList) {
     const group = currentTriggersList.find(g => g.isGroup && g.id === t.groupId);
-    if (group) target = group;
+    if (group && (group.script || group.scriptId)) target = group;
   }
   if (target.scriptId) {
     const cs = customScripts.find(c => c && String(c.id) === String(target.scriptId));
     if (cs && cs.script) return cs.script;
   }
-  return target.script;
+  if (target !== t && target.script) return target.script;
+  return t.script;
 }
 
 export function getValidSpriteSize(w, h) {

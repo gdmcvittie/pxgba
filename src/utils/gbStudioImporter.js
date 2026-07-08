@@ -209,6 +209,8 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   const scriptFiles = Object.keys(zip.files).filter(name =>
     name.includes('/scripts/') && name.endsWith('.gbsres')
   );
+  const customScriptsGroup = { id: Date.now() + Math.random() + 300, type: 'group', name: 'Imported Scripts', isGroup: true, isOpen: true };
+  customScripts.push(customScriptsGroup);
   for (const sPath of scriptFiles) {
     try {
       const text = await zip.files[sPath].async('text');
@@ -218,7 +220,8 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
         customScripts.push({
           id: parsed.id,
           name: parsed.name || 'Unnamed Script',
-          script: parsed.script || []
+          script: parsed.script || [],
+          groupId: customScriptsGroup.id
         });
       }
     } catch (err) {
@@ -313,19 +316,29 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   }
 
   if (gbsVariables && Array.isArray(gbsVariables)) {
+    const importedVars = [];
     gbsVariables.forEach((v, index) => {
       if (!v) return;
       const cleanName = String(v.name || `VAR_${v.id || index}`).replace(/[^a-zA-Z0-9_]/g, '_').toUpperCase();
       variableIdMap[v.id] = cleanName;
       if (!defaultPlayerVars.some(dpv => dpv.name === cleanName)) {
+        importedVars.push(v);
+      }
+    });
+    if (importedVars.length > 0) {
+      const importedVarGroup = { id: Date.now() + Math.random() + 400, type: 'group', name: 'Imported Variables', isOpen: true };
+      variables.push(importedVarGroup);
+      importedVars.forEach((v, index) => {
+        const cleanName = String(v.name || `VAR_${v.id || index}`).replace(/[^a-zA-Z0-9_]/g, '_').toUpperCase();
         variables.push({
           id: Date.now() + Math.random() + index,
           name: cleanName,
           type: 'number',
-          initialValue: parseInt(v.defaultValue) || 0
+          initialValue: parseInt(v.defaultValue) || 0,
+          groupId: importedVarGroup.id
         });
-      }
-    });
+      });
+    }
   }
 
   // 2. Parse referenced Sprites & Slices only
@@ -677,6 +690,14 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
 
     const sceneId = sIdx + 1;
     const sceneName = gbsScene.name || `Scene ${sceneId}`;
+    const sceneScriptGroup = {
+      id: Date.now() + Math.random() + 250 + sIdx,
+      type: 'group',
+      name: `${sceneName} Imported Scripts`,
+      isGroup: true,
+      isOpen: true
+    };
+    customScripts.push(sceneScriptGroup);
 
     console.log(`[Importer Debug] Translating scene #${sceneId} "${sceneName}":`, {
       collisionsType: typeof gbsScene.collisions,
@@ -906,6 +927,34 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       const hit2Script = translateEventList(act.hit2Script, sceneIdMap, variableIdMap);
       const hit3Script = translateEventList(act.hit3Script, sceneIdMap, variableIdMap);
 
+      const actName = (act.name || `Actor${actIdx + 1}`).replace(/[^a-zA-Z0-9_]/g, '_');
+      let startScriptId = null;
+      let updateScriptId = null;
+      let onHitScriptId = null;
+      let onHit2ScriptId = null;
+      let onHit3ScriptId = null;
+
+      if (startScript && (startScript.nodes?.length || startScript.edges?.length)) {
+        startScriptId = Date.now() + Math.random() + 6000 + actIdx;
+        customScripts.push({ id: startScriptId, name: `${sceneName}_${actName}_on_start`, script: startScript, groupId: sceneScriptGroup.id });
+      }
+      if (updateScript && (updateScript.nodes?.length || updateScript.edges?.length)) {
+        updateScriptId = Date.now() + Math.random() + 7000 + actIdx;
+        customScripts.push({ id: updateScriptId, name: `${sceneName}_${actName}_on_update`, script: updateScript, groupId: sceneScriptGroup.id });
+      }
+      if (hit1Script && (hit1Script.nodes?.length || hit1Script.edges?.length)) {
+        onHitScriptId = Date.now() + Math.random() + 8000 + actIdx;
+        customScripts.push({ id: onHitScriptId, name: `${sceneName}_${actName}_on_hit`, script: hit1Script, groupId: sceneScriptGroup.id });
+      }
+      if (hit2Script && (hit2Script.nodes?.length || hit2Script.edges?.length)) {
+        onHit2ScriptId = Date.now() + Math.random() + 9000 + actIdx;
+        customScripts.push({ id: onHit2ScriptId, name: `${sceneName}_${actName}_on_hit2`, script: hit2Script, groupId: sceneScriptGroup.id });
+      }
+      if (hit3Script && (hit3Script.nodes?.length || hit3Script.edges?.length)) {
+        onHit3ScriptId = Date.now() + Math.random() + 10000 + actIdx;
+        customScripts.push({ id: onHit3ScriptId, name: `${sceneName}_${actName}_on_hit3`, script: hit3Script, groupId: sceneScriptGroup.id });
+      }
+
       const actX = ((parseInt(act.x) || 0) * 8) + actorOffsetX;
       const actY = ((parseInt(act.y) || 0) * 8) + actorOffsetY;
 
@@ -925,11 +974,11 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
         hflip: true,
         groupId: parentGroup?.id || null,
         script: mainScript,
-        startScript,
-        updateScript,
-        hit1Script,
-        hit2Script,
-        hit3Script
+        startScriptId,
+        updateScriptId,
+        onHitScriptId,
+        onHit2ScriptId,
+        onHit3ScriptId
       });
     });
 
@@ -991,6 +1040,17 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       const trigY = ((parseInt(trig.y) || 0) * 8) + actorOffsetY;
 
       const trigScript = translateEventList(trig.script, sceneIdMap, variableIdMap);
+      let trigScriptId = null;
+      if (trigScript && (trigScript.nodes?.length || trigScript.edges?.length)) {
+        trigScriptId = Date.now() + Math.random() + 5000 + trigIdx;
+        const scriptName = `${sceneName}_${(trig.name || `Trigger${trigIdx + 1}`).replace(/[^a-zA-Z0-9_]/g, '_')}_on_enter`;
+        customScripts.push({
+          id: trigScriptId,
+          name: scriptName,
+          script: trigScript,
+          groupId: sceneScriptGroup.id
+        });
+      }
       triggers.push({
         id: Date.now() + Math.random() + trigIdx,
         name: trig.name || `Trigger ${trigIdx + 1}`,
@@ -999,7 +1059,8 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
         width: (parseInt(trig.width) || 2) * 8,
         height: (parseInt(trig.height) || 2) * 8,
         color: '#ffaa00',
-        script: trigScript
+        scriptId: trigScriptId,
+        groupId: triggerGroup.id
       });
     });
 
@@ -1019,6 +1080,16 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
 
     // Build scene script
     const sceneScript = translateEventList(gbsScene.script, sceneIdMap, variableIdMap);
+    let sceneScriptId = null;
+    if (sceneScript && (sceneScript.nodes?.length || sceneScript.edges?.length)) {
+      sceneScriptId = Date.now() + Math.random() + 11000 + sIdx;
+      customScripts.push({
+        id: sceneScriptId,
+        name: `${sceneName}_on_start`,
+        script: sceneScript,
+        groupId: sceneScriptGroup.id
+      });
+    }
 
     // Map music ID correctly
     let musicId = null;
@@ -1042,7 +1113,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       dimensions: { w: sceneW, h: sceneH },
       worldX: parseInt(gbsScene.x) || 0,
       worldY: parseInt(gbsScene.y) || 0,
-      script: sceneScript
+      startScriptId: sceneScriptId
     });
   }
 
