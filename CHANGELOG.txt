@@ -1,3 +1,6 @@
+0.3.4
+- added 'pass wall' actor type
+
 0.3.3
 - fixed windows compile error (hopefully it works for everyone!)
 - extended check input script node options
