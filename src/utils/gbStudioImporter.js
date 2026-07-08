@@ -166,6 +166,9 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     if (scene.musicId) {
       usedMusicIds.add(scene.musicId);
     }
+    if (scene.playerSpriteSheetId) {
+      usedSpriteSheetIds.add(scene.playerSpriteSheetId);
+    }
     if (scene.actors && Array.isArray(scene.actors)) {
       scene.actors.forEach(actor => {
         if (actor.spriteSheetId) {
@@ -193,6 +196,11 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   if (gbsProj.settings) {
     if (gbsProj.settings.defaultPlayerSpriteSheetId) {
       usedSpriteSheetIds.add(gbsProj.settings.defaultPlayerSpriteSheetId);
+    }
+    if (gbsProj.settings.defaultPlayerSprites) {
+      Object.values(gbsProj.settings.defaultPlayerSprites).forEach(id => {
+        if (id) usedSpriteSheetIds.add(id);
+      });
     }
   }
 
@@ -233,6 +241,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   usedSpriteSheetIds.forEach(id => {
     usedSpriteFiles.add(id);
     const spriteAsset = gbsSprites?.find(s => s.id === id);
+    console.log(`[Import] usedSpriteSheetId=${id}, found spriteAsset=`, spriteAsset ? spriteAsset.name : 'NULL');
     if (spriteAsset && spriteAsset.filename) {
       usedSpriteFiles.add(spriteAsset.filename);
       usedSpriteFiles.add(spriteAsset.filename.replace(/\.[^/.]+$/, ''));
@@ -240,6 +249,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     const spriteName = String(id).replace(/\.[^/.]+$/, '');
     usedSpriteFiles.add(spriteName);
   });
+  console.log(`[Import] usedSpriteFiles contents:`, Array.from(usedSpriteFiles));
 
   const usedMusicFiles = new Set();
   usedMusicIds.forEach(id => {
@@ -259,6 +269,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     sprites: gbsSprites.length,
     music: gbsMusic.length
   });
+  console.log("[Importer Debug] gbsSprites names:", gbsSprites.map(s => s.name));
   console.log("[Importer Debug] Used Asset IDs:", {
     usedBackgroundIds: Array.from(usedBackgroundIds),
     usedSpriteSheetIds: Array.from(usedSpriteSheetIds),
@@ -327,7 +338,8 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       return false;
     }
     const spriteName = name.split('/').pop().replace(/\.[^/.]+$/, '');
-    return usedSpriteFiles.has(spriteName) || [...usedSpriteFiles].some(uf => name.includes(uf));
+    const match = usedSpriteFiles.has(spriteName) || [...usedSpriteFiles].some(uf => name.includes(uf));
+    return match;
   });
 
   let tileIdCounter = Date.now();
@@ -347,6 +359,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
             const r = imgData[idx];
             const g = imgData[idx + 1];
             const b = imgData[idx + 2];
+            if (r === 101 && g === 255 && b === 0) continue;
             tileData[ty][tx] = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
             hasPixels = true;
           }
@@ -371,7 +384,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       const spriteName = spritePath.split('/').pop().replace(/\.[^/.]+$/, '');
       const spriteBlob = await zip.files[spritePath].async('blob');
       const dataUrl = URL.createObjectURL(spriteBlob);
-
+ 
       const img = new Image();
       await new Promise((resolve, reject) => {
         img.onload = resolve;
@@ -390,16 +403,33 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
         spriteName === s.name || spriteName === (s.filename && s.filename.replace(/\.[^/.]+$/, ''))
       );
 
+      console.log(`[Import] Processing sprite: ${spriteName}, config found:`, !!spriteConfig,
+        spriteConfig ? `states: ${spriteConfig.states?.length || 0}` : 'no config');
+
       const animFrames = [];
       let frameIdx = 0;
       const tileCache = {};
 
+      const gbsSpriteEntry = gbsSprites?.find(s => s.name === spriteName || s.filename === spriteName);
+
       if (spriteConfig && spriteConfig.states && spriteConfig.states.length > 0) {
-        // Config-driven sprite import: iterate states → animations → frames → tiles
+        // Config-driven: create one animation per state per direction
         const canvasW = spriteConfig.canvasWidth || 16;
+        const stateAnims = {};
+        let firstTileId = null;
+
+        // Direction labels for multi_movement
+        const dirNames = ['down', 'down_left', 'left', 'up_left', 'up', 'up_right', 'right', 'down_right'];
 
         for (const state of spriteConfig.states) {
-          for (const animation of state.animations) {
+          const stateName = state.name || '';
+          const dirAnims = [];
+          const combinedFrames = [];
+          const isMulti = state.animationType === 'multi_movement';
+
+          state.animations.forEach((animation, dirIdx) => {
+            const animFrames = [];
+
             for (const frame of animation.frames) {
               const frameGroupId = Date.now() + Math.random() + frameIdx;
               const frameTiles = [null, null, null, null];
@@ -407,15 +437,26 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
               for (const tile of frame.tiles) {
                 const px = tile.sliceX;
                 const py = tile.sliceY < 0 ? 0 : tile.sliceY;
-
                 const cacheKey = `${px},${py}`;
-                if (!tileCache[cacheKey]) {
-                  const { data, hasPixels } = extractTileData(imgData, img.width, img.height, px, py);
+                const fallbackPy = py + 8;
+                const fallbackCacheKey = `${px},${fallbackPy}`;
+
+                if (!tileCache[cacheKey] && !tileCache[fallbackCacheKey]) {
+                  let { data, hasPixels } = extractTileData(imgData, img.width, img.height, px, py);
+                  let usedPy = py;
+                  if (!hasPixels && fallbackPy < img.height && fallbackPy + 8 <= img.height) {
+                    const fallback = extractTileData(imgData, img.width, img.height, px, fallbackPy);
+                    if (fallback.hasPixels) {
+                      data = fallback.data;
+                      hasPixels = true;
+                      usedPy = fallbackPy;
+                    }
+                  }
                   if (hasPixels) {
                     const tileId = tileIdCounter++;
                     savedTiles.push({
                       id: tileId,
-                      name: `${spriteName}_frame_${frameIdx}_${px}_${py}`,
+                      name: `${spriteName}_frame_${frameIdx}_${px}_${usedPy}`,
                       collisionType: 'none',
                       data,
                       groupId: frameGroupId,
@@ -435,10 +476,50 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
               }
 
               animFrames.push(frameTiles);
+              combinedFrames.push(frameTiles);
               frameIdx++;
             }
+
+            const dirLabel = isMulti && dirIdx < dirNames.length ? dirNames[dirIdx] : String(dirIdx);
+            const animName = stateName ? `${spriteName}_${stateName}_${dirLabel}` : `${spriteName}_${dirLabel}`;
+
+            const animId = Date.now() + Math.random();
+            animations.push({
+              id: animId,
+              name: animName,
+              frames: animFrames,
+              fps: spriteConfig?.animSpeed != null ? Math.round(60 / spriteConfig.animSpeed) : 8
+            });
+
+            dirAnims.push(animId);
+            if (!firstTileId) {
+              for (const f of animFrames) {
+                for (const t of f) {
+                  if (t != null) { firstTileId = t; break; }
+                }
+                if (firstTileId) break;
+              }
+            }
+          });
+
+          // Create combined animation with all frames from all directions
+          if (combinedFrames.length > 0) {
+            const combinedAnimId = Date.now() + Math.random();
+            const combinedName = stateName ? `${spriteName}_${stateName}` : spriteName;
+            animations.push({
+              id: combinedAnimId,
+              name: combinedName,
+              frames: combinedFrames,
+              fps: spriteConfig?.animSpeed != null ? Math.round(60 / spriteConfig.animSpeed) : 8
+            });
+            stateAnims[stateName] = [combinedAnimId, ...dirAnims];
+          } else {
+            stateAnims[stateName] = dirAnims;
           }
         }
+
+        spriteIdMap[spriteName] = { tileId: firstTileId, stateAnims };
+        if (gbsSpriteEntry) spriteIdMap[gbsSpriteEntry.id] = { tileId: firstTileId, stateAnims };
       } else {
         // Fallback: slice spritesheet into 8x8 tiles, group every 4 into a frame
         const tileCols = Math.floor(img.width / 8);
@@ -459,13 +540,24 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
             const ty = Math.floor(ti / tileCols) * 8;
 
             const cacheKey = `${tx},${ty}`;
-            if (!tileCache[cacheKey]) {
-              const { data, hasPixels } = extractTileData(imgData, img.width, img.height, tx, ty);
+            const fallbackTy = ty + 8;
+            const fallbackCacheKey = `${tx},${fallbackTy}`;
+            if (!tileCache[cacheKey] && !tileCache[fallbackCacheKey]) {
+              let { data, hasPixels } = extractTileData(imgData, img.width, img.height, tx, ty);
+              let usedTy = ty;
+              if (!hasPixels && fallbackTy < img.height && fallbackTy + 8 <= img.height) {
+                const fallback = extractTileData(imgData, img.width, img.height, tx, fallbackTy);
+                if (fallback.hasPixels) {
+                  data = fallback.data;
+                  hasPixels = true;
+                  usedTy = fallbackTy;
+                }
+              }
               if (hasPixels) {
                 const tileId = tileIdCounter++;
                 savedTiles.push({
                   id: tileId,
-                  name: `${spriteName}_tile_${tx}_${ty}`,
+                  name: `${spriteName}_tile_${tx}_${usedTy}`,
                   collisionType: 'none',
                   data,
                   groupId: frameGroupId,
@@ -483,30 +575,30 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
           animFrames.push(frameTiles);
           frameIdx++;
         }
-      }
 
-      if (animFrames.length === 0) continue;
+        if (animFrames.length === 0) continue;
 
-      const animId = Date.now() + Math.random();
-      const cleanAnimName = `${spriteName}_anim`;
-      animations.push({
-        id: animId,
-        name: cleanAnimName,
-        frames: animFrames,
-        fps: spriteConfig?.animSpeed != null ? Math.round(60 / spriteConfig.animSpeed) : 8
-      });
+        const fallbackAnimId = Date.now() + Math.random();
+        animations.push({
+          id: fallbackAnimId,
+          name: `${spriteName}_anim`,
+          frames: animFrames,
+          fps: spriteConfig?.animSpeed != null ? Math.round(60 / spriteConfig.animSpeed) : 8
+        });
 
-      spriteIdMap[spriteName] = { animId, tileId: animFrames[0]?.[0] || null };
-
-      const gbsSpriteEntry = gbsSprites?.find(s => s.name === spriteName || s.filename === spriteName);
-      if (gbsSpriteEntry) {
-        spriteIdMap[gbsSpriteEntry.id] = { animId, tileId: animFrames[0]?.[0] || null };
+        const spriteData = { tileId: animFrames[0]?.[0] || null, stateAnims: { '': [fallbackAnimId] } };
+        spriteIdMap[spriteName] = spriteData;
+        if (gbsSpriteEntry) spriteIdMap[gbsSpriteEntry.id] = spriteData;
       }
 
     } catch (spriteErr) {
       warnings.push(`Failed to import sprite sheet "${spritePath}": ${spriteErr.message}`);
     }
   }
+
+  console.log(`[Import] Created ${animations.length} animations total`);
+  console.log(`[Import] spriteIdMap keys:`, Object.keys(spriteIdMap));
+  console.log(`[Import] animations:`, animations.map(a => ({ id: a.id, name: a.name, frames: a.frames.length })));
 
   // Load project settings (modular or monolithic)
   if (!gbsProj.settings) {
@@ -642,6 +734,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
               const r = imgData[idx];
               const g = imgData[idx + 1];
               const b = imgData[idx + 2];
+              if (r === 101 && g === 255 && b === 0) continue;
               colorGrid[y][x] = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
             }
           }
@@ -726,6 +819,10 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       rawCollisions = gbsScene.collisions;
     }
 
+    // Create collision type groups
+    const colGroupSolid = { id: Date.now() + Math.random() + 100, type: 'solid', name: 'Collisions (Solid)', isGroup: true, isOpen: true };
+    const colGroupLadder = { id: Date.now() + Math.random() + 101, type: 'ladder', name: 'Collisions (Ladder)', isGroup: true, isOpen: true };
+
     if (rawCollisions.length > 0) {
       const originalTileCols = Math.ceil((imgW || sceneW) / 8);
       const originalTileRows = Math.ceil((imgH || sceneH) / 8);
@@ -733,21 +830,24 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       const offsetCols = Math.floor((sceneW / 8 - originalTileCols) / 2);
       const offsetRows = Math.floor((sceneH / 8 - originalTileRows) / 2);
 
+      collisions.push(colGroupSolid, colGroupLadder);
+
       rawCollisions.forEach((val, idx) => {
         if (!val) return;
         const col = idx % originalTileCols;
         const row = Math.floor(idx / originalTileCols);
         if (row >= originalTileRows) return;
+        const isLadder = (val === 0x10 || val === 16);
         collisions.push({
           id: Date.now() + Math.random() + colIdx++,
           name: `Collision ${colIdx}`,
-          type: (val === 0x10 || val === 16) ? 'ladder' : 'solid',
+          type: isLadder ? 'ladder' : 'solid',
           x: (col + offsetCols) * 8,
           y: (row + offsetRows) * 8,
           width: 8,
           height: 8,
           isPainted: false,
-          groupId: null
+          groupId: isLadder ? colGroupLadder.id : colGroupSolid.id
         });
       });
     }
@@ -781,14 +881,22 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
 
       let spriteId = 1;
       let walkAnimId = null;
+      let idleAnimId = null;
       const spriteRef = spriteIdMap[act.spriteSheetId];
+      console.log(`[Import] Actor "${act.name}": spriteSheetId=${act.spriteSheetId}, spriteRef=`, spriteRef ? `found tileId=${spriteRef.tileId}, stateAnims keys=${Object.keys(spriteRef.stateAnims || {})}` : 'NOT FOUND');
       if (spriteRef) {
         spriteId = spriteRef.tileId || 1;
-        walkAnimId = spriteRef.animId;
+        const defaultAnims = spriteRef.stateAnims?.[''];
+        console.log(`[Import] Actor "${act.name}": stateAnims['']=`, defaultAnims);
+        if (defaultAnims && defaultAnims.length > 0) {
+          walkAnimId = defaultAnims[0];
+          idleAnimId = defaultAnims[0];
+          console.log(`[Import] Actor "${act.name}": assigned walkAnimId=${walkAnimId}, idleAnimId=${idleAnimId}`);
+        }
       }
 
       const cleanType = 'npc';
-      const parentGroup = actorGroups.find(g => g.name === 'NPCs');
+      const parentGroup = actorGroups.find(g => g.name === 'Misc');
 
       // Translate all script types
       const mainScript = translateEventList(act.script, sceneIdMap, variableIdMap);
@@ -812,6 +920,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
         color: '#4CAF50',
         spriteId: spriteId,
         walkAnimId: walkAnimId,
+        idleAnimId: idleAnimId,
         isHidden: false,
         hflip: true,
         groupId: parentGroup?.id || null,
@@ -824,6 +933,41 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       });
     });
 
+    // --- Create player actor if scene has one ---
+    const playerSpriteId = gbsScene.playerSpriteSheetId || gbsProj.settings?.defaultPlayerSpriteSheetId;
+    console.log(`[Import] Player sprite ID: ${playerSpriteId}, spriteRef:`, spriteIdMap[playerSpriteId] ? 'FOUND' : 'NOT FOUND');
+    if (playerSpriteId) {
+      const spriteRef = spriteIdMap[playerSpriteId];
+      const playerTileX = Math.floor((imgW || sceneW) / 2 / 8);
+      const playerTileY = Math.floor((imgH || sceneH) / 2 / 8);
+      const playerGroup = { id: 9, type: 'group', name: 'PLAYER', isOpen: true };
+      // Ensure PLAYER group is in actors array
+      if (!actors.find(g => g.name === 'PLAYER')) actors.push(playerGroup);
+
+      actors.push({
+        id: Date.now() + Math.random(),
+        name: 'Player',
+        type: 'player',
+        x: playerTileX * 8 + actorOffsetX,
+        y: playerTileY * 8 + actorOffsetY,
+        width: 16,
+        height: 16,
+        color: '#2196F3',
+        spriteId: spriteRef?.tileId || 1,
+        walkAnimId: spriteRef?.stateAnims?.['']?.[0] || null,
+        idleAnimId: spriteRef?.stateAnims?.['']?.[0] || null,
+        isHidden: false,
+        hflip: true,
+        groupId: playerGroup.id,
+        script: null,
+        startScript: null,
+        updateScript: null,
+        hit1Script: null,
+        hit2Script: null,
+        hit3Script: null
+      });
+    }
+
     // --- Load Triggers from modular files ---
     const triggers = [];
     let gbsTriggers = [];
@@ -831,6 +975,13 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       gbsTriggers = gbsScene.triggers;
     } else if (sceneDir && modularTriggers[sceneDir]) {
       gbsTriggers = modularTriggers[sceneDir];
+    }
+
+    // Create trigger group
+    const triggerGroup = { id: Date.now() + Math.random() + 200, type: 'group', name: 'Imported Triggers', isGroup: true, isOpen: true };
+
+    if (gbsTriggers.length > 0) {
+      triggers.push(triggerGroup);
     }
 
     gbsTriggers.forEach((trig, trigIdx) => {
