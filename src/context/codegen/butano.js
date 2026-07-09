@@ -1160,9 +1160,10 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 }
               } else {
                 const waveType = n.data.waveType || 'square';
+                const safeWaveType = String(waveType).replace(/[^a-z0-9_]/gi, '_');
                 const freq = n.data.freq || 440;
                 const durationMs = n.data.durationMs || 100;
-                const soundName = `snd_${waveType}_${freq}_${durationMs}`;
+                const soundName = `snd_${safeWaveType}_${freq}_${durationMs}`;
                 if (!generatedSounds.has(soundName)) {
                   generatedSounds.add(soundName);
                   zip.file(`audio/${soundName}.wav`, generateWav(waveType, freq, durationMs));

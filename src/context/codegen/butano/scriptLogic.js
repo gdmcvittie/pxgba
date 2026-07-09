@@ -916,8 +916,8 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
     } else if (label === 'Music Control') {
       const mAction = currentNode.data.musicAction || 'pause';
       code += `${indent}BN_LOG("Action: Music Control ${mAction}");\n`;
-      if (mAction === 'pause') code += `${indent}bn::music::pause();\n`;
-      else if (mAction === 'resume') code += `${indent}bn::music::resume();\n`;
+      if (mAction === 'pause') code += `${indent}if(bn::music::playing()){bn::music::pause();}\n`;
+      else if (mAction === 'resume') code += `${indent}if(bn::music::paused()){bn::music::resume();}\n`;
       else if (mAction === 'stop') code += `${indent}bn::music::stop();\n`;
     } else if (label === 'Set Timer' || currentNode.data?.actionType === 'set_timer') {
       const timerIdx = currentNode.data?.timerIndex || 1;

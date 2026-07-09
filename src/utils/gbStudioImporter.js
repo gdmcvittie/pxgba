@@ -272,6 +272,33 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     }
   }
 
+  // Build sound asset map from .gbsres files (GB Studio 3.x modular sounds + built-in)
+  const soundAssetMap = new Map();
+  for (const zipPath of Object.keys(zip.files)) {
+    if ((zipPath.includes('assets/sounds/') || /\/plugins\/.+\/(assets\/)?sounds\//.test(zipPath)) && zipPath.endsWith('.gbsres')) {
+      try {
+        const text = await zip.files[zipPath].async('text');
+        const parsed = JSON.parse(text);
+        if (parsed._resourceType === 'sound') {
+          soundAssetMap.set(parsed.id || zipPath.split('/').pop().replace(/\.gbsres$/, ''), {
+            waveType: parsed.type || 'square',
+            freq: parseInt(parsed.frequency) || 440,
+            durationMs: parseFloat(parsed.duration) ? Math.round(parseFloat(parsed.duration) * 1000) : 100
+          });
+        }
+      } catch (e) {}
+    }
+  }
+  const builtinSounds = [
+    ['beep', { waveType: 'square', freq: 440, durationMs: 100 }],
+    ['coin', { waveType: 'square', freq: 660, durationMs: 200 }],
+    ['hurt', { waveType: 'noise', freq: 0, durationMs: 200 }],
+    ['jump', { waveType: 'square', freq: 440, durationMs: 100 }],
+    ['laser', { waveType: 'square', freq: 220, durationMs: 300 }],
+    ['explosion', { waveType: 'noise', freq: 0, durationMs: 500 }]
+  ];
+  for (const [name, params] of builtinSounds) soundAssetMap.set(name, params);
+
   // Load custom scripts for EVENT_CALL_CUSTOM_EVENT resolution
   const customEventScripts = {};
   const scriptFiles = Object.keys(zip.files).filter(name =>
@@ -285,7 +312,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       const parsed = JSON.parse(text);
       if (parsed && parsed._resourceType === 'script') {
         customEventScripts[parsed.id] = parsed;
-        const translatedScript = translateEventList(parsed.script || [], sceneIdMap, variableIdMap, {}, { gbsSprites });
+        const translatedScript = translateEventList(parsed.script || [], sceneIdMap, variableIdMap, {}, { gbsSprites, soundAssetMap });
         customScripts.push({
           id: parsed.id,
           name: parsed.name || 'Unnamed Script',
@@ -399,7 +426,9 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   const spriteIdMap = {};
 
   const spriteFiles = Object.keys(zip.files).filter(name => {
-    if (!name.includes('assets/sprites/') || (!name.endsWith('.png') && !name.endsWith('.PNG'))) {
+    const isPluginPath = /\/plugins\/.+\/(assets\/)?sprites\//.test(name);
+    const isProjectPath = name.includes('assets/sprites/');
+    if (!(isPluginPath || isProjectPath) || (!name.endsWith('.png') && !name.endsWith('.PNG'))) {
       return false;
     }
     const spriteName = name.split('/').pop().replace(/\.[^/.]+$/, '');
@@ -671,24 +700,117 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     }
   }
 
-  // 3. Ingest referenced Music Assets (.mod / .uge files)
-  const musicFiles = Object.keys(zip.files).filter(name => {
-    if (!name.includes('assets/music/') || (!name.endsWith('.mod') && !name.endsWith('.uge'))) {
-      return false;
+  // 3. Ingest Music Assets (.mod / .uge / .wav / .mp3) from both project assets/ and plugins/
+  const musicExtRe = /\.(mod|uge|wav|mp3)$/i;
+  const musicFileMap = {};
+  const musicZipData = {};
+  for (const zipPath of Object.keys(zip.files)) {
+    const isPluginPath = /\/plugins\/.+\/(assets\/)?music\//.test(zipPath);
+    const isProjectPath = zipPath.includes('assets/music/');
+    if ((isPluginPath || isProjectPath) && musicExtRe.test(zipPath)) {
+      const fullName = zipPath.split('/').pop();
+      const baseName = fullName.replace(/\.[^/.]+$/, '');
+      musicFileMap[baseName] = zipPath;
+      musicFileMap[fullName] = zipPath;
+      try {
+        musicZipData[baseName] = zip.files[zipPath];
+        musicZipData[fullName] = zip.files[zipPath];
+      } catch (e) {}
     }
-    const mName = name.split('/').pop().replace(/\.[^/.]+$/, '');
-    return usedMusicFiles.has(mName) || [...usedMusicFiles].some(um => name.includes(um));
-  });
-  
-  musicFiles.forEach((mPath, index) => {
-    const mName = mPath.split('/').pop().replace(/\.[^/.]+$/, '');
-    musicTracks.push({
-      id: `music_${index + 1}`,
-      name: mName,
-      artist: 'Imported',
-      isSfx: false
+  }
+  const musicZipPaths = [...new Set(Object.values(musicFileMap))];
+
+  const matchedZipPaths = new Set();
+  const uuidTrackMap = {}; // UUID → trackId (e.g., "music_1") for scene musicId fallback
+
+  // Step A: import via gbsMusic entries in project order (scene musicId alignment)
+  if (gbsMusic && Array.isArray(gbsMusic) && gbsMusic.length > 0) {
+    for (let mi = 0; mi < gbsMusic.length; mi++) {
+      const musicAsset = gbsMusic[mi];
+      if (!musicAsset) continue;
+      const filename = musicAsset.filename || musicAsset.name || String(musicAsset.id);
+      const nameNoExt = filename.replace(/\.[^/.]+$/, '');
+      const mPath = musicFileMap[filename] || musicFileMap[nameNoExt];
+      if (mPath && musicZipData[nameNoExt]) {
+        try {
+          const fileData = await musicZipData[nameNoExt].async('base64');
+          musicTracks.push({
+            id: `music_${mi + 1}`,
+            name: filename,
+            artist: 'Imported',
+            isSfx: false,
+            data: `data:;base64,${fileData}`
+          });
+          matchedZipPaths.add(mPath);
+          // Track UUID from gbsMusic id (UUID) or zip path
+          const uuid = typeof musicAsset.id === 'string' && musicAsset.id.includes('-') ? musicAsset.id : null;
+          if (uuid && !uuidTrackMap[uuid]) {
+            uuidTrackMap[uuid] = `music_${mi + 1}`;
+          }
+          const pathUuidMatch = mPath.match(/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/);
+          if (pathUuidMatch && !uuidTrackMap[pathUuidMatch[0]]) {
+            uuidTrackMap[pathUuidMatch[0]] = `music_${mi + 1}`;
+          }
+        } catch (err) {
+          warnings.push(`Failed to read music file "${filename}": ${err.message}`);
+        }
+      } else {
+        warnings.push(`Music asset "${musicAsset.name || musicAsset.id}" has no matching file in zip`);
+      }
+    }
+  }
+
+  // Step B: import ALL remaining music files not already matched by Step A
+  for (const zipPath of musicZipPaths) {
+    if (matchedZipPaths.has(zipPath)) continue;
+    const fullName = zipPath.split('/').pop();
+    try {
+      const fileData = await zip.files[zipPath].async('base64');
+      musicTracks.push({
+        id: `music_${musicTracks.length + 1}`,
+        name: fullName,
+        artist: 'Imported',
+        isSfx: false,
+        data: `data:;base64,${fileData}`
+      });
+      matchedZipPaths.add(zipPath);
+      // Track UUID from zip path
+      const pathUuidMatch = zipPath.match(/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/);
+      if (pathUuidMatch && !uuidTrackMap[pathUuidMatch[0]]) {
+        uuidTrackMap[pathUuidMatch[0]] = `music_${musicTracks.length}`;
+      }
+    } catch (err) {
+      warnings.push(`Failed to read music file "${zipPath}": ${err.message}`);
+    }
+  }
+
+  const importedCount = musicTracks.length;
+
+  // Wrap all imported tracks in an "Imported Music" group folder
+  if (importedCount > 0) {
+    const groupId = 'imported-music';
+    for (let i = 0; i < musicTracks.length; i++) {
+      musicTracks[i] = { ...musicTracks[i], groupId };
+    }
+    musicTracks.unshift({
+      id: groupId,
+      type: 'group',
+      isGroup: true,
+      name: 'Imported Music',
+      isOpen: true
     });
-  });
+  }
+
+  // Patch scene musicIds for UUID references that weren't in gbsMusic
+  for (const scene of scenes) {
+    if (!scene.musicId && scene.rawMusicId && typeof scene.rawMusicId === 'string' && scene.rawMusicId.includes('-')) {
+      const mapped = uuidTrackMap[scene.rawMusicId];
+      if (mapped) {
+        scene.musicId = mapped;
+      }
+    }
+    delete scene.rawMusicId; // clean up temp field
+  }
 
   // Build scene actor/trigger lookup from modular files
   const modularActors = {};
@@ -757,11 +879,11 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     }
 
     const cleanBgName = bgName.replace(/\.[^/.]+$/, '');
-    const bgPath = Object.keys(zip.files).find(name => 
-      name.includes('assets/backgrounds/') && 
-      name.includes(cleanBgName) && 
-      (name.endsWith('.png') || name.endsWith('.PNG'))
-    );
+    const bgPath = Object.keys(zip.files).find(name => {
+      const isPluginPath = /\/plugins\/.+\/(assets\/)?backgrounds\//.test(name);
+      const isProjectPath = name.includes('assets/backgrounds/');
+      return (isPluginPath || isProjectPath) && name.includes(cleanBgName) && (name.endsWith('.png') || name.endsWith('.PNG'));
+    });
 
     if (bgPath) {
       try {
@@ -964,7 +1086,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
 
       // Script-level maps: actor sub-scripts use param 0 → self
       const actorSelfMap = { ...actorIdMap, 0: actorProjectId };
-      const transOpts = { actorUuidMap, animations, spriteIdMap, gbsSprites };
+      const transOpts = { actorUuidMap, animations, spriteIdMap, gbsSprites, soundAssetMap };
 
       const resolveAnims = (nodes) => {
         if (!spriteRef?.stateAnims) return nodes;
@@ -1102,7 +1224,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       const trigX = ((parseInt(trig.x) || 0) * 8) + actorOffsetX;
       const trigY = ((parseInt(trig.y) || 0) * 8) + actorOffsetY;
 
-      const trigScript = translateEventList(trig.script, sceneIdMap, variableIdMap, actorIdMap, { gbsSprites });
+      const trigScript = translateEventList(trig.script, sceneIdMap, variableIdMap, actorIdMap, { gbsSprites, soundAssetMap });
       let trigScriptId = null;
       if (trigScript && (trigScript.nodes?.length || trigScript.edges?.length)) {
         trigScriptId = Date.now() + Math.random() + 5000 + trigIdx;
@@ -1142,7 +1264,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     }];
 
     // Build scene script
-    const sceneScript = translateEventList(gbsScene.script, sceneIdMap, variableIdMap, actorIdMap, { gbsSprites });
+    const sceneScript = translateEventList(gbsScene.script, sceneIdMap, variableIdMap, actorIdMap, { gbsSprites, soundAssetMap });
     let sceneScriptId = null;
     if (sceneScript && (sceneScript.nodes?.length || sceneScript.edges?.length)) {
       sceneScriptId = Date.now() + Math.random() + 11000 + sIdx;
@@ -1156,11 +1278,15 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
 
     // Map music ID correctly
     let musicId = null;
+    const rawMusicId = gbsScene.musicId || null;
     if (gbsScene.musicId) {
       const musicAsset = gbsMusic?.find(m => m.id === gbsScene.musicId);
       if (musicAsset) {
         const musicIdx = gbsMusic.indexOf(musicAsset);
         musicId = `music_${musicIdx + 1}`;
+      } else if (typeof gbsScene.musicId === 'number' && gbsScene.musicId > 0) {
+        // Fallback: numeric musicId (GB Studio 1.x/2.x style)
+        musicId = `music_${gbsScene.musicId}`;
       }
     }
 
@@ -1173,6 +1299,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       triggers,
       collisions,
       musicId,
+      rawMusicId,
       dimensions: { w: sceneW, h: sceneH },
       worldX: parseInt(gbsScene.x) || 0,
       worldY: parseInt(gbsScene.y) || 0,
@@ -1196,7 +1323,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       dimensions: { w: MIN_PX, h: MIN_PX },
       worldX: 0,
       worldY: 0,
-      script: translateEventList([], sceneIdMap, variableIdMap, {}, { gbsSprites })
+      script: translateEventList([], sceneIdMap, variableIdMap, {}, { gbsSprites, soundAssetMap })
     });
   }
 
@@ -1237,7 +1364,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
  * Translates a GB Studio script array into a PxGBA React Flow node sequence.
  */
 function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}, extraOpts = {}) {
-  const { gbsSprites = [] } = extraOpts;
+  const { gbsSprites = [], soundAssetMap = new Map() } = extraOpts;
   const nodes = [{ id: 'start', position: { x: 420, y: 20 }, data: { label: 'On Update' }, type: 'customStart' }];
   const edges = [];
 
@@ -1515,12 +1642,23 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}, 
           isMapped = true;
           break;
 
-        case 'EVENT_MUSIC_PLAY_EFFECT':
+        case 'EVENT_MUSIC_PLAY_EFFECT': {
           label = 'Play Sound';
-          actionType = 'play_sound';
-          data = { label, actionType, computedSoundName: ev.args?.sound || 'snd_square_440_100' };
+          actionType = 'sound';
+          const musicSfxRef = ev.args?.sound || ev.args?.type || ev.args?.waveType;
+          let musicSfxParams = musicSfxRef ? soundAssetMap.get(String(musicSfxRef)) : null;
+          if (!musicSfxParams) {
+            const musicSfxWaveType = ev.args?.type || ev.args?.waveType || 'square';
+            musicSfxParams = {
+              waveType: String(musicSfxWaveType),
+              freq: parseInt(ev.args?.frequency || ev.args?.freq) || 440,
+              durationMs: parseFloat(ev.args?.duration) ? Math.round(parseFloat(ev.args?.duration) * 1000) : 100
+            };
+          }
+          data = { label, actionType, ...musicSfxParams };
           isMapped = true;
           break;
+        }
 
         case 'EVENT_ACTOR_HIDE':
           label = 'Destroy Actor';
@@ -1548,12 +1686,23 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}, 
           isMapped = true;
           break;
 
-        case 'EVENT_SOUND_PLAY_EFFECT':
+        case 'EVENT_SOUND_PLAY_EFFECT': {
           label = 'Play Sound';
-          actionType = 'play_sound';
-          data = { label, actionType, computedSoundName: ev.args?.sound || 'snd_square_440_100' };
+          actionType = 'sound';
+          const sfxRef = ev.args?.sound || ev.args?.type || ev.args?.waveType;
+          let sfxParams = sfxRef ? soundAssetMap.get(String(sfxRef)) : null;
+          if (!sfxParams) {
+            const sfxWaveType = ev.args?.type || ev.args?.waveType || 'square';
+            sfxParams = {
+              waveType: String(sfxWaveType),
+              freq: parseInt(ev.args?.frequency || ev.args?.freq) || 440,
+              durationMs: parseFloat(ev.args?.duration) ? Math.round(parseFloat(ev.args?.duration) * 1000) : 100
+            };
+          }
+          data = { label, actionType, ...sfxParams };
           isMapped = true;
           break;
+        }
 
         case 'EVENT_CAMERA_SHAKE':
           label = 'Camera Shake';
