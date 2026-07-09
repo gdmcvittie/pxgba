@@ -45,7 +45,7 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
       code += `${indent}        scene_dialog_bg->set_priority(0);\n`;
       code += `${indent}    }\n`;
       code += `${indent}    bn::vector<bn::sprite_ptr, 128> text_sprites;\n`;
-      code += `${indent}    show_dialog_text("${safeStr(currentNode.data.message)}", text_sprites, dialog_text_palette);\n`;
+      code += `${indent}    show_dialog_text("${safeStr(currentNode.data.message)}", text_sprites, dialog_text_palette, text_anim_speed);\n`;
       code += `${indent}    while(bn::keypad::a_held()) { bn::core::update(); }\n`;
       code += `${indent}    while(!bn::keypad::a_pressed()) { bn::core::update(); }\n`;
       code += `${indent}    while(bn::keypad::a_held()) { bn::core::update(); }\n`;
@@ -93,7 +93,7 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
         opts.forEach((opt, oIdx) => {
           const variant = getMenuFormattedText(msg, opts, oIdx);
           recreateSwitch += `${indent}                case ${oIdx}:\n`;
-          recreateSwitch += `${indent}                    show_dialog_text("${safeStr(variant)}", text_sprites, dialog_text_palette);\n`;
+          recreateSwitch += `${indent}                    show_dialog_text("${safeStr(variant)}", text_sprites, dialog_text_palette, text_anim_speed);\n`;
           recreateSwitch += `${indent}                    break;\n`;
         });
         recreateSwitch += `${indent}            }\n`;
@@ -125,7 +125,7 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
         code += `${indent}        scene_dialog_bg->set_priority(0);\n`;
         code += `${indent}    }\n`;
         code += `${indent}    bn::vector<bn::sprite_ptr, 128> text_sprites;\n`;
-        code += `${indent}    show_dialog_text("${safeStr(initialVariant)}", text_sprites, dialog_text_palette);\n`;
+        code += `${indent}    show_dialog_text("${safeStr(initialVariant)}", text_sprites, dialog_text_palette, text_anim_speed);\n`;
         code += `${indent}    while(bn::keypad::a_held() || bn::keypad::b_held()) { bn::core::update(); }\n`;
         code += `${indent}    while(true) {\n`;
         code += `${indent}        int num_rows = (${numOptions} + 1) / 2;\n`;
@@ -760,10 +760,35 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
       code += `${indent}}\n`;
     } else if (label === 'Fade In' || currentNode.data?.actionType === 'fade_in') {
       const fadeSpeed = parseInt(currentNode.data?.speed) || 1;
-      code += `${indent}BN_LOG("Action: Fade In (speed=${fadeSpeed})");\n`;
+      const speedFrames = fadeSpeed === 0 ? 0 : fadeSpeed === 1 ? 15 : fadeSpeed === 2 ? 30 : 60;
+      code += `${indent}{\n`;
+      code += `${indent}    bn::regular_bg_ptr fade_bg = bn::regular_bg_items::fade_overlay_bg.create_bg(0, 0);\n`;
+      code += `${indent}    fade_bg.set_blending_enabled(true);\n`;
+      code += `${indent}    fade_bg.set_priority(0);\n`;
+      if (speedFrames > 0) {
+        code += `${indent}    for (int f = ${speedFrames}; f >= 0; f--) {\n`;
+        code += `${indent}        fade_bg.set_alpha(bn::fixed(f) / ${speedFrames});\n`;
+        code += `${indent}        bn::core::update();\n`;
+        code += `${indent}    }\n`;
+      }
+      code += `${indent}}\n`;
     } else if (label === 'Fade Out' || currentNode.data?.actionType === 'fade_out') {
       const fadeSpeed = parseInt(currentNode.data?.speed) || 1;
-      code += `${indent}BN_LOG("Action: Fade Out (speed=${fadeSpeed})");\n`;
+      const speedFrames = fadeSpeed === 0 ? 0 : fadeSpeed === 1 ? 15 : fadeSpeed === 2 ? 30 : 60;
+      code += `${indent}{\n`;
+      code += `${indent}    bn::regular_bg_ptr fade_bg = bn::regular_bg_items::fade_overlay_bg.create_bg(0, 0);\n`;
+      code += `${indent}    fade_bg.set_blending_enabled(true);\n`;
+      code += `${indent}    fade_bg.set_priority(0);\n`;
+      if (speedFrames > 0) {
+        code += `${indent}    fade_bg.set_alpha(bn::fixed(0));\n`;
+        code += `${indent}    for (int f = 1; f <= ${speedFrames}; f++) {\n`;
+        code += `${indent}        fade_bg.set_alpha(bn::fixed(f) / ${speedFrames});\n`;
+        code += `${indent}        bn::core::update();\n`;
+        code += `${indent}    }\n`;
+      } else {
+        code += `${indent}    fade_bg.set_alpha(bn::fixed(1));\n`;
+      }
+      code += `${indent}}\n`;
     } else if (label === 'Camera Lock' || currentNode.data?.actionType === 'camera_lock') {
       code += `${indent}camera_custom_control = false;\n`;
     } else if (label === 'Set Direction' || currentNode.data?.actionType === 'set_direction') {
@@ -790,21 +815,53 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
     } else if (label === 'Await Input' || currentNode.data?.actionType === 'await_input') {
       code += `${indent}while (!bn::keypad::a_pressed() && !bn::keypad::b_pressed() && !bn::keypad::start_pressed()) { bn::core::update(); }\n`;
     } else if (label === 'Actor Emote' || currentNode.data?.actionType === 'actor_emote') {
+      const targetActorId = currentNode.data?.targetActorId;
       const emote = currentNode.data?.emote || 'exclamation';
-      code += `${indent}BN_LOG("Action: Actor Emote - ${emote}");\n`;
+      if (targetActorId !== null && targetActorId !== undefined) {
+        const targetActorIdx = sActors.findIndex(a => a && a.id === targetActorId);
+        if (targetActorIdx !== -1) {
+          const charMap = { exclamation: '!', question: '?', music: '>', sleep: '.' };
+          const ch = charMap[emote] || '!';
+          code += `${indent}{\n`;
+          code += `${indent}    bn::vector<bn::sprite_ptr, 4> emote_sprites;\n`;
+          code += `${indent}    int ex = actor_${targetActorIdx}_sprite.x().integer() - camera.x().integer();\n`;
+          code += `${indent}    int ey = actor_${targetActorIdx}_sprite.y().integer() - camera.y().integer() - 20;\n`;
+          code += `${indent}    auto e_item = get_dialog_char_sprite_item('${ch}');\n`;
+          code += `${indent}    if (e_item) {\n`;
+          code += `${indent}        bn::sprite_ptr es = e_item->create_sprite(ex, ey);\n`;
+          code += `${indent}        es.set_palette(dialog_text_palette);\n`;
+          code += `${indent}        es.set_bg_priority(0);\n`;
+          code += `${indent}        es.set_z_order(-32767);\n`;
+          code += `${indent}        emote_sprites.push_back(es);\n`;
+          code += `${indent}    }\n`;
+          code += `${indent}    for (int w = 0; w < 60; w++) { bn::core::update(); }\n`;
+          code += `${indent}}\n`;
+        }
+      }
     } else if (label === 'Overlay Show' || currentNode.data?.actionType === 'overlay_show') {
-      code += `${indent}BN_LOG("Action: Overlay Show");\n`;
+      const overlayX = parseInt(currentNode.data?.x) || 0;
+      const overlayY = parseInt(currentNode.data?.y) || 0;
+      const overlayColor = currentNode.data?.color || 'white';
+      code += `${indent}if (!scene_overlay_bg) {\n`;
+      if (overlayColor === 'black') {
+        code += `${indent}    scene_overlay_bg = bn::regular_bg_items::fade_overlay_bg.create_bg(${overlayX * 8 - 120}, ${overlayY * 8 - 80});\n`;
+      } else {
+        code += `${indent}    scene_overlay_bg = bn::regular_bg_items::dialog_bg.create_bg(${overlayX * 8 - 120}, ${overlayY * 8 - 80});\n`;
+      }
+      code += `${indent}    scene_overlay_bg->set_priority(0);\n`;
+      code += `${indent}}\n`;
     } else if (label === 'Overlay Hide' || currentNode.data?.actionType === 'overlay_hide') {
-      code += `${indent}BN_LOG("Action: Overlay Hide");\n`;
+      code += `${indent}scene_overlay_bg.reset();\n`;
     } else if (label === 'Set Text Speed' || currentNode.data?.actionType === 'text_set_anim_speed') {
       const textSpeed = parseInt(currentNode.data?.speed) || 1;
-      code += `${indent}BN_LOG("Action: Set Text Speed - ${textSpeed}");\n`;
+      const speedFrames = textSpeed === 0 ? 0 : textSpeed === 1 ? 1 : textSpeed === 2 ? 3 : 6;
+      code += `${indent}text_anim_speed = ${speedFrames};\n`;
     } else if (label === 'Set Actor Sprite' || currentNode.data?.actionType === 'set_actor_sprite') {
       const targetActorId = currentNode.data?.targetActorId;
       if (targetActorId !== null && targetActorId !== undefined) {
         const targetActorIdx = sActors.findIndex(a => a && a.id === targetActorId);
         if (targetActorIdx !== -1) {
-          code += `${indent}BN_LOG("Action: Set Actor Sprite - actor ${targetActorIdx}");\n`;
+          code += `${indent}BN_LOG("Action: Set Actor Sprite - actor ${targetActorIdx} (sprite swapping not yet implemented)");\n`;
         }
       }
     } else if (label === 'Set Actor Flip' || currentNode.data?.actionType === 'set_actor_flip') {

@@ -125,7 +125,7 @@ export async function generateButano(ctx) {
       let globalBppMode = globalSpriteColors.length > 16 ? "bpp_8" : "bpp_4";
       let globalColorsCount = globalSpriteColors.length;
 
-      let mainCppIncludes = `#include "bn_core.h"\n#include "bn_log.h"\n#include "bn_random.h"\n#include "bn_camera_ptr.h"\n#include "bn_keypad.h"\n#include "bn_optional.h"\n#include "bn_sprite_ptr.h"\n#include "bn_sprite_tiles_ptr.h"\n#include "bn_sprite_palette_ptr.h"\n#include "bn_sprite_affine_mat_ptr.h"\n#include "bn_music.h"\n#include "bn_bg_palettes.h"\n#include "bn_string_view.h"\n#include "bn_sprite_item.h"\n#include "bn_vector.h"\n`;
+      let mainCppIncludes = `#include "bn_core.h"\n#include "bn_log.h"\n#include "bn_random.h"\n#include "bn_camera_ptr.h"\n#include "bn_keypad.h"\n#include "bn_optional.h"\n#include "bn_sprite_ptr.h"\n#include "bn_sprite_tiles_ptr.h"\n#include "bn_sprite_palette_ptr.h"\n#include "bn_sprite_affine_mat_ptr.h"\n#include "bn_music.h"\n#include "bn_bg_palettes.h"\n#include "bn_blending.h"\n#include "bn_string_view.h"\n#include "bn_sprite_item.h"\n#include "bn_vector.h"\n`;
       mainCppIncludes += `#include "bn_affine_mat_attributes.h"\n#include "bn_affine_bg_ptr.h"\n#include "bn_regular_bg_ptr.h"\n#include "bn_sram.h"\n`;
       let hasMusic = false;
       if (variables.some(v => v.type === 'string') || scenes.some(s => s.type === 'RACING')) {
@@ -297,32 +297,60 @@ bn::optional<bn::sprite_item> get_dialog_char_sprite_item(char c) {
     }
 }
 
-void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 128>& text_sprites, const bn::sprite_palette_ptr& palette) {
+void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 128>& text_sprites, const bn::sprite_palette_ptr& palette, int speed = 0) {
     int start_x = -110;
     int start_y = 26;
     int cur_x = start_x;
     int cur_y = start_y;
     
-    for (char c : text) {
-        if (c == '\\n') {
-            cur_x = start_x;
-            cur_y += 14;
-            continue;
-        }
-        if (c == ' ') {
-            cur_x += 8;
-            continue;
-        }
-        auto item_opt = get_dialog_char_sprite_item(c);
-        if (item_opt) {
-            if (text_sprites.size() < text_sprites.max_size()) {
-                bn::sprite_ptr sprite = item_opt->create_sprite(cur_x, cur_y);
-                sprite.set_palette(palette);
-                sprite.set_bg_priority(0);
-                sprite.set_z_order(-32767);
-                text_sprites.push_back(sprite);
+    if (speed <= 0) {
+        for (char c : text) {
+            if (c == '\\n') {
+                cur_x = start_x;
+                cur_y += 14;
+                continue;
             }
-            cur_x += 8;
+            if (c == ' ') {
+                cur_x += 8;
+                continue;
+            }
+            auto item_opt = get_dialog_char_sprite_item(c);
+            if (item_opt) {
+                if (text_sprites.size() < text_sprites.max_size()) {
+                    bn::sprite_ptr sprite = item_opt->create_sprite(cur_x, cur_y);
+                    sprite.set_palette(palette);
+                    sprite.set_bg_priority(0);
+                    sprite.set_z_order(-32767);
+                    text_sprites.push_back(sprite);
+                }
+                cur_x += 8;
+            }
+        }
+    } else {
+        for (char c : text) {
+            if (c == '\\n') {
+                cur_x = start_x;
+                cur_y += 14;
+                continue;
+            }
+            if (c == ' ') {
+                cur_x += 8;
+                continue;
+            }
+            auto item_opt = get_dialog_char_sprite_item(c);
+            if (item_opt) {
+                if (text_sprites.size() < text_sprites.max_size()) {
+                    bn::sprite_ptr sprite = item_opt->create_sprite(cur_x, cur_y);
+                    sprite.set_palette(palette);
+                    sprite.set_bg_priority(0);
+                    sprite.set_z_order(-32767);
+                    text_sprites.push_back(sprite);
+                }
+                cur_x += 8;
+            }
+            for (int w = 0; w < speed; w++) {
+                bn::core::update();
+            }
         }
     }
 }
@@ -5168,7 +5196,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 triggerLogicCode += `                            stream.append(".");\n`;
                 triggerLogicCode += `                            if (b_centiseconds < 10) stream.append("0");\n`;
                 triggerLogicCode += `                            stream.append(b_centiseconds);\n`;
-                triggerLogicCode += `                            show_dialog_text(msg, text_sprites, dialog_text_palette);\n`;
+                triggerLogicCode += `                            show_dialog_text(msg, text_sprites, dialog_text_palette, text_anim_speed);\n`;
                 triggerLogicCode += `                            while(bn::keypad::a_held()) { bn::core::update(); }\n`;
                 triggerLogicCode += `                            while(!bn::keypad::a_pressed()) { bn::core::update(); }\n`;
                 triggerLogicCode += `                            while(bn::keypad::a_held()) { bn::core::update(); }\n`;
@@ -5637,6 +5665,8 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
         sceneCode += `    shared_sprite_palette.set_color(${safeFontColorIdx}, bn::color(${fontR}, ${fontG}, ${fontB}));\n`;
         sceneCode += `    bn::sprite_palette_ptr dialog_text_palette = shared_sprite_palette;\n`;
         sceneCode += `    bn::optional<bn::regular_bg_ptr> scene_dialog_bg;\n`;
+        sceneCode += `    bn::optional<bn::regular_bg_ptr> scene_overlay_bg;\n`;
+        sceneCode += `    int text_anim_speed = 2;\n`;
         if (hudSettings && hudSettings.enabled && scene.type !== 'INTRO' && scene.type !== 'PAUSE') {
           bgDeclarations += `    bn::regular_bg_ptr hud_bg = bn::regular_bg_items::hud_bg.create_bg(0, 0);\n`;
           bgDeclarations += `    hud_bg.set_priority(1);\n`;
@@ -6904,6 +6934,21 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
             bpp_mode: "bpp_4"
           }, null, 2));
           mainCppIncludes += '#include "bn_regular_bg_items_dialog_bg.h"\n';
+        }
+
+        // Export fade overlay background (full black for screen transitions)
+        {
+          const fadeCanvas = document.createElement('canvas');
+          fadeCanvas.width = 256; fadeCanvas.height = 256;
+          const fadeCtx = fadeCanvas.getContext('2d', { willReadFrequently: true });
+          fadeCtx.fillStyle = '#000000'; fadeCtx.fillRect(0, 0, 256, 256);
+          const fadeBmpBlob = canvasToIndexedBmpBlob(fadeCanvas, null);
+          zip.file('graphics/fade_overlay_bg.bmp', fadeBmpBlob);
+          zip.file('graphics/fade_overlay_bg.json', JSON.stringify({
+            type: "regular_bg",
+            bpp_mode: "bpp_4"
+          }, null, 2));
+          mainCppIncludes += '#include "bn_regular_bg_items_fade_overlay_bg.h"\n';
         }
 
       if (generatedProjectiles.size === 0) generatedProjectiles.add('bullet_sprite');
