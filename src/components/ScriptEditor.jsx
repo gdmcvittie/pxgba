@@ -696,12 +696,15 @@ const CustomActionNode = ({ id, data }) => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
           <div>
             <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Variable:</label>
-            {variables && variables.filter(v => v.type !== 'group').length > 0 ? (
+            {variables && variables.filter(v => v.type !== 'group').length > 0 ? (() => {
+              const varNames = variables.filter(v => v.type !== 'group').map(v => v.name);
+              console.log(`[ScriptEditor Debug] math_op dropdown: data.varName="${data.varName}" availableNames=[${varNames.join(',')}] match=${varNames.includes(data.varName)}`);
+              return (
               <select className="nodrag" value={data.varName || ''} onChange={(e) => updateData({ varName: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
                 <option value="">Select a variable...</option>
                 {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
-              </select>
-            ) : (
+              </select>);
+            })() : (
               <input className="nodrag" type="text" placeholder="e.g. has_key" value={data.varName || ''} onChange={(e) => updateData({ varName: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }} />
             )}
           </div>
@@ -785,12 +788,15 @@ const CustomActionNode = ({ id, data }) => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
           <div>
             <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Variable:</label>
-            {variables && variables.filter(v => v.type !== 'group').length > 0 ? (
+            {variables && variables.filter(v => v.type !== 'group').length > 0 ? (() => {
+              const varNames = variables.filter(v => v.type !== 'group').map(v => v.name);
+              console.log(`[ScriptEditor Debug] set_var/check_var dropdown: data.varName="${data.varName}" availableNames=[${varNames.join(',')}] match=${varNames.includes(data.varName)}`);
+              return (
               <select className="nodrag" value={data.varName || ''} onChange={(e) => updateData({ varName: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
                 <option value="">Select a variable...</option>
                 {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
-              </select>
-            ) : (
+              </select>);
+            })() : (
               <input className="nodrag" type="text" placeholder="e.g. has_key" value={data.varName || ''} onChange={(e) => updateData({ varName: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }} />
             )}
           </div>

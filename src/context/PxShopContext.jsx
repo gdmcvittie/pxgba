@@ -7428,6 +7428,7 @@ export const PxShopProvider = ({ children }) => {
     } else {
       setActiveSavedTileId(1);
     }
+    console.log('[PxShopContext Debug] project.variables from importer:', project.variables ? project.variables.map(v => ({ id: v.id, name: v.name, type: v.type })) : 'EMPTY');
     const loadedVars = (project.variables || []).map((v, index) => ({
       id: v.id || Date.now() + Math.random() + index,
       ...v
