@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "dd35ffe4-df89-457e-8aec-d2a7a68e92e8",
-  "plugin": "LiftedPixelAssets",
-  "name": "Water_Splash.vgm",
-  "symbol": "sound_water_splash_vgm",
-  "type": "vgm",
-  "filename": "Water_Splash.vgm"
-}

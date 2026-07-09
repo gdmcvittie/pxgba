@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "3ed1a631-72f7-44f7-b11b-2bfcb031b25e",
-  "plugin": "LiftedPixelAssets",
-  "name": "Jump.vgm",
-  "symbol": "sound_jump_vgm",
-  "type": "vgm",
-  "filename": "Jump.vgm"
-}

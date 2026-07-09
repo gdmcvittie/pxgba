@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "013cc9f9-df5f-4dd4-a508-3a341186abee",
-  "plugin": "LiftedPixelAssets",
-  "name": "Steps.vgm",
-  "symbol": "sound_steps_vgm",
-  "type": "vgm",
-  "filename": "Steps.vgm"
-}

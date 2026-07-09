@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "58d3147d-7b78-426e-aa45-a14d4eb7e472",
-  "plugin": "LiftedPixelAssets",
-  "name": "Door_Slow_Open.vgm",
-  "symbol": "sound_door_slow_open_vgm",
-  "type": "vgm",
-  "filename": "Door_Slow_Open.vgm"
-}

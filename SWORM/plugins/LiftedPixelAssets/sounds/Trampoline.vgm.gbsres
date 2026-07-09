@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "ed4e506e-e207-424d-a159-f605fa7b6f8d",
-  "plugin": "LiftedPixelAssets",
-  "name": "Trampoline.vgm",
-  "symbol": "sound_trampoline_vgm",
-  "type": "vgm",
-  "filename": "Trampoline.vgm"
-}

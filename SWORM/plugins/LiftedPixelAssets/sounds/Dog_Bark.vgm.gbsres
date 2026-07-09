@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "cdac03f0-a337-4d4e-a779-dddeb22accda",
-  "plugin": "LiftedPixelAssets",
-  "name": "Dog_Bark.vgm",
-  "symbol": "sound_dog_bark_vgm",
-  "type": "vgm",
-  "filename": "Dog_Bark.vgm"
-}

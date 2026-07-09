@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "dbf79eef-6d1b-4f9a-a2af-5f7095ce3e83",
-  "plugin": "LiftedPixelAssets",
-  "name": "Digital_Alarm.vgm",
-  "symbol": "sound_digital_alarm_vgm",
-  "type": "vgm",
-  "filename": "Digital_Alarm.vgm"
-}

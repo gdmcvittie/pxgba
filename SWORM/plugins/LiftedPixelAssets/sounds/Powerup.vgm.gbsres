@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "a66d818e-b30d-49b6-8b06-1d9339d6b9e5",
-  "plugin": "LiftedPixelAssets",
-  "name": "Powerup.vgm",
-  "symbol": "sound_powerup_vgm",
-  "type": "vgm",
-  "filename": "Powerup.vgm"
-}

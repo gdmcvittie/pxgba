@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "c4422e71-29f9-488b-8a2a-23d2228f2d58",
-  "plugin": "LiftedPixelAssets",
-  "name": "Cat_Meow.vgm",
-  "symbol": "sound_cat_meow_vgm",
-  "type": "vgm",
-  "filename": "Cat_Meow.vgm"
-}

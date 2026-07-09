@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "d53e44c1-765e-43a4-9a0b-06594031882c",
-  "plugin": "LiftedPixelAssets",
-  "name": "Cancel.vgm",
-  "symbol": "sound_cancel_vgm",
-  "type": "vgm",
-  "filename": "Cancel.vgm"
-}

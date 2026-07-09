@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "142af34a-718d-4474-a559-47a1a5e9e0b5",
-  "plugin": "LiftedPixelAssets",
-  "name": "Crunch.vgm",
-  "symbol": "sound_crunch_vgm",
-  "type": "vgm",
-  "filename": "Crunch.vgm"
-}

@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "69db6d81-5791-496d-b820-1f168f1fb9b1",
-  "plugin": "LiftedPixelAssets",
-  "name": "Monster_Scream.vgm",
-  "symbol": "sound_monster_scream_vgm",
-  "type": "vgm",
-  "filename": "Monster_Scream.vgm"
-}

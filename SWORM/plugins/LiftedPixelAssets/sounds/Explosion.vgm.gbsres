@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "7bbf81d7-853e-4ec2-a497-66100a9b616b",
-  "plugin": "LiftedPixelAssets",
-  "name": "Explosion.vgm",
-  "symbol": "sound_explosion_vgm",
-  "type": "vgm",
-  "filename": "Explosion.vgm"
-}

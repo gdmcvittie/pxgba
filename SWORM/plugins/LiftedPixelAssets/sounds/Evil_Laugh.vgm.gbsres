@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "f19bda55-eb30-4451-b1ca-cfa45ded620b",
-  "plugin": "LiftedPixelAssets",
-  "name": "Evil_Laugh.vgm",
-  "symbol": "sound_evil_laugh_vgm",
-  "type": "vgm",
-  "filename": "Evil_Laugh.vgm"
-}

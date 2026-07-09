@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "c6432ec2-c63f-45d2-976c-bec6ddf2a705",
-  "plugin": "LiftedPixelAssets",
-  "name": "Pause.vgm",
-  "symbol": "sound_pause_vgm",
-  "type": "vgm",
-  "filename": "Pause.vgm"
-}

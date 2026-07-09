@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "08d75ad1-375a-41b8-9a0e-8cded6022ef6",
-  "plugin": "LiftedPixelAssets",
-  "name": "Gun.vgm",
-  "symbol": "sound_gun_vgm",
-  "type": "vgm",
-  "filename": "Gun.vgm"
-}

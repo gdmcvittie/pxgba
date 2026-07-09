@@ -1,9 +1,0 @@
-{
-  "_resourceType": "sound",
-  "id": "9ea796f1-0493-4814-af3c-279951678607",
-  "plugin": "LiftedPixelAssets",
-  "name": "Bump.vgm",
-  "symbol": "sound_bump_vgm",
-  "type": "vgm",
-  "filename": "Bump.vgm"
-}
