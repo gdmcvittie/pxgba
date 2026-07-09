@@ -1567,6 +1567,147 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}) 
           isMapped = true;
           break;
 
+        case 'EVENT_FADE_IN':
+          label = 'Fade In';
+          actionType = 'fade_in';
+          data = {
+            label,
+            actionType,
+            speed: ev.args?.speed ?? 1
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_FADE_OUT':
+          label = 'Fade Out';
+          actionType = 'fade_out';
+          data = {
+            label,
+            actionType,
+            speed: ev.args?.speed ?? 1
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_ACTOR_SET_DIRECTION':
+          label = 'Set Direction';
+          actionType = 'set_direction';
+          data = {
+            label,
+            actionType,
+            targetActorId: actorIdMap[ev.args?.actorId === '$self$' ? '0' : ev.args?.actorId] || null,
+            direction: ev.args?.direction?.value || ev.args?.direction || 'down'
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_AWAIT_INPUT':
+          label = 'Await Input';
+          actionType = 'await_input';
+          data = {
+            label,
+            actionType
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_ACTOR_EMOTE':
+          label = 'Actor Emote';
+          actionType = 'actor_emote';
+          data = {
+            label,
+            actionType,
+            targetActorId: actorIdMap[ev.args?.actorId === '$self$' ? '0' : ev.args?.actorId] || null,
+            emote: ev.args?.emote || 'exclamation'
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_CAMERA_MOVE_TO':
+          label = 'Move Camera';
+          actionType = 'move_camera';
+          data = {
+            label,
+            actionType,
+            targetType: 'coords',
+            x: resolveValue(ev.args?.x),
+            y: resolveValue(ev.args?.y),
+            speed: ev.args?.speed ?? 2
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_CAMERA_LOCK':
+          label = 'Camera Lock';
+          actionType = 'camera_lock';
+          data = {
+            label,
+            actionType,
+            axis: ev.args?.axis || ['x', 'y']
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_OVERLAY_SHOW':
+          label = 'Overlay Show';
+          actionType = 'overlay_show';
+          data = {
+            label,
+            actionType,
+            x: ev.args?.x ?? 0,
+            y: ev.args?.y ?? 0,
+            color: ev.args?.color || 'white'
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_OVERLAY_HIDE':
+          label = 'Overlay Hide';
+          actionType = 'overlay_hide';
+          data = {
+            label,
+            actionType
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_TEXT_SET_ANIM_SPEED':
+          label = 'Set Text Speed';
+          actionType = 'text_set_anim_speed';
+          data = {
+            label,
+            actionType,
+            speed: ev.args?.speed ?? 1,
+            allowFastForward: ev.args?.allowFastForward !== false
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_ACTOR_SET_SPRITE':
+          label = 'Set Actor Sprite';
+          actionType = 'set_actor_sprite';
+          data = {
+            label,
+            actionType,
+            targetActorId: actorIdMap[ev.args?.actorId === '$self$' ? '0' : ev.args?.actorId] || null,
+            spriteSheetId: ev.args?.spriteSheetId || ''
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_ACTOR_SET_FLIP':
+          label = 'Set Actor Flip';
+          actionType = 'set_actor_flip';
+          data = {
+            label,
+            actionType,
+            targetActorId: actorIdMap[ev.args?.actorId === '$self$' ? '0' : ev.args?.actorId] || null,
+            flipX: ev.args?.flipX !== undefined ? !!ev.args.flipX : false,
+            flipY: ev.args?.flipY !== undefined ? !!ev.args.flipY : false
+          };
+          isMapped = true;
+          break;
+
         default:
           break;
       }

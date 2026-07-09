@@ -1353,6 +1353,170 @@ const CustomActionNode = ({ id, data }) => {
         </div>
       )}
 
+      {data.actionType === 'fade_in' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Speed:</label>
+            <select className="nodrag" value={String(data.speed ?? 1)} onChange={(e) => updateData({ speed: parseInt(e.target.value) || 1 })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="0">Instant</option>
+              <option value="1">Fast</option>
+              <option value="2">Normal</option>
+              <option value="3">Slow</option>
+            </select>
+          </div>
+        </div>
+      )}
+
+      {data.actionType === 'fade_out' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Speed:</label>
+            <select className="nodrag" value={String(data.speed ?? 1)} onChange={(e) => updateData({ speed: parseInt(e.target.value) || 1 })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="0">Instant</option>
+              <option value="1">Fast</option>
+              <option value="2">Normal</option>
+              <option value="3">Slow</option>
+            </select>
+          </div>
+        </div>
+      )}
+
+      {data.actionType === 'set_direction' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Actor:</label>
+            <select className="nodrag" value={data.targetActorId ?? ''} onChange={(e) => updateData({ targetActorId: e.target.value || null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="">Select Actor</option>
+              {actors && actors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+              {globalActors && globalActors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Global Actor ${a.id}`}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Direction:</label>
+            <select className="nodrag" value={data.direction || 'down'} onChange={(e) => updateData({ direction: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="up">Up</option>
+              <option value="down">Down</option>
+              <option value="left">Left</option>
+              <option value="right">Right</option>
+            </select>
+          </div>
+        </div>
+      )}
+
+      {data.actionType === 'await_input' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ fontSize: '10px', color: '#888' }}>Pauses script execution until any button is pressed.</div>
+        </div>
+      )}
+
+      {data.actionType === 'actor_emote' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Actor:</label>
+            <select className="nodrag" value={data.targetActorId ?? ''} onChange={(e) => updateData({ targetActorId: e.target.value || null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="">Select Actor</option>
+              {actors && actors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+              {globalActors && globalActors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Global Actor ${a.id}`}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Emote:</label>
+            <select className="nodrag" value={data.emote || 'exclamation'} onChange={(e) => updateData({ emote: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="exclamation">Exclamation</option>
+              <option value="question">Question</option>
+              <option value="music">Music</option>
+              <option value="sleep">Sleep</option>
+            </select>
+          </div>
+        </div>
+      )}
+
+      {data.actionType === 'camera_lock' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ fontSize: '10px', color: '#888' }}>Locks camera to follow the player.</div>
+        </div>
+      )}
+
+      {data.actionType === 'overlay_show' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ flex: 1 }}>
+              <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>X:</label>
+              <input className="nodrag" type="text" placeholder="0" value={data.x ?? 0} onChange={(e) => updateData({ x: e.target.value.replace(/[^0-9]/g, '') })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Y:</label>
+              <input className="nodrag" type="text" placeholder="0" value={data.y ?? 0} onChange={(e) => updateData({ y: e.target.value.replace(/[^0-9]/g, '') })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Color:</label>
+              <select className="nodrag" value={data.color || 'white'} onChange={(e) => updateData({ color: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+                <option value="white">White</option>
+                <option value="black">Black</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {data.actionType === 'overlay_hide' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ fontSize: '10px', color: '#888' }}>Hides the overlay window.</div>
+        </div>
+      )}
+
+      {data.actionType === 'text_set_anim_speed' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Speed:</label>
+            <select className="nodrag" value={String(data.speed ?? 1)} onChange={(e) => updateData({ speed: parseInt(e.target.value) || 1 })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="0">Instant</option>
+              <option value="1">Fast</option>
+              <option value="2">Normal</option>
+              <option value="3">Slow</option>
+            </select>
+          </div>
+          <label style={{ fontSize: '10px', color: '#aaa', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+            <input type="checkbox" className="nodrag" checked={data.allowFastForward !== false} onChange={(e) => updateData({ allowFastForward: e.target.checked })} />
+            Allow Fast Forward
+          </label>
+        </div>
+      )}
+
+      {data.actionType === 'set_actor_sprite' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Actor:</label>
+            <select className="nodrag" value={data.targetActorId ?? ''} onChange={(e) => updateData({ targetActorId: e.target.value || null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="">Select Actor</option>
+              {actors && actors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+              {globalActors && globalActors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Global Actor ${a.id}`}</option>)}
+            </select>
+          </div>
+        </div>
+      )}
+
+      {data.actionType === 'set_actor_flip' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Actor:</label>
+            <select className="nodrag" value={data.targetActorId ?? ''} onChange={(e) => updateData({ targetActorId: e.target.value || null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="">Select Actor</option>
+              {actors && actors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+              {globalActors && globalActors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Global Actor ${a.id}`}</option>)}
+            </select>
+          </div>
+          <label style={{ fontSize: '10px', color: '#aaa', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+            <input type="checkbox" className="nodrag" checked={data.flipX || false} onChange={(e) => updateData({ flipX: e.target.checked })} />
+            Flip Horizontal
+          </label>
+          <label style={{ fontSize: '10px', color: '#aaa', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+            <input type="checkbox" className="nodrag" checked={data.flipY || false} onChange={(e) => updateData({ flipY: e.target.checked })} />
+            Flip Vertical
+          </label>
+        </div>
+      )}
+
       {data.actionType !== 'menu' && !(data.actionType === 'check_input' && data.useThreshold && data.branchByThreshold) && (
         <Handle type="source" position={Position.Right} />
       )}
@@ -1376,7 +1540,8 @@ const nodeGroups = [
       { type: 'check_random', label: 'Check Random' },
       { type: 'set_timer', label: 'Set Timer' },
       { type: 'attach_input_script', label: 'Attach Input Script' },
-      { type: 'draw_text', label: 'Draw Text' }
+      { type: 'draw_text', label: 'Draw Text' },
+      { type: 'await_input', label: 'Await Input' }
     ]
   },
   {
@@ -1418,7 +1583,11 @@ const nodeGroups = [
       { type: 'set_anim_speed', label: 'Set Animation Speed' },
       { type: 'set_movement_speed', label: 'Set Movement Speed' },
       { type: 'start_update', label: 'Start Update' },
-      { type: 'stop_update', label: 'Stop Update' }
+      { type: 'stop_update', label: 'Stop Update' },
+      { type: 'set_direction', label: 'Set Direction' },
+      { type: 'actor_emote', label: 'Actor Emote' },
+      { type: 'set_actor_sprite', label: 'Set Actor Sprite' },
+      { type: 'set_actor_flip', label: 'Set Actor Flip' }
     ]
   },
   {
@@ -1450,8 +1619,14 @@ const nodeGroups = [
       { type: 'music_control', label: 'Music Control' },
       { type: 'change_scene', label: 'Change Scene' },
       { type: 'set_bg_color', label: 'Set BG Color' },
+      { type: 'fade_in', label: 'Fade In' },
+      { type: 'fade_out', label: 'Fade Out' },
       { type: 'move_camera', label: 'Move Camera' },
-      { type: 'camera_shake', label: 'Camera Shake' }
+      { type: 'camera_lock', label: 'Camera Lock' },
+      { type: 'camera_shake', label: 'Camera Shake' },
+      { type: 'overlay_show', label: 'Overlay Show' },
+      { type: 'overlay_hide', label: 'Overlay Hide' },
+      { type: 'text_set_anim_speed', label: 'Set Text Speed' }
     ]
   },
   {
@@ -1579,7 +1754,18 @@ const ScriptEditor = () => {
                                                                                                    : node.data.label === 'Draw Text' ? 'draw_text'
                                                                                                      : node.data.label === 'Camera Shake' ? 'camera_shake'
                                                                                        : node.data.label === 'Set Timer' ? 'set_timer'
-                                                                                         : node.data.label === 'Move Camera' ? 'move_camera' : 'default';
+                                                                                          : node.data.label === 'Move Camera' ? 'move_camera'
+                                                                                            : node.data.label === 'Fade In' ? 'fade_in'
+                                                                                              : node.data.label === 'Fade Out' ? 'fade_out'
+                                                                                                : node.data.label === 'Set Direction' ? 'set_direction'
+                                                                                                  : node.data.label === 'Await Input' ? 'await_input'
+                                                                                                    : node.data.label === 'Actor Emote' ? 'actor_emote'
+                                                                                                      : node.data.label === 'Camera Lock' ? 'camera_lock'
+                                                                                                        : node.data.label === 'Overlay Show' ? 'overlay_show'
+                                                                                                          : node.data.label === 'Overlay Hide' ? 'overlay_hide'
+                                                                                                            : node.data.label === 'Set Text Speed' ? 'text_set_anim_speed'
+                                                                                                              : node.data.label === 'Set Actor Sprite' ? 'set_actor_sprite'
+                                                                                                                : node.data.label === 'Set Actor Flip' ? 'set_actor_flip' : 'default';
             return { ...node, type: 'customAction', data: { ...node.data, actionType } };
           }
           return node;
