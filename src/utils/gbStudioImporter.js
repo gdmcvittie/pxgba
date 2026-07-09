@@ -1333,6 +1333,38 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}, 
           isMapped = true;
           break;
 
+        case 'EVENT_PUSH_SCENE':
+        case 'EVENT_SCENE_PUSH':
+          label = 'Push Scene';
+          actionType = 'push_scene';
+          data = {
+            label,
+            actionType,
+            sceneId: sceneIdMap[ev.args?.sceneId] || ev.args?.sceneId || ''
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_POP_SCENE':
+        case 'EVENT_SCENE_POP':
+          label = 'Pop Scene';
+          actionType = 'pop_scene';
+          data = { label, actionType };
+          isMapped = true;
+          break;
+
+        case 'EVENT_REPLACE_SCENE':
+        case 'EVENT_SCENE_REPLACE':
+          label = 'Replace Scene';
+          actionType = 'replace_scene';
+          data = {
+            label,
+            actionType,
+            sceneId: sceneIdMap[ev.args?.sceneId] || ev.args?.sceneId || ''
+          };
+          isMapped = true;
+          break;
+
         case 'EVENT_WAIT':
           label = 'Wait';
           actionType = 'wait';
@@ -1386,6 +1418,57 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}, 
             varName: decVarName,
             operator: '-=',
             value: '1'
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_MUL_VALUE':
+        case 'EVENT_VARIABLE_MULT_VALUES':
+        case 'EVENT_MATH_MUL':
+          label = 'Math Operation';
+          actionType = 'math_op';
+          const mulVarName = resolveVariableRef(ev.args?.variable) || `VAR_${typeof ev.args?.variable === 'object' ? 'OBJ' : (ev.args?.variable || 'UNKNOWN')}`;
+          const mulValue = ev.args?.value !== undefined ? resolveValue(ev.args.value) : '1';
+          data = {
+            label,
+            actionType,
+            varName: mulVarName,
+            operator: '*=',
+            value: mulValue
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_DIV_VALUE':
+        case 'EVENT_VARIABLE_DIV_VALUES':
+        case 'EVENT_MATH_DIV':
+          label = 'Math Operation';
+          actionType = 'math_op';
+          const divVarName = resolveVariableRef(ev.args?.variable) || `VAR_${typeof ev.args?.variable === 'object' ? 'OBJ' : (ev.args?.variable || 'UNKNOWN')}`;
+          const divValue = ev.args?.value !== undefined ? resolveValue(ev.args.value) : '1';
+          data = {
+            label,
+            actionType,
+            varName: divVarName,
+            operator: '/=',
+            value: divValue
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_MOD_VALUE':
+        case 'EVENT_VARIABLE_MOD_VALUES':
+        case 'EVENT_MATH_MOD':
+          label = 'Math Operation';
+          actionType = 'math_op';
+          const modVarName = resolveVariableRef(ev.args?.variable) || `VAR_${typeof ev.args?.variable === 'object' ? 'OBJ' : (ev.args?.variable || 'UNKNOWN')}`;
+          const modValue = ev.args?.value !== undefined ? resolveValue(ev.args.value) : '1';
+          data = {
+            label,
+            actionType,
+            varName: modVarName,
+            operator: '%=',
+            value: modValue
           };
           isMapped = true;
           break;
@@ -1494,6 +1577,28 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}, 
             timerIndex: ev.args?.timer ?? 1,
             duration: ev.args?.duration || 0.5,
             frames: ev.args?.frames || 30
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_TIMER_DISABLE':
+          label = 'Timer Disable';
+          actionType = 'timer_disable';
+          data = {
+            label,
+            actionType,
+            timerIndex: ev.args?.timer ?? 1
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_TIMER_RESTART':
+          label = 'Timer Restart';
+          actionType = 'timer_restart';
+          data = {
+            label,
+            actionType,
+            timerIndex: ev.args?.timer ?? 1
           };
           isMapped = true;
           break;
@@ -1686,6 +1791,32 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}, 
           isMapped = true;
           break;
 
+        case 'EVENT_BACKGROUND_PALETTE':
+        case 'EVENT_SET_BG_PALETTE':
+          label = 'Set BG Palette';
+          actionType = 'set_bg_palette';
+          data = {
+            label,
+            actionType,
+            paletteIndex: ev.args?.paletteIndex ?? 0,
+            color: ev.args?.color || ''
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_SPRITE_PALETTE':
+        case 'EVENT_SET_SPRITE_PALETTE':
+          label = 'Set Sprite Palette';
+          actionType = 'set_sprite_palette';
+          data = {
+            label,
+            actionType,
+            paletteIndex: ev.args?.paletteIndex ?? 0,
+            color: ev.args?.color || ''
+          };
+          isMapped = true;
+          break;
+
         case 'EVENT_ACTOR_SET_DIRECTION':
           label = 'Set Direction';
           actionType = 'set_direction';
@@ -1704,6 +1835,19 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}, 
           data = {
             label,
             actionType
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_IF_INPUT':
+          label = 'Check Input';
+          actionType = 'check_input';
+          const inputBtn = (Array.isArray(ev.args?.input) ? ev.args.input[0] : (ev.args?.input || 'a'));
+          data = {
+            label,
+            actionType,
+            keyName: String(inputBtn),
+            keyState: ev.args?.type || 'pressed'
           };
           isMapped = true;
           break;
@@ -1805,6 +1949,40 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}, 
             targetActorId: actorIdMap[ev.args?.actorId === '$self$' ? '0' : ev.args?.actorId] || null,
             flipX: ev.args?.flipX !== undefined ? !!ev.args.flipX : false,
             flipY: ev.args?.flipY !== undefined ? !!ev.args.flipY : false
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_ADD_FLAGS':
+          label = 'Set Flag';
+          actionType = 'set_flag';
+          data = {
+            label,
+            actionType,
+            flag: ev.args?.flag || ''
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_REMOVE_FLAGS':
+          label = 'Clear Flag';
+          actionType = 'clear_flag';
+          data = {
+            label,
+            actionType,
+            flag: ev.args?.flag || ''
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_IF_FLAGS':
+          label = 'Check Flag';
+          actionType = 'check_flag';
+          data = {
+            label,
+            actionType,
+            flag: ev.args?.flag || '',
+            matches: ev.args?.matches !== false
           };
           isMapped = true;
           break;

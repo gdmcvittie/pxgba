@@ -135,7 +135,7 @@ export async function generateButano(ctx) {
         mainCppIncludes += `#include "bn_sstream.h"\n`;
       }
 
-      let mainCppDefinitions = `enum class SceneId { ${includeCreditsScene ? 'SCENE_CREDITS, ' : ''}${scenes.map((s, i) => `SCENE_${i}`).join(', ')} };\n\nSceneId paused_from_scene = SceneId::SCENE_${startingSceneIdx};\nconst int pause_scene_idx = ${scenes.findIndex(s => s.type === 'PAUSE')};\n\n`;
+      let mainCppDefinitions = `enum class SceneId { ${includeCreditsScene ? 'SCENE_CREDITS, ' : ''}${scenes.map((s, i) => `SCENE_${i}`).join(', ')} };\n\nSceneId paused_from_scene = SceneId::SCENE_${startingSceneIdx};\nconst int pause_scene_idx = ${scenes.findIndex(s => s.type === 'PAUSE')};\n\nint scene_stack[16];\nint scene_stack_depth = 0;\n\n`;
       if (variables.some(v => v.type === 'string')) {
         mainCppDefinitions += `struct SaveString {\n`;
         mainCppDefinitions += `    char data[33];\n`;
@@ -5386,6 +5386,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
           return nb === 'wander' || nb === 'random' || (nb === 'follow' && (parseInt(a.followProximity) || 0) > 0);
         });
         let sceneCode = `SceneId play_${safeSceneName}(bn::random& rng) {\n`;
+        sceneCode += `    SceneId current_scene_id = SceneId::SCENE_${sIdx};\n`;
         if (!_needsRng) sceneCode += `    (void)rng;\n`;
         sceneCode += `    bn::camera_ptr camera = bn::camera_ptr::create(0, 0);\n`;
         sceneCode += `    int cam_x = 0;\n`;
@@ -5399,6 +5400,14 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
         sceneCode += `    int timer_2_frames = 0;\n`;
         sceneCode += `    int timer_3_frames = 0;\n`;
         sceneCode += `    int timer_4_frames = 0;\n`;
+        sceneCode += `    int timer_1_max_frames = 0;\n`;
+        sceneCode += `    int timer_2_max_frames = 0;\n`;
+        sceneCode += `    int timer_3_max_frames = 0;\n`;
+        sceneCode += `    int timer_4_max_frames = 0;\n`;
+        sceneCode += `    bool timer_1_active = false;\n`;
+        sceneCode += `    bool timer_2_active = false;\n`;
+        sceneCode += `    bool timer_3_active = false;\n`;
+        sceneCode += `    bool timer_4_active = false;\n`;
         sceneCode += `    global_spawn_x = -1;\n    global_spawn_y = -1;\n`;
         sceneCode += `    int key_held_up = 0; int cur_held_up = 0;\n`;
         sceneCode += `    int key_held_down = 0; int cur_held_down = 0;\n`;

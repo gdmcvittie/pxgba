@@ -540,6 +540,28 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
       if (targetSceneIdx !== -1) {
         code += `${indent}return SceneId::SCENE_${targetSceneIdx};\n`;
       }
+    } else if (label === 'Push Scene' || currentNode.data?.actionType === 'push_scene') {
+      const targetSceneId = currentNode.data.sceneId;
+      const targetSceneIdx = scenes.findIndex(s => s.id === targetSceneId);
+      if (targetSceneIdx !== -1) {
+        code += `${indent}BN_LOG("Action: Push Scene - scene_${targetSceneIdx}");\n`;
+        code += `${indent}scene_stack[scene_stack_depth++] = static_cast<int>(current_scene_id);\n`;
+        code += `${indent}return SceneId::SCENE_${targetSceneIdx};\n`;
+      }
+    } else if (label === 'Pop Scene' || currentNode.data?.actionType === 'pop_scene') {
+      code += `${indent}BN_LOG("Action: Pop Scene");\n`;
+      code += `${indent}if (scene_stack_depth > 0) {\n`;
+      code += `${indent}    return static_cast<SceneId>(scene_stack[--scene_stack_depth]);\n`;
+      code += `${indent}} else {\n`;
+      code += `${indent}    return current_scene_id;\n`;
+      code += `${indent}}\n`;
+    } else if (label === 'Replace Scene' || currentNode.data?.actionType === 'replace_scene') {
+      const targetSceneId = currentNode.data.sceneId;
+      const targetSceneIdx = scenes.findIndex(s => s.id === targetSceneId);
+      if (targetSceneIdx !== -1) {
+        code += `${indent}BN_LOG("Action: Replace Scene - scene_${targetSceneIdx}");\n`;
+        code += `${indent}return SceneId::SCENE_${targetSceneIdx};\n`;
+      }
     } else if (label === 'Restart Current Scene' || label === 'Restart Scene' || currentNode.data?.actionType === 'restart_scene') {
       code += `${indent}BN_LOG("Action: Restart Scene");\n`;
       code += `${indent}return SceneId::SCENE_${currentSceneIdx};\n`;
@@ -901,6 +923,16 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
       const timerIdx = currentNode.data?.timerIndex || 1;
       const durationFrames = Math.round((parseFloat(currentNode.data?.duration) || 0.5) * 60);
       code += `${indent}timer_${timerIdx}_frames = ${durationFrames};\n`;
+    } else if (label === 'Timer Disable' || currentNode.data?.actionType === 'timer_disable') {
+      const timerIdx = currentNode.data?.timerIndex || 1;
+      code += `${indent}BN_LOG("Action: Timer Disable ${timerIdx}");\n`;
+      code += `${indent}timer_${timerIdx}_frames = 0;\n`;
+      code += `${indent}timer_${timerIdx}_active = false;\n`;
+    } else if (label === 'Timer Restart' || currentNode.data?.actionType === 'timer_restart') {
+      const timerIdx = currentNode.data?.timerIndex || 1;
+      code += `${indent}BN_LOG("Action: Timer Restart ${timerIdx}");\n`;
+      code += `${indent}timer_${timerIdx}_frames = timer_${timerIdx}_max_frames;\n`;
+      code += `${indent}timer_${timerIdx}_active = true;\n`;
     } else if (label === 'Run Script') {
       const targetScriptId = currentNode.data.scriptId;
       if (targetScriptId && !callStack.has(targetScriptId)) {
@@ -942,6 +974,25 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
           }
         }
         code += `${indent}if (${sv} == ${val}) {\n`; openBraces++;
+      }
+    } else if (label === 'Set Flag' || currentNode.data?.actionType === 'set_flag') {
+      const flagName = resolveVarName(currentNode.data.flag);
+      if (flagName) {
+        code += `${indent}BN_LOG("Action: Set Flag ${flagName}");\n`;
+        code += `${indent}${flagName} = 1;\n`;
+      }
+    } else if (label === 'Clear Flag' || currentNode.data?.actionType === 'clear_flag') {
+      const flagName = resolveVarName(currentNode.data.flag);
+      if (flagName) {
+        code += `${indent}BN_LOG("Action: Clear Flag ${flagName}");\n`;
+        code += `${indent}${flagName} = 0;\n`;
+      }
+    } else if (label === 'Check Flag' || currentNode.data?.actionType === 'check_flag') {
+      const flagName = resolveVarName(currentNode.data.flag);
+      const shouldMatch = currentNode.data.matches !== false;
+      if (flagName) {
+        code += `${indent}BN_LOG("Action: Check Flag ${flagName} == ${shouldMatch ? 1 : 0}");\n`;
+        code += `${indent}if (${flagName} ${shouldMatch ? '==' : '!='} 1) {\n`; openBraces++;
       }
     } else if (label === 'Math Operation') {
       const safeVarName = resolveVarName(currentNode.data.varName);
@@ -1137,6 +1188,26 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
       const b = Math.floor(parseInt(hex.slice(5, 7), 16) / 8);
       code += `${indent}BN_LOG("Action: Set BG Color to ${hex}");\n`;
       code += `${indent}bn::bg_palettes::set_transparent_color(bn::color(${r}, ${g}, ${b}));\n`;
+    } else if (label === 'Set BG Palette' || currentNode.data?.actionType === 'set_bg_palette') {
+      const palIdx = parseInt(currentNode.data.paletteIndex) || 0;
+      const colorHex = currentNode.data.color || '#000000';
+      if (/^#[0-9A-Fa-f]{6}$/i.test(colorHex)) {
+        const r = Math.floor(parseInt(colorHex.slice(1, 3), 16) / 8);
+        const g = Math.floor(parseInt(colorHex.slice(3, 5), 16) / 8);
+        const b = Math.floor(parseInt(colorHex.slice(5, 7), 16) / 8);
+        code += `${indent}BN_LOG("Action: Set BG Palette ${palIdx} to ${colorHex}");\n`;
+        code += `${indent}bn::bg_palettes::set_palette_color(${palIdx}, bn::color(${r}, ${g}, ${b}));\n`;
+      }
+    } else if (label === 'Set Sprite Palette' || currentNode.data?.actionType === 'set_sprite_palette') {
+      const palIdx = parseInt(currentNode.data.paletteIndex) || 0;
+      const colorHex = currentNode.data.color || '#000000';
+      if (/^#[0-9A-Fa-f]{6}$/i.test(colorHex)) {
+        const r = Math.floor(parseInt(colorHex.slice(1, 3), 16) / 8);
+        const g = Math.floor(parseInt(colorHex.slice(3, 5), 16) / 8);
+        const b = Math.floor(parseInt(colorHex.slice(5, 7), 16) / 8);
+        code += `${indent}BN_LOG("Action: Set Sprite Palette ${palIdx} to ${colorHex}");\n`;
+        code += `${indent}bn::sprite_palettes::set_palette_color(${palIdx}, bn::color(${r}, ${g}, ${b}));\n`;
+      }
     } else if (label === 'Check Input') {
       const keyState = currentNode.data.keyState || 'held';
       const keyName = currentNode.data.keyName || 'a';
