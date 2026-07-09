@@ -693,6 +693,28 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
         code += `${indent}camera_instant = ${instantVal ? 'true' : 'false'};\n`;
         code += `${indent}camera_custom_control = true;\n`;
       }
+    } else if (label === 'Camera Shake' || currentNode.data?.actionType === 'camera_shake') {
+      const shakeTime = parseFloat(currentNode.data?.time) || 0.2;
+      const shakeFrames = Math.round(shakeTime * 60);
+      const magnitude = parseFloat(currentNode.data?.magnitude) || 2;
+      const direction = currentNode.data?.direction || 'horizontal';
+      code += `${indent}{\n`;
+      code += `${indent}    bn::fixed orig_x = camera_target_x;\n`;
+      code += `${indent}    bn::fixed orig_y = camera_target_y;\n`;
+      code += `${indent}    for (int i = 0; i < ${shakeFrames}; i++) {\n`;
+      if (direction === 'horizontal') {
+        code += `${indent}        camera_target_x = orig_x + (i % 2 == 0 ? bn::fixed(${magnitude}) : bn::fixed(-${magnitude}));\n`;
+      } else if (direction === 'vertical') {
+        code += `${indent}        camera_target_y = orig_y + (i % 2 == 0 ? bn::fixed(${magnitude}) : bn::fixed(-${magnitude}));\n`;
+      } else {
+        code += `${indent}        camera_target_x = orig_x + (i % 2 == 0 ? bn::fixed(${magnitude}) : bn::fixed(-${magnitude}));\n`;
+        code += `${indent}        camera_target_y = orig_y + (i % 2 == 0 ? bn::fixed(${magnitude}) : bn::fixed(-${magnitude}));\n`;
+      }
+      code += `${indent}        bn::core::update();\n`;
+      code += `${indent}    }\n`;
+      code += `${indent}    camera_target_x = orig_x;\n`;
+      code += `${indent}    camera_target_y = orig_y;\n`;
+      code += `${indent}}\n`;
     } else if (label === 'Play Sound') {
       code += `${indent}bn::sound_items::${currentNode.data.computedSoundName || 'snd_square_440_100'}.play();\n`;
     } else if (label === 'Music Control') {
@@ -701,6 +723,10 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
       if (mAction === 'pause') code += `${indent}bn::music::pause();\n`;
       else if (mAction === 'resume') code += `${indent}bn::music::resume();\n`;
       else if (mAction === 'stop') code += `${indent}bn::music::stop();\n`;
+    } else if (label === 'Set Timer' || currentNode.data?.actionType === 'set_timer') {
+      const timerIdx = currentNode.data?.timerIndex || 1;
+      const durationFrames = Math.round((parseFloat(currentNode.data?.duration) || 0.5) * 60);
+      code += `${indent}timer_${timerIdx}_frames = ${durationFrames};\n`;
     } else if (label === 'Run Script') {
       const targetScriptId = currentNode.data.scriptId;
       if (targetScriptId && !callStack.has(targetScriptId)) {

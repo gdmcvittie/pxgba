@@ -1205,6 +1205,49 @@ const CustomActionNode = ({ id, data }) => {
         </div>
       )}
 
+      {data.actionType === 'camera_shake' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ flex: 1 }}>
+              <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Time (s):</label>
+              <input className="nodrag" type="text" placeholder="e.g. 0.2" value={data.time ?? '0.2'} onChange={(e) => { let val = e.target.value.replace(/[^0-9.]/g, ''); const parts = val.split('.'); if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join(''); updateData({ time: val }); }} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Magnitude:</label>
+              <input className="nodrag" type="text" placeholder="e.g. 2" value={data.magnitude ?? '2'} onChange={(e) => { let val = e.target.value.replace(/[^0-9.]/g, ''); const parts = val.split('.'); if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join(''); updateData({ magnitude: val }); }} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }} />
+            </div>
+          </div>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Direction:</label>
+            <select className="nodrag" value={data.direction || 'horizontal'} onChange={(e) => updateData({ direction: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="horizontal">Horizontal</option>
+              <option value="vertical">Vertical</option>
+              <option value="both">Both</option>
+            </select>
+          </div>
+        </div>
+      )}
+
+      {data.actionType === 'set_timer' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ flex: 1 }}>
+              <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Timer:</label>
+              <select className="nodrag" value={String(data.timerIndex ?? '1')} onChange={(e) => updateData({ timerIndex: parseInt(e.target.value) || 1 })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+                <option value="1">Timer 1</option>
+                <option value="2">Timer 2</option>
+                <option value="3">Timer 3</option>
+                <option value="4">Timer 4</option>
+              </select>
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Duration (s):</label>
+              <input className="nodrag" type="text" placeholder="e.g. 2" value={data.duration ?? '0.5'} onChange={(e) => { let val = e.target.value.replace(/[^0-9.]/g, ''); const parts = val.split('.'); if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join(''); updateData({ duration: val }); }} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }} />
+            </div>
+          </div>
+        </div>
+      )}
+
       {data.actionType !== 'menu' && !(data.actionType === 'check_input' && data.useThreshold && data.branchByThreshold) && (
         <Handle type="source" position={Position.Right} />
       )}
@@ -1225,7 +1268,8 @@ const nodeGroups = [
       { type: 'wait', label: 'Wait' },
       { type: 'run_script', label: 'Run Script' },
       { type: 'check_input', label: 'Check Input' },
-      { type: 'check_random', label: 'Check Random' }
+      { type: 'check_random', label: 'Check Random' },
+      { type: 'set_timer', label: 'Set Timer' }
     ]
   },
   {
@@ -1295,7 +1339,8 @@ const nodeGroups = [
       { type: 'music_control', label: 'Music Control' },
       { type: 'change_scene', label: 'Change Scene' },
       { type: 'set_bg_color', label: 'Set BG Color' },
-      { type: 'move_camera', label: 'Move Camera' }
+      { type: 'move_camera', label: 'Move Camera' },
+      { type: 'camera_shake', label: 'Camera Shake' }
     ]
   },
   {
@@ -1415,7 +1460,9 @@ const ScriptEditor = () => {
                                                                                   : node.data.label === 'Set Actor Scale' ? 'set_actor_scale'
                                                                                     : node.data.label === 'Set Car Speed' ? 'set_car_speed'
                                                                                       : node.data.label === 'Set Car Steering' ? 'set_car_steering'
-                                                                                        : node.data.label === 'Move Camera' ? 'move_camera' : 'default';
+                                                                                        : node.data.label === 'Camera Shake' ? 'camera_shake'
+                                                                                       : node.data.label === 'Set Timer' ? 'set_timer'
+                                                                                         : node.data.label === 'Move Camera' ? 'move_camera' : 'default';
             return { ...node, type: 'customAction', data: { ...node.data, actionType } };
           }
           return node;

@@ -5208,6 +5208,10 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
         sceneCode += `    bn::fixed camera_target_y = 0;\n`;
         sceneCode += `    bn::fixed camera_speed = 2;\n`;
         sceneCode += `    bool camera_instant = false;\n`;
+        sceneCode += `    int timer_1_frames = 0;\n`;
+        sceneCode += `    int timer_2_frames = 0;\n`;
+        sceneCode += `    int timer_3_frames = 0;\n`;
+        sceneCode += `    int timer_4_frames = 0;\n`;
         sceneCode += `    global_spawn_x = -1;\n    global_spawn_y = -1;\n`;
         sceneCode += `    int key_held_up = 0; int cur_held_up = 0;\n`;
         sceneCode += `    int key_held_down = 0; int cur_held_down = 0;\n`;
@@ -5931,6 +5935,10 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
         sceneCode += `        cur_held_r = key_held_r; if (bn::keypad::r_held()) key_held_r++; else key_held_r = 0;\n`;
         sceneCode += `        cur_held_start = key_held_start; if (bn::keypad::start_held()) key_held_start++; else key_held_start = 0;\n`;
         sceneCode += `        cur_held_select = key_held_select; if (bn::keypad::select_held()) key_held_select++; else key_held_select = 0;\n`;
+        sceneCode += `        if (timer_1_frames > 0) timer_1_frames--;\n`;
+        sceneCode += `        if (timer_2_frames > 0) timer_2_frames--;\n`;
+        sceneCode += `        if (timer_3_frames > 0) timer_3_frames--;\n`;
+        sceneCode += `        if (timer_4_frames > 0) timer_4_frames--;\n`;
         if (scene.type === 'RACING' && scene.showCountdown) {
           sceneCode += `        if (!_countdown_done) {\n`;
           sceneCode += `            _countdown_done = true;\n`;

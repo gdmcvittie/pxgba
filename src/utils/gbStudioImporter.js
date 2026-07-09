@@ -1382,7 +1382,8 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}) 
             label,
             actionType,
             time: ev.args?.time || 0.2,
-            direction: ev.args?.shakeDirection || 'horizontal'
+            direction: ev.args?.shakeDirection || 'horizontal',
+            magnitude: typeof ev.args?.magnitude === 'object' ? String(ev.args.magnitude.value ?? 2) : String(ev.args?.magnitude ?? 2)
           };
           isMapped = true;
           break;
@@ -1393,6 +1394,7 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}) 
           data = {
             label,
             actionType,
+            timerIndex: ev.args?.timer ?? 1,
             duration: ev.args?.duration || 0.5,
             frames: ev.args?.frames || 30
           };
