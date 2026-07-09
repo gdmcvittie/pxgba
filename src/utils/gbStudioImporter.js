@@ -239,13 +239,11 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     }
   }
 
-  console.log('[Importer Debug] RAW gbsVariables:', JSON.stringify(gbsVariables));
   if (gbsVariables && Array.isArray(gbsVariables)) {
     const importedVars = [];
     gbsVariables.forEach((v, index) => {
       if (!v) return;
       const cleanName = String(v.name || `VAR_${v.id || index}`).replace(/[^a-zA-Z0-9_]/g, '_').toUpperCase();
-      console.log(`[Importer Debug] variableIdMap[${JSON.stringify(v.id)}] = "${cleanName}"`);
       variableIdMap[v.id] = cleanName;
       if (!defaultPlayerVars.some(dpv => dpv.name === cleanName)) {
         importedVars.push(v);
@@ -266,9 +264,6 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       });
     }
   }
-
-  console.log('[Importer Debug] Final variableIdMap:', JSON.stringify(variableIdMap));
-  console.log('[Importer Debug] Project variables array:', JSON.stringify(variables.map(v => ({ id: v.id, name: v.name, type: v.type }))));
 
   // Load custom scripts for EVENT_CALL_CUSTOM_EVENT resolution
   const customEventScripts = {};
@@ -311,7 +306,6 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   usedSpriteSheetIds.forEach(id => {
     usedSpriteFiles.add(id);
     const spriteAsset = gbsSprites?.find(s => s.id === id);
-    console.log(`[Import] usedSpriteSheetId=${id}, found spriteAsset=`, spriteAsset ? spriteAsset.name : 'NULL');
     if (spriteAsset && spriteAsset.filename) {
       usedSpriteFiles.add(spriteAsset.filename);
       usedSpriteFiles.add(spriteAsset.filename.replace(/\.[^/.]+$/, ''));
@@ -319,7 +313,6 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     const spriteName = String(id).replace(/\.[^/.]+$/, '');
     usedSpriteFiles.add(spriteName);
   });
-  console.log(`[Import] usedSpriteFiles contents:`, Array.from(usedSpriteFiles));
 
   const usedMusicFiles = new Set();
   usedMusicIds.forEach(id => {
@@ -332,20 +325,6 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     const musicName = String(id).replace(/\.[^/.]+$/, '');
     usedMusicFiles.add(musicName);
   });
-
-  console.log("[Importer Debug] Loaded modular counts:", {
-    scenes: gbsScenes.length,
-    backgrounds: gbsBackgrounds.length,
-    sprites: gbsSprites.length,
-    music: gbsMusic.length
-  });
-  console.log("[Importer Debug] gbsSprites names:", gbsSprites.map(s => s.name));
-  console.log("[Importer Debug] Used Asset IDs:", {
-    usedBackgroundIds: Array.from(usedBackgroundIds),
-    usedSpriteSheetIds: Array.from(usedSpriteSheetIds),
-    usedMusicIds: Array.from(usedMusicIds)
-  });
-  console.log("[Importer Debug] Resolved sprite names:", Array.from(usedSpriteFiles));
 
   // 2. Parse referenced Sprites & Slices only
   const savedTiles = [...initialTiles];
@@ -421,9 +400,6 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       const spriteConfig = gbsSprites.find(s =>
         spriteName === s.name || spriteName === (s.filename && s.filename.replace(/\.[^/.]+$/, ''))
       );
-
-      console.log(`[Import] Processing sprite: ${spriteName}, config found:`, !!spriteConfig,
-        spriteConfig ? `states: ${spriteConfig.states?.length || 0}` : 'no config');
 
       const animFrames = [];
       let frameIdx = 0;
@@ -615,10 +591,6 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     }
   }
 
-  console.log(`[Import] Created ${animations.length} animations total`);
-  console.log(`[Import] spriteIdMap keys:`, Object.keys(spriteIdMap));
-  console.log(`[Import] animations:`, animations.map(a => ({ id: a.id, name: a.name, frames: a.frames.length })));
-
   // Load project settings (modular or monolithic)
   if (!gbsProj.settings) {
     const settingsPath = Object.keys(zip.files).find(name => name.endsWith('settings.gbsres'));
@@ -704,11 +676,6 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       isOpen: true
     };
     customScripts.push(sceneScriptGroup);
-
-    console.log(`[Importer Debug] Translating scene #${sceneId} "${sceneName}":`, {
-      collisionsType: typeof gbsScene.collisions,
-      collisionsLength: gbsScene.collisions?.length
-    });
 
     // Get background dimensions and pixel array
     let imgW = 0;
@@ -916,15 +883,12 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       let walkAnimId = null;
       let idleAnimId = null;
       const spriteRef = spriteIdMap[act.spriteSheetId];
-      console.log(`[Import] Actor "${act.name}": spriteSheetId=${act.spriteSheetId}, spriteRef=`, spriteRef ? `found tileId=${spriteRef.tileId}, stateAnims keys=${Object.keys(spriteRef.stateAnims || {})}` : 'NOT FOUND');
       if (spriteRef) {
         spriteId = spriteRef.tileId || 1;
         const defaultAnims = spriteRef.stateAnims?.[''];
-        console.log(`[Import] Actor "${act.name}": stateAnims['']=`, defaultAnims);
         if (defaultAnims && defaultAnims.length > 0) {
           walkAnimId = defaultAnims[0];
           idleAnimId = defaultAnims[0];
-          console.log(`[Import] Actor "${act.name}": assigned walkAnimId=${walkAnimId}, idleAnimId=${idleAnimId}`);
         }
       }
 
@@ -1017,7 +981,6 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
 
     // --- Create player actor if scene has one ---
     const playerSpriteId = gbsScene.playerSpriteSheetId || gbsProj.settings?.defaultPlayerSpriteSheetId;
-    console.log(`[Import] Player sprite ID: ${playerSpriteId}, spriteRef:`, spriteIdMap[playerSpriteId] ? 'FOUND' : 'NOT FOUND');
     if (playerSpriteId) {
       const spriteRef = spriteIdMap[playerSpriteId];
       const playerTileX = Math.floor((imgW || sceneW) / 2 / 8);
@@ -1250,10 +1213,6 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}) 
       let data = {};
       let isMapped = false;
 
-      if (['EVENT_SET_VALUE','EVENT_SET_INPUT_VAR','EVENT_VARIABLE_SET','EVENT_INC_VALUE','EVENT_DEC_VALUE','EVENT_IF','EVENT_VARIABLE_MATH_EVALUATE'].includes(ev.command)) {
-        console.log(`[Importer Debug] EV ${ev.command} args:`, JSON.stringify(ev.args), `| variableIdMap keys:`, Object.keys(variableIdMap));
-      }
-
       switch (ev.command) {
         case 'EVENT_TEXT':
           label = 'Show Dialog';
@@ -1297,7 +1256,6 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}) 
           actionType = 'set_var';
           const setVarVarName = resolveVariableRef(ev.args?.variable) || `VAR_${typeof ev.args?.variable === 'object' ? 'OBJ' : (ev.args?.variable || 'UNKNOWN')}`;
           const setVarVarValue = ev.args?.value !== undefined ? resolveValue(ev.args.value) : '1';
-          console.log(`[Importer Debug] SET_VALUE: variable=${JSON.stringify(ev.args?.variable)} resolvedVarName="${setVarVarName}" varValue="${setVarVarValue}"`);
           data = {
             label,
             actionType,
@@ -1311,7 +1269,6 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}) 
           label = 'Math Operation';
           actionType = 'math_op';
           const incVarName = resolveVariableRef(ev.args?.variable) || `VAR_${typeof ev.args?.variable === 'object' ? 'OBJ' : (ev.args?.variable || 'UNKNOWN')}`;
-          console.log(`[Importer Debug] INC_VALUE: variable=${JSON.stringify(ev.args?.variable)} resolvedVarName="${incVarName}"`);
           data = {
             label,
             actionType,
@@ -1326,7 +1283,6 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}) 
           label = 'Math Operation';
           actionType = 'math_op';
           const decVarName = resolveVariableRef(ev.args?.variable) || `VAR_${typeof ev.args?.variable === 'object' ? 'OBJ' : (ev.args?.variable || 'UNKNOWN')}`;
-          console.log(`[Importer Debug] DEC_VALUE: variable=${JSON.stringify(ev.args?.variable)} resolvedVarName="${decVarName}"`);
           data = {
             label,
             actionType,
@@ -1344,7 +1300,6 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}) 
           const opMap = { 'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'lte': '<=', 'gte': '>=' };
           const ifVarName = resolveValue(cond.valueA);
           const ifVarValue = resolveValue(cond.valueB);
-          console.log(`[Importer Debug] IF: valueA=${JSON.stringify(cond.valueA)} resolvedVarName="${ifVarName}" valueB=${JSON.stringify(cond.valueB)} resolvedVarValue="${ifVarValue}"`);
           data = {
             label,
             actionType,
@@ -1488,7 +1443,6 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}) 
           label = 'Math Equation';
           actionType = 'math_equation';
           const mathEqTargetVar = resolveVariableRef(ev.args?.variable) || `VAR_${typeof ev.args?.variable === 'object' ? 'OBJ' : (ev.args?.variable || 'UNKNOWN')}`;
-          console.log(`[Importer Debug] MATH_EQ: variable=${JSON.stringify(ev.args?.variable)} resolvedTargetVar="${mathEqTargetVar}" expr="${ev.args?.expression || ''}"`);
           data = {
             label,
             actionType,
