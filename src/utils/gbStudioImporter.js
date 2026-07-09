@@ -1399,26 +1399,47 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   const activeScene = scenes.find(s => s.id === activeSceneId) || scenes[0];
 
   // Merge unique extracted colors with the current palette, enforcing 256 colors maximum.
+  // Colors are matched by their normalized RGB value so a color already present in the
+  // current palette (even in a different string format/case) is never added again.
+  const normalizeColor = (color) => {
+    if (!color || typeof color !== 'string') return null;
+    let r, g, b;
+    const trimmed = color.trim().toLowerCase();
+    const rgbMatch = trimmed.match(/^rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+    if (rgbMatch) {
+      r = parseInt(rgbMatch[1], 10);
+      g = parseInt(rgbMatch[2], 10);
+      b = parseInt(rgbMatch[3], 10);
+    } else {
+      let hex = trimmed.replace(/^#/, '');
+      if (hex.length === 3) {
+        hex = hex.split('').map(c => c + c).join('');
+      }
+      if (hex.length !== 6) return null;
+      r = parseInt(hex.slice(0, 2), 16);
+      g = parseInt(hex.slice(2, 4), 16);
+      b = parseInt(hex.slice(4, 6), 16);
+    }
+    if ([r, g, b].some(v => Number.isNaN(v) || v < 0 || v > 255)) return null;
+    return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+  };
+
   const seen = new Set();
   const finalPalette = [];
-  
+
   for (const color of (currentPalette || [])) {
-    if (color && typeof color === 'string') {
-      const lower = color.toLowerCase().trim();
-      if (!seen.has(lower)) {
-        seen.add(lower);
-        finalPalette.push(lower);
-      }
+    const norm = normalizeColor(color);
+    if (norm && !seen.has(norm)) {
+      seen.add(norm);
+      finalPalette.push(norm);
     }
   }
 
   for (const color of uniqueProjectColors) {
-    if (color && typeof color === 'string') {
-      const lower = color.toLowerCase().trim();
-      if (!seen.has(lower) && finalPalette.length < 256) {
-        seen.add(lower);
-        finalPalette.push(lower);
-      }
+    const norm = normalizeColor(color);
+    if (norm && !seen.has(norm) && finalPalette.length < 256) {
+      seen.add(norm);
+      finalPalette.push(norm);
     }
   }
 
