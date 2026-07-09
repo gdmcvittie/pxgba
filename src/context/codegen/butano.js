@@ -147,10 +147,13 @@ export async function generateButano(ctx) {
         mainCppDefinitions += `    operator const char*() const {\n        const_cast<SaveString*>(this)->data[32] = 0;\n        return data;\n    }\n`;
         mainCppDefinitions += `};\n\n`;
       }
+      const seenSaveFields = new Set();
       mainCppDefinitions += `struct SaveData {\n`;
       variables.forEach(v => {
         if (v.type === 'group') return;
         const safeVarName = v.name.replace(/[^a-zA-Z0-9_]/g, '_');
+        if (seenSaveFields.has(safeVarName)) return;
+        seenSaveFields.add(safeVarName);
         if (v.type === 'boolean') {
           mainCppDefinitions += `    bool ${safeVarName};\n`;
         } else if (v.type === 'string') {
@@ -163,9 +166,12 @@ export async function generateButano(ctx) {
       });
       mainCppDefinitions += `    int player_scene;\n    int player_x;\n    int player_y;\n};\n\n`;
       mainCppDefinitions += `int global_spawn_x = -1;\nint global_spawn_y = -1;\n\n`;
+      const seenGlobalVars = new Set();
       variables.forEach(v => {
         if (v.type === 'group') return;
         const safeVarName = v.name.replace(/[^a-zA-Z0-9_]/g, '_');
+        if (seenGlobalVars.has(safeVarName)) return;
+        seenGlobalVars.add(safeVarName);
         if (v.type === 'boolean') {
           mainCppDefinitions += `bool ${safeVarName} = ${v.initialValue ? 'true' : 'false'};\n`;
         } else if (v.type === 'string') {
@@ -5070,6 +5076,158 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
         }
 
         actorDeclarations += deferredFireProjLambdas;
+
+        // Generate extra sprite items for set_actor_sprite referenced sprite sheets
+        const extraSpriteNames = new Set();
+        const gatherSetActorSpriteRefs = (nodes) => {
+          if (!nodes) return;
+          nodes.forEach(n => {
+            if (n.data?.actionType === 'set_actor_sprite' && n.data?.resolvedSpriteName) {
+              extraSpriteNames.add(n.data.resolvedSpriteName);
+            }
+          });
+        };
+        sActors.forEach(a => {
+          gatherSetActorSpriteRefs(a.script?.nodes);
+        });
+        sTriggers.forEach(t => {
+          if (t.isGroup) return;
+          const tScript = getTriggerScript(t, sTriggers, customScripts);
+          gatherSetActorSpriteRefs(tScript?.nodes);
+        });
+        customScripts.forEach(cs => gatherSetActorSpriteRefs(cs.script?.nodes));
+        gatherSetActorSpriteRefs(globalScript?.nodes);
+        gatherSetActorSpriteRefs(scene.script?.nodes);
+
+        const generatedExtraSpriteItems = new Set();
+        extraSpriteNames.forEach(spriteName => {
+          const safeSpriteName = spriteName.replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase();
+          if (!safeSpriteName || generatedExtraSpriteItems.has(safeSpriteName)) return;
+          generatedExtraSpriteItems.add(safeSpriteName);
+
+          // Find animations for this sprite
+          const spriteAnims = animations.filter(a => a.name && a.name.startsWith(spriteName));
+          if (spriteAnims.length === 0) return;
+
+          // Collect all tile IDs from all frames
+          const extraFrameTiles = [];
+          const addExtraTile = (tileId) => {
+            const key = String(tileId);
+            let idx = extraFrameTiles.findIndex(t => String(t) === key);
+            if (idx === -1) { extraFrameTiles.push(tileId); idx = extraFrameTiles.length - 1; }
+            return idx;
+          };
+          let extraDefaultIdx = 0;
+          spriteAnims.forEach(anim => {
+            if (anim.frames) {
+              anim.frames.forEach(frame => {
+                if (Array.isArray(frame)) {
+                  frame.forEach(tileId => {
+                    if (tileId != null) {
+                      const idx = addExtraTile(tileId);
+                      if (extraDefaultIdx === 0) extraDefaultIdx = idx;
+                    }
+                  });
+                }
+              });
+            }
+          });
+
+          if (extraFrameTiles.length === 0) return;
+
+          // Determine sprite dimensions from first frame of first animation
+          const firstAnim = spriteAnims.find(a => a.frames && a.frames.length > 0);
+          const firstFrame = firstAnim?.frames?.[0];
+          const frameTileCount = firstFrame ? firstFrame.filter(t => t != null).length : 1;
+          let spriteW = 16, spriteH = 16;
+          if (frameTileCount === 1) { spriteW = 8; spriteH = 8; }
+          else if (frameTileCount === 4) { spriteW = 16; spriteH = 16; }
+          else if (frameTileCount === 8) { spriteW = 16; spriteH = 32; }
+          else if (frameTileCount === 12) { spriteW = 24; spriteH = 24; }
+          else { spriteW = 32; spriteH = 32; }
+
+          const extraActName = `${safeSceneName}_extra_sprite_${safeSpriteName}`;
+          const extraValidSizes = [8, 16, 24, 32, 64];
+          const extraValidW = extraValidSizes.includes(spriteW) ? spriteW : 16;
+          const extraValidH = extraValidSizes.includes(spriteH) ? spriteH : 16;
+          const tilesPerFrame = (extraValidW / 8) * (extraValidH / 8);
+          const extraFrameCount = Math.max(1, Math.ceil(extraFrameTiles.length / tilesPerFrame));
+
+          // Render sprite item BMP
+          const extraSCanvas = document.createElement('canvas');
+          extraSCanvas.width = extraValidW;
+          extraSCanvas.height = extraValidH * extraFrameCount;
+          const extraSctx = extraSCanvas.getContext('2d');
+          extraSctx.imageSmoothingEnabled = false;
+
+          for (let f = 0; f < extraFrameCount; f++) {
+            for (let ty = 0; ty < extraValidH / 8; ty++) {
+              for (let tx = 0; tx < extraValidW / 8; tx++) {
+                const tileIdx = f * tilesPerFrame + ty * (extraValidW / 8) + tx;
+                const tilePayload = tileIdx < extraFrameTiles.length ? extraFrameTiles[tileIdx] : null;
+                if (tilePayload != null) {
+                  const tile = savedTiles.find(t => t && String(t.id) === String(tilePayload));
+                  if (tile && tile.data) {
+                    for (let py = 0; py < 8; py++) {
+                      for (let px = 0; px < 8; px++) {
+                        const color = tile.data[py]?.[px];
+                        if (color) {
+                          const rgb = hexToRgb(color);
+                          extraSctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+                        } else {
+                          extraSctx.fillStyle = 'transparent';
+                        }
+                        extraSctx.fillRect(tx * 8 + px, f * extraValidH + ty * 8 + py, 1, 1);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          const extraForceBpp = globalBppMode === 'bpp_8' ? 8 : 4;
+          const extraBmpBlob = canvasToIndexedBmpBlob(extraSCanvas, globalSpriteColors, extraForceBpp);
+          zip.file(`graphics/${extraActName}.bmp`, extraBmpBlob);
+          zip.file(`graphics/${extraActName}.json`, JSON.stringify({
+            type: "sprite",
+            width: extraValidW,
+            height: extraValidH,
+            bpp_mode: globalBppMode,
+            colors_count: globalColorsCount
+          }, null, 2));
+          zip.file(`graphics/${extraActName}.grit`, `-m!`);
+          mainCppIncludes += `#include "bn_sprite_items_${extraActName}.h"\n`;
+
+          // Store mapping on scene script nodes for use in script codegen
+          const setActorSpriteNodes = [];
+          const collectNodes = (nodes) => {
+            if (!nodes) return;
+            nodes.forEach(n => {
+              if (n.data?.actionType === 'set_actor_sprite' && n.data?.resolvedSpriteName === spriteName) {
+                setActorSpriteNodes.push(n);
+              }
+            });
+          };
+          sActors.forEach(a => collectNodes(a.script?.nodes));
+          sTriggers.forEach(t => {
+            if (t.isGroup) return;
+            const tScript = getTriggerScript(t, sTriggers, customScripts);
+            collectNodes(tScript?.nodes);
+          });
+          customScripts.forEach(cs => collectNodes(cs.script?.nodes));
+          collectNodes(globalScript?.nodes);
+          collectNodes(scene.script?.nodes);
+
+          setActorSpriteNodes.forEach(n => {
+            if (n.data) {
+              n.data.computedSpriteItemName = extraActName;
+              n.data.computedSpriteFrameCount = extraFrameCount;
+              n.data.computedSpriteWidth = extraValidW;
+              n.data.computedSpriteHeight = extraValidH;
+            }
+          });
+        });
 
         let triggerDeclarations = '';
         let triggerLogicCode = '';

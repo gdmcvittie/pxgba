@@ -1,5 +1,13 @@
 import { BUTANO_COLLISION_ENUMS } from '../../constants';
 
+function translateExpr(str) {
+  if (!str) return str;
+  let result = str.replace(/\brnd\b\(([^)]+)\)/gi, (match, arg) => {
+    return `rng.get_int(${arg} + 1)`;
+  });
+  return result;
+}
+
 export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight, baseIndent = 0, callStack = new Set(), options = {}) {
   const {
     dialogs, safeSceneName, scenes, sActors, sDims, customScripts, variables,
@@ -861,7 +869,13 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
       if (targetActorId !== null && targetActorId !== undefined) {
         const targetActorIdx = sActors.findIndex(a => a && a.id === targetActorId);
         if (targetActorIdx !== -1) {
-          code += `${indent}BN_LOG("Action: Set Actor Sprite - actor ${targetActorIdx} (sprite swapping not yet implemented)");\n`;
+          const spriteItemName = currentNode.data?.computedSpriteItemName;
+          if (spriteItemName) {
+            code += `${indent}// Set Actor Sprite: change actor ${targetActorIdx} to ${spriteItemName}\n`;
+            code += `${indent}actor_${targetActorIdx}_sprite.set_tiles(bn::sprite_items::${spriteItemName}.tiles_item().create_tiles(0));\n`;
+          } else {
+            code += `${indent}// Set Actor Sprite: actor ${targetActorIdx} (sprite item not generated - try using a sprite sheet that exists in the project)\n`;
+          }
         }
       }
     } else if (label === 'Set Actor Flip' || currentNode.data?.actionType === 'set_actor_flip') {
@@ -905,7 +919,7 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
       const sv = resolveVarName(currentNode.data.varName);
       if (sv) {
         const variable = variables.find(v => v &&  v && v.name === currentNode.data.varName);
-        let val = safeStr(currentNode.data.varValue);
+        let val = translateExpr(safeStr(currentNode.data.varValue));
         if (variable && variable.type === 'string') {
           val = `"${val.replace(/"/g, '\\"')}"`;
         } else if (variable && variable.type === 'float') {
@@ -919,7 +933,7 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
       const sv = resolveVarName(currentNode.data.varName);
       if (sv) {
         const variable = variables.find(v => v &&  v && v.name === currentNode.data.varName);
-        let val = safeStr(currentNode.data.varValue);
+        let val = translateExpr(safeStr(currentNode.data.varValue));
         if (variable && variable.type === 'string') {
           val = `"${val.replace(/"/g, '\\"')}"`;
         } else if (variable && variable.type === 'float') {
@@ -953,6 +967,7 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
         const regex = new RegExp(`\\b${escapedName}\\b`, 'g');
         sanitizedEq = sanitizedEq.replace(regex, safeName);
       });
+      sanitizedEq = translateExpr(sanitizedEq);
       code += `${indent}BN_LOG("Action: Math Equation ${safeVarName} = ${safeStr(rawEq)}");\n`;
       if (safeVarName && sanitizedEq) {
         code += `${indent}${safeVarName} = ${sanitizedEq};\n`;

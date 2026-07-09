@@ -252,8 +252,15 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     if (importedVars.length > 0) {
       const importedVarGroup = { id: Date.now() + Math.random() + 400, type: 'group', name: 'Imported Variables', isOpen: true };
       variables.push(importedVarGroup);
+      const usedVarNames = new Set(variables.filter(v => v.name).map(v => v.name));
       importedVars.forEach((v, index) => {
-        const cleanName = String(v.name || `VAR_${v.id || index}`).replace(/[^a-zA-Z0-9_]/g, '_').toUpperCase();
+        let cleanName = String(v.name || `VAR_${v.id || index}`).replace(/[^a-zA-Z0-9_]/g, '_').toUpperCase();
+        if (usedVarNames.has(cleanName)) {
+          let suffix = 2;
+          while (usedVarNames.has(`${cleanName}_${suffix}`)) suffix++;
+          cleanName = `${cleanName}_${suffix}`;
+        }
+        usedVarNames.add(cleanName);
         variables.push({
           id: Date.now() + Math.random() + index,
           name: cleanName,
@@ -278,7 +285,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       const parsed = JSON.parse(text);
       if (parsed && parsed._resourceType === 'script') {
         customEventScripts[parsed.id] = parsed;
-        const translatedScript = translateEventList(parsed.script || [], sceneIdMap, variableIdMap);
+        const translatedScript = translateEventList(parsed.script || [], sceneIdMap, variableIdMap, {}, { gbsSprites });
         customScripts.push({
           id: parsed.id,
           name: parsed.name || 'Unnamed Script',
@@ -288,6 +295,66 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       }
     } catch (err) {
       // skip
+    }
+  }
+
+  // Pre-scan all scene scripts for EVENT_ACTOR_SET_SPRITE so those sprites get loaded
+  const scanScriptsForSpriteRefs = (scriptList) => {
+    if (!Array.isArray(scriptList)) return;
+    for (const ev of scriptList) {
+      if (!ev || !ev.command) continue;
+      if (ev.command === 'EVENT_ACTOR_SET_SPRITE' && ev.args?.spriteSheetId) {
+        usedSpriteSheetIds.add(ev.args.spriteSheetId);
+      }
+      if (ev.children?.script) scanScriptsForSpriteRefs(ev.children.script);
+    }
+  };
+  gbsScenes.forEach(scene => {
+    if (scene.script) scanScriptsForSpriteRefs(scene.script);
+    if (scene.actors) {
+      scene.actors.forEach(act => {
+        if (act.script) scanScriptsForSpriteRefs(act.script);
+        if (act.startScript) scanScriptsForSpriteRefs(act.startScript);
+        if (act.updateScript) scanScriptsForSpriteRefs(act.updateScript);
+        if (act.hit1Script) scanScriptsForSpriteRefs(act.hit1Script);
+        if (act.hit2Script) scanScriptsForSpriteRefs(act.hit2Script);
+        if (act.hit3Script) scanScriptsForSpriteRefs(act.hit3Script);
+      });
+    }
+    if (scene.triggers) {
+      scene.triggers.forEach(trig => {
+        if (trig.script) scanScriptsForSpriteRefs(trig.script);
+      });
+    }
+  });
+  // Also scan modular actor/trigger gbsres files for EVENT_ACTOR_SET_SPRITE
+  for (const zipPath of Object.keys(zip.files)) {
+    if (zipPath.includes('scenes/') && zipPath.endsWith('.gbsres')) {
+      try {
+        const text = await zip.files[zipPath].async('text');
+        if (text.includes('EVENT_ACTOR_SET_SPRITE')) {
+          const parsed = JSON.parse(text);
+          const doScan = (obj) => {
+            if (!obj || !obj.command) return;
+            if (obj.command === 'EVENT_ACTOR_SET_SPRITE' && obj.args?.spriteSheetId) {
+              usedSpriteSheetIds.add(obj.args.spriteSheetId);
+            }
+            if (obj.children?.script) obj.children.script.forEach(doScan);
+          };
+          if (parsed._resourceType === 'actor') {
+            if (parsed.script) parsed.script.forEach(doScan);
+            if (parsed.startScript) parsed.startScript.forEach(doScan);
+            if (parsed.updateScript) parsed.updateScript.forEach(doScan);
+            if (parsed.hit1Script) parsed.hit1Script.forEach(doScan);
+            if (parsed.hit2Script) parsed.hit2Script.forEach(doScan);
+            if (parsed.hit3Script) parsed.hit3Script.forEach(doScan);
+          } else if (parsed._resourceType === 'trigger') {
+            if (parsed.script) parsed.script.forEach(doScan);
+          } else if (parsed._resourceType === 'script') {
+            if (parsed.script) parsed.script.forEach(doScan);
+          }
+        }
+      } catch (e) { /* skip */ }
     }
   }
 
@@ -897,7 +964,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
 
       // Script-level maps: actor sub-scripts use param 0 → self
       const actorSelfMap = { ...actorIdMap, 0: actorProjectId };
-      const transOpts = { actorUuidMap, animations, spriteIdMap };
+      const transOpts = { actorUuidMap, animations, spriteIdMap, gbsSprites };
 
       const resolveAnims = (nodes) => {
         if (!spriteRef?.stateAnims) return nodes;
@@ -1035,7 +1102,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       const trigX = ((parseInt(trig.x) || 0) * 8) + actorOffsetX;
       const trigY = ((parseInt(trig.y) || 0) * 8) + actorOffsetY;
 
-      const trigScript = translateEventList(trig.script, sceneIdMap, variableIdMap, actorIdMap);
+      const trigScript = translateEventList(trig.script, sceneIdMap, variableIdMap, actorIdMap, { gbsSprites });
       let trigScriptId = null;
       if (trigScript && (trigScript.nodes?.length || trigScript.edges?.length)) {
         trigScriptId = Date.now() + Math.random() + 5000 + trigIdx;
@@ -1075,7 +1142,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     }];
 
     // Build scene script
-    const sceneScript = translateEventList(gbsScene.script, sceneIdMap, variableIdMap, actorIdMap);
+    const sceneScript = translateEventList(gbsScene.script, sceneIdMap, variableIdMap, actorIdMap, { gbsSprites });
     let sceneScriptId = null;
     if (sceneScript && (sceneScript.nodes?.length || sceneScript.edges?.length)) {
       sceneScriptId = Date.now() + Math.random() + 11000 + sIdx;
@@ -1129,7 +1196,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       dimensions: { w: MIN_PX, h: MIN_PX },
       worldX: 0,
       worldY: 0,
-      script: translateEventList([], sceneIdMap, variableIdMap)
+      script: translateEventList([], sceneIdMap, variableIdMap, {}, { gbsSprites })
     });
   }
 
@@ -1141,6 +1208,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     dimensions: activeScene.dimensions,
     layers: activeScene.frames[0].layers,
     savedTiles,
+    spriteIdMap,
     tileGroupNames: { [importGroupId]: 'GB Studio Project Import Tiles' },
     scenes,
     actors: activeScene.actors,
@@ -1168,7 +1236,8 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
 /**
  * Translates a GB Studio script array into a PxGBA React Flow node sequence.
  */
-function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}) {
+function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}, extraOpts = {}) {
+  const { gbsSprites = [] } = extraOpts;
   const nodes = [{ id: 'start', position: { x: 420, y: 20 }, data: { label: 'On Update' }, type: 'customStart' }];
   const edges = [];
 
@@ -1180,27 +1249,55 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}) 
   let xOffset = 640;
   let nodeCount = 0;
 
+  function resolveVarId(id) {
+    const mapped = variableIdMap[id];
+    if (mapped) return mapped;
+    if (typeof id === 'string' || typeof id === 'number') {
+      const str = String(id);
+      const vMatch = str.match(/^V?(\d+)$/);
+      if (vMatch && variableIdMap[vMatch[1]]) {
+        return variableIdMap[vMatch[1]];
+      }
+    }
+    return undefined;
+  }
+
   function resolveVariableRef(variableField) {
     if (variableField && typeof variableField === 'object') {
-      if (variableField.type === 'variable') return variableIdMap[variableField.value] || variableField.value;
-      if (variableField.type === 'number') return variableIdMap[String(variableField.value)] || String(variableField.value);
+      if (variableField.type === 'variable') return resolveVarId(variableField.value) || variableField.value;
+      if (variableField.type === 'number') return resolveVarId(variableField.value) || String(variableField.value);
       return undefined;
     }
-    return variableIdMap[variableField] || undefined;
+    return resolveVarId(variableField) || undefined;
   }
 
   function resolveValue(val) {
     if (val && typeof val === 'object') {
-      if (val.type === 'variable') return variableIdMap[val.value] || val.value;
+      if (val.type === 'variable') return resolveVarId(val.value) || val.value;
       if (val.type === 'number') return String(val.value);
       if (val.type === 'string') return val.value;
       if (val.type === 'true') return 'true';
       if (val.type === 'add') return `${resolveValue(val.valueA)} + ${resolveValue(val.valueB)}`;
       if (val.type === 'sub') return `${resolveValue(val.valueA)} - ${resolveValue(val.valueB)}`;
-      if (val.type === 'rnd') return `random(0, ${resolveValue(val.value)})`;
+      if (val.type === 'rnd') return `rng.get_int(${resolveValue(val.value)} + 1)`;
       return String(val.value || '');
     }
-    return val !== undefined ? String(val) : '';
+    if (val !== undefined) {
+      const str = String(val);
+      return resolveVarId(str) || str;
+    }
+    return '';
+  }
+
+  function translateVarRefsInExpression(expr) {
+    if (!expr) return expr;
+    let result = expr.replace(/\bV(\d+)\b/g, (match, slotNum) => {
+      return variableIdMap[slotNum] || match;
+    });
+    result = result.replace(/\brnd\b\(([^)]+)\)/gi, (match, arg) => {
+      return `rng.get_int(${arg} + 1)`;
+    });
+    return result;
   }
 
   function flattenAndMap(eventList) {
@@ -1521,7 +1618,7 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}) 
             label,
             actionType,
             targetVar: mathEqTargetVar,
-            equation: ev.args?.expression || ''
+            equation: translateVarRefsInExpression(ev.args?.expression || '')
           };
           isMapped = true;
           break;
@@ -1686,11 +1783,15 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}) 
         case 'EVENT_ACTOR_SET_SPRITE':
           label = 'Set Actor Sprite';
           actionType = 'set_actor_sprite';
+          const setSpriteSheetId = ev.args?.spriteSheetId || '';
+          const setSpriteEntry = gbsSprites?.find(s => s.id === setSpriteSheetId);
+          const setSpriteName = setSpriteEntry?.name || setSpriteEntry?.filename || '';
           data = {
             label,
             actionType,
             targetActorId: actorIdMap[ev.args?.actorId === '$self$' ? '0' : ev.args?.actorId] || null,
-            spriteSheetId: ev.args?.spriteSheetId || ''
+            spriteSheetId: setSpriteSheetId,
+            resolvedSpriteName: setSpriteName
           };
           isMapped = true;
           break;
