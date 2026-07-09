@@ -124,6 +124,7 @@ export const PxShopProvider = ({ children }) => {
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(showNewProjectOnStartup);
   const [newProjectSettings, setNewProjectSettings] = useState({ w: 256, h: 256, bgColor: '#fff1e8', transparentBg: false });
   const [showWizardDialog, setShowWizardDialog] = useState(false);
+  const [showGbStudioImportDialog, setShowGbStudioImportDialog] = useState(false);
   const [wizardSettings, setWizardSettings] = useState({ topdown: 1, platformer: 1, metroidvania: 1, pointnclick: 1, shmup: 1, racing: 1, beatemup: 1, intro: 2, pause: true, randomBg: true, globalPlayer: true, generateLevels: true });
   const [dimensions, setDimensions] = useState({ w: 256, h: 256 });
   const dimensionsRef = useRef(dimensions);
@@ -7725,7 +7726,31 @@ export const PxShopProvider = ({ children }) => {
       loadProjectData(project);
 
       if (warnings.length > 0) {
-        toast.success("Imported with warnings! See console for skipped custom elements.", { id: toastId, duration: 6000 });
+        const skippedFiles = warnings.map(w => {
+          const match = w.match(/"([^"]+)"/);
+          if (match) {
+            return match[1].split('/').pop();
+          }
+          if (w.toLowerCase().includes('variables file')) return 'variables.gbsres';
+          if (w.toLowerCase().includes('settings')) return 'settings.gbsres';
+          return w;
+        });
+        const uniqueSkippedFiles = [...new Set(skippedFiles)];
+
+        toast.success(
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', textAlign: 'left' }}>
+            <div style={{ fontWeight: 'bold' }}>Imported with warnings!</div>
+            <div style={{ fontSize: '11px', maxHeight: '120px', overflowY: 'auto', paddingRight: '4px' }}>
+              <div style={{ fontWeight: 600 }}>Skipped files:</div>
+              <ul style={{ margin: '4px 0 0 12px', padding: 0, listStyleType: 'disc' }}>
+                {uniqueSkippedFiles.map((filename, idx) => (
+                  <li key={idx} style={{ marginBottom: '2px' }}>{filename}</li>
+                ))}
+              </ul>
+            </div>
+          </div>,
+          { id: toastId, duration: 10000 }
+        );
         console.warn("GB Studio Import Warnings:", warnings);
       } else {
         toast.success("GB Studio project imported successfully!", { id: toastId });
@@ -8754,6 +8779,7 @@ const handleWizardCreate = () => {
     exportAllLayersZipped,
     handleCreateNewProject,
     showWizardDialog, setShowWizardDialog,
+    showGbStudioImportDialog, setShowGbStudioImportDialog,
     wizardSettings, setWizardSettings,
     handleWizardCreate,
     renderText,

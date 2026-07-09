@@ -41,6 +41,7 @@ const Toolbar = () => {
 
     // Functions
     setShowNewProjectDialog,
+    setShowGbStudioImportDialog,
     projectInputRef,
     gbStudioInputRef,
     imageInputRef,
@@ -172,12 +173,12 @@ const Toolbar = () => {
                       >
                         <BsUpload size={14} /> Import Image / Palette...
                       </button>
-                      <button
-                        onClick={() => {
-                          gbStudioInputRef.current?.click();
-                          setShowFileMenu(false);
-                          setShowImportSubmenu(false);
-                        }}
+                       <button
+                         onClick={() => {
+                           setShowGbStudioImportDialog(true);
+                           setShowFileMenu(false);
+                           setShowImportSubmenu(false);
+                         }}
                         style={{
                           background: 'transparent',
                           border: 'none',

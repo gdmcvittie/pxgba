@@ -352,6 +352,8 @@ const Dialogs = () => {
     showNewProjectOnStartup, setShowNewProjectOnStartup,
     handleCreateNewProject,
     showWizardDialog, setShowWizardDialog,
+    showGbStudioImportDialog, setShowGbStudioImportDialog,
+    gbStudioInputRef,
     wizardSettings, setWizardSettings,
     handleWizardCreate,
     imageInputRef,
@@ -946,7 +948,7 @@ const Dialogs = () => {
                 • <a href="https://github.com/ez-me/gba-bios" target="_blank" style={{ color: '#4CAF50' }}>ez-me</a> (Open Source GBA Bios)<br />
                 • <a href="https://github.com/antoniourtza/maxmod" target="_blank" style={{ color: '#4CAF50' }}>Maxmod</a> (Audio)<br />
                 • <a href="https://opengameart.org/" target="_blank" style={{ color: '#4CAF50' }}>Open Game Art</a> (Tile Search)<br />
-                • <a href="https://modarchive.org/" target="_blank" style={{ color: '#4CAF50' }}>The Mod Archive</a> (Music Search)
+                 • <a href="https://modarchive.org/" target="_blank" style={{ color: '#4CAF50' }}>The Mod Archive</a> (Music Search)
               </div>
               <div style={{ flexGrow: 1, fontSize: '12px', color: '#ccc', textAlign: 'right', lineHeight: '1.5' }}>
                 <strong>Shoutouts:</strong><br />
@@ -966,6 +968,69 @@ const Dialogs = () => {
               <a title="Join Discord" href="https://discord.gg/4zPChaMc" target='_blank' rel="noreferrer" style={{ padding: '10px 20px', background: '#5865F2', border: 'none', color: '#fff', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', textDecoration: 'none' }}><BsDiscord size={14} /></a>
               <a title="YouTube Tutorials" href="https://www.youtube.com/@LiftedPixel_ca/videos" target='_blank' rel="noreferrer" style={{ padding: '10px 20px', background: '#FF0000', border: 'none', color: '#fff', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', textDecoration: 'none' }}><BsYoutube size={14} /></a>
               <button onClick={() => setShowAboutDialog(false)} style={{ padding: '10px 30px', background: '#4CAF50', border: 'none', color: '#fff', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* GB STUDIO IMPORT DIALOG */}
+      {showGbStudioImportDialog && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.75)' }}>
+          <div style={{ background: '#2a2a2a', border: '1px solid #ff9800', borderRadius: '6px', boxShadow: '0 10px 30px rgba(0,0,0,0.8)', padding: '24px', width: '520px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #444', paddingBottom: '10px' }}>
+              <span style={{ fontWeight: 'bold', fontSize: '15px', color: '#ff9800', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <BsFolder2Open size={16} /> Import GB Studio Project
+              </span>
+              <button onClick={() => setShowGbStudioImportDialog(false)} style={{ background: 'none', border: 'none', color: '#aaa', cursor: 'pointer', fontSize: '16px' }}>{'\u2715'}</button>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '12.5px', color: '#ccc', lineHeight: '1.5' }}>
+              <div style={{ backgroundColor: 'rgba(255, 152, 0, 0.1)', border: '1px solid rgba(255, 152, 0, 0.3)', borderRadius: '4px', padding: '10px 12px', color: '#ffb74d' }}>
+                <strong>Important Note:</strong><br/> This feature is in its early infancy. While it imports core layout and elements, it has specific limitations. Keep your expectations in check, things WILL most likely be broken and will probably not work properly!
+              </div>
+
+              <div style={{ display: 'flex', textAlign:'left', flexDirection: 'column', gap: '8px', padding: '4px 0' }}>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <div>
+                    <strong style={{color: '#39cd39'}}>Unsupported Audio:</strong> <br/>
+                    <code style={{color: '#39cd39'}}>.uge</code> audio files are not supported. Please use <code style={{color: '#39cd39'}}>.mod</code> versions of your music assets.
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <div>
+                    <strong style={{color: '#39cd39'}}>Tweaking Required:</strong> <br/>
+                    You will likely need to manually link scripts, adjust variable configurations, and verify collisions/trigger layouts after import.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', borderTop: '1px solid #444', paddingTop: '14px', marginTop: '4px' }}>
+              <button
+                onClick={() => {
+                  setShowGbStudioImportDialog(false);
+                  gbStudioInputRef.current?.click();
+                }}
+                style={{
+                  background: '#ff9800', color: '#fff', border: 'none', borderRadius: '4px',
+                  padding: '8px 20px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px'
+                }}
+                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#e68a00'}
+                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#ff9800'}
+              >
+                Select ZIP File...
+              </button>
+              <button
+                onClick={() => setShowGbStudioImportDialog(false)}
+                style={{
+                  background: 'transparent', color: '#aaa', border: '1px solid #555', borderRadius: '4px',
+                  padding: '8px 20px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px'
+                }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = '#888'; }}
+                onMouseLeave={e => { e.currentTarget.style.color = '#aaa'; e.currentTarget.style.borderColor = '#555'; }}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

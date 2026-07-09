@@ -731,6 +731,12 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
       const filename = musicAsset.filename || musicAsset.name || String(musicAsset.id);
       const nameNoExt = filename.replace(/\.[^/.]+$/, '');
       const mPath = musicFileMap[filename] || musicFileMap[nameNoExt];
+
+      if (filename.toLowerCase().endsWith('.uge') || (mPath && mPath.toLowerCase().endsWith('.uge'))) {
+        warnings.push(`Music track "${filename}" uses the unsupported .uge format. Only .mod files are supported. Please convert it to .mod format.`);
+        continue;
+      }
+
       if (mPath && musicZipData[nameNoExt]) {
         try {
           const fileData = await musicZipData[nameNoExt].async('base64');
@@ -764,6 +770,10 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   for (const zipPath of musicZipPaths) {
     if (matchedZipPaths.has(zipPath)) continue;
     const fullName = zipPath.split('/').pop();
+    if (fullName.toLowerCase().endsWith('.uge')) {
+      warnings.push(`Music file "${fullName}" is in the unsupported .uge format. Only .mod files are supported. Please convert it to .mod format.`);
+      continue;
+    }
     try {
       const fileData = await zip.files[zipPath].async('base64');
       musicTracks.push({
