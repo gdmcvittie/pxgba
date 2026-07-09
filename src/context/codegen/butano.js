@@ -1512,6 +1512,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             actorDeclarations += `    actor_${i}_sprite.set_visible(false);\n`;
           }
           actorDeclarations += `    int actor_${i}_timer = 0;\n    bn::fixed actor_${i}_dx = 0;\n    bn::fixed actor_${i}_dy = 0;\n    int actor_${i}_last_dx_dir = 1;\n    int actor_${i}_last_dy_dir = 0;\n    bool actor_${i}_active = ${isHidden ? 'false' : 'true'};\n`;
+          actorDeclarations += `    bn::fixed actor_${i}_anim_speed = 1;\n    bn::fixed actor_${i}_movement_speed = 1;\n    bool actor_${i}_update_enabled = true;\n`;
           if (a.type === 'player' && scene.type === 'RACING') {
             actorDeclarations += `    bn::fixed actor_${i}_speed = 0;\n`;
             let racingStartAngle = 270;

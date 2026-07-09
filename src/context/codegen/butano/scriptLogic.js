@@ -657,6 +657,49 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
           code += `${indent}actor_${targetActorIdx}_anim_fired = false;\n`;
         }
       }
+    } else if (label === 'Set Animation Speed' || currentNode.data?.actionType === 'set_anim_speed') {
+      const targetActorId = currentNode.data?.targetActorId;
+      const speedVal = parseFloat(currentNode.data?.speed) || 1;
+      if (targetActorId !== null && targetActorId !== undefined) {
+        const targetActorIdx = sActors.findIndex(a => a && a.id === targetActorId);
+        if (targetActorIdx !== -1) {
+          code += `${indent}actor_${targetActorIdx}_anim_speed = bn::fixed(${speedVal});\n`;
+        }
+      }
+    } else if (label === 'Set Movement Speed' || currentNode.data?.actionType === 'set_movement_speed') {
+      const targetActorId = currentNode.data?.targetActorId;
+      const speedVal = parseFloat(currentNode.data?.speed) || 1;
+      if (targetActorId !== null && targetActorId !== undefined) {
+        const targetActorIdx = sActors.findIndex(a => a && a.id === targetActorId);
+        if (targetActorIdx !== -1) {
+          code += `${indent}actor_${targetActorIdx}_movement_speed = bn::fixed(${speedVal});\n`;
+        }
+      }
+    } else if (label === 'Start Update' || currentNode.data?.actionType === 'start_update') {
+      const targetActorId = currentNode.data?.targetActorId;
+      if (targetActorId !== null && targetActorId !== undefined) {
+        const targetActorIdx = sActors.findIndex(a => a && a.id === targetActorId);
+        if (targetActorIdx !== -1) {
+          code += `${indent}actor_${targetActorIdx}_update_enabled = true;\n`;
+        }
+      }
+    } else if (label === 'Stop Update' || currentNode.data?.actionType === 'stop_update') {
+      const targetActorId = currentNode.data?.targetActorId;
+      if (targetActorId !== null && targetActorId !== undefined) {
+        const targetActorIdx = sActors.findIndex(a => a && a.id === targetActorId);
+        if (targetActorIdx !== -1) {
+          code += `${indent}actor_${targetActorIdx}_update_enabled = false;\n`;
+        }
+      }
+    } else if (label === 'Attach Input Script' || currentNode.data?.actionType === 'attach_input_script') {
+      const btn = (Array.isArray(currentNode.data?.input) ? currentNode.data.input[0] : 'a') || 'a';
+      code += `${indent}BN_LOG("Action: Attach Input Script - ${btn}");\n`;
+    } else if (label === 'Draw Text' || currentNode.data?.actionType === 'draw_text') {
+      const drawText = safeStr(currentNode.data?.text || '');
+      const drawX = parseInt(currentNode.data?.x) || 0;
+      const drawY = parseInt(currentNode.data?.y) || 0;
+      const drawLoc = currentNode.data?.location || 'background';
+      code += `${indent}BN_LOG("Action: Draw Text - ${drawText} at (${drawX},${drawY}) on ${drawLoc}");\n`;
     } else if (label === 'Move Camera' || currentNode.data?.actionType === 'move_camera') {
       const targetType = currentNode.data?.targetType || 'custom';
       if (targetType === 'reset') {

@@ -1401,6 +1401,78 @@ function translateEventList(events, sceneIdMap, variableIdMap, actorIdMap = {}) 
           isMapped = true;
           break;
 
+        case 'EVENT_ACTOR_SET_ANIMATION_SPEED':
+          label = 'Set Animation Speed';
+          actionType = 'set_anim_speed';
+          data = {
+            label,
+            actionType,
+            targetActorId: actorIdMap[ev.args?.actorId === '$self$' ? '0' : ev.args?.actorId] || null,
+            speed: String(ev.args?.speed ?? 1)
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_ACTOR_SET_MOVEMENT_SPEED':
+          label = 'Set Movement Speed';
+          actionType = 'set_movement_speed';
+          data = {
+            label,
+            actionType,
+            targetActorId: actorIdMap[ev.args?.actorId === '$self$' ? '0' : ev.args?.actorId] || null,
+            speed: String(ev.args?.speed ?? 1)
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_ACTOR_START_UPDATE':
+          label = 'Start Update';
+          actionType = 'start_update';
+          data = {
+            label,
+            actionType,
+            targetActorId: actorIdMap[ev.args?.actorId === '$self$' ? '0' : ev.args?.actorId] || null
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_ACTOR_STOP_UPDATE':
+          label = 'Stop Update';
+          actionType = 'stop_update';
+          data = {
+            label,
+            actionType,
+            targetActorId: actorIdMap[ev.args?.actorId === '$self$' ? '0' : ev.args?.actorId] || null
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_SET_INPUT_SCRIPT':
+          label = 'Attach Input Script';
+          actionType = 'attach_input_script';
+          data = {
+            label,
+            actionType,
+            input: Array.isArray(ev.args?.input) ? ev.args.input : ['a'],
+            override: ev.args?.override !== false
+          };
+          isMapped = true;
+          break;
+
+        case 'EVENT_TEXT_DRAW':
+          label = 'Draw Text';
+          actionType = 'draw_text';
+          data = {
+            label,
+            actionType,
+            text: ev.args?.text || '',
+            x: String(ev.args?.x ?? 0),
+            y: String(ev.args?.y ?? 0),
+            location: ev.args?.location || 'background'
+          };
+          isMapped = true;
+          break;
+
         case 'EVENT_RNG_SEED':
           label = 'Seed RNG';
           actionType = 'rng_seed';

@@ -1205,6 +1205,111 @@ const CustomActionNode = ({ id, data }) => {
         </div>
       )}
 
+      {data.actionType === 'set_anim_speed' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Actor:</label>
+            <select className="nodrag" value={data.targetActorId ?? ''} onChange={(e) => updateData({ targetActorId: e.target.value ? parseInt(e.target.value) : null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="">Self</option>
+              {actors && actors.map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Speed:</label>
+            <input className="nodrag" type="text" value={data.speed ?? '1'} onChange={(e) => { let val = e.target.value.replace(/[^0-9.]/g, ''); const parts = val.split('.'); if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join(''); updateData({ speed: val }); }} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }} />
+          </div>
+        </div>
+      )}
+
+      {data.actionType === 'set_movement_speed' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Actor:</label>
+            <select className="nodrag" value={data.targetActorId ?? ''} onChange={(e) => updateData({ targetActorId: e.target.value ? parseInt(e.target.value) : null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="">Self</option>
+              {actors && actors.map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Speed:</label>
+            <input className="nodrag" type="text" value={data.speed ?? '1'} onChange={(e) => { let val = e.target.value.replace(/[^0-9.]/g, ''); const parts = val.split('.'); if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join(''); updateData({ speed: val }); }} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }} />
+          </div>
+        </div>
+      )}
+
+      {data.actionType === 'start_update' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Actor:</label>
+            <select className="nodrag" value={data.targetActorId ?? ''} onChange={(e) => updateData({ targetActorId: e.target.value ? parseInt(e.target.value) : null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="">Self</option>
+              {actors && actors.map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+            </select>
+          </div>
+        </div>
+      )}
+
+      {data.actionType === 'stop_update' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Actor:</label>
+            <select className="nodrag" value={data.targetActorId ?? ''} onChange={(e) => updateData({ targetActorId: e.target.value ? parseInt(e.target.value) : null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="">Self</option>
+              {actors && actors.map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+            </select>
+          </div>
+        </div>
+      )}
+
+      {data.actionType === 'attach_input_script' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Button:</label>
+            <select className="nodrag" value={Array.isArray(data.input) ? data.input[0] || 'a' : 'a'} onChange={(e) => updateData({ input: [e.target.value] })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="a">A</option>
+              <option value="b">B</option>
+              <option value="start">Start</option>
+              <option value="select">Select</option>
+              <option value="left">Left</option>
+              <option value="right">Right</option>
+              <option value="up">Up</option>
+              <option value="down">Down</option>
+            </select>
+          </div>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>
+              <input className="nodrag" type="checkbox" checked={data.override !== false} onChange={(e) => updateData({ override: e.target.checked })} /> Override default action
+            </label>
+          </div>
+        </div>
+      )}
+
+      {data.actionType === 'draw_text' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Text:</label>
+            <input className="nodrag" type="text" value={data.text ?? ''} onChange={(e) => updateData({ text: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }} />
+          </div>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ flex: 1 }}>
+              <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>X:</label>
+              <input className="nodrag" type="text" value={data.x ?? '0'} onChange={(e) => { let val = e.target.value.replace(/[^0-9]/g, ''); updateData({ x: val }); }} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Y:</label>
+              <input className="nodrag" type="text" value={data.y ?? '0'} onChange={(e) => { let val = e.target.value.replace(/[^0-9]/g, ''); updateData({ y: val }); }} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }} />
+            </div>
+          </div>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Location:</label>
+            <select className="nodrag" value={data.location || 'background'} onChange={(e) => updateData({ location: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="background">Background</option>
+              <option value="window">Window</option>
+            </select>
+          </div>
+        </div>
+      )}
+
       {data.actionType === 'camera_shake' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
           <div style={{ display: 'flex', gap: '8px' }}>
@@ -1269,7 +1374,9 @@ const nodeGroups = [
       { type: 'run_script', label: 'Run Script' },
       { type: 'check_input', label: 'Check Input' },
       { type: 'check_random', label: 'Check Random' },
-      { type: 'set_timer', label: 'Set Timer' }
+      { type: 'set_timer', label: 'Set Timer' },
+      { type: 'attach_input_script', label: 'Attach Input Script' },
+      { type: 'draw_text', label: 'Draw Text' }
     ]
   },
   {
@@ -1307,7 +1414,11 @@ const nodeGroups = [
       { type: 'spawn_actor', label: 'Spawn Actor' },
       { type: 'destroy_actor', label: 'Destroy Actor' },
       { type: 'play_animation', label: 'Play Animation' },
-      { type: 'shoot_projectile', label: 'Shoot Projectile' }
+      { type: 'shoot_projectile', label: 'Shoot Projectile' },
+      { type: 'set_anim_speed', label: 'Set Animation Speed' },
+      { type: 'set_movement_speed', label: 'Set Movement Speed' },
+      { type: 'start_update', label: 'Start Update' },
+      { type: 'stop_update', label: 'Stop Update' }
     ]
   },
   {
@@ -1460,7 +1571,13 @@ const ScriptEditor = () => {
                                                                                   : node.data.label === 'Set Actor Scale' ? 'set_actor_scale'
                                                                                     : node.data.label === 'Set Car Speed' ? 'set_car_speed'
                                                                                       : node.data.label === 'Set Car Steering' ? 'set_car_steering'
-                                                                                        : node.data.label === 'Camera Shake' ? 'camera_shake'
+                                                                                         : node.data.label === 'Set Animation Speed' ? 'set_anim_speed'
+                                                                                           : node.data.label === 'Set Movement Speed' ? 'set_movement_speed'
+                                                                                             : node.data.label === 'Start Update' ? 'start_update'
+                                                                                               : node.data.label === 'Stop Update' ? 'stop_update'
+                                                                                                 : node.data.label === 'Attach Input Script' ? 'attach_input_script'
+                                                                                                   : node.data.label === 'Draw Text' ? 'draw_text'
+                                                                                                     : node.data.label === 'Camera Shake' ? 'camera_shake'
                                                                                        : node.data.label === 'Set Timer' ? 'set_timer'
                                                                                          : node.data.label === 'Move Camera' ? 'move_camera' : 'default';
             return { ...node, type: 'customAction', data: { ...node.data, actionType } };
