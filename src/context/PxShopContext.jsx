@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
+import TileEditor from '../components/TileEditor';
 import JSZip from 'jszip';
 import { readPsd, writePsd } from 'ag-psd';
 import { API_BASE_URL } from '../config';
@@ -242,6 +243,146 @@ export const PxShopProvider = ({ children }) => {
   const [tileGroupNames, setTileGroupNames] = useState({});
   const [activeSavedTileId, setActiveSavedTileId] = useState(1);
   const tileSheetInputRef = useRef(null);
+
+  // Tile editor state: which tile is being edited, and an optional live-preview override
+  const [tileEditor, setTileEditor] = useState(null); // { tileId } | null
+  const [liveTilePreview, setLiveTilePreview] = useState(null); // { tileId, data } | null
+
+  // Resolve a tile by id, honoring a live-preview override from the tile editor
+  const getTileById = useCallback((id) => {
+    if (id == null) return null;
+    const base = savedTiles.find(t => String(t.id) === String(id) || t.id === Number(id) || t.id === id);
+    if (!base) return null;
+    if (liveTilePreview && String(liveTilePreview.tileId) === String(id)) {
+      return { ...base, data: liveTilePreview.data };
+    }
+    return base;
+  }, [savedTiles, liveTilePreview]);
+
+  // Live-preview bookkeeping (declared before the functions that use them)
+  const prevLiveDataRef = useRef(null);
+  const prevLiveDataTileIdRef = useRef(null);
+
+  // Replace every 8x8 block in a layer's pixel data whose non-null pixels match
+  // `fromData` with the corresponding pixels of `toData`. Returns a new layer (with
+  // cloned data) if anything changed, otherwise the same layer reference.
+  function replaceTileBlocksInLayer(layer, fromData, toData) {
+    if (!layer || !layer.data || !fromData || !toData) return layer;
+    const h = layer.data.length;
+    const w = layer.data[0] ? layer.data[0].length : 0;
+    if (w < 8 || h < 8) return layer;
+
+    // Quick reject: the layer must contain at least one of the tile's colors
+    const fromColors = new Set();
+    for (let py = 0; py < 8; py++) for (let px = 0; px < 8; px++) {
+      const v = fromData[py][px];
+      if (v) fromColors.add(v);
+    }
+    let hasAny = false;
+    for (let y = 0; y < h && !hasAny; y++) {
+      for (let x = 0; x < w; x++) {
+        const c = layer.data[y][x];
+        if (c && fromColors.has(c)) { hasAny = true; break; }
+      }
+    }
+    if (!hasAny) return layer;
+
+    let changed = false;
+    const data = layer.data.map(r => r.slice());
+    for (let by = 0; by <= h - 8; by += 8) {
+      for (let bx = 0; bx <= w - 8; bx += 8) {
+        let match = true;
+        for (let py = 0; py < 8 && match; py++) {
+          for (let px = 0; px < 8; px++) {
+            const fv = fromData[py][px];
+            if (fv == null) continue;
+            if (data[by + py][bx + px] !== fv) { match = false; break; }
+          }
+        }
+        if (!match) continue;
+        for (let py = 0; py < 8; py++) {
+          for (let px = 0; px < 8; px++) {
+            const tv = toData[py][px];
+            if (tv != null) data[by + py][bx + px] = tv;
+          }
+        }
+        changed = true;
+      }
+    }
+    return changed ? { ...layer, data } : layer;
+  }
+
+  // Scan every layer across every scene and frame, replacing 8x8 blocks that match
+  // `fromData` with `toData`.
+  function findAndReplaceTile(fromData, toData) {
+    if (!fromData || !toData) return;
+    setLayers(prev => prev.map(layer => replaceTileBlocksInLayer(layer, fromData, toData)));
+    setScenes(prev => prev.map(scene => {
+      const frames = (scene.frames && scene.frames.length)
+        ? scene.frames
+        : [{ id: 'frame-1', layers: scene.layers || [] }];
+      let changed = false;
+      const newFrames = frames.map(frame => {
+        const newLayers = frame.layers.map(layer => {
+          const repl = replaceTileBlocksInLayer(layer, fromData, toData);
+          if (repl !== layer) changed = true;
+          return repl;
+        });
+        return { ...frame, layers: newLayers };
+      });
+      if (!changed) return scene;
+      return { ...scene, frames: newFrames };
+    }));
+  }
+
+  // Lighter variant used for live preview: only the active (visible) frame's layers
+  // are rescanned, avoiding the heavier per-scene cascade while editing.
+  function findAndReplaceTileActive(fromData, toData) {
+    if (!fromData || !toData) return;
+    setLayers(prev => prev.map(layer => replaceTileBlocksInLayer(layer, fromData, toData)));
+  }
+
+  // Commit an edited tile: update savedTiles, then replace every placed instance
+  // of the old tile data with the new data across all scenes and layers.
+  function commitTileEdit(tileId, data) {
+    const id = String(tileId);
+    const oldTile = savedTiles.find(t => String(t.id) === id);
+    const oldData = oldTile ? oldTile.data : null;
+    // Restore any live-previewed blocks back to the saved data first
+    if (prevLiveDataRef.current && oldData) {
+      findAndReplaceTile(prevLiveDataRef.current, oldData);
+      prevLiveDataRef.current = null;
+      prevLiveDataTileIdRef.current = null;
+    }
+    setSavedTiles(prev => prev.map(t => String(t.id) === id ? { ...t, data } : t));
+    if (oldData) findAndReplaceTile(oldData, data);
+    setLiveTilePreview(null);
+  }
+
+  // Live preview: while on, replace saved-tile blocks with the live (edited) data,
+  // restoring them to the saved data when toggled off. We remember the last applied
+  // live data so each new stroke can first revert the previous preview before
+  // re-applying, all discovered by scanning the layer image data (no placement tracking).
+  useEffect(() => {
+    if (liveTilePreview) {
+      const newData = liveTilePreview.data;
+      const tile = savedTiles.find(t => String(t.id) === String(liveTilePreview.tileId));
+      const savedData = tile ? tile.data : null;
+      if (savedData) {
+        if (prevLiveDataRef.current) findAndReplaceTileActive(prevLiveDataRef.current, savedData);
+        findAndReplaceTileActive(savedData, newData);
+        prevLiveDataRef.current = newData;
+        prevLiveDataTileIdRef.current = liveTilePreview.tileId;
+      }
+    } else if (prevLiveDataRef.current) {
+      const tile = savedTiles.find(t => String(t.id) === String(prevLiveDataTileIdRef.current));
+      const savedData = tile ? tile.data : null;
+      if (savedData) findAndReplaceTileActive(prevLiveDataRef.current, savedData);
+      prevLiveDataRef.current = null;
+      prevLiveDataTileIdRef.current = null;
+    }
+  }, [liveTilePreview, savedTiles]);
+
 
   // Tile import palette choices
   const [showTileImportPaletteDialog, setShowTileImportPaletteDialog] = useState(false);
@@ -8821,12 +8962,17 @@ const handleWizardCreate = () => {
     hudSettings, setHudSettings,
     estimatedRomSize,
     lastSavedTime,
-    saveWarningShown, setSaveWarningShown
+    saveWarningShown, setSaveWarningShown,
+    tileEditor, setTileEditor,
+    liveTilePreview, setLiveTilePreview,
+    getTileById,
+    commitTileEdit
   };
 
   return (
     <PxShopContext.Provider value={value}>
       {children}
+      <TileEditor key={tileEditor?.tileId ?? 'closed'} />
     </PxShopContext.Provider>
   );
 };

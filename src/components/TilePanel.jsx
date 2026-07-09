@@ -15,6 +15,7 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
     handleTileSheetUpload,
     saveSelectionAsTile,
     savedTiles, setSavedTiles,
+    tileEditor, setTileEditor,
     tileGroupNames, setTileGroupNames,
     activeSavedTileId, setActiveSavedTileId,
     tool, setTool,
@@ -1069,13 +1070,21 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
 
           {activeTile && (
             <div style={{ padding: '10px', borderTop: '1px solid #444', display: 'flex', flexDirection: 'column', gap: '8px', backgroundColor: '#252525' }}>
-              <div style={{ display: 'flex', flexGrow: 1, gap: '4px' }}>
+              <div style={{ display: 'flex', flexRow: 1, gap: '4px' }}>
                 <input
                   type="text"
                   value={activeTile.name || ''}
                   onChange={(e) => updateActiveTileProp('name', e.target.value)}
                   style={{ maxWidth: '100%', width: '100%', background: '#111', color: '#fff', border: '1px solid #444', padding: '6px', outline: 'none', borderRadius: '3px', fontSize: '12px' }}
                 />
+                <button
+                  onClick={() => setTileEditor({ tileId: activeTile.id })}
+                  disabled={!!tileEditor}
+                  title="Edit this tile"
+                  style={{ flexShrink: 0, background: tileEditor ? '#3a3a3a' : '#4CAF50', border: 'none', color: '#fff', padding: '6px 10px', borderRadius: '3px', cursor: tileEditor ? 'default' : 'pointer', opacity: tileEditor ? 0.6 : 1, fontSize: '12px', fontWeight: 'bold' }}
+                >
+                  Edit Tile
+                </button>
               </div>
             </div>
           )}
