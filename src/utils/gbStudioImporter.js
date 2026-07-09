@@ -53,6 +53,7 @@ function decompressCollisions(str) {
 export async function importGbStudioProject(zipFile, initialTiles = [], currentPalette = []) {
   const warnings = [];
   const zip = await JSZip.loadAsync(zipFile);
+  const uniqueProjectColors = new Set();
 
   // 1. Find the main project file
   const gbsprojFile = Object.keys(zip.files).find(name => name.endsWith('.gbsproj'));
@@ -62,6 +63,25 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
 
   const projectText = await zip.files[gbsprojFile].async('text');
   const gbsProj = JSON.parse(projectText);
+
+  // Load modular settings config if not monolithic
+  if (!gbsProj.settings || Object.keys(gbsProj.settings).length === 0) {
+    const settingsFile = Object.keys(zip.files).find(name => 
+      name.toLowerCase().endsWith('settings.gbsres')
+    );
+    if (settingsFile) {
+      try {
+        const text = await zip.files[settingsFile].async('text');
+        const parsed = JSON.parse(text);
+        gbsProj.settings = parsed.settings || parsed;
+      } catch (err) {
+        warnings.push(`Failed to read settings config: ${err.message}`);
+      }
+    }
+  }
+  if (!gbsProj.settings) {
+    gbsProj.settings = {};
+  }
 
   // Shared group for all imported tiles
   const importGroupId = Date.now() + Math.random();
@@ -74,10 +94,10 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   const musicTracks = [];
 
   // Load modular background configs if not monolithic
-  let gbsBackgrounds = gbsProj.backgrounds || [];
+  let gbsBackgrounds = gbsProj.backgrounds || gbsProj.backgroundSheets || [];
   if (gbsBackgrounds.length === 0) {
     const bgFiles = Object.keys(zip.files).filter(name => 
-      name.includes('backgrounds/') && name.endsWith('.gbsres')
+      name.toLowerCase().includes('backgrounds/') && name.endsWith('.gbsres')
     );
     for (const sPath of bgFiles) {
       try {
@@ -90,10 +110,10 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   }
 
   // Load modular sprite configs if not monolithic
-  let gbsSprites = gbsProj.sprites || [];
+  let gbsSprites = gbsProj.sprites || gbsProj.spriteSheets || [];
   if (gbsSprites.length === 0) {
     const spriteFiles = Object.keys(zip.files).filter(name => 
-      name.includes('sprites/') && name.endsWith('.gbsres')
+      name.toLowerCase().includes('sprites/') && name.endsWith('.gbsres')
     );
     for (const sPath of spriteFiles) {
       try {
@@ -106,10 +126,10 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   }
 
   // Load modular music configs if not monolithic
-  let gbsMusic = gbsProj.music || [];
+  let gbsMusic = gbsProj.music || gbsProj.musicTracks || [];
   if (gbsMusic.length === 0) {
     const musicFiles = Object.keys(zip.files).filter(name => 
-      name.includes('music/') && name.endsWith('.gbsres')
+      name.toLowerCase().includes('music/') && name.endsWith('.gbsres')
     );
     for (const sPath of musicFiles) {
       try {
@@ -131,7 +151,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   }
 
   const sceneFiles = Object.keys(zip.files).filter(name => 
-    name.includes('scenes/') && name.endsWith('.gbsres')
+    name.toLowerCase().includes('scenes/') && name.endsWith('.gbsres')
   );
   for (const sPath of sceneFiles) {
     try {
@@ -390,9 +410,15 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   usedBackgroundIds.forEach(id => {
     usedBackgroundFiles.add(id);
     const bgAsset = gbsBackgrounds?.find(b => b.id === id);
-    if (bgAsset && bgAsset.filename) {
-      usedBackgroundFiles.add(bgAsset.filename);
-      usedBackgroundFiles.add(bgAsset.filename.replace(/\.[^/.]+$/, ''));
+    if (bgAsset) {
+      if (bgAsset.filename) {
+        usedBackgroundFiles.add(bgAsset.filename);
+        usedBackgroundFiles.add(bgAsset.filename.replace(/\.[^/.]+$/, ''));
+      }
+      if (bgAsset.name) {
+        usedBackgroundFiles.add(bgAsset.name);
+        usedBackgroundFiles.add(bgAsset.name.replace(/\.[^/.]+$/, ''));
+      }
     }
   });
 
@@ -400,9 +426,15 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   usedSpriteSheetIds.forEach(id => {
     usedSpriteFiles.add(id);
     const spriteAsset = gbsSprites?.find(s => s.id === id);
-    if (spriteAsset && spriteAsset.filename) {
-      usedSpriteFiles.add(spriteAsset.filename);
-      usedSpriteFiles.add(spriteAsset.filename.replace(/\.[^/.]+$/, ''));
+    if (spriteAsset) {
+      if (spriteAsset.filename) {
+        usedSpriteFiles.add(spriteAsset.filename);
+        usedSpriteFiles.add(spriteAsset.filename.replace(/\.[^/.]+$/, ''));
+      }
+      if (spriteAsset.name) {
+        usedSpriteFiles.add(spriteAsset.name);
+        usedSpriteFiles.add(spriteAsset.name.replace(/\.[^/.]+$/, ''));
+      }
     }
     const spriteName = String(id).replace(/\.[^/.]+$/, '');
     usedSpriteFiles.add(spriteName);
@@ -426,13 +458,13 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   const spriteIdMap = {};
 
   const spriteFiles = Object.keys(zip.files).filter(name => {
-    const isPluginPath = /\/plugins\/.+\/(assets\/)?sprites\//.test(name);
-    const isProjectPath = name.includes('assets/sprites/');
-    if (!(isPluginPath || isProjectPath) || (!name.endsWith('.png') && !name.endsWith('.PNG'))) {
+    const isPluginPath = /\/plugins\/.+\/(assets\/)?sprites\//i.test(name);
+    const isProjectPath = name.toLowerCase().includes('assets/sprites/');
+    if (!(isPluginPath || isProjectPath) || (!name.toLowerCase().endsWith('.png'))) {
       return false;
     }
     const spriteName = name.split('/').pop().replace(/\.[^/.]+$/, '');
-    const match = usedSpriteFiles.has(spriteName) || [...usedSpriteFiles].some(uf => name.includes(uf));
+    const match = usedSpriteFiles.has(spriteName) || [...usedSpriteFiles].some(uf => name.toLowerCase().includes(uf.toLowerCase()));
     return match;
   });
 
@@ -454,7 +486,9 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
             const g = imgData[idx + 1];
             const b = imgData[idx + 2];
             if (r === 101 && g === 255 && b === 0) continue;
-            tileData[ty][tx] = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            const hexColor = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            tileData[ty][tx] = hexColor;
+            uniqueProjectColors.add(hexColor);
             hasPixels = true;
           }
         }
@@ -890,9 +924,9 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
 
     const cleanBgName = bgName.replace(/\.[^/.]+$/, '');
     const bgPath = Object.keys(zip.files).find(name => {
-      const isPluginPath = /\/plugins\/.+\/(assets\/)?backgrounds\//.test(name);
-      const isProjectPath = name.includes('assets/backgrounds/');
-      return (isPluginPath || isProjectPath) && name.includes(cleanBgName) && (name.endsWith('.png') || name.endsWith('.PNG'));
+      const isPluginPath = /\/plugins\/.+\/(assets\/)?backgrounds\//i.test(name);
+      const isProjectPath = name.toLowerCase().includes('assets/backgrounds/');
+      return (isPluginPath || isProjectPath) && name.toLowerCase().includes(cleanBgName.toLowerCase()) && (name.toLowerCase().endsWith('.png'));
     });
 
     if (bgPath) {
@@ -928,7 +962,9 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
               const g = imgData[idx + 1];
               const b = imgData[idx + 2];
               if (r === 101 && g === 255 && b === 0) continue;
-              colorGrid[y][x] = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+              const hexColor = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+              colorGrid[y][x] = hexColor;
+              uniqueProjectColors.add(hexColor);
             }
           }
         }
@@ -1179,11 +1215,24 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     });
 
     // --- Create player actor if scene has one ---
-    const playerSpriteId = gbsScene.playerSpriteSheetId || gbsProj.settings?.defaultPlayerSpriteSheetId;
+    let playerSpriteId = gbsScene.playerSpriteSheetId || gbsProj.settings?.defaultPlayerSpriteSheetId;
+    if (!playerSpriteId && gbsProj.settings?.defaultPlayerSprites) {
+      const mode = (gbsScene.type || 'TOPDOWN').toLowerCase();
+      playerSpriteId = gbsProj.settings.defaultPlayerSprites[mode] || 
+                       gbsProj.settings.defaultPlayerSprites.topdown ||
+                       Object.values(gbsProj.settings.defaultPlayerSprites)[0];
+    }
+
     if (playerSpriteId) {
       const spriteRef = spriteIdMap[playerSpriteId];
-      const playerTileX = Math.floor((imgW || sceneW) / 2 / 8);
-      const playerTileY = Math.floor((imgH || sceneH) / 2 / 8);
+      let playerTileX = Math.floor((imgW || sceneW) / 2 / 8);
+      let playerTileY = Math.floor((imgH || sceneH) / 2 / 8);
+
+      if (gbsScene.id === gbsProj.settings?.startSceneId) {
+        if (gbsProj.settings.startX !== undefined) playerTileX = parseInt(gbsProj.settings.startX) || 0;
+        if (gbsProj.settings.startY !== undefined) playerTileY = parseInt(gbsProj.settings.startY) || 0;
+      }
+
       const playerGroup = { id: 9, type: 'group', name: 'PLAYER', isOpen: true };
       // Ensure PLAYER group is in actors array
       if (!actors.find(g => g.name === 'PLAYER')) actors.push(playerGroup);
@@ -1302,6 +1351,7 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
 
     scenes.push({
       id: sceneId,
+      gbsSceneId: gbsScene.id,
       name: sceneName,
       type: gbsScene.type || 'TOPDOWN',
       frames: sceneFrames,
@@ -1338,8 +1388,39 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
   }
 
   // Set default active scene
-  const activeSceneId = scenes[0].id;
-  const activeScene = scenes[0];
+  let activeSceneId = scenes[0].id;
+  const startSceneId = gbsProj.settings?.startSceneId;
+  if (startSceneId) {
+    const startScene = scenes.find(s => s.gbsSceneId === startSceneId);
+    if (startScene) {
+      activeSceneId = startScene.id;
+    }
+  }
+  const activeScene = scenes.find(s => s.id === activeSceneId) || scenes[0];
+
+  // Merge unique extracted colors with the current palette, enforcing 256 colors maximum.
+  const seen = new Set();
+  const finalPalette = [];
+  
+  for (const color of (currentPalette || [])) {
+    if (color && typeof color === 'string') {
+      const lower = color.toLowerCase().trim();
+      if (!seen.has(lower)) {
+        seen.add(lower);
+        finalPalette.push(lower);
+      }
+    }
+  }
+
+  for (const color of uniqueProjectColors) {
+    if (color && typeof color === 'string') {
+      const lower = color.toLowerCase().trim();
+      if (!seen.has(lower) && finalPalette.length < 256) {
+        seen.add(lower);
+        finalPalette.push(lower);
+      }
+    }
+  }
 
   const projectData = {
     dimensions: activeScene.dimensions,
@@ -1364,7 +1445,8 @@ export async function importGbStudioProject(zipFile, initialTiles = [], currentP
     panOffset: { x: 0, y: 0 },
     showGbaMask: true,
     gridSize: 8,
-    isPixelated: true
+    isPixelated: true,
+    recentColors: finalPalette
   };
 
   return { project: projectData, warnings };

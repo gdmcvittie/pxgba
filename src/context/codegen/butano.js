@@ -39,6 +39,7 @@ export async function generateButano(ctx) {
       const zip = new JSZip();
       zip.folder("audio");
       zip.folder("dmg_audio");
+      zip.folder("music");
       zip.folder("graphics");
       zip.folder("include");
       zip.folder("src");
@@ -997,7 +998,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               }
             }
             if (modBytes) {
-              zip.file(`audio/${sanitizedMusicName}.${ext}`, modBytes);
+              zip.file(`music/${sanitizedMusicName}.${ext}`, modBytes);
               musicPlayCode = `    bn::music_items::${sanitizedMusicName}.play();\n`;
               hasMusic = true;
             } else {
@@ -6747,7 +6748,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               }
             }
             if (modBytes) {
-              zip.file(`audio/${sanitizedMusicName}.${ext}`, modBytes);
+              zip.file(`music/${sanitizedMusicName}.${ext}`, modBytes);
               creditsMusicPlayCode = `bn::music_items::${sanitizedMusicName}.play();\n`;
               hasMusic = true;
             } else {

@@ -6465,8 +6465,14 @@ export const PxShopProvider = ({ children }) => {
       });
     } else {
       // Keep existing project palette, but check if we can add any missing colors from the imported image's dominant colors (up to 256 total)
-      const currentPalette = recentColors && recentColors.length > 0 ? [...recentColors] : [...DEFAULT_16_PALETTE];
-      const newColors = dominantColorsList.filter(color => !currentPalette.includes(color));
+      const currentPalette = (recentColors && recentColors.length > 0 ? [...recentColors] : [...DEFAULT_16_PALETTE])
+        .filter(c => c && typeof c === 'string')
+        .map(c => c.toLowerCase().trim());
+      const currentPaletteSet = new Set(currentPalette);
+      const newColors = dominantColorsList
+        .filter(color => color && typeof color === 'string')
+        .map(color => color.toLowerCase().trim())
+        .filter(color => !currentPaletteSet.has(color));
       const spaceLeft = 256 - currentPalette.length;
 
       if (newColors.length > 0 && spaceLeft > 0) {
@@ -7429,7 +7435,7 @@ export const PxShopProvider = ({ children }) => {
     } else {
       setActiveSavedTileId(1);
     }
-    console.log('[PxShopContext Debug] project.variables from importer:', project.variables ? project.variables.map(v => ({ id: v.id, name: v.name, type: v.type })) : 'EMPTY');
+    //console.log('[PxShopContext Debug] project.variables from importer:', project.variables ? project.variables.map(v => ({ id: v.id, name: v.name, type: v.type })) : 'EMPTY');
     const loadedVars = (project.variables || []).map((v, index) => ({
       id: v.id || Date.now() + Math.random() + index,
       ...v
@@ -7751,7 +7757,7 @@ export const PxShopProvider = ({ children }) => {
           </div>,
           { id: toastId, duration: 10000 }
         );
-        console.warn("GB Studio Import Warnings:", warnings);
+        //console.warn("GB Studio Import Warnings:", warnings);
       } else {
         toast.success("GB Studio project imported successfully!", { id: toastId });
       }
