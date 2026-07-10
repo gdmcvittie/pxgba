@@ -1161,6 +1161,17 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
         if (svX) code += `${indent}${svX} = actor_${playerIdx}_x;\n`;
         if (svY) code += `${indent}${svY} = actor_${playerIdx}_y;\n`;
       }
+    } else if (label === 'Get Actor Position' || currentNode.data?.actionType === 'get_actor_pos') {
+      const targetActorId = currentNode.data.targetActorId;
+      const targetActorIdx = targetActorId ? sActors.findIndex(a => a && String(a.id) === String(targetActorId)) : actorIndex;
+      const svX = resolveVarName(currentNode.data.varXName);
+      const svY = resolveVarName(currentNode.data.varYName);
+      const inTiles = currentNode.data.positionUnit === 'tiles';
+      code += `${indent}BN_LOG("Action: Get Actor Position");\n`;
+      if (targetActorIdx !== -1) {
+        if (svX) code += `${indent}${svX} = ${inTiles ? `actor_${targetActorIdx}_x / 8` : `actor_${targetActorIdx}_x`};\n`;
+        if (svY) code += `${indent}${svY} = ${inTiles ? `actor_${targetActorIdx}_y / 8` : `actor_${targetActorIdx}_y`};\n`;
+      }
     } else if (label === 'Set Cursor Position') {
       const playerIdx = sActors.findIndex(a => a && a.type === 'player');
       const xVal = variables.some(v => v.name === String(currentNode.data.x))

@@ -118,19 +118,14 @@ const CustomActionNode = ({ id, data }) => {
               style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}
             >
               <option value="">Self (If Actor Script)</option>
-              {actors && actors.length > 0 && (
+              {actors && actors.filter(a => a.type !== 'group').length > 0 && (
                 <optgroup label="Scene Actors">
-                  {actors.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                  {actors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
                 </optgroup>
               )}
-              {globalActors && globalActors.length > 0 && (
+              {globalActors && globalActors.filter(a => a.type !== 'group').length > 0 && (
                 <optgroup label="Global Actors">
-                  {globalActors.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-                </optgroup>
-              )}
-              {variables && variables.filter(v => v.type !== 'group').length > 0 && (
-                <optgroup label="Variables (Index)">
-                  {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
+                  {globalActors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
                 </optgroup>
               )}
             </select>
@@ -162,19 +157,14 @@ const CustomActionNode = ({ id, data }) => {
               style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}
             >
               <option value="">Self (If Actor Script)</option>
-              {actors && actors.length > 0 && (
+              {actors && actors.filter(a => a.type !== 'group').length > 0 && (
                 <optgroup label="Scene Actors">
-                  {actors.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                  {actors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
                 </optgroup>
               )}
-              {globalActors && globalActors.length > 0 && (
+              {globalActors && globalActors.filter(a => a.type !== 'group').length > 0 && (
                 <optgroup label="Global Actors">
-                  {globalActors.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-                </optgroup>
-              )}
-              {variables && variables.filter(v => v.type !== 'group').length > 0 && (
-                <optgroup label="Variables (Index)">
-                  {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
+                  {globalActors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
                 </optgroup>
               )}
             </select>
@@ -353,19 +343,14 @@ const CustomActionNode = ({ id, data }) => {
               style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}
             >
               <option value="">Select target...</option>
-              {actors && actors.length > 0 && (
+              {actors && actors.filter(a => a.type !== 'group').length > 0 && (
                 <optgroup label="Scene Actors">
-                  {actors.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                  {actors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
                 </optgroup>
               )}
-              {globalActors && globalActors.length > 0 && (
+              {globalActors && globalActors.filter(a => a.type !== 'group').length > 0 && (
                 <optgroup label="Global Actors">
-                  {globalActors.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-                </optgroup>
-              )}
-              {variables && variables.filter(v => v.type !== 'group').length > 0 && (
-                <optgroup label="Variables (Index)">
-                  {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
+                  {globalActors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
                 </optgroup>
               )}
             </select>
@@ -620,7 +605,7 @@ const CustomActionNode = ({ id, data }) => {
             {actors && actors.length > 0 ? (
               <select className="nodrag" value={data.targetActorId || ''} onChange={(e) => updateData({ targetActorId: e.target.value ? Number(e.target.value) : null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
                 <option value="">Self (If Actor Script)</option>
-                {[...actors, ...globalActors].map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                {[...actors.filter(a => a.type !== 'group'), ...globalActors.filter(a => a.type !== 'group')].map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
               </select>
             ) : (
               <span style={{ fontSize: '10px', color: '#888' }}>No actors available</span>
@@ -849,14 +834,14 @@ const CustomActionNode = ({ id, data }) => {
               <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Actor 1:</label>
               <select className="nodrag" value={data.actor1Id || ''} onChange={(e) => updateData({ actor1Id: e.target.value ? Number(e.target.value) : null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
                 <option value="">Self (If Actor Script)</option>
-                {[...actors, ...globalActors].map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                {[...actors.filter(a => a.type !== 'group'), ...globalActors.filter(a => a.type !== 'group')].map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
               </select>
             </div>
             <div style={{ flex: 1 }}>
               <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Actor 2:</label>
               <select className="nodrag" value={data.actor2Id || ''} onChange={(e) => updateData({ actor2Id: e.target.value ? Number(e.target.value) : null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
                 <option value="">Select an actor...</option>
-                {[...actors, ...globalActors].map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                {[...actors.filter(a => a.type !== 'group'), ...globalActors.filter(a => a.type !== 'group')].map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
               </select>
             </div>
           </div>
@@ -881,7 +866,7 @@ const CustomActionNode = ({ id, data }) => {
             <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Target Actor:</label>
             <select className="nodrag" value={data.targetActorId || ''} onChange={(e) => updateData({ targetActorId: e.target.value ? Number(e.target.value) : null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
               <option value="">Self (If Actor Script)</option>
-              {[...actors, ...globalActors].map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+              {[...actors.filter(a => a.type !== 'group'), ...globalActors.filter(a => a.type !== 'group')].map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
             </select>
           </div>
         </div>
@@ -889,6 +874,61 @@ const CustomActionNode = ({ id, data }) => {
 
       {data.actionType === 'get_cursor_pos' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Save X to:</label>
+            <select className="nodrag" value={data.varXName || ''} onChange={(e) => updateData({ varXName: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="">Select variable...</option>
+              {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Save Y to:</label>
+            <select className="nodrag" value={data.varYName || ''} onChange={(e) => updateData({ varYName: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+              <option value="">Select variable...</option>
+              {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
+            </select>
+          </div>
+        </div>
+      )}
+
+      {data.actionType === 'get_actor_pos' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Actor:</label>
+            <select
+              className="nodrag"
+              value={data.targetActorId || ''}
+              onChange={(e) => {
+                const val = e.target.value;
+                updateData({ targetActorId: val ? (isNaN(val) ? val : Number(val)) : null });
+              }}
+              style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}
+            >
+              <option value="">Self (If Actor Script)</option>
+              {actors && actors.filter(a => a.type !== 'group').length > 0 && (
+                <optgroup label="Scene Actors">
+                  {actors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                </optgroup>
+              )}
+              {globalActors && globalActors.filter(a => a.type !== 'group').length > 0 && (
+                <optgroup label="Global Actors">
+                  {globalActors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                </optgroup>
+              )}
+            </select>
+          </div>
+          <div>
+            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Position Unit:</label>
+            <select
+              className="nodrag"
+              value={data.positionUnit || 'pixels'}
+              onChange={(e) => updateData({ positionUnit: e.target.value })}
+              style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}
+            >
+              <option value="pixels">Pixels</option>
+              <option value="tiles">Tiles</option>
+            </select>
+          </div>
           <div>
             <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Save X to:</label>
             <select className="nodrag" value={data.varXName || ''} onChange={(e) => updateData({ varXName: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
@@ -998,7 +1038,7 @@ const CustomActionNode = ({ id, data }) => {
             {actors && actors.length > 0 ? (
               <select className="nodrag" value={data.targetActorId || ''} onChange={(e) => updateData({ targetActorId: e.target.value ? Number(e.target.value) : null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
                 <option value="">Self (If Actor Script)</option>
-                {[...actors, ...globalActors].map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                {[...actors.filter(a => a.type !== 'group'), ...globalActors.filter(a => a.type !== 'group')].map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
               </select>
             ) : (
               <span style={{ fontSize: '10px', color: '#888' }}>No actors available</span>
@@ -1028,7 +1068,7 @@ const CustomActionNode = ({ id, data }) => {
             {actors && actors.length > 0 ? (
               <select className="nodrag" value={data.targetActorId || ''} onChange={(e) => updateData({ targetActorId: e.target.value ? Number(e.target.value) : null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
                 <option value="">Self (If Actor Script)</option>
-                {[...actors, ...globalActors].map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                {[...actors.filter(a => a.type !== 'group'), ...globalActors.filter(a => a.type !== 'group')].map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
               </select>
             ) : (
               <span style={{ fontSize: '10px', color: '#888' }}>No actors available</span>
@@ -1211,7 +1251,8 @@ const CustomActionNode = ({ id, data }) => {
             <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Actor:</label>
             <select className="nodrag" value={data.targetActorId ?? ''} onChange={(e) => updateData({ targetActorId: e.target.value ? parseInt(e.target.value) : null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
               <option value="">Self</option>
-              {actors && actors.map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+              {actors && actors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+              {globalActors && globalActors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Global Actor ${a.id}`}</option>)}
             </select>
           </div>
           <div>
@@ -1227,7 +1268,8 @@ const CustomActionNode = ({ id, data }) => {
             <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Actor:</label>
             <select className="nodrag" value={data.targetActorId ?? ''} onChange={(e) => updateData({ targetActorId: e.target.value ? parseInt(e.target.value) : null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
               <option value="">Self</option>
-              {actors && actors.map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+              {actors && actors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+              {globalActors && globalActors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Global Actor ${a.id}`}</option>)}
             </select>
           </div>
           <div>
@@ -1243,7 +1285,8 @@ const CustomActionNode = ({ id, data }) => {
             <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Actor:</label>
             <select className="nodrag" value={data.targetActorId ?? ''} onChange={(e) => updateData({ targetActorId: e.target.value ? parseInt(e.target.value) : null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
               <option value="">Self</option>
-              {actors && actors.map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+              {actors && actors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+              {globalActors && globalActors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Global Actor ${a.id}`}</option>)}
             </select>
           </div>
         </div>
@@ -1255,7 +1298,8 @@ const CustomActionNode = ({ id, data }) => {
             <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Actor:</label>
             <select className="nodrag" value={data.targetActorId ?? ''} onChange={(e) => updateData({ targetActorId: e.target.value ? parseInt(e.target.value) : null })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
               <option value="">Self</option>
-              {actors && actors.map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+              {actors && actors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Actor ${a.id}`}</option>)}
+              {globalActors && globalActors.filter(a => a.type !== 'group').map(a => <option key={a.id} value={a.id}>{a.name || `Global Actor ${a.id}`}</option>)}
             </select>
           </div>
         </div>
@@ -1587,7 +1631,8 @@ const nodeGroups = [
       { type: 'set_direction', label: 'Set Direction' },
       { type: 'actor_emote', label: 'Actor Emote' },
       { type: 'set_actor_sprite', label: 'Set Actor Sprite' },
-      { type: 'set_actor_flip', label: 'Set Actor Flip' }
+      { type: 'set_actor_flip', label: 'Set Actor Flip' },
+      { type: 'get_actor_pos', label: 'Get Actor Position' }
     ]
   },
   {
@@ -1765,7 +1810,8 @@ const ScriptEditor = () => {
                                                                                                           : node.data.label === 'Overlay Hide' ? 'overlay_hide'
                                                                                                             : node.data.label === 'Set Text Speed' ? 'text_set_anim_speed'
                                                                                                               : node.data.label === 'Set Actor Sprite' ? 'set_actor_sprite'
-                                                                                                                : node.data.label === 'Set Actor Flip' ? 'set_actor_flip' : 'default';
+                                                                                                                : node.data.label === 'Set Actor Flip' ? 'set_actor_flip'
+                                                                                           : node.data.label === 'Get Actor Position' ? 'get_actor_pos' : 'default';
             return { ...node, type: 'customAction', data: { ...node.data, actionType } };
           }
           return node;
