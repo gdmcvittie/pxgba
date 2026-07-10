@@ -64,7 +64,7 @@ const TileEditor = () => {
   if (bufferRef.current === null) bufferRef.current = buildInitial();
   const [localHistory, setLocalHistory] = useState(() => [buildInitial()]);
   const [localIndex, setLocalIndex] = useState(0);
-  const [livePreview, setLivePreview] = useState(false);
+  const [livePreview, setLivePreview] = useState(true);
   const [pos, setPos] = useState(() => ({
     x: typeof window !== 'undefined' ? Math.max(20, window.innerWidth / 2 - 150) : 320,
     y: 120

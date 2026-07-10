@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { usePxShop, INITIAL_DEFAULT_TILES } from '../context/PxShopContext';
-import { BsBorder, BsBoxArrowInDown, BsPlus, BsChevronDown, BsChevronRight, BsSearch, BsFileEarmarkZip, BsFileEarmarkImage, BsFileEarmarkText, BsArrowLeft, BsBoxArrowUp, BsTrash } from 'react-icons/bs';
+import { BsBorder, BsBoxArrowInDown, BsPlus, BsChevronDown, BsChevronRight, BsSearch, BsFileEarmarkZip, BsFileEarmarkImage, BsFileEarmarkText, BsArrowLeft, BsBoxArrowUp, BsTrash, BsPencil } from 'react-icons/bs';
 import toast from 'react-hot-toast';
 import JSZip from 'jszip';
 import TileIcon from './TileIcon';
@@ -1081,9 +1081,9 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
                   onClick={() => setTileEditor({ tileId: activeTile.id })}
                   disabled={!!tileEditor}
                   title="Edit this tile"
-                  style={{ flexShrink: 0, background: tileEditor ? '#3a3a3a' : '#4CAF50', border: 'none', color: '#fff', padding: '6px 10px', borderRadius: '3px', cursor: tileEditor ? 'default' : 'pointer', opacity: tileEditor ? 0.6 : 1, fontSize: '12px', fontWeight: 'bold' }}
+                  style={{ flexShrink: 0, background: tileEditor ? '#3a3a3a' : '#4CAF50', border: 'none', color: '#fff', padding: '6px', borderRadius: '3px', cursor: tileEditor ? 'default' : 'pointer', opacity: tileEditor ? 0.6 : 1, fontSize: '12px', display: 'flex', alignItems: 'center' }}
                 >
-                  Edit Tile
+                  <BsPencil size={12} />
                 </button>
               </div>
             </div>
