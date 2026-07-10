@@ -369,83 +369,83 @@ const TileEditor = () => {
         <button onClick={handleClose} title="Close (discard changes)" style={{ background: '#444', border: 'none', color: '#fff', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer', fontSize: '12px' }}>X</button>
       </div>
 
-      {/* Toolbar */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', padding: '8px 10px', borderBottom: '1px solid #3c3c3c', alignItems: 'center' }}>
-        {TOOLS.map(t => (
+      {/* Main content: tools on left, canvas in center */}
+      <div style={{ display: 'flex', padding: '10px', gap: '8px' }}>
+        {/* Toolbar (vertical, left side) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center' }}>
+          {TOOLS.map(t => (
+            <button
+              key={t.id}
+              onClick={() => setTool(t.id)}
+              title={t.label}
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: '28px', height: '28px',
+                background: tool === t.id ? '#4CAF50' : '#333',
+                border: 'none', color: '#fff', borderRadius: '4px', cursor: 'pointer'
+              }}
+            >
+              {t.icon ? <t.icon size={14} /> : <span style={{ fontSize: '9px' }}>{t.label.slice(0, 3)}</span>}
+            </button>
+          ))}
+          <div style={{ width: '20px', height: '1px', background: '#3c3c3c', margin: '4px 0' }} />
           <button
-            key={t.id}
-            onClick={() => setTool(t.id)}
-            title={t.label}
+            onClick={localUndo}
+            disabled={localIndex <= 0}
+            title="Undo (Ctrl+Z)"
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               width: '28px', height: '28px',
-              background: tool === t.id ? '#4CAF50' : '#333',
-              border: 'none', color: '#fff', borderRadius: '4px', cursor: 'pointer'
+              background: '#333',
+              border: 'none', color: '#fff', borderRadius: '4px',
+              cursor: localIndex <= 0 ? 'default' : 'pointer',
+              opacity: localIndex <= 0 ? 0.4 : 1
             }}
           >
-            {t.icon ? <t.icon size={14} /> : <span style={{ fontSize: '9px' }}>{t.label.slice(0, 3)}</span>}
+            <BsArrowCounterclockwise size={14} />
           </button>
-        ))}
-        <div style={{ width: '1px', height: '20px', background: '#3c3c3c', margin: '0 4px' }} />
-        <button
-          onClick={localUndo}
-          disabled={localIndex <= 0}
-          title="Undo (Ctrl+Z)"
-          style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            width: '28px', height: '28px',
-            background: '#333',
-            border: 'none', color: '#fff', borderRadius: '4px',
-            cursor: localIndex <= 0 ? 'default' : 'pointer',
-            opacity: localIndex <= 0 ? 0.4 : 1
-          }}
-        >
-          <BsArrowCounterclockwise size={14} />
-        </button>
-        <button
-          onClick={localRedo}
-          disabled={localIndex >= localHistory.length - 1}
-          title="Redo (Ctrl+Y)"
-          style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            width: '28px', height: '28px',
-            background: '#333',
-            border: 'none', color: '#fff', borderRadius: '4px',
-            cursor: localIndex >= localHistory.length - 1 ? 'default' : 'pointer',
-            opacity: localIndex >= localHistory.length - 1 ? 0.4 : 1
-          }}
-        >
-          <BsArrowClockwise size={14} />
-        </button>
-      </div>
+          <button
+            onClick={localRedo}
+            disabled={localIndex >= localHistory.length - 1}
+            title="Redo (Ctrl+Y)"
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: '28px', height: '28px',
+              background: '#333',
+              border: 'none', color: '#fff', borderRadius: '4px',
+              cursor: localIndex >= localHistory.length - 1 ? 'default' : 'pointer',
+              opacity: localIndex >= localHistory.length - 1 ? 0.4 : 1
+            }}
+          >
+            <BsArrowClockwise size={14} />
+          </button>
+        </div>
 
-      {/* Palette swatches (no color picker) */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 10px', borderBottom: '1px solid #3c3c3c' }}>
-        <span style={{ fontSize: '10px', color: '#aaa', flexShrink: 0 }}>Palette</span>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', maxWidth: '210px' }}>
-          {(recentColors || []).slice(0, 32).map((c, i) => (
-            <div
-              key={i}
-              onClick={() => setCurrentColor(c)}
-              title={c}
-              style={{ width: '16px', height: '16px', background: c, border: currentColor === c ? '2px solid #fff' : '1px solid #555', borderRadius: '2px', cursor: 'pointer', flexShrink: 0 }}
-            />
-          ))}
+        {/* Canvas */}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+          <canvas
+            ref={canvasRef}
+            width={SIZE * CELL}
+            height={SIZE * CELL}
+            onMouseDown={onMouseDown}
+            onMouseMove={onMouseMove}
+            onMouseUp={onMouseUp}
+            onMouseLeave={onMouseUp}
+            style={{ width: SIZE * CELL, height: SIZE * CELL, imageRendering: 'pixelated', border: '1px solid #555', borderRadius: '4px', cursor: tool === 'eraser' ? 'cell' : 'crosshair', background: '#000' }}
+          />
         </div>
       </div>
 
-      {/* Canvas */}
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
-        <canvas
-          ref={canvasRef}
-          width={SIZE * CELL}
-          height={SIZE * CELL}
-          onMouseDown={onMouseDown}
-          onMouseMove={onMouseMove}
-          onMouseUp={onMouseUp}
-          onMouseLeave={onMouseUp}
-          style={{ width: SIZE * CELL, height: SIZE * CELL, imageRendering: 'pixelated', border: '1px solid #555', borderRadius: '4px', cursor: tool === 'eraser' ? 'cell' : 'crosshair', background: '#000' }}
-        />
+      {/* Palette swatches (below canvas) */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', padding: '0 10px 10px 10px', justifyContent: 'flex-start' }}>
+        {(recentColors || []).slice(0, 32).map((c, i) => (
+          <div
+            key={i}
+            onClick={() => setCurrentColor(c)}
+            title={c}
+            style={{ width: '16px', height: '16px', background: c, border: currentColor === c ? '2px solid #fff' : '1px solid #555', borderRadius: '2px', cursor: 'pointer', flexShrink: 0 }}
+          />
+        ))}
       </div>
     </div>,
     document.body
