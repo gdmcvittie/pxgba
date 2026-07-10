@@ -1235,7 +1235,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
 
         const scCtx = {
           dialogs, safeSceneName, scenes, sActors, sDims, customScripts, variables,
-          currentSceneIdx, startingSceneIdx, scene
+          currentSceneIdx, startingSceneIdx, scene, animations
         };
 
         const spawnerTargetIds = new Set();

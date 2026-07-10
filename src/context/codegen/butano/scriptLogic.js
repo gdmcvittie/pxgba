@@ -11,7 +11,7 @@ function translateExpr(str) {
 export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight, baseIndent = 0, callStack = new Set(), options = {}) {
   const {
     dialogs, safeSceneName, scenes, sActors, sDims, customScripts, variables,
-    currentSceneIdx, startingSceneIdx, scene, startNodeId = 'start'
+    currentSceneIdx, startingSceneIdx, scene, animations, startNodeId = 'start'
   } = options;
   let code = '';
   if (!script?.nodes?.length) return code;
@@ -959,6 +959,9 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
             val = `${val}f`;
           }
         }
+        if (!val) {
+          val = (variable && variable.type === 'string') ? '""' : (variable && variable.type === 'float') ? '0.0f' : '0';
+        }
         code += `${indent}${sv} = ${val};\n`;
       }
     } else if (label === 'Check Variable') {
@@ -972,6 +975,9 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
           if (!val.endsWith('f') && !isNaN(parseFloat(val))) {
             val = `${val}f`;
           }
+        }
+        if (!val) {
+          val = (variable && variable.type === 'string') ? '""' : (variable && variable.type === 'float') ? '0.0f' : '0';
         }
         code += `${indent}if (${sv} == ${val}) {\n`; openBraces++;
       }

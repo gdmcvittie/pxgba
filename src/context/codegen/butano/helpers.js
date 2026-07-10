@@ -1,12 +1,58 @@
 export function autoDeclare(variables, customScripts, globalScript, scenes) {
   var referenced = {};
-  var allScripts = [];
+  var scriptsById = {};
   for (var ci = 0; ci < customScripts.length; ci++) {
-    if (!customScripts[ci]) continue;
-    var s = customScripts[ci].script;
-    if (s) allScripts.push(s);
+    if (customScripts[ci] && customScripts[ci].id != null) scriptsById[customScripts[ci].id] = customScripts[ci];
   }
-  if (globalScript) allScripts.push(globalScript);
+
+  var scriptStack = new Set();
+
+  function processNode(nd) {
+    if (!nd || !nd.data) return;
+    var lbl = nd.data.label || '';
+    var vn = nd.data.varName || nd.data.targetVar || '';
+    if (vn && (lbl === 'Set Variable' || lbl === 'Check Variable' || lbl === 'Math Operation' || lbl === 'Set Random Var' || lbl === 'Math Equation')) {
+      referenced[vn] = true;
+    }
+    var fl = nd.data.flag || '';
+    if (fl && (lbl === 'Set Flag' || lbl === 'Clear Flag' || lbl === 'Check Flag')) {
+      referenced[fl] = true;
+    }
+    if (nd.data.script) {
+      if (nd.data.script.nodes) collectFromScript(nd.data.script);
+      else if (Array.isArray(nd.data.script)) collectFromScript({ nodes: nd.data.script });
+    }
+    if (nd.data.scriptId != null && scriptsById[nd.data.scriptId]) {
+      collectFromScript(scriptsById[nd.data.scriptId].script);
+    }
+  }
+
+  function collectFromScript(script) {
+    if (!script || !script.nodes || !script.nodes.length) return;
+    if (scriptStack.has(script)) return;
+    scriptStack.add(script);
+    var startNode = script.nodes.find(function (n) { return n && n.id === 'start'; }) || script.nodes[0];
+    if (!startNode) { scriptStack.delete(script); return; }
+    var visited = new Set();
+    var stack = [startNode];
+    while (stack.length) {
+      var cur = stack.pop();
+      if (!cur || visited.has(cur.id)) continue;
+      visited.add(cur.id);
+      processNode(cur);
+      var outs = (script.edges || []).filter(function (e) { return e && e.source === cur.id; });
+      for (var oi = 0; oi < outs.length; oi++) {
+        var tgt = script.nodes.find(function (n) { return n && n.id === outs[oi].target; });
+        if (tgt && !visited.has(tgt.id)) stack.push(tgt);
+      }
+    }
+    scriptStack.delete(script);
+  }
+
+  for (var ci2 = 0; ci2 < customScripts.length; ci2++) {
+    if (customScripts[ci2] && customScripts[ci2].script) collectFromScript(customScripts[ci2].script);
+  }
+  if (globalScript) collectFromScript(globalScript);
   for (var si = 0; si < scenes.length; si++) {
     var trigs = scenes[si].triggers || [];
     for (var ti = 0; ti < trigs.length; ti++) {
@@ -17,40 +63,15 @@ export function autoDeclare(variables, customScripts, globalScript, scenes) {
           if (trigs[gi].isGroup && trigs[gi].id === t.groupId && (trigs[gi].script || trigs[gi].scriptId)) { target = trigs[gi]; break; }
         }
       }
-      if (target.scriptId) {
+      if (target.scriptId != null) {
         for (var csi = 0; csi < customScripts.length; csi++) {
           if (customScripts[csi] && String(customScripts[csi].id) === String(target.scriptId)) {
-            var cs = customScripts[csi].script;
-            if (cs) allScripts.push(cs);
+            if (customScripts[csi].script) collectFromScript(customScripts[csi].script);
             break;
           }
         }
       } else if (target.script) {
-        allScripts.push(target.script);
-      }
-    }
-  }
-  for (var ai = 0; ai < allScripts.length; ai++) {
-    var scriptItem = allScripts[ai];
-    var nodes = scriptItem.nodes || (Array.isArray(scriptItem) ? scriptItem : null);
-    if (!nodes) continue;
-    var stack = [nodes];
-    while (stack.length > 0) {
-      var ns = stack.pop();
-      if (!Array.isArray(ns)) continue;
-      for (var ni = 0; ni < ns.length; ni++) {
-        var nd = ns[ni];
-        if (!nd || !nd.data) continue;
-        var lbl = nd.data.label || '';
-        var vn = nd.data.varName || nd.data.targetVar || '';
-        if (vn && (lbl === 'Set Variable' || lbl === 'Check Variable' || lbl === 'Math Operation' || lbl === 'Set Random Var' || lbl === 'Math Equation')) {
-          referenced[vn] = true;
-        }
-        var sub = nd.data.script;
-        if (sub) {
-          if (sub.nodes) stack.push(sub.nodes);
-          else if (Array.isArray(sub)) stack.push(sub);
-        }
+        collectFromScript(target.script);
       }
     }
   }
