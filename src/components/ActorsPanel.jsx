@@ -2522,6 +2522,14 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                               <option value="bouncing">Bouncing Fireball</option>
                             </select>
                           </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', width: '100%' }}>
+                            <label style={{ fontSize: '11px', color: '#aaa', width: '80px' }}>Lock Axis:</label>
+                            <select value={actor.playerProjLockAxis || 'none'} onChange={(e) => updateActor(actor.id, 'playerProjLockAxis', e.target.value)} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }}>
+                              <option value="none">None</option>
+                              <option value="horizontal">Horizontal</option>
+                              <option value="vertical">Vertical</option>
+                            </select>
+                          </div>
                           {(actor.playerProjDirMode === 'vector' || !actor.playerProjDirMode) && (
                             <>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -2752,6 +2760,14 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                             <label style={{ fontSize: '11px', color: '#aaa' }}>Interval (f):</label>
                             <input type="number" min="1" value={actor.enemyFireRate ?? 60} onChange={(e) => updateActor(actor.id, 'enemyFireRate', parseInt(e.target.value) || 60)} style={{ width: '50px', background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }} />
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <label style={{ fontSize: '11px', color: '#aaa' }}>Lock Axis:</label>
+                            <select value={actor.enemyProjLockAxis || 'none'} onChange={(e) => updateActor(actor.id, 'enemyProjLockAxis', e.target.value)} style={{ background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px', minWidth: 0, flex: 1 }}>
+                              <option value="none">None</option>
+                              <option value="horizontal">Horizontal</option>
+                              <option value="vertical">Vertical</option>
+                            </select>
                           </div>
                         </div>
                       )}
@@ -2997,6 +3013,14 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                             <label style={{ fontSize: '11px', color: '#aaa' }}>Proj Speed:</label>
                             <input type="number" step="0.5" min="0.5" value={actor.companionProjSpeed ?? 3} onChange={(e) => updateActor(actor.id, 'companionProjSpeed', parseFloat(e.target.value) || 3)} style={{ width: '50px', background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }} />
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <label style={{ fontSize: '11px', color: '#aaa' }}>Lock Axis:</label>
+                            <select value={actor.companionProjLockAxis || 'none'} onChange={(e) => updateActor(actor.id, 'companionProjLockAxis', e.target.value)} style={{ background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px', minWidth: 0, flex: 1 }}>
+                              <option value="none">None</option>
+                              <option value="horizontal">Horizontal</option>
+                              <option value="vertical">Vertical</option>
+                            </select>
                           </div>
                         </div>
                       )}

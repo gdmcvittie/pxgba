@@ -1733,6 +1733,11 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 deferredFireProjLambdas += `                    }\n`;
                 deferredFireProjLambdas += `                }\n`;
               }
+              if (a.playerProjLockAxis === 'horizontal') {
+                deferredFireProjLambdas += `                proj_dy[p] = 0;\n`;
+              } else if (a.playerProjLockAxis === 'vertical') {
+                deferredFireProjLambdas += `                proj_dx[p] = 0;\n`;
+              }
               deferredFireProjLambdas += `                proj_active[p] = true;\n`;
               deferredFireProjLambdas += `                proj_from_player[p] = true;\n`;
               deferredFireProjLambdas += `                proj_bouncing[p] = ${a.playerProjType === 'bouncing' ? 'true' : 'false'};\n`;
@@ -3888,6 +3893,11 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 actorLogicCode += `                            proj_y[p] = actor_${i}_y + ${Math.floor((a.height || 16) / 2)};\n`;
                 actorLogicCode += `                            proj_dx[p] = p_dx;\n`;
                 actorLogicCode += `                            proj_dy[p] = p_dy;\n`;
+                if (a.enemyProjLockAxis === 'horizontal') {
+                  actorLogicCode += `                            proj_dy[p] = 0;\n`;
+                } else if (a.enemyProjLockAxis === 'vertical') {
+                  actorLogicCode += `                            proj_dx[p] = 0;\n`;
+                }
                 actorLogicCode += `                            proj_active[p] = true;\n`;
                 actorLogicCode += `                            proj_from_player[p] = false;\n`;
                 actorLogicCode += `                            proj_bounce_count[p] = 0;\n`;
@@ -4278,6 +4288,11 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               actorLogicCode += `                            bn::fixed td = bn::sqrt((tdx * tdx) + (tdy * tdy));\n`;
               actorLogicCode += `                            if (td > 0) { proj_dx[p] = (tdx / td) * bn::fixed(${projSpeed}); proj_dy[p] = (tdy / td) * bn::fixed(${projSpeed}); }\n`;
               actorLogicCode += `                            else { proj_dx[p] = bn::fixed(${projSpeed}); proj_dy[p] = 0; }\n`;
+              if (a.companionProjLockAxis === 'horizontal') {
+                actorLogicCode += `                            proj_dy[p] = 0;\n`;
+              } else if (a.companionProjLockAxis === 'vertical') {
+                actorLogicCode += `                            proj_dx[p] = 0;\n`;
+              }
               actorLogicCode += `                            proj_x[p] = actor_${i}_x + ${Math.floor((a.width || 16) / 2)};\n`;
               actorLogicCode += `                            proj_y[p] = actor_${i}_y + ${Math.floor((a.height || 16) / 2)};\n`;
               actorLogicCode += `                            proj_active[p] = true;\n`;
