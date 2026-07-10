@@ -1101,7 +1101,8 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
             } else if (v.type === 'float') {
               const floatVal = parseFloat(v.initialValue);
               const safeFloat = isNaN(floatVal) ? 0.0 : floatVal;
-              code += `${indent}    _save.${sv} = ${safeFloat}f;\n`;
+              const floatStr = String(safeFloat).includes('.') ? String(safeFloat) : safeFloat.toFixed(1);
+              code += `${indent}    _save.${sv} = ${floatStr}f;\n`;
             } else {
               code += `${indent}    _save.${sv} = ${parseInt(v.initialValue) || 0};\n`;
             }

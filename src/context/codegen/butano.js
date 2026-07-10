@@ -181,7 +181,8 @@ export async function generateButano(ctx) {
         } else if (v.type === 'float') {
           const floatVal = parseFloat(v.initialValue);
           const safeFloat = isNaN(floatVal) ? 0.0 : floatVal;
-          mainCppDefinitions += `float ${safeVarName} = ${safeFloat}f;\n`;
+          const floatStr = String(safeFloat).includes('.') ? String(safeFloat) : safeFloat.toFixed(1);
+          mainCppDefinitions += `float ${safeVarName} = ${floatStr}f;\n`;
         } else if (v.type === 'number' || !v.type) {
           mainCppDefinitions += `int ${safeVarName} = ${parseInt(v.initialValue) || 0};\n`;
         } else if (v.type === 'random') {
