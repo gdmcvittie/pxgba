@@ -520,7 +520,17 @@ export const PxShopProvider = ({ children }) => {
     { id: 10, name: 'PLAYER_MAX_HP', type: 'number', initialValue: 10, groupId: 9 },
     { id: 11, name: 'PLAYER_MAX_XP', type: 'number', initialValue: 100, groupId: 9 },
     { id: 12, name: 'PLAYER_MAX_BONUS', type: 'number', initialValue: 100, groupId: 9 },
-    { id: 13, name: 'PLAYER_MAX_GRENADES', type: 'number', initialValue: 5, groupId: 9 }
+    { id: 13, name: 'PLAYER_MAX_GRENADES', type: 'number', initialValue: 5, groupId: 9 },
+    { id: 20, type: 'group', name: 'SCENE SETTINGS', isOpen: false },
+    { id: 30, name: 'HORIZONTAL_SPEED', type: 'float', initialValue: 1.0, groupId: 20 },
+    { id: 31, name: 'VERTICAL_SPEED', type: 'float', initialValue: 1.0, groupId: 20 },
+    { id: 32, name: 'FRICTION', type: 'float', initialValue: 0.5, groupId: 20 },
+    { id: 33, name: 'GRAVITY', type: 'float', initialValue: 0.5, groupId: 20 },
+    { id: 34, name: 'JUMP_VELOCITY', type: 'float', initialValue: -5.0, groupId: 20 },
+    { id: 35, name: 'MAX_FALL_VELOCITY', type: 'float', initialValue: 8.0, groupId: 20 },
+    { id: 36, name: 'MAX_SPEED', type: 'float', initialValue: 1.0, groupId: 20 },
+    { id: 37, name: 'ACCELERATION', type: 'float', initialValue: 0.01, groupId: 20 },
+    { id: 38, name: 'STEERING_SPEED', type: 'float', initialValue: 0.5, groupId: 20 }
   ]);
 
   // Animations state (Project-wide)
