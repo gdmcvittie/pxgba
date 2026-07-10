@@ -7204,6 +7204,7 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
       }
 
       let finalIncludes = mainCppIncludes;
+      finalIncludes += `#include "bn_backdrop.h"\n#include "bn_color.h"\n`;
       if (generatedSounds.size > 0 || hasSoundMusic) {
         finalIncludes += `#include "bn_sound_items.h"\n`;
       }
@@ -7213,7 +7214,7 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
 
       const creditsCase = includeCreditsScene ? `            case SceneId::SCENE_CREDITS: next_scene = play_credits_scene(rng); break;\n` : '';
       const initialScene = includeCreditsScene ? 'SCENE_CREDITS' : `SCENE_${startingSceneIdx}`;
-      const mainCpp = `${finalIncludes}\n${mainCppDefinitions}\nint main() {\n    bn::core::init();\n    bn::random rng;\n    SceneId next_scene = SceneId::${initialScene};\n    while(true) {\n        switch(next_scene) {\n${creditsCase}${scenes.map((s, i) => `            case SceneId::SCENE_${i}: next_scene = play_scene_${i}(rng); break;`).join('\n')}\n            default: next_scene = play_scene_${startingSceneIdx}(rng); break;\n        }\n        bn::core::update();\n    }\n}\n`;
+      const mainCpp = `${finalIncludes}\n${mainCppDefinitions}\nint main() {\n    bn::core::init();\n    bn::backdrop::set_color(bn::color(0, 0, 0));\n    bn::random rng;\n    SceneId next_scene = SceneId::${initialScene};\n    while(true) {\n        switch(next_scene) {\n${creditsCase}${scenes.map((s, i) => `            case SceneId::SCENE_${i}: next_scene = play_scene_${i}(rng); break;`).join('\n')}\n            default: next_scene = play_scene_${startingSceneIdx}(rng); break;\n        }\n        bn::core::update();\n    }\n}\n`;
 
       // Standard Butano Makefile structure
       const makefile = `TARGET      :=  \${sanitizedName}
