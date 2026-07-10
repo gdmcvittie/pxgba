@@ -6037,7 +6037,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               }
             });
             itemLayout.vars.forEach(v => {
-              if (hudSettings.verticalText) {
+              if (v.x !== undefined) {
                 sceneCode += `    bn::sprite_ptr hud_item_${i}_var_${v.varIdx}_digit1_s = bn::sprite_items::hud_0.create_sprite(${v.x}, ${v.d1_y});\n`;
                 sceneCode += `    hud_item_${i}_var_${v.varIdx}_digit1_s.set_palette(shared_sprite_palette);\n`;
                 sceneCode += `    hud_item_${i}_var_${v.varIdx}_digit1_s.set_bg_priority(1);\n    hud_item_${i}_var_${v.varIdx}_digit1_s.set_z_order(-32767);\n`;
@@ -6446,7 +6446,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 const varExists = variables.some(valObj => valObj.name.replace(/[^a-zA-Z0-9_]/g, '_') === safeVarName);
                 cppCurrentVal = varExists ? safeVarName : '0';
               }
-              if (hudSettings.verticalText) {
+              if (v.x !== undefined) {
                 sceneCode += `        update_var_display_vertical(hud_item_${i}_var_${v.varIdx}_digit1_s, hud_item_${i}_var_${v.varIdx}_digit2_s, ${cppCurrentVal}, hud_item_${i}_var_${v.varIdx}_prev, ${v.d1_y}, ${v.d2_y}, ${v.d2_y_single});\n`;
               } else {
                 sceneCode += `        update_var_display(hud_item_${i}_var_${v.varIdx}_digit1_s, hud_item_${i}_var_${v.varIdx}_digit2_s, ${cppCurrentVal}, hud_item_${i}_var_${v.varIdx}_prev, ${v.d1_x}, ${v.d2_x}, ${v.d2_x_single});\n`;
