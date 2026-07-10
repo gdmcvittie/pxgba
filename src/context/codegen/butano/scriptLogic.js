@@ -1,9 +1,17 @@
 import { BUTANO_COLLISION_ENUMS } from '../../constants';
 
+function translateExpr(str) {
+  if (!str) return str;
+  let result = str.replace(/\brnd\b\(([^)]+)\)/gi, (match, arg) => {
+    return `rng.get_int(${arg} + 1)`;
+  });
+  return result;
+}
+
 export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight, baseIndent = 0, callStack = new Set(), options = {}) {
   const {
     dialogs, safeSceneName, scenes, sActors, sDims, customScripts, variables,
-    currentSceneIdx, startingSceneIdx, scene, startNodeId = 'start'
+    currentSceneIdx, startingSceneIdx, scene, animations, startNodeId = 'start'
   } = options;
   let code = '';
   if (!script?.nodes?.length) return code;
@@ -45,7 +53,7 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
       code += `${indent}        scene_dialog_bg->set_priority(0);\n`;
       code += `${indent}    }\n`;
       code += `${indent}    bn::vector<bn::sprite_ptr, 128> text_sprites;\n`;
-      code += `${indent}    show_dialog_text("${safeStr(currentNode.data.message)}", text_sprites, dialog_text_palette);\n`;
+      code += `${indent}    show_dialog_text("${safeStr(currentNode.data.message)}", text_sprites, dialog_text_palette, text_anim_speed);\n`;
       code += `${indent}    while(bn::keypad::a_held()) { bn::core::update(); }\n`;
       code += `${indent}    while(!bn::keypad::a_pressed()) { bn::core::update(); }\n`;
       code += `${indent}    while(bn::keypad::a_held()) { bn::core::update(); }\n`;
@@ -93,7 +101,7 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
         opts.forEach((opt, oIdx) => {
           const variant = getMenuFormattedText(msg, opts, oIdx);
           recreateSwitch += `${indent}                case ${oIdx}:\n`;
-          recreateSwitch += `${indent}                    show_dialog_text("${safeStr(variant)}", text_sprites, dialog_text_palette);\n`;
+          recreateSwitch += `${indent}                    show_dialog_text("${safeStr(variant)}", text_sprites, dialog_text_palette, text_anim_speed);\n`;
           recreateSwitch += `${indent}                    break;\n`;
         });
         recreateSwitch += `${indent}            }\n`;
@@ -125,7 +133,7 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
         code += `${indent}        scene_dialog_bg->set_priority(0);\n`;
         code += `${indent}    }\n`;
         code += `${indent}    bn::vector<bn::sprite_ptr, 128> text_sprites;\n`;
-        code += `${indent}    show_dialog_text("${safeStr(initialVariant)}", text_sprites, dialog_text_palette);\n`;
+        code += `${indent}    show_dialog_text("${safeStr(initialVariant)}", text_sprites, dialog_text_palette, text_anim_speed);\n`;
         code += `${indent}    while(bn::keypad::a_held() || bn::keypad::b_held()) { bn::core::update(); }\n`;
         code += `${indent}    while(true) {\n`;
         code += `${indent}        int num_rows = (${numOptions} + 1) / 2;\n`;
@@ -532,6 +540,28 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
       if (targetSceneIdx !== -1) {
         code += `${indent}return SceneId::SCENE_${targetSceneIdx};\n`;
       }
+    } else if (label === 'Push Scene' || currentNode.data?.actionType === 'push_scene') {
+      const targetSceneId = currentNode.data.sceneId;
+      const targetSceneIdx = scenes.findIndex(s => s.id === targetSceneId);
+      if (targetSceneIdx !== -1) {
+        code += `${indent}BN_LOG("Action: Push Scene - scene_${targetSceneIdx}");\n`;
+        code += `${indent}scene_stack[scene_stack_depth++] = static_cast<int>(current_scene_id);\n`;
+        code += `${indent}return SceneId::SCENE_${targetSceneIdx};\n`;
+      }
+    } else if (label === 'Pop Scene' || currentNode.data?.actionType === 'pop_scene') {
+      code += `${indent}BN_LOG("Action: Pop Scene");\n`;
+      code += `${indent}if (scene_stack_depth > 0) {\n`;
+      code += `${indent}    return static_cast<SceneId>(scene_stack[--scene_stack_depth]);\n`;
+      code += `${indent}} else {\n`;
+      code += `${indent}    return current_scene_id;\n`;
+      code += `${indent}}\n`;
+    } else if (label === 'Replace Scene' || currentNode.data?.actionType === 'replace_scene') {
+      const targetSceneId = currentNode.data.sceneId;
+      const targetSceneIdx = scenes.findIndex(s => s.id === targetSceneId);
+      if (targetSceneIdx !== -1) {
+        code += `${indent}BN_LOG("Action: Replace Scene - scene_${targetSceneIdx}");\n`;
+        code += `${indent}return SceneId::SCENE_${targetSceneIdx};\n`;
+      }
     } else if (label === 'Restart Current Scene' || label === 'Restart Scene' || currentNode.data?.actionType === 'restart_scene') {
       code += `${indent}BN_LOG("Action: Restart Scene");\n`;
       code += `${indent}return SceneId::SCENE_${currentSceneIdx};\n`;
@@ -657,6 +687,49 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
           code += `${indent}actor_${targetActorIdx}_anim_fired = false;\n`;
         }
       }
+    } else if (label === 'Set Animation Speed' || currentNode.data?.actionType === 'set_anim_speed') {
+      const targetActorId = currentNode.data?.targetActorId;
+      const speedVal = parseFloat(currentNode.data?.speed) || 1;
+      if (targetActorId !== null && targetActorId !== undefined) {
+        const targetActorIdx = sActors.findIndex(a => a && a.id === targetActorId);
+        if (targetActorIdx !== -1) {
+          code += `${indent}actor_${targetActorIdx}_anim_speed = bn::fixed(${speedVal});\n`;
+        }
+      }
+    } else if (label === 'Set Movement Speed' || currentNode.data?.actionType === 'set_movement_speed') {
+      const targetActorId = currentNode.data?.targetActorId;
+      const speedVal = parseFloat(currentNode.data?.speed) || 1;
+      if (targetActorId !== null && targetActorId !== undefined) {
+        const targetActorIdx = sActors.findIndex(a => a && a.id === targetActorId);
+        if (targetActorIdx !== -1) {
+          code += `${indent}actor_${targetActorIdx}_movement_speed = bn::fixed(${speedVal});\n`;
+        }
+      }
+    } else if (label === 'Start Update' || currentNode.data?.actionType === 'start_update') {
+      const targetActorId = currentNode.data?.targetActorId;
+      if (targetActorId !== null && targetActorId !== undefined) {
+        const targetActorIdx = sActors.findIndex(a => a && a.id === targetActorId);
+        if (targetActorIdx !== -1) {
+          code += `${indent}actor_${targetActorIdx}_update_enabled = true;\n`;
+        }
+      }
+    } else if (label === 'Stop Update' || currentNode.data?.actionType === 'stop_update') {
+      const targetActorId = currentNode.data?.targetActorId;
+      if (targetActorId !== null && targetActorId !== undefined) {
+        const targetActorIdx = sActors.findIndex(a => a && a.id === targetActorId);
+        if (targetActorIdx !== -1) {
+          code += `${indent}actor_${targetActorIdx}_update_enabled = false;\n`;
+        }
+      }
+    } else if (label === 'Attach Input Script' || currentNode.data?.actionType === 'attach_input_script') {
+      const btn = (Array.isArray(currentNode.data?.input) ? currentNode.data.input[0] : 'a') || 'a';
+      code += `${indent}BN_LOG("Action: Attach Input Script - ${btn}");\n`;
+    } else if (label === 'Draw Text' || currentNode.data?.actionType === 'draw_text') {
+      const drawText = safeStr(currentNode.data?.text || '');
+      const drawX = parseInt(currentNode.data?.x) || 0;
+      const drawY = parseInt(currentNode.data?.y) || 0;
+      const drawLoc = currentNode.data?.location || 'background';
+      code += `${indent}BN_LOG("Action: Draw Text - ${drawText} at (${drawX},${drawY}) on ${drawLoc}");\n`;
     } else if (label === 'Move Camera' || currentNode.data?.actionType === 'move_camera') {
       const targetType = currentNode.data?.targetType || 'custom';
       if (targetType === 'reset') {
@@ -693,14 +766,173 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
         code += `${indent}camera_instant = ${instantVal ? 'true' : 'false'};\n`;
         code += `${indent}camera_custom_control = true;\n`;
       }
+    } else if (label === 'Camera Shake' || currentNode.data?.actionType === 'camera_shake') {
+      const shakeTime = parseFloat(currentNode.data?.time) || 0.2;
+      const shakeFrames = Math.round(shakeTime * 60);
+      const magnitude = parseFloat(currentNode.data?.magnitude) || 2;
+      const direction = currentNode.data?.direction || 'horizontal';
+      code += `${indent}{\n`;
+      code += `${indent}    bn::fixed orig_x = camera_target_x;\n`;
+      code += `${indent}    bn::fixed orig_y = camera_target_y;\n`;
+      code += `${indent}    for (int i = 0; i < ${shakeFrames}; i++) {\n`;
+      if (direction === 'horizontal') {
+        code += `${indent}        camera_target_x = orig_x + (i % 2 == 0 ? bn::fixed(${magnitude}) : bn::fixed(-${magnitude}));\n`;
+      } else if (direction === 'vertical') {
+        code += `${indent}        camera_target_y = orig_y + (i % 2 == 0 ? bn::fixed(${magnitude}) : bn::fixed(-${magnitude}));\n`;
+      } else {
+        code += `${indent}        camera_target_x = orig_x + (i % 2 == 0 ? bn::fixed(${magnitude}) : bn::fixed(-${magnitude}));\n`;
+        code += `${indent}        camera_target_y = orig_y + (i % 2 == 0 ? bn::fixed(${magnitude}) : bn::fixed(-${magnitude}));\n`;
+      }
+      code += `${indent}        bn::core::update();\n`;
+      code += `${indent}    }\n`;
+      code += `${indent}    camera_target_x = orig_x;\n`;
+      code += `${indent}    camera_target_y = orig_y;\n`;
+      code += `${indent}}\n`;
+    } else if (label === 'Fade In' || currentNode.data?.actionType === 'fade_in') {
+      const fadeSpeed = parseInt(currentNode.data?.speed) || 1;
+      const speedFrames = fadeSpeed === 0 ? 0 : fadeSpeed === 1 ? 15 : fadeSpeed === 2 ? 30 : 60;
+      code += `${indent}{\n`;
+      code += `${indent}    bn::regular_bg_ptr fade_bg = bn::regular_bg_items::fade_overlay_bg.create_bg(0, 0);\n`;
+      code += `${indent}    fade_bg.set_blending_enabled(true);\n`;
+      code += `${indent}    fade_bg.set_priority(0);\n`;
+      if (speedFrames > 0) {
+        code += `${indent}    for (int f = ${speedFrames}; f >= 0; f--) {\n`;
+        code += `${indent}        fade_bg.set_alpha(bn::fixed(f) / ${speedFrames});\n`;
+        code += `${indent}        bn::core::update();\n`;
+        code += `${indent}    }\n`;
+      }
+      code += `${indent}}\n`;
+    } else if (label === 'Fade Out' || currentNode.data?.actionType === 'fade_out') {
+      const fadeSpeed = parseInt(currentNode.data?.speed) || 1;
+      const speedFrames = fadeSpeed === 0 ? 0 : fadeSpeed === 1 ? 15 : fadeSpeed === 2 ? 30 : 60;
+      code += `${indent}{\n`;
+      code += `${indent}    bn::regular_bg_ptr fade_bg = bn::regular_bg_items::fade_overlay_bg.create_bg(0, 0);\n`;
+      code += `${indent}    fade_bg.set_blending_enabled(true);\n`;
+      code += `${indent}    fade_bg.set_priority(0);\n`;
+      if (speedFrames > 0) {
+        code += `${indent}    fade_bg.set_alpha(bn::fixed(0));\n`;
+        code += `${indent}    for (int f = 1; f <= ${speedFrames}; f++) {\n`;
+        code += `${indent}        fade_bg.set_alpha(bn::fixed(f) / ${speedFrames});\n`;
+        code += `${indent}        bn::core::update();\n`;
+        code += `${indent}    }\n`;
+      } else {
+        code += `${indent}    fade_bg.set_alpha(bn::fixed(1));\n`;
+      }
+      code += `${indent}}\n`;
+    } else if (label === 'Camera Lock' || currentNode.data?.actionType === 'camera_lock') {
+      code += `${indent}camera_custom_control = false;\n`;
+    } else if (label === 'Set Direction' || currentNode.data?.actionType === 'set_direction') {
+      const targetActorId = currentNode.data?.targetActorId;
+      const direction = currentNode.data?.direction || 'down';
+      if (targetActorId !== null && targetActorId !== undefined) {
+        const targetActorIdx = sActors.findIndex(a => a && a.id === targetActorId);
+        if (targetActorIdx !== -1) {
+          if (direction === 'up') {
+            code += `${indent}actor_${targetActorIdx}_last_dx_dir = 0;\n`;
+            code += `${indent}actor_${targetActorIdx}_last_dy_dir = -1;\n`;
+          } else if (direction === 'down') {
+            code += `${indent}actor_${targetActorIdx}_last_dx_dir = 0;\n`;
+            code += `${indent}actor_${targetActorIdx}_last_dy_dir = 1;\n`;
+          } else if (direction === 'left') {
+            code += `${indent}actor_${targetActorIdx}_last_dx_dir = -1;\n`;
+            code += `${indent}actor_${targetActorIdx}_last_dy_dir = 0;\n`;
+          } else if (direction === 'right') {
+            code += `${indent}actor_${targetActorIdx}_last_dx_dir = 1;\n`;
+            code += `${indent}actor_${targetActorIdx}_last_dy_dir = 0;\n`;
+          }
+        }
+      }
+    } else if (label === 'Await Input' || currentNode.data?.actionType === 'await_input') {
+      code += `${indent}while (!bn::keypad::a_pressed() && !bn::keypad::b_pressed() && !bn::keypad::start_pressed()) { bn::core::update(); }\n`;
+    } else if (label === 'Actor Emote' || currentNode.data?.actionType === 'actor_emote') {
+      const targetActorId = currentNode.data?.targetActorId;
+      const emote = currentNode.data?.emote || 'exclamation';
+      if (targetActorId !== null && targetActorId !== undefined) {
+        const targetActorIdx = sActors.findIndex(a => a && a.id === targetActorId);
+        if (targetActorIdx !== -1) {
+          const charMap = { exclamation: '!', question: '?', music: '>', sleep: '.' };
+          const ch = charMap[emote] || '!';
+          code += `${indent}{\n`;
+          code += `${indent}    bn::vector<bn::sprite_ptr, 4> emote_sprites;\n`;
+          code += `${indent}    int ex = actor_${targetActorIdx}_sprite.x().integer() - camera.x().integer();\n`;
+          code += `${indent}    int ey = actor_${targetActorIdx}_sprite.y().integer() - camera.y().integer() - 20;\n`;
+          code += `${indent}    auto e_item = get_dialog_char_sprite_item('${ch}');\n`;
+          code += `${indent}    if (e_item) {\n`;
+          code += `${indent}        bn::sprite_ptr es = e_item->create_sprite(ex, ey);\n`;
+          code += `${indent}        es.set_palette(dialog_text_palette);\n`;
+          code += `${indent}        es.set_bg_priority(0);\n`;
+          code += `${indent}        es.set_z_order(-32767);\n`;
+          code += `${indent}        emote_sprites.push_back(es);\n`;
+          code += `${indent}    }\n`;
+          code += `${indent}    for (int w = 0; w < 60; w++) { bn::core::update(); }\n`;
+          code += `${indent}}\n`;
+        }
+      }
+    } else if (label === 'Overlay Show' || currentNode.data?.actionType === 'overlay_show') {
+      const overlayX = parseInt(currentNode.data?.x) || 0;
+      const overlayY = parseInt(currentNode.data?.y) || 0;
+      const overlayColor = currentNode.data?.color || 'white';
+      code += `${indent}if (!scene_overlay_bg) {\n`;
+      if (overlayColor === 'black') {
+        code += `${indent}    scene_overlay_bg = bn::regular_bg_items::fade_overlay_bg.create_bg(${overlayX * 8 - 120}, ${overlayY * 8 - 80});\n`;
+      } else {
+        code += `${indent}    scene_overlay_bg = bn::regular_bg_items::dialog_bg.create_bg(${overlayX * 8 - 120}, ${overlayY * 8 - 80});\n`;
+      }
+      code += `${indent}    scene_overlay_bg->set_priority(0);\n`;
+      code += `${indent}}\n`;
+    } else if (label === 'Overlay Hide' || currentNode.data?.actionType === 'overlay_hide') {
+      code += `${indent}scene_overlay_bg.reset();\n`;
+    } else if (label === 'Set Text Speed' || currentNode.data?.actionType === 'text_set_anim_speed') {
+      const textSpeed = parseInt(currentNode.data?.speed) || 1;
+      const speedFrames = textSpeed === 0 ? 0 : textSpeed === 1 ? 1 : textSpeed === 2 ? 3 : 6;
+      code += `${indent}text_anim_speed = ${speedFrames};\n`;
+    } else if (label === 'Set Actor Sprite' || currentNode.data?.actionType === 'set_actor_sprite') {
+      const targetActorId = currentNode.data?.targetActorId;
+      if (targetActorId !== null && targetActorId !== undefined) {
+        const targetActorIdx = sActors.findIndex(a => a && a.id === targetActorId);
+        if (targetActorIdx !== -1) {
+          const spriteItemName = currentNode.data?.computedSpriteItemName;
+          if (spriteItemName) {
+            code += `${indent}// Set Actor Sprite: change actor ${targetActorIdx} to ${spriteItemName}\n`;
+            code += `${indent}actor_${targetActorIdx}_sprite.set_tiles(bn::sprite_items::${spriteItemName}.tiles_item().create_tiles(0));\n`;
+          } else {
+            code += `${indent}// Set Actor Sprite: actor ${targetActorIdx} (sprite item not generated - try using a sprite sheet that exists in the project)\n`;
+          }
+        }
+      }
+    } else if (label === 'Set Actor Flip' || currentNode.data?.actionType === 'set_actor_flip') {
+      const targetActorId = currentNode.data?.targetActorId;
+      const flipX = currentNode.data?.flipX || false;
+      const flipY = currentNode.data?.flipY || false;
+      if (targetActorId !== null && targetActorId !== undefined) {
+        const targetActorIdx = sActors.findIndex(a => a && a.id === targetActorId);
+        if (targetActorIdx !== -1) {
+          code += `${indent}actor_${targetActorIdx}_sprite.set_horizontal_flip(${flipX ? 'true' : 'false'});\n`;
+          code += `${indent}actor_${targetActorIdx}_sprite.set_vertical_flip(${flipY ? 'true' : 'false'});\n`;
+        }
+      }
     } else if (label === 'Play Sound') {
       code += `${indent}bn::sound_items::${currentNode.data.computedSoundName || 'snd_square_440_100'}.play();\n`;
     } else if (label === 'Music Control') {
       const mAction = currentNode.data.musicAction || 'pause';
       code += `${indent}BN_LOG("Action: Music Control ${mAction}");\n`;
-      if (mAction === 'pause') code += `${indent}bn::music::pause();\n`;
-      else if (mAction === 'resume') code += `${indent}bn::music::resume();\n`;
+      if (mAction === 'pause') code += `${indent}if(bn::music::playing()){bn::music::pause();}\n`;
+      else if (mAction === 'resume') code += `${indent}if(bn::music::paused()){bn::music::resume();}\n`;
       else if (mAction === 'stop') code += `${indent}bn::music::stop();\n`;
+    } else if (label === 'Set Timer' || currentNode.data?.actionType === 'set_timer') {
+      const timerIdx = currentNode.data?.timerIndex || 1;
+      const durationFrames = Math.round((parseFloat(currentNode.data?.duration) || 0.5) * 60);
+      code += `${indent}timer_${timerIdx}_frames = ${durationFrames};\n`;
+    } else if (label === 'Timer Disable' || currentNode.data?.actionType === 'timer_disable') {
+      const timerIdx = currentNode.data?.timerIndex || 1;
+      code += `${indent}BN_LOG("Action: Timer Disable ${timerIdx}");\n`;
+      code += `${indent}timer_${timerIdx}_frames = 0;\n`;
+      code += `${indent}timer_${timerIdx}_active = false;\n`;
+    } else if (label === 'Timer Restart' || currentNode.data?.actionType === 'timer_restart') {
+      const timerIdx = currentNode.data?.timerIndex || 1;
+      code += `${indent}BN_LOG("Action: Timer Restart ${timerIdx}");\n`;
+      code += `${indent}timer_${timerIdx}_frames = timer_${timerIdx}_max_frames;\n`;
+      code += `${indent}timer_${timerIdx}_active = true;\n`;
     } else if (label === 'Run Script') {
       const targetScriptId = currentNode.data.scriptId;
       if (targetScriptId && !callStack.has(targetScriptId)) {
@@ -719,13 +951,16 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
       const sv = resolveVarName(currentNode.data.varName);
       if (sv) {
         const variable = variables.find(v => v &&  v && v.name === currentNode.data.varName);
-        let val = safeStr(currentNode.data.varValue);
+        let val = translateExpr(safeStr(currentNode.data.varValue));
         if (variable && variable.type === 'string') {
           val = `"${val.replace(/"/g, '\\"')}"`;
         } else if (variable && variable.type === 'float') {
           if (!val.endsWith('f') && !isNaN(parseFloat(val))) {
             val = `${val}f`;
           }
+        }
+        if (!val) {
+          val = (variable && variable.type === 'string') ? '""' : (variable && variable.type === 'float') ? '0.0f' : '0';
         }
         code += `${indent}${sv} = ${val};\n`;
       }
@@ -733,7 +968,7 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
       const sv = resolveVarName(currentNode.data.varName);
       if (sv) {
         const variable = variables.find(v => v &&  v && v.name === currentNode.data.varName);
-        let val = safeStr(currentNode.data.varValue);
+        let val = translateExpr(safeStr(currentNode.data.varValue));
         if (variable && variable.type === 'string') {
           val = `"${val.replace(/"/g, '\\"')}"`;
         } else if (variable && variable.type === 'float') {
@@ -741,7 +976,29 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
             val = `${val}f`;
           }
         }
+        if (!val) {
+          val = (variable && variable.type === 'string') ? '""' : (variable && variable.type === 'float') ? '0.0f' : '0';
+        }
         code += `${indent}if (${sv} == ${val}) {\n`; openBraces++;
+      }
+    } else if (label === 'Set Flag' || currentNode.data?.actionType === 'set_flag') {
+      const flagName = resolveVarName(currentNode.data.flag);
+      if (flagName) {
+        code += `${indent}BN_LOG("Action: Set Flag ${flagName}");\n`;
+        code += `${indent}${flagName} = 1;\n`;
+      }
+    } else if (label === 'Clear Flag' || currentNode.data?.actionType === 'clear_flag') {
+      const flagName = resolveVarName(currentNode.data.flag);
+      if (flagName) {
+        code += `${indent}BN_LOG("Action: Clear Flag ${flagName}");\n`;
+        code += `${indent}${flagName} = 0;\n`;
+      }
+    } else if (label === 'Check Flag' || currentNode.data?.actionType === 'check_flag') {
+      const flagName = resolveVarName(currentNode.data.flag);
+      const shouldMatch = currentNode.data.matches !== false;
+      if (flagName) {
+        code += `${indent}BN_LOG("Action: Check Flag ${flagName} == ${shouldMatch ? 1 : 0}");\n`;
+        code += `${indent}if (${flagName} ${shouldMatch ? '==' : '!='} 1) {\n`; openBraces++;
       }
     } else if (label === 'Math Operation') {
       const safeVarName = resolveVarName(currentNode.data.varName);
@@ -767,6 +1024,7 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
         const regex = new RegExp(`\\b${escapedName}\\b`, 'g');
         sanitizedEq = sanitizedEq.replace(regex, safeName);
       });
+      sanitizedEq = translateExpr(sanitizedEq);
       code += `${indent}BN_LOG("Action: Math Equation ${safeVarName} = ${safeStr(rawEq)}");\n`;
       if (safeVarName && sanitizedEq) {
         code += `${indent}${safeVarName} = ${sanitizedEq};\n`;
@@ -936,6 +1194,26 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
       const b = Math.floor(parseInt(hex.slice(5, 7), 16) / 8);
       code += `${indent}BN_LOG("Action: Set BG Color to ${hex}");\n`;
       code += `${indent}bn::bg_palettes::set_transparent_color(bn::color(${r}, ${g}, ${b}));\n`;
+    } else if (label === 'Set BG Palette' || currentNode.data?.actionType === 'set_bg_palette') {
+      const palIdx = parseInt(currentNode.data.paletteIndex) || 0;
+      const colorHex = currentNode.data.color || '#000000';
+      if (/^#[0-9A-Fa-f]{6}$/i.test(colorHex)) {
+        const r = Math.floor(parseInt(colorHex.slice(1, 3), 16) / 8);
+        const g = Math.floor(parseInt(colorHex.slice(3, 5), 16) / 8);
+        const b = Math.floor(parseInt(colorHex.slice(5, 7), 16) / 8);
+        code += `${indent}BN_LOG("Action: Set BG Palette ${palIdx} to ${colorHex}");\n`;
+        code += `${indent}bn::bg_palettes::set_palette_color(${palIdx}, bn::color(${r}, ${g}, ${b}));\n`;
+      }
+    } else if (label === 'Set Sprite Palette' || currentNode.data?.actionType === 'set_sprite_palette') {
+      const palIdx = parseInt(currentNode.data.paletteIndex) || 0;
+      const colorHex = currentNode.data.color || '#000000';
+      if (/^#[0-9A-Fa-f]{6}$/i.test(colorHex)) {
+        const r = Math.floor(parseInt(colorHex.slice(1, 3), 16) / 8);
+        const g = Math.floor(parseInt(colorHex.slice(3, 5), 16) / 8);
+        const b = Math.floor(parseInt(colorHex.slice(5, 7), 16) / 8);
+        code += `${indent}BN_LOG("Action: Set Sprite Palette ${palIdx} to ${colorHex}");\n`;
+        code += `${indent}bn::sprite_palettes::set_palette_color(${palIdx}, bn::color(${r}, ${g}, ${b}));\n`;
+      }
     } else if (label === 'Check Input') {
       const keyState = currentNode.data.keyState || 'held';
       const keyName = currentNode.data.keyName || 'a';

@@ -39,6 +39,7 @@ export async function generateButano(ctx) {
       const zip = new JSZip();
       zip.folder("audio");
       zip.folder("dmg_audio");
+      zip.folder("music");
       zip.folder("graphics");
       zip.folder("include");
       zip.folder("src");
@@ -125,7 +126,7 @@ export async function generateButano(ctx) {
       let globalBppMode = globalSpriteColors.length > 16 ? "bpp_8" : "bpp_4";
       let globalColorsCount = globalSpriteColors.length;
 
-      let mainCppIncludes = `#include "bn_core.h"\n#include "bn_log.h"\n#include "bn_random.h"\n#include "bn_camera_ptr.h"\n#include "bn_keypad.h"\n#include "bn_optional.h"\n#include "bn_sprite_ptr.h"\n#include "bn_sprite_tiles_ptr.h"\n#include "bn_sprite_palette_ptr.h"\n#include "bn_sprite_affine_mat_ptr.h"\n#include "bn_music.h"\n#include "bn_bg_palettes.h"\n#include "bn_string_view.h"\n#include "bn_sprite_item.h"\n#include "bn_vector.h"\n`;
+      let mainCppIncludes = `#include "bn_core.h"\n#include "bn_log.h"\n#include "bn_random.h"\n#include "bn_camera_ptr.h"\n#include "bn_keypad.h"\n#include "bn_optional.h"\n#include "bn_sprite_ptr.h"\n#include "bn_sprite_tiles_ptr.h"\n#include "bn_sprite_palette_ptr.h"\n#include "bn_sprite_affine_mat_ptr.h"\n#include "bn_music.h"\n#include "bn_bg_palettes.h"\n#include "bn_blending.h"\n#include "bn_string_view.h"\n#include "bn_sprite_item.h"\n#include "bn_vector.h"\n`;
       mainCppIncludes += `#include "bn_affine_mat_attributes.h"\n#include "bn_affine_bg_ptr.h"\n#include "bn_regular_bg_ptr.h"\n#include "bn_sram.h"\n`;
       let hasMusic = false;
       if (variables.some(v => v.type === 'string') || scenes.some(s => s.type === 'RACING')) {
@@ -135,7 +136,7 @@ export async function generateButano(ctx) {
         mainCppIncludes += `#include "bn_sstream.h"\n`;
       }
 
-      let mainCppDefinitions = `enum class SceneId { ${includeCreditsScene ? 'SCENE_CREDITS, ' : ''}${scenes.map((s, i) => `SCENE_${i}`).join(', ')} };\n\nSceneId paused_from_scene = SceneId::SCENE_${startingSceneIdx};\nconst int pause_scene_idx = ${scenes.findIndex(s => s.type === 'PAUSE')};\n\n`;
+      let mainCppDefinitions = `enum class SceneId { ${includeCreditsScene ? 'SCENE_CREDITS, ' : ''}${scenes.map((s, i) => `SCENE_${i}`).join(', ')} };\n\nSceneId paused_from_scene = SceneId::SCENE_${startingSceneIdx};\nconst int pause_scene_idx = ${scenes.findIndex(s => s.type === 'PAUSE')};\n\nint scene_stack[16];\nint scene_stack_depth = 0;\n\n`;
       if (variables.some(v => v.type === 'string')) {
         mainCppDefinitions += `struct SaveString {\n`;
         mainCppDefinitions += `    char data[33];\n`;
@@ -147,10 +148,13 @@ export async function generateButano(ctx) {
         mainCppDefinitions += `    operator const char*() const {\n        const_cast<SaveString*>(this)->data[32] = 0;\n        return data;\n    }\n`;
         mainCppDefinitions += `};\n\n`;
       }
+      const seenSaveFields = new Set();
       mainCppDefinitions += `struct SaveData {\n`;
       variables.forEach(v => {
         if (v.type === 'group') return;
         const safeVarName = v.name.replace(/[^a-zA-Z0-9_]/g, '_');
+        if (seenSaveFields.has(safeVarName)) return;
+        seenSaveFields.add(safeVarName);
         if (v.type === 'boolean') {
           mainCppDefinitions += `    bool ${safeVarName};\n`;
         } else if (v.type === 'string') {
@@ -163,9 +167,12 @@ export async function generateButano(ctx) {
       });
       mainCppDefinitions += `    int player_scene;\n    int player_x;\n    int player_y;\n};\n\n`;
       mainCppDefinitions += `int global_spawn_x = -1;\nint global_spawn_y = -1;\n\n`;
+      const seenGlobalVars = new Set();
       variables.forEach(v => {
         if (v.type === 'group') return;
         const safeVarName = v.name.replace(/[^a-zA-Z0-9_]/g, '_');
+        if (seenGlobalVars.has(safeVarName)) return;
+        seenGlobalVars.add(safeVarName);
         if (v.type === 'boolean') {
           mainCppDefinitions += `bool ${safeVarName} = ${v.initialValue ? 'true' : 'false'};\n`;
         } else if (v.type === 'string') {
@@ -297,32 +304,60 @@ bn::optional<bn::sprite_item> get_dialog_char_sprite_item(char c) {
     }
 }
 
-void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 128>& text_sprites, const bn::sprite_palette_ptr& palette) {
+void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 128>& text_sprites, const bn::sprite_palette_ptr& palette, int speed = 0) {
     int start_x = -110;
     int start_y = 26;
     int cur_x = start_x;
     int cur_y = start_y;
     
-    for (char c : text) {
-        if (c == '\\n') {
-            cur_x = start_x;
-            cur_y += 14;
-            continue;
-        }
-        if (c == ' ') {
-            cur_x += 8;
-            continue;
-        }
-        auto item_opt = get_dialog_char_sprite_item(c);
-        if (item_opt) {
-            if (text_sprites.size() < text_sprites.max_size()) {
-                bn::sprite_ptr sprite = item_opt->create_sprite(cur_x, cur_y);
-                sprite.set_palette(palette);
-                sprite.set_bg_priority(0);
-                sprite.set_z_order(-32767);
-                text_sprites.push_back(sprite);
+    if (speed <= 0) {
+        for (char c : text) {
+            if (c == '\\n') {
+                cur_x = start_x;
+                cur_y += 14;
+                continue;
             }
-            cur_x += 8;
+            if (c == ' ') {
+                cur_x += 8;
+                continue;
+            }
+            auto item_opt = get_dialog_char_sprite_item(c);
+            if (item_opt) {
+                if (text_sprites.size() < text_sprites.max_size()) {
+                    bn::sprite_ptr sprite = item_opt->create_sprite(cur_x, cur_y);
+                    sprite.set_palette(palette);
+                    sprite.set_bg_priority(0);
+                    sprite.set_z_order(-32767);
+                    text_sprites.push_back(sprite);
+                }
+                cur_x += 8;
+            }
+        }
+    } else {
+        for (char c : text) {
+            if (c == '\\n') {
+                cur_x = start_x;
+                cur_y += 14;
+                continue;
+            }
+            if (c == ' ') {
+                cur_x += 8;
+                continue;
+            }
+            auto item_opt = get_dialog_char_sprite_item(c);
+            if (item_opt) {
+                if (text_sprites.size() < text_sprites.max_size()) {
+                    bn::sprite_ptr sprite = item_opt->create_sprite(cur_x, cur_y);
+                    sprite.set_palette(palette);
+                    sprite.set_bg_priority(0);
+                    sprite.set_z_order(-32767);
+                    text_sprites.push_back(sprite);
+                }
+                cur_x += 8;
+            }
+            for (int w = 0; w < speed; w++) {
+                bn::core::update();
+            }
         }
     }
 }
@@ -1126,9 +1161,10 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 }
               } else {
                 const waveType = n.data.waveType || 'square';
+                const safeWaveType = String(waveType).replace(/[^a-z0-9_]/gi, '_');
                 const freq = n.data.freq || 440;
                 const durationMs = n.data.durationMs || 100;
-                const soundName = `snd_${waveType}_${freq}_${durationMs}`;
+                const soundName = `snd_${safeWaveType}_${freq}_${durationMs}`;
                 if (!generatedSounds.has(soundName)) {
                   generatedSounds.add(soundName);
                   zip.file(`audio/${soundName}.wav`, generateWav(waveType, freq, durationMs));
@@ -1199,7 +1235,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
 
         const scCtx = {
           dialogs, safeSceneName, scenes, sActors, sDims, customScripts, variables,
-          currentSceneIdx, startingSceneIdx, scene
+          currentSceneIdx, startingSceneIdx, scene, animations
         };
 
         const spawnerTargetIds = new Set();
@@ -1512,6 +1548,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             actorDeclarations += `    actor_${i}_sprite.set_visible(false);\n`;
           }
           actorDeclarations += `    int actor_${i}_timer = 0;\n    bn::fixed actor_${i}_dx = 0;\n    bn::fixed actor_${i}_dy = 0;\n    int actor_${i}_last_dx_dir = 1;\n    int actor_${i}_last_dy_dir = 0;\n    bool actor_${i}_active = ${isHidden ? 'false' : 'true'};\n`;
+          actorDeclarations += `    bn::fixed actor_${i}_anim_speed = 1;\n    bn::fixed actor_${i}_movement_speed = 1;\n    bool actor_${i}_update_enabled = true;\n`;
           if (a.type === 'player' && scene.type === 'RACING') {
             actorDeclarations += `    bn::fixed actor_${i}_speed = 0;\n`;
             let racingStartAngle = 270;
@@ -5042,6 +5079,158 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
 
         actorDeclarations += deferredFireProjLambdas;
 
+        // Generate extra sprite items for set_actor_sprite referenced sprite sheets
+        const extraSpriteNames = new Set();
+        const gatherSetActorSpriteRefs = (nodes) => {
+          if (!nodes) return;
+          nodes.forEach(n => {
+            if (n.data?.actionType === 'set_actor_sprite' && n.data?.resolvedSpriteName) {
+              extraSpriteNames.add(n.data.resolvedSpriteName);
+            }
+          });
+        };
+        sActors.forEach(a => {
+          gatherSetActorSpriteRefs(a.script?.nodes);
+        });
+        sTriggers.forEach(t => {
+          if (t.isGroup) return;
+          const tScript = getTriggerScript(t, sTriggers, customScripts);
+          gatherSetActorSpriteRefs(tScript?.nodes);
+        });
+        customScripts.forEach(cs => gatherSetActorSpriteRefs(cs.script?.nodes));
+        gatherSetActorSpriteRefs(globalScript?.nodes);
+        gatherSetActorSpriteRefs(scene.script?.nodes);
+
+        const generatedExtraSpriteItems = new Set();
+        extraSpriteNames.forEach(spriteName => {
+          const safeSpriteName = spriteName.replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase();
+          if (!safeSpriteName || generatedExtraSpriteItems.has(safeSpriteName)) return;
+          generatedExtraSpriteItems.add(safeSpriteName);
+
+          // Find animations for this sprite
+          const spriteAnims = animations.filter(a => a.name && a.name.startsWith(spriteName));
+          if (spriteAnims.length === 0) return;
+
+          // Collect all tile IDs from all frames
+          const extraFrameTiles = [];
+          const addExtraTile = (tileId) => {
+            const key = String(tileId);
+            let idx = extraFrameTiles.findIndex(t => String(t) === key);
+            if (idx === -1) { extraFrameTiles.push(tileId); idx = extraFrameTiles.length - 1; }
+            return idx;
+          };
+          let extraDefaultIdx = 0;
+          spriteAnims.forEach(anim => {
+            if (anim.frames) {
+              anim.frames.forEach(frame => {
+                if (Array.isArray(frame)) {
+                  frame.forEach(tileId => {
+                    if (tileId != null) {
+                      const idx = addExtraTile(tileId);
+                      if (extraDefaultIdx === 0) extraDefaultIdx = idx;
+                    }
+                  });
+                }
+              });
+            }
+          });
+
+          if (extraFrameTiles.length === 0) return;
+
+          // Determine sprite dimensions from first frame of first animation
+          const firstAnim = spriteAnims.find(a => a.frames && a.frames.length > 0);
+          const firstFrame = firstAnim?.frames?.[0];
+          const frameTileCount = firstFrame ? firstFrame.filter(t => t != null).length : 1;
+          let spriteW = 16, spriteH = 16;
+          if (frameTileCount === 1) { spriteW = 8; spriteH = 8; }
+          else if (frameTileCount === 4) { spriteW = 16; spriteH = 16; }
+          else if (frameTileCount === 8) { spriteW = 16; spriteH = 32; }
+          else if (frameTileCount === 12) { spriteW = 24; spriteH = 24; }
+          else { spriteW = 32; spriteH = 32; }
+
+          const extraActName = `${safeSceneName}_extra_sprite_${safeSpriteName}`;
+          const extraValidSizes = [8, 16, 24, 32, 64];
+          const extraValidW = extraValidSizes.includes(spriteW) ? spriteW : 16;
+          const extraValidH = extraValidSizes.includes(spriteH) ? spriteH : 16;
+          const tilesPerFrame = (extraValidW / 8) * (extraValidH / 8);
+          const extraFrameCount = Math.max(1, Math.ceil(extraFrameTiles.length / tilesPerFrame));
+
+          // Render sprite item BMP
+          const extraSCanvas = document.createElement('canvas');
+          extraSCanvas.width = extraValidW;
+          extraSCanvas.height = extraValidH * extraFrameCount;
+          const extraSctx = extraSCanvas.getContext('2d');
+          extraSctx.imageSmoothingEnabled = false;
+
+          for (let f = 0; f < extraFrameCount; f++) {
+            for (let ty = 0; ty < extraValidH / 8; ty++) {
+              for (let tx = 0; tx < extraValidW / 8; tx++) {
+                const tileIdx = f * tilesPerFrame + ty * (extraValidW / 8) + tx;
+                const tilePayload = tileIdx < extraFrameTiles.length ? extraFrameTiles[tileIdx] : null;
+                if (tilePayload != null) {
+                  const tile = savedTiles.find(t => t && String(t.id) === String(tilePayload));
+                  if (tile && tile.data) {
+                    for (let py = 0; py < 8; py++) {
+                      for (let px = 0; px < 8; px++) {
+                        const color = tile.data[py]?.[px];
+                        if (color) {
+                          const rgb = hexToRgb(color);
+                          extraSctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+                        } else {
+                          extraSctx.fillStyle = 'transparent';
+                        }
+                        extraSctx.fillRect(tx * 8 + px, f * extraValidH + ty * 8 + py, 1, 1);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          const extraForceBpp = globalBppMode === 'bpp_8' ? 8 : 4;
+          const extraBmpBlob = canvasToIndexedBmpBlob(extraSCanvas, globalSpriteColors, extraForceBpp);
+          zip.file(`graphics/${extraActName}.bmp`, extraBmpBlob);
+          zip.file(`graphics/${extraActName}.json`, JSON.stringify({
+            type: "sprite",
+            width: extraValidW,
+            height: extraValidH,
+            bpp_mode: globalBppMode,
+            colors_count: globalColorsCount
+          }, null, 2));
+          zip.file(`graphics/${extraActName}.grit`, `-m!`);
+          mainCppIncludes += `#include "bn_sprite_items_${extraActName}.h"\n`;
+
+          // Store mapping on scene script nodes for use in script codegen
+          const setActorSpriteNodes = [];
+          const collectNodes = (nodes) => {
+            if (!nodes) return;
+            nodes.forEach(n => {
+              if (n.data?.actionType === 'set_actor_sprite' && n.data?.resolvedSpriteName === spriteName) {
+                setActorSpriteNodes.push(n);
+              }
+            });
+          };
+          sActors.forEach(a => collectNodes(a.script?.nodes));
+          sTriggers.forEach(t => {
+            if (t.isGroup) return;
+            const tScript = getTriggerScript(t, sTriggers, customScripts);
+            collectNodes(tScript?.nodes);
+          });
+          customScripts.forEach(cs => collectNodes(cs.script?.nodes));
+          collectNodes(globalScript?.nodes);
+          collectNodes(scene.script?.nodes);
+
+          setActorSpriteNodes.forEach(n => {
+            if (n.data) {
+              n.data.computedSpriteItemName = extraActName;
+              n.data.computedSpriteFrameCount = extraFrameCount;
+              n.data.computedSpriteWidth = extraValidW;
+              n.data.computedSpriteHeight = extraValidH;
+            }
+          });
+        });
+
         let triggerDeclarations = '';
         let triggerLogicCode = '';
 
@@ -5167,7 +5356,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 triggerLogicCode += `                            stream.append(".");\n`;
                 triggerLogicCode += `                            if (b_centiseconds < 10) stream.append("0");\n`;
                 triggerLogicCode += `                            stream.append(b_centiseconds);\n`;
-                triggerLogicCode += `                            show_dialog_text(msg, text_sprites, dialog_text_palette);\n`;
+                triggerLogicCode += `                            show_dialog_text(msg, text_sprites, dialog_text_palette, text_anim_speed);\n`;
                 triggerLogicCode += `                            while(bn::keypad::a_held()) { bn::core::update(); }\n`;
                 triggerLogicCode += `                            while(!bn::keypad::a_pressed()) { bn::core::update(); }\n`;
                 triggerLogicCode += `                            while(bn::keypad::a_held()) { bn::core::update(); }\n`;
@@ -5199,6 +5388,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
           return nb === 'wander' || nb === 'random' || (nb === 'follow' && (parseInt(a.followProximity) || 0) > 0);
         });
         let sceneCode = `SceneId play_${safeSceneName}(bn::random& rng) {\n`;
+        sceneCode += `    SceneId current_scene_id = SceneId::SCENE_${sIdx};\n`;
         if (!_needsRng) sceneCode += `    (void)rng;\n`;
         sceneCode += `    bn::camera_ptr camera = bn::camera_ptr::create(0, 0);\n`;
         sceneCode += `    int cam_x = 0;\n`;
@@ -5208,6 +5398,18 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
         sceneCode += `    bn::fixed camera_target_y = 0;\n`;
         sceneCode += `    bn::fixed camera_speed = 2;\n`;
         sceneCode += `    bool camera_instant = false;\n`;
+        sceneCode += `    int timer_1_frames = 0;\n`;
+        sceneCode += `    int timer_2_frames = 0;\n`;
+        sceneCode += `    int timer_3_frames = 0;\n`;
+        sceneCode += `    int timer_4_frames = 0;\n`;
+        sceneCode += `    int timer_1_max_frames = 0;\n`;
+        sceneCode += `    int timer_2_max_frames = 0;\n`;
+        sceneCode += `    int timer_3_max_frames = 0;\n`;
+        sceneCode += `    int timer_4_max_frames = 0;\n`;
+        sceneCode += `    bool timer_1_active = false;\n`;
+        sceneCode += `    bool timer_2_active = false;\n`;
+        sceneCode += `    bool timer_3_active = false;\n`;
+        sceneCode += `    bool timer_4_active = false;\n`;
         sceneCode += `    global_spawn_x = -1;\n    global_spawn_y = -1;\n`;
         sceneCode += `    int key_held_up = 0; int cur_held_up = 0;\n`;
         sceneCode += `    int key_held_down = 0; int cur_held_down = 0;\n`;
@@ -5632,6 +5834,8 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
         sceneCode += `    shared_sprite_palette.set_color(${safeFontColorIdx}, bn::color(${fontR}, ${fontG}, ${fontB}));\n`;
         sceneCode += `    bn::sprite_palette_ptr dialog_text_palette = shared_sprite_palette;\n`;
         sceneCode += `    bn::optional<bn::regular_bg_ptr> scene_dialog_bg;\n`;
+        sceneCode += `    bn::optional<bn::regular_bg_ptr> scene_overlay_bg;\n`;
+        sceneCode += `    int text_anim_speed = 2;\n`;
         if (hudSettings && hudSettings.enabled && scene.type !== 'INTRO' && scene.type !== 'PAUSE') {
           bgDeclarations += `    bn::regular_bg_ptr hud_bg = bn::regular_bg_items::hud_bg.create_bg(0, 0);\n`;
           bgDeclarations += `    hud_bg.set_priority(1);\n`;
@@ -5931,6 +6135,10 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
         sceneCode += `        cur_held_r = key_held_r; if (bn::keypad::r_held()) key_held_r++; else key_held_r = 0;\n`;
         sceneCode += `        cur_held_start = key_held_start; if (bn::keypad::start_held()) key_held_start++; else key_held_start = 0;\n`;
         sceneCode += `        cur_held_select = key_held_select; if (bn::keypad::select_held()) key_held_select++; else key_held_select = 0;\n`;
+        sceneCode += `        if (timer_1_frames > 0) timer_1_frames--;\n`;
+        sceneCode += `        if (timer_2_frames > 0) timer_2_frames--;\n`;
+        sceneCode += `        if (timer_3_frames > 0) timer_3_frames--;\n`;
+        sceneCode += `        if (timer_4_frames > 0) timer_4_frames--;\n`;
         if (scene.type === 'RACING' && scene.showCountdown) {
           sceneCode += `        if (!_countdown_done) {\n`;
           sceneCode += `            _countdown_done = true;\n`;
@@ -6895,6 +7103,21 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
             bpp_mode: "bpp_4"
           }, null, 2));
           mainCppIncludes += '#include "bn_regular_bg_items_dialog_bg.h"\n';
+        }
+
+        // Export fade overlay background (full black for screen transitions)
+        {
+          const fadeCanvas = document.createElement('canvas');
+          fadeCanvas.width = 256; fadeCanvas.height = 256;
+          const fadeCtx = fadeCanvas.getContext('2d', { willReadFrequently: true });
+          fadeCtx.fillStyle = '#000000'; fadeCtx.fillRect(0, 0, 256, 256);
+          const fadeBmpBlob = canvasToIndexedBmpBlob(fadeCanvas, null);
+          zip.file('graphics/fade_overlay_bg.bmp', fadeBmpBlob);
+          zip.file('graphics/fade_overlay_bg.json', JSON.stringify({
+            type: "regular_bg",
+            bpp_mode: "bpp_4"
+          }, null, 2));
+          mainCppIncludes += '#include "bn_regular_bg_items_fade_overlay_bg.h"\n';
         }
 
       if (generatedProjectiles.size === 0) generatedProjectiles.add('bullet_sprite');

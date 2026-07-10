@@ -315,7 +315,11 @@ const TriggersPanel = ({ isCollapsed, onToggle }) => {
                                 </div>
                                 <div style={{ fontSize: '10px', color: '#888' }}>
                                   Script: <span style={{ color: '#ff9800', fontWeight: 'bold' }}>
-                                    {group.scriptId ? `Inherited Custom Script (${customScripts.find(cs => String(cs.id) === String(group.scriptId))?.name || 'Unknown'})` : 'Inherited Group Node Graph'}
+                                    {group.scriptId ? `Inherited Custom Script (${customScripts.find(cs => String(cs.id) === String(group.scriptId))?.name || 'Unknown'})`
+                                      : group.script?.nodes?.length ? 'Inherited Group Node Graph'
+                                      : child.scriptId
+                                        ? `${customScripts.find(cs => String(cs.id) === String(child.scriptId))?.name || 'Custom Script'}`
+                                        : child.script?.nodes?.length ? 'Has Node Graph' : 'None'}
                                   </span>
                                 </div>
 
