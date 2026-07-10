@@ -60,6 +60,7 @@ const Canvas = () => {
     currentColor, drawWidth, brushType, colorJitter, symmetryMode,
     getSymmetricPixels, brushOpacity, getShapePixels, getGradientPixels,
     savedTiles, activeSavedTileId, textSettings, lassoPath, transformData,
+    getTileById,
     selection, isShiftPressed, getBrushPixels, editingTextLayerId,
     actors, globalActors, activeActorId,
     triggers, activeTriggerId,
@@ -124,7 +125,7 @@ const Canvas = () => {
         let effectiveSpriteIds = actor.spriteIds;
         if (actor.type === 'player' && activeScene?.type === 'POINTNCLICK') {
           const ptrSpriteId = activeScene?.pointerSpriteId ?? 22;
-          const ptrTile = savedTiles?.find(t => t.id === ptrSpriteId || t.id === String(ptrSpriteId) || t.id === Number(ptrSpriteId) || t.name === 'Pointer');
+          const ptrTile = getTileById(ptrSpriteId) || savedTiles?.find(t => t.name === 'Pointer');
           if (ptrTile) {
             effectiveSpriteId = ptrTile.id;
             effectiveSpriteIds = null;
@@ -132,7 +133,7 @@ const Canvas = () => {
         } else if (actor.type === 'player' && activeScene?.type === 'SHMUP') {
           const hasCustomSprite = actor.spriteId || (actor.spriteIds && actor.spriteIds.some(id => id));
           if (!hasCustomSprite) {
-            const shmupTile = savedTiles?.find(t => t.id === 24 || t.id === '24' || t.name === 'SHMUP Player Ship');
+            const shmupTile = getTileById(24) || savedTiles?.find(t => t.name === 'SHMUP Player Ship');
             if (shmupTile) {
               effectiveSpriteId = shmupTile.id;
               effectiveSpriteIds = null;
@@ -141,7 +142,7 @@ const Canvas = () => {
         } else if (actor.type === 'player' && activeScene?.type === 'RACING') {
           const hasCustomSprite = actor.spriteId || (actor.spriteIds && actor.spriteIds.some(id => id));
           if (!hasCustomSprite) {
-            const racingTile = savedTiles?.find(t => t.id === 27 || t.id === '27' || t.name === 'Racing Car');
+            const racingTile = getTileById(27) || savedTiles?.find(t => t.name === 'Racing Car');
             if (racingTile) {
               effectiveSpriteId = racingTile.id;
               effectiveSpriteIds = null;
@@ -159,7 +160,7 @@ const Canvas = () => {
                 const actualId = typeof tId === 'object' ? tId.id : tId;
                 const flipH = typeof tId === 'object' ? tId.flipH : false;
                 const flipV = typeof tId === 'object' ? tId.flipV : false;
-                const tile = savedTiles?.find(t => String(t.id) === String(actualId) || t.id === Number(actualId));
+                const tile = getTileById(actualId);
                 if (tile) {
                   for (let py = 0; py < 8; py++) {
                     for (let px = 0; px < 8; px++) {
@@ -177,7 +178,7 @@ const Canvas = () => {
             }
           }
         } else if (effectiveSpriteId) {
-          const tile = savedTiles?.find(t => t.id === String(effectiveSpriteId) || t.id === Number(effectiveSpriteId) || t.id === effectiveSpriteId);
+          const tile = getTileById(effectiveSpriteId);
           if (tile) {
             const scaleX = actor.width / 8;
             const scaleY = actor.height / 8;
@@ -478,7 +479,7 @@ const Canvas = () => {
         ctx.strokeRect(rectX * zoom, rectY * zoom, rectW * zoom, rectH * zoom);
 
         const drawTileIcon = (tileId, x, y) => {
-          const tile = savedTiles?.find(t => String(t.id) === String(tileId));
+          const tile = getTileById(tileId);
           if (tile) {
             for (let py = 0; py < 8; py++) {
               for (let px = 0; px < 8; px++) {
@@ -745,7 +746,7 @@ const Canvas = () => {
         // Fallback: Render HUD if player has displayHealthInHud enabled
         if (player && player.displayHealthInHud) {
           const hudTileId = player.hudHealthTileId ?? 21;
-          const tile = savedTiles?.find(t => String(t.id) === String(hudTileId));
+          const tile = getTileById(hudTileId);
           const maxHp = player.playerHp ?? 10;
           const hudPosition = player.hudPosition || 'top';
           
@@ -780,7 +781,7 @@ const Canvas = () => {
         // Render HUD if player has displayBonusInHud enabled
         if (player && player.displayBonusInHud) {
           const hudTileId = player.hudBonusTileId ?? 5;
-          const tile = savedTiles?.find(t => String(t.id) === String(hudTileId));
+          const tile = getTileById(hudTileId);
           const maxBonus = player.playerMaxBonus ?? 10;
           const hudPosition = player.hudPosition || 'top';
           
@@ -824,7 +825,7 @@ const Canvas = () => {
     } catch (e) {
       console.error("[Canvas Render] Error during rendering:", e);
     }
-  }, [renderLayersToCtx, dimensions, zoom, viewActiveOnly, activeLayerId, layers, tool, isDrawing, panOffset, selection, canvasRef, actors, activeActorId, triggers, activeTriggerId, collisions, activeCollisionId, tempPaintedCollisions, tempPaintedTriggers, savedTiles, onionSkinEnabled, frames, activeFrameId, scenes, activeSceneId, hudSettings, variables, showGbaMask]);
+  }, [renderLayersToCtx, dimensions, zoom, viewActiveOnly, activeLayerId, layers, tool, isDrawing, panOffset, selection, canvasRef, actors, activeActorId, triggers, activeTriggerId, collisions, activeCollisionId, tempPaintedCollisions, tempPaintedTriggers, savedTiles, getTileById, onionSkinEnabled, frames, activeFrameId, scenes, activeSceneId, hudSettings, variables, showGbaMask]);
 
   // Set initial zoom based on available canvas area
   useEffect(() => {

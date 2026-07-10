@@ -1,4 +1,4 @@
-import { PxShopProvider } from './context/PxShopContext';
+import { PxShopProvider, usePxShop } from './context/PxShopContext';
 import Dialogs from './components/Dialogs';
 import Toolbar from './components/Toolbar';
 import Header from './components/Header';
@@ -10,6 +10,12 @@ import MusicEditor from './components/MusicEditor';
 import StatusBar from './components/StatusBar';
 import { Toaster } from 'react-hot-toast';
 import WelcomeTour from './components/WelcomeTour';
+import TileEditor from './components/TileEditor';
+
+const TileEditorContainer = () => {
+  const { tileEditor } = usePxShop();
+  return <TileEditor key={tileEditor?.tileId ?? 'closed'} />;
+};
 
 const PxShop = () => {
   return (
@@ -31,6 +37,7 @@ const PxShop = () => {
         </div>
         <StatusBar />
       </div>
+      <TileEditorContainer />
     </PxShopProvider>
   );
 };

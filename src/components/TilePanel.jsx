@@ -15,6 +15,7 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
     handleTileSheetUpload,
     saveSelectionAsTile,
     savedTiles, setSavedTiles,
+    tileEditor, setTileEditor,
     tileGroupNames, setTileGroupNames,
     activeSavedTileId, setActiveSavedTileId,
     tool, setTool,
@@ -617,7 +618,7 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
         onClick={onToggle}
         style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
       >
-        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: 'px' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <BsBorder /> Tiles
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onClick={e => { if (isCollapsed) { onToggle(); } e.stopPropagation(); }}>
@@ -1076,6 +1077,14 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
                   onChange={(e) => updateActiveTileProp('name', e.target.value)}
                   style={{ maxWidth: '100%', width: '100%', background: '#111', color: '#fff', border: '1px solid #444', padding: '6px', outline: 'none', borderRadius: '3px', fontSize: '12px' }}
                 />
+                <button
+                  onClick={() => setTileEditor({ tileId: activeTile.id })}
+                  disabled={!!tileEditor}
+                  title="Edit this tile"
+                  style={{ flexShrink: 0, background: tileEditor ? '#3a3a3a' : '#4CAF50', border: 'none', color: '#fff', padding: '6px 10px', borderRadius: '3px', cursor: tileEditor ? 'default' : 'pointer', opacity: tileEditor ? 0.6 : 1, fontSize: '12px', fontWeight: 'bold' }}
+                >
+                  Edit Tile
+                </button>
               </div>
             </div>
           )}
