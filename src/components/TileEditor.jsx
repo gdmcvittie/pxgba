@@ -437,8 +437,8 @@ const TileEditor = () => {
       </div>
 
       {/* Palette swatches (below canvas) */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', padding: '0 10px 10px 10px', justifyContent: 'flex-start' }}>
-        {(recentColors || []).slice(0, 32).map((c, i) => (
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', padding: '0 10px 10px 10px', justifyContent: 'flex-start', maxHeight: '160px', overflowY: 'auto', marginBottom: '10px' }}>
+        {(recentColors || []).map((c, i) => (
           <div
             key={i}
             onClick={() => setCurrentColor(c)}
