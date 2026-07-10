@@ -476,12 +476,12 @@ export const PxShopProvider = ({ children }) => {
       layers: [createEmptyLayer('Background', null, 240, 160)]
     }],
     actors: [
-      { id: 1001, type: 'group', name: 'Pickups', isOpen: true },
-      { id: 1002, type: 'group', name: 'Enemies', isOpen: true },
-      { id: 1003, type: 'group', name: 'Hazards', isOpen: true },
-      { id: 1004, type: 'group', name: 'Platforms', isOpen: true },
-      { id: 1005, type: 'group', name: 'NPCs', isOpen: true },
-      { id: 1006, type: 'group', name: 'Misc', isOpen: true }
+      { id: 1001, type: 'group', name: 'Pickups', isOpen: false },
+      { id: 1002, type: 'group', name: 'Enemies', isOpen: false },
+      { id: 1003, type: 'group', name: 'Hazards', isOpen: false },
+      { id: 1004, type: 'group', name: 'Platforms', isOpen: false },
+      { id: 1005, type: 'group', name: 'NPCs', isOpen: false },
+      { id: 1006, type: 'group', name: 'Misc', isOpen: false }
     ],
     triggers: [],
     musicId: null,
@@ -508,7 +508,7 @@ export const PxShopProvider = ({ children }) => {
 
   // Variables state (Project-wide)
   const [variables, setVariables] = useState([
-    { id: 9, type: 'group', name: 'PLAYER', isOpen: true },
+    { id: 9, type: 'group', name: 'PLAYER', isOpen: false },
     { id: 1, name: 'PLAYER_HP', type: 'number', initialValue: 10, groupId: 9 },
     { id: 2, name: 'PLAYER_BONUS', type: 'number', initialValue: 0, groupId: 9 },
     { id: 3, name: 'PLAYER_KEYS', type: 'number', initialValue: 0, groupId: 9 },
@@ -1508,12 +1508,12 @@ export const PxShopProvider = ({ children }) => {
           jumpAnimId: null,
           script: { nodes: [{ id: 'start', position: { x: 250, y: 100 }, data: { label: 'On Update' }, type: 'input' }], edges: [] }
         },
-        { id: baseId + 1 + Math.random(), type: 'group', name: 'Pickups', isOpen: true },
-        { id: baseId + 2 + Math.random(), type: 'group', name: 'Enemies', isOpen: true },
-        { id: baseId + 3 + Math.random(), type: 'group', name: 'Hazards', isOpen: true },
-        { id: baseId + 4 + Math.random(), type: 'group', name: 'Platforms', isOpen: true },
-        { id: baseId + 5 + Math.random(), type: 'group', name: 'NPCs', isOpen: true },
-        { id: baseId + 6 + Math.random(), type: 'group', name: 'Misc', isOpen: true }
+        { id: baseId + 1 + Math.random(), type: 'group', name: 'Pickups', isOpen: false },
+        { id: baseId + 2 + Math.random(), type: 'group', name: 'Enemies', isOpen: false },
+        { id: baseId + 3 + Math.random(), type: 'group', name: 'Hazards', isOpen: false },
+        { id: baseId + 4 + Math.random(), type: 'group', name: 'Platforms', isOpen: false },
+        { id: baseId + 5 + Math.random(), type: 'group', name: 'NPCs', isOpen: false },
+        { id: baseId + 6 + Math.random(), type: 'group', name: 'Misc', isOpen: false }
       ],
       triggers: [],
       collisions: [],
@@ -1521,6 +1521,24 @@ export const PxShopProvider = ({ children }) => {
       dimensions: newDims,
       worldX: 0,
       worldY: 0,
+      useVarGravity: true,
+      gravityVar: 'GRAVITY',
+      useVarJumpVelocity: true,
+      jumpVelocityVar: 'JUMP_VELOCITY',
+      useVarHorizontalSpeed: true,
+      horizontalSpeedVar: 'HORIZONTAL_SPEED',
+      useVarVerticalSpeed: true,
+      verticalSpeedVar: 'VERTICAL_SPEED',
+      useVarMaxFallVelocity: true,
+      maxFallVelocityVar: 'MAX_FALL_VELOCITY',
+      useVarFriction: true,
+      frictionVar: 'FRICTION',
+      useVarMaxSpeed: true,
+      maxSpeedVar: 'MAX_SPEED',
+      useVarAcceleration: true,
+      accelerationVar: 'ACCELERATION',
+      useVarSteeringSpeed: true,
+      steeringSpeedVar: 'STEERING_SPEED',
       script: { nodes: [{ id: 'start', position: { x: 250, y: 100 }, data: { label: 'On Start' }, type: 'input' }], edges: [] }
     };
     const nextScenes = [...scenes, newScene];
@@ -1687,7 +1705,7 @@ export const PxShopProvider = ({ children }) => {
       id: Date.now() + Math.random(),
       type: 'group',
       name: `Group ${scenes.filter(s => s.type === 'group').length + 1}`,
-      isOpen: true
+      isOpen: false
     };
     const nextScenes = [...scenes, newGroup];
     setScenes(nextScenes);
@@ -7066,7 +7084,7 @@ export const PxShopProvider = ({ children }) => {
       type: 'group',
       name: `Group ${layers.filter(l => l.type === 'group').length + 1}`,
       visible: true,
-      isOpen: true
+      isOpen: false
     };
     const activeIndex = layers.findIndex(l => l.id === activeLayerId);
     const nextLayers = [...layers];
@@ -7574,7 +7592,7 @@ export const PxShopProvider = ({ children }) => {
     let playerGroup = loadedVars.find(v => v.type === 'group' && v.name === 'PLAYER');
     if (!playerGroup) {
       const hasId9 = loadedVars.some(v => v.id === 9);
-      playerGroup = { id: hasId9 ? (Date.now() + Math.random()) : 9, type: 'group', name: 'PLAYER', isOpen: true };
+      playerGroup = { id: hasId9 ? (Date.now() + Math.random()) : 9, type: 'group', name: 'PLAYER', isOpen: false };
       loadedVars.unshift(playerGroup);
     }
 
@@ -7609,6 +7627,45 @@ export const PxShopProvider = ({ children }) => {
       } else {
         if (!existing.id) existing.id = defaultVar.id;
         existing.groupId = playerGroup.id;
+      }
+    });
+
+    // Ensure SCENE SETTINGS group exists
+    let sceneSettingsGroup = loadedVars.find(v => v.type === 'group' && v.name === 'SCENE SETTINGS');
+    if (!sceneSettingsGroup) {
+      const hasId20 = loadedVars.some(v => v.id === 20);
+      sceneSettingsGroup = { id: hasId20 ? (Date.now() + Math.random() + 20) : 20, type: 'group', name: 'SCENE SETTINGS', isOpen: false };
+      loadedVars.push(sceneSettingsGroup);
+    }
+
+    const defaultSceneVars = [
+      { id: 30, name: 'HORIZONTAL_SPEED', type: 'float', initialValue: 1.0 },
+      { id: 31, name: 'VERTICAL_SPEED', type: 'float', initialValue: 1.0 },
+      { id: 32, name: 'FRICTION', type: 'float', initialValue: 0.5 },
+      { id: 33, name: 'GRAVITY', type: 'float', initialValue: 0.5 },
+      { id: 34, name: 'JUMP_VELOCITY', type: 'float', initialValue: -5.0 },
+      { id: 35, name: 'MAX_FALL_VELOCITY', type: 'float', initialValue: 8.0 },
+      { id: 36, name: 'MAX_SPEED', type: 'float', initialValue: 1.0 },
+      { id: 37, name: 'ACCELERATION', type: 'float', initialValue: 0.01 },
+      { id: 38, name: 'STEERING_SPEED', type: 'float', initialValue: 0.5 }
+    ];
+
+    defaultSceneVars.forEach(defaultVar => {
+      const existing = loadedVars.find(v => v.name === defaultVar.name);
+      if (!existing) {
+        // Insert right after the sceneSettingsGroup
+        const groupIndex = loadedVars.indexOf(sceneSettingsGroup);
+        let insertIndex = groupIndex + 1;
+        while (insertIndex < loadedVars.length && loadedVars[insertIndex].groupId === sceneSettingsGroup.id) {
+          insertIndex++;
+        }
+        loadedVars.splice(insertIndex, 0, {
+          ...defaultVar,
+          groupId: sceneSettingsGroup.id
+        });
+      } else {
+        if (!existing.id) existing.id = defaultVar.id;
+        existing.groupId = sceneSettingsGroup.id;
       }
     });
 
@@ -7736,12 +7793,12 @@ export const PxShopProvider = ({ children }) => {
         name: 'Imported Scene',
         frames: [newFrame],
         actors: [
-          { id: compatBaseId + 1 + Math.random(), type: 'group', name: 'Pickups', isOpen: true },
-          { id: compatBaseId + 2 + Math.random(), type: 'group', name: 'Enemies', isOpen: true },
-          { id: compatBaseId + 3 + Math.random(), type: 'group', name: 'Hazards', isOpen: true },
-          { id: compatBaseId + 4 + Math.random(), type: 'group', name: 'Platforms', isOpen: true },
-          { id: compatBaseId + 5 + Math.random(), type: 'group', name: 'NPCs', isOpen: true },
-          { id: compatBaseId + 6 + Math.random(), type: 'group', name: 'Misc', isOpen: true }
+          { id: compatBaseId + 1 + Math.random(), type: 'group', name: 'Pickups', isOpen: false },
+          { id: compatBaseId + 2 + Math.random(), type: 'group', name: 'Enemies', isOpen: false },
+          { id: compatBaseId + 3 + Math.random(), type: 'group', name: 'Hazards', isOpen: false },
+          { id: compatBaseId + 4 + Math.random(), type: 'group', name: 'Platforms', isOpen: false },
+          { id: compatBaseId + 5 + Math.random(), type: 'group', name: 'NPCs', isOpen: false },
+          { id: compatBaseId + 6 + Math.random(), type: 'group', name: 'Misc', isOpen: false }
         ],
         triggers: [],
         collisions: [],
@@ -7749,6 +7806,24 @@ export const PxShopProvider = ({ children }) => {
         dimensions: project.dimensions,
         worldX: 0,
         worldY: 0,
+        useVarGravity: true,
+        gravityVar: 'GRAVITY',
+        useVarJumpVelocity: true,
+        jumpVelocityVar: 'JUMP_VELOCITY',
+        useVarHorizontalSpeed: true,
+        horizontalSpeedVar: 'HORIZONTAL_SPEED',
+        useVarVerticalSpeed: true,
+        verticalSpeedVar: 'VERTICAL_SPEED',
+        useVarMaxFallVelocity: true,
+        maxFallVelocityVar: 'MAX_FALL_VELOCITY',
+        useVarFriction: true,
+        frictionVar: 'FRICTION',
+        useVarMaxSpeed: true,
+        maxSpeedVar: 'MAX_SPEED',
+        useVarAcceleration: true,
+        accelerationVar: 'ACCELERATION',
+        useVarSteeringSpeed: true,
+        steeringSpeedVar: 'STEERING_SPEED',
         zoom: project.zoom,
         panOffset: project.panOffset,
         showGbaMask: project.showGbaMask
@@ -8044,19 +8119,37 @@ export const PxShopProvider = ({ children }) => {
           jumpAnimId: null,
           script: { nodes: [{ id: 'start', position: { x: 250, y: 100 }, data: { label: 'On Update' }, type: 'input' }], edges: [] }
         },
-        { id: baseId + 1 + Math.random(), type: 'group', name: 'Pickups', isOpen: true },
-        { id: baseId + 2 + Math.random(), type: 'group', name: 'Enemies', isOpen: true },
-        { id: baseId + 3 + Math.random(), type: 'group', name: 'Hazards', isOpen: true },
-        { id: baseId + 4 + Math.random(), type: 'group', name: 'Platforms', isOpen: true },
-        { id: baseId + 5 + Math.random(), type: 'group', name: 'NPCs', isOpen: true },
-        { id: baseId + 6 + Math.random(), type: 'group', name: 'Misc', isOpen: true }
+        { id: baseId + 1 + Math.random(), type: 'group', name: 'Pickups', isOpen: false },
+        { id: baseId + 2 + Math.random(), type: 'group', name: 'Enemies', isOpen: false },
+        { id: baseId + 3 + Math.random(), type: 'group', name: 'Hazards', isOpen: false },
+        { id: baseId + 4 + Math.random(), type: 'group', name: 'Platforms', isOpen: false },
+        { id: baseId + 5 + Math.random(), type: 'group', name: 'NPCs', isOpen: false },
+        { id: baseId + 6 + Math.random(), type: 'group', name: 'Misc', isOpen: false }
       ],
       triggers: [],
       collisions: [],
       musicId: null,
       dimensions: newDims,
       worldX: 0,
-      worldY: 0
+      worldY: 0,
+      useVarGravity: true,
+      gravityVar: 'GRAVITY',
+      useVarJumpVelocity: true,
+      jumpVelocityVar: 'JUMP_VELOCITY',
+      useVarHorizontalSpeed: true,
+      horizontalSpeedVar: 'HORIZONTAL_SPEED',
+      useVarVerticalSpeed: true,
+      verticalSpeedVar: 'VERTICAL_SPEED',
+      useVarMaxFallVelocity: true,
+      maxFallVelocityVar: 'MAX_FALL_VELOCITY',
+      useVarFriction: true,
+      frictionVar: 'FRICTION',
+      useVarMaxSpeed: true,
+      maxSpeedVar: 'MAX_SPEED',
+      useVarAcceleration: true,
+      accelerationVar: 'ACCELERATION',
+      useVarSteeringSpeed: true,
+      steeringSpeedVar: 'STEERING_SPEED'
     };
     setScenes([newScene]);
     setActiveSceneId(newScene.id);
@@ -8086,7 +8179,7 @@ export const PxShopProvider = ({ children }) => {
     setSavedTiles(JSON.parse(JSON.stringify(INITIAL_DEFAULT_TILES)));
     setActiveSavedTileId(1);
     setVariables([
-      { id: 9, type: 'group', name: 'PLAYER', isOpen: true },
+      { id: 9, type: 'group', name: 'PLAYER', isOpen: false },
       { id: 1, name: 'PLAYER_HP', type: 'number', initialValue: 10, groupId: 9 },
       { id: 2, name: 'PLAYER_BONUS', type: 'number', initialValue: 0, groupId: 9 },
       { id: 3, name: 'PLAYER_KEYS', type: 'number', initialValue: 0, groupId: 9 },
@@ -8098,7 +8191,17 @@ export const PxShopProvider = ({ children }) => {
       { id: 10, name: 'PLAYER_MAX_HP', type: 'number', initialValue: 10, groupId: 9 },
       { id: 11, name: 'PLAYER_MAX_XP', type: 'number', initialValue: 100, groupId: 9 },
       { id: 12, name: 'PLAYER_MAX_BONUS', type: 'number', initialValue: 100, groupId: 9 },
-      { id: 13, name: 'PLAYER_MAX_GRENADES', type: 'number', initialValue: 5, groupId: 9 }
+      { id: 13, name: 'PLAYER_MAX_GRENADES', type: 'number', initialValue: 5, groupId: 9 },
+      { id: 20, type: 'group', name: 'SCENE SETTINGS', isOpen: false },
+      { id: 30, name: 'HORIZONTAL_SPEED', type: 'float', initialValue: 1.0, groupId: 20 },
+      { id: 31, name: 'VERTICAL_SPEED', type: 'float', initialValue: 1.0, groupId: 20 },
+      { id: 32, name: 'FRICTION', type: 'float', initialValue: 0.5, groupId: 20 },
+      { id: 33, name: 'GRAVITY', type: 'float', initialValue: 0.5, groupId: 20 },
+      { id: 34, name: 'JUMP_VELOCITY', type: 'float', initialValue: -5.0, groupId: 20 },
+      { id: 35, name: 'MAX_FALL_VELOCITY', type: 'float', initialValue: 8.0, groupId: 20 },
+      { id: 36, name: 'MAX_SPEED', type: 'float', initialValue: 1.0, groupId: 20 },
+      { id: 37, name: 'ACCELERATION', type: 'float', initialValue: 0.01, groupId: 20 },
+      { id: 38, name: 'STEERING_SPEED', type: 'float', initialValue: 0.5, groupId: 20 }
     ]);
     setAnimations([]);
     setCustomScripts([]);
@@ -8202,12 +8305,12 @@ const handleWizardCreate = () => {
       const wizardBaseId = Date.now() + index;
 
       const defaultActorGroups = [
-        { id: wizardBaseId + 1000 + Math.random(), type: 'group', name: 'Pickups', isOpen: true },
-        { id: wizardBaseId + 2000 + Math.random(), type: 'group', name: 'Enemies', isOpen: true },
-        { id: wizardBaseId + 3000 + Math.random(), type: 'group', name: 'Hazards', isOpen: true },
-        { id: wizardBaseId + 4000 + Math.random(), type: 'group', name: 'Platforms', isOpen: true },
-        { id: wizardBaseId + 5000 + Math.random(), type: 'group', name: 'NPCs', isOpen: true },
-        { id: wizardBaseId + 6000 + Math.random(), type: 'group', name: 'Misc', isOpen: true }
+        { id: wizardBaseId + 1000 + Math.random(), type: 'group', name: 'Pickups', isOpen: false },
+        { id: wizardBaseId + 2000 + Math.random(), type: 'group', name: 'Enemies', isOpen: false },
+        { id: wizardBaseId + 3000 + Math.random(), type: 'group', name: 'Hazards', isOpen: false },
+        { id: wizardBaseId + 4000 + Math.random(), type: 'group', name: 'Platforms', isOpen: false },
+        { id: wizardBaseId + 5000 + Math.random(), type: 'group', name: 'NPCs', isOpen: false },
+        { id: wizardBaseId + 6000 + Math.random(), type: 'group', name: 'Misc', isOpen: false }
       ];
 
       const sceneActors = playerActor ? [playerActor, ...defaultActorGroups] : defaultActorGroups;
@@ -8226,7 +8329,25 @@ const handleWizardCreate = () => {
         dimensions: sceneDims,
         worldX: 0,
         worldY: 0,
-        script: { nodes: [{ id: 'start', position: { x: 250, y: 100 }, data: { label: 'On Start' }, type: 'input' }], edges: [] }
+        script: { nodes: [{ id: 'start', position: { x: 250, y: 100 }, data: { label: 'On Start' }, type: 'input' }], edges: [] },
+        useVarGravity: true,
+        gravityVar: 'GRAVITY',
+        useVarJumpVelocity: true,
+        jumpVelocityVar: 'JUMP_VELOCITY',
+        useVarHorizontalSpeed: true,
+        horizontalSpeedVar: 'HORIZONTAL_SPEED',
+        useVarVerticalSpeed: true,
+        verticalSpeedVar: 'VERTICAL_SPEED',
+        useVarMaxFallVelocity: true,
+        maxFallVelocityVar: 'MAX_FALL_VELOCITY',
+        useVarFriction: true,
+        frictionVar: 'FRICTION',
+        useVarMaxSpeed: true,
+        maxSpeedVar: 'MAX_SPEED',
+        useVarAcceleration: true,
+        accelerationVar: 'ACCELERATION',
+        useVarSteeringSpeed: true,
+        steeringSpeedVar: 'STEERING_SPEED'
       };
 
       return scene;
@@ -8502,7 +8623,7 @@ const handleWizardCreate = () => {
     setSavedTiles(JSON.parse(JSON.stringify(INITIAL_DEFAULT_TILES)));
     setActiveSavedTileId(1);
     setVariables([
-      { id: 9, type: 'group', name: 'PLAYER', isOpen: true },
+      { id: 9, type: 'group', name: 'PLAYER', isOpen: false },
       { id: 1, name: 'PLAYER_HP', type: 'number', initialValue: 10, groupId: 9 },
       { id: 2, name: 'PLAYER_BONUS', type: 'number', initialValue: 0, groupId: 9 },
       { id: 3, name: 'PLAYER_KEYS', type: 'number', initialValue: 0, groupId: 9 },
@@ -8514,7 +8635,17 @@ const handleWizardCreate = () => {
       { id: 10, name: 'PLAYER_MAX_HP', type: 'number', initialValue: 10, groupId: 9 },
       { id: 11, name: 'PLAYER_MAX_XP', type: 'number', initialValue: 100, groupId: 9 },
       { id: 12, name: 'PLAYER_MAX_BONUS', type: 'number', initialValue: 100, groupId: 9 },
-      { id: 13, name: 'PLAYER_MAX_GRENADES', type: 'number', initialValue: 5, groupId: 9 }
+      { id: 13, name: 'PLAYER_MAX_GRENADES', type: 'number', initialValue: 5, groupId: 9 },
+      { id: 20, type: 'group', name: 'SCENE SETTINGS', isOpen: false },
+      { id: 30, name: 'HORIZONTAL_SPEED', type: 'float', initialValue: 1.0, groupId: 20 },
+      { id: 31, name: 'VERTICAL_SPEED', type: 'float', initialValue: 1.0, groupId: 20 },
+      { id: 32, name: 'FRICTION', type: 'float', initialValue: 0.5, groupId: 20 },
+      { id: 33, name: 'GRAVITY', type: 'float', initialValue: 0.5, groupId: 20 },
+      { id: 34, name: 'JUMP_VELOCITY', type: 'float', initialValue: -5.0, groupId: 20 },
+      { id: 35, name: 'MAX_FALL_VELOCITY', type: 'float', initialValue: 8.0, groupId: 20 },
+      { id: 36, name: 'MAX_SPEED', type: 'float', initialValue: 1.0, groupId: 20 },
+      { id: 37, name: 'ACCELERATION', type: 'float', initialValue: 0.01, groupId: 20 },
+      { id: 38, name: 'STEERING_SPEED', type: 'float', initialValue: 0.5, groupId: 20 }
     ]);
     setAnimations([]);
     setCustomScripts([]);

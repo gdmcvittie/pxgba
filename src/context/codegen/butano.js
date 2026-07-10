@@ -477,6 +477,24 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
       for (let sIdx = 0; sIdx < scenes.length; sIdx++) {
         currentSceneIdx = sIdx;
         const scene = scenes[sIdx];
+        const getSceneValExpr = (field, defaultVal, fallbackField = null) => {
+          const useVarKey = 'useVar' + field.charAt(0).toUpperCase() + field.slice(1);
+          const varNameKey = field + 'Var';
+          if (scene[useVarKey] && scene[varNameKey]) {
+            const cleanedVar = scene[varNameKey].replace(/[^a-zA-Z0-9_]/g, '_');
+            return 'bn::fixed(' + cleanedVar + ')';
+          }
+          if (fallbackField) {
+            const fallbackUseVarKey = 'useVar' + fallbackField.charAt(0).toUpperCase() + fallbackField.slice(1);
+            const fallbackVarNameKey = fallbackField + 'Var';
+            if (scene[fallbackUseVarKey] && scene[fallbackVarNameKey]) {
+              const cleanedVar = scene[fallbackVarNameKey].replace(/[^a-zA-Z0-9_]/g, '_');
+              return 'bn::fixed(' + cleanedVar + ')';
+            }
+          }
+          const val = scene[field] ?? (fallbackField ? scene[fallbackField] : null) ?? defaultVal;
+          return 'bn::fixed(' + val + ')';
+        };
         const isActive = scene.id === activeSceneId;
         const sDims = isActive ? dimensions : (scene.dimensions || { w: 240, h: 160 });
         const sceneGlobalIds = scene.globalActorIds || [];
@@ -2059,11 +2077,11 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               actorLogicCode += `                actor_${i}_dy = 0;\n`;
               actorLogicCode += `                if (bn::keypad::up_held()) actor_${i}_dy = -1;\n`;
               actorLogicCode += `                else if (bn::keypad::down_held()) actor_${i}_dy = 1;\n`;
-              actorLogicCode += `                if (bn::keypad::left_held()) target_dx = -bn::fixed(${scene.horizontalSpeed ?? 1.5});\n`;
-              actorLogicCode += `                else if (bn::keypad::right_held()) target_dx = bn::fixed(${scene.horizontalSpeed ?? 1.5});\n`;
+              actorLogicCode += `                if (bn::keypad::left_held()) target_dx = -${getSceneValExpr('horizontalSpeed', 1.5)};\n`;
+              actorLogicCode += `                else if (bn::keypad::right_held()) target_dx = ${getSceneValExpr('horizontalSpeed', 1.5)};\n`;
               actorLogicCode += `                if (bn::keypad::a_pressed()) {\n`;
               actorLogicCode += `                    actor_${i}_climbing = false;\n`;
-              actorLogicCode += `                    actor_${i}_dy = bn::fixed(${scene.jumpVelocity ?? -5.0});\n`;
+              actorLogicCode += `                    actor_${i}_dy = ${getSceneValExpr('jumpVelocity', -5.0)};\n`;
               if (a.doubleJump) {
                 actorLogicCode += `                    actor_${i}_double_jumped = false;\n`;
               }
@@ -2071,14 +2089,14 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               actorLogicCode += `            } else {\n`;
 
               // actorLogicCode += `            actor_${i}_on_wall = 0;\n`;
-              actorLogicCode += `            if (bn::keypad::left_held()) target_dx = -bn::fixed(${scene.horizontalSpeed ?? 1.5});\n`;
-              actorLogicCode += `            else if (bn::keypad::right_held()) target_dx = bn::fixed(${scene.horizontalSpeed ?? 1.5});\n`;
-              actorLogicCode += `            actor_${i}_dy += bn::fixed(${scene.gravity ?? 0.5});\n`;
+              actorLogicCode += `            if (bn::keypad::left_held()) target_dx = -${getSceneValExpr('horizontalSpeed', 1.5)};\n`;
+              actorLogicCode += `            else if (bn::keypad::right_held()) target_dx = ${getSceneValExpr('horizontalSpeed', 1.5)};\n`;
+              actorLogicCode += `            actor_${i}_dy += ${getSceneValExpr('gravity', 0.5)};\n`;
               // actorLogicCode += `            if (actor_${i}_on_wall != 0 && actor_${i}_dy > bn::fixed(0.5)) { actor_${i}_dy = bn::fixed(0.5); }\n`;
               actorLogicCode += `            if (actor_${i}_dy < 0 && !bn::keypad::a_held()) {\n`;
               actorLogicCode += `                actor_${i}_dy /= 2;\n`;
               actorLogicCode += `            }\n`;
-              actorLogicCode += `            if (actor_${i}_dy > bn::fixed(${scene.maxFallVelocity ?? 8.0})) actor_${i}_dy = bn::fixed(${scene.maxFallVelocity ?? 8.0});\n`;
+              actorLogicCode += `            if (actor_${i}_dy > ${getSceneValExpr('maxFallVelocity', 8.0)}) actor_${i}_dy = ${getSceneValExpr('maxFallVelocity', 8.0)};\n`;
               actorLogicCode += `            if (actor_${i}_drop_through_timer > 0) actor_${i}_drop_through_timer--;\n`;
               actorLogicCode += `            if (actor_${i}_speed_timer > 0) {\n`;
               actorLogicCode += `                target_dx = target_dx * 2;\n`;
@@ -2189,21 +2207,21 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 actorLogicCode += `            }\n`;
                 actorLogicCode += `            if (bn::keypad::a_pressed()) {\n`;
                 actorLogicCode += `                if (on_ground) {\n`;
-                actorLogicCode += `                    actor_${i}_dy = bn::fixed(${scene.jumpVelocity ?? -5.0});\n`;
+                actorLogicCode += `                    actor_${i}_dy = ${getSceneValExpr('jumpVelocity', -5.0)};\n`;
                 actorLogicCode += `                } else if (!actor_${i}_double_jumped) {\n`;
-                actorLogicCode += `                    actor_${i}_dy = bn::fixed(${scene.jumpVelocity ?? -5.0});\n`;
+                actorLogicCode += `                    actor_${i}_dy = ${getSceneValExpr('jumpVelocity', -5.0)};\n`;
                 actorLogicCode += `                    actor_${i}_double_jumped = true;\n`;
                 actorLogicCode += `                }\n`;
                 actorLogicCode += `            }\n`;
               } else {
-                actorLogicCode += `            if (on_ground && bn::keypad::a_pressed()) actor_${i}_dy = bn::fixed(${scene.jumpVelocity ?? -5.0});\n`;
+                actorLogicCode += `            if (on_ground && bn::keypad::a_pressed()) actor_${i}_dy = ${getSceneValExpr('jumpVelocity', -5.0)};\n`;
               }
               actorLogicCode += `            }\n`;
             } else if (scene.type === 'SHMUP' && scene.mode7) {
-              actorLogicCode += `            if (bn::keypad::left_held()) actor_${i}_float_x -= bn::fixed(${scene.horizontalSpeed ?? 1.5});\n`;
-              actorLogicCode += `            else if (bn::keypad::right_held()) actor_${i}_float_x += bn::fixed(${scene.horizontalSpeed ?? 1.5});\n`;
-              actorLogicCode += `            if (bn::keypad::up_held()) actor_${i}_float_y -= bn::fixed(${scene.verticalSpeed ?? scene.horizontalSpeed ?? 1.5});\n`;
-              actorLogicCode += `            else if (bn::keypad::down_held()) actor_${i}_float_y += bn::fixed(${scene.verticalSpeed ?? scene.horizontalSpeed ?? 1.5});\n`;
+              actorLogicCode += `            if (bn::keypad::left_held()) actor_${i}_float_x -= ${getSceneValExpr('horizontalSpeed', 1.5)};\n`;
+              actorLogicCode += `            else if (bn::keypad::right_held()) actor_${i}_float_x += ${getSceneValExpr('horizontalSpeed', 1.5)};\n`;
+              actorLogicCode += `            if (bn::keypad::up_held()) actor_${i}_float_y -= ${getSceneValExpr('verticalSpeed', 1.5, 'horizontalSpeed')};\n`;
+              actorLogicCode += `            else if (bn::keypad::down_held()) actor_${i}_float_y += ${getSceneValExpr('verticalSpeed', 1.5, 'horizontalSpeed')};\n`;
               if (scene.autoScroll !== false) {
                 actorLogicCode += `            actor_${i}_float_y += current_scroll_speed_y;\n`;
               }
@@ -2327,10 +2345,10 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               actorLogicCode += `            }\n`;
               actorLogicCode += `            actor_${i}_affine.set_rotation_angle(actor_${i}_angle);\n`;
             } else {
-              actorLogicCode += `            if (bn::keypad::left_held()) target_dx = -bn::fixed(${scene.horizontalSpeed ?? 1.0});\n`;
-              actorLogicCode += `            else if (bn::keypad::right_held()) target_dx = bn::fixed(${scene.horizontalSpeed ?? 1.0});\n`;
-              actorLogicCode += `            if (bn::keypad::up_held()) target_dy = -bn::fixed(${scene.verticalSpeed ?? scene.horizontalSpeed ?? 1.0});\n`;
-              actorLogicCode += `            else if (bn::keypad::down_held()) target_dy = bn::fixed(${scene.verticalSpeed ?? scene.horizontalSpeed ?? 1.0});\n`;
+              actorLogicCode += `            if (bn::keypad::left_held()) target_dx = -${getSceneValExpr('horizontalSpeed', 1.0)};\n`;
+              actorLogicCode += `            else if (bn::keypad::right_held()) target_dx = ${getSceneValExpr('horizontalSpeed', 1.0)};\n`;
+              actorLogicCode += `            if (bn::keypad::up_held()) target_dy = -${getSceneValExpr('verticalSpeed', 1.0, 'horizontalSpeed')};\n`;
+              actorLogicCode += `            else if (bn::keypad::down_held()) target_dy = ${getSceneValExpr('verticalSpeed', 1.0, 'horizontalSpeed')};\n`;
               actorLogicCode += `            if (actor_${i}_speed_timer > 0) {\n`;
               actorLogicCode += `                target_dx = target_dx * 2;\n`;
               actorLogicCode += `                target_dy = target_dy * 2;\n`;
@@ -2338,16 +2356,30 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             }
 
             if (scene.type !== 'RACING') {
-              const fVal = Number((scene.friction ?? 1.0).toFixed(4));
-              if (scene.type === 'PLATFORMER') {
-                actorLogicCode += `            bn::fixed current_friction = on_ice ? slide_friction : bn::fixed(${fVal});\n`;
-                actorLogicCode += `            actor_${i}_dx = (actor_${i}_dx * (1 - current_friction)) + (target_dx * current_friction);\n`;
-                actorLogicCode += `            if (actor_${i}_dx < 0.05 && actor_${i}_dx > -0.05) actor_${i}_dx = 0;\n`;
+              if (scene.useVarFriction && scene.frictionVar) {
+                const cleanedVar = scene.frictionVar.replace(/[^a-zA-Z0-9_]/g, '_');
+                if (scene.type === 'PLATFORMER') {
+                  actorLogicCode += `            bn::fixed current_friction = on_ice ? slide_friction : bn::fixed(${cleanedVar});\n`;
+                  actorLogicCode += `            actor_${i}_dx = (actor_${i}_dx * (1 - current_friction)) + (target_dx * current_friction);\n`;
+                  actorLogicCode += `            if (actor_${i}_dx < 0.05 && actor_${i}_dx > -0.05) actor_${i}_dx = 0;\n`;
+                } else {
+                  actorLogicCode += `            actor_${i}_dx = (actor_${i}_dx * (bn::fixed(1) - bn::fixed(${cleanedVar}))) + (target_dx * bn::fixed(${cleanedVar}));\n`;
+                  actorLogicCode += `            actor_${i}_dy = (actor_${i}_dy * (bn::fixed(1) - bn::fixed(${cleanedVar}))) + (target_dy * bn::fixed(${cleanedVar}));\n`;
+                  actorLogicCode += `            if (actor_${i}_dx < 0.05 && actor_${i}_dx > -0.05) actor_${i}_dx = 0;\n`;
+                  actorLogicCode += `            if (actor_${i}_dy < 0.05 && actor_${i}_dy > -0.05) actor_${i}_dy = 0;\n`;
+                }
               } else {
-                actorLogicCode += `            actor_${i}_dx = (actor_${i}_dx * bn::fixed(${Number((1 - fVal).toFixed(4))})) + (target_dx * bn::fixed(${fVal}));\n`;
-                actorLogicCode += `            actor_${i}_dy = (actor_${i}_dy * bn::fixed(${Number((1 - fVal).toFixed(4))})) + (target_dy * bn::fixed(${fVal}));\n`;
-                actorLogicCode += `            if (actor_${i}_dx < 0.05 && actor_${i}_dx > -0.05) actor_${i}_dx = 0;\n`;
-                actorLogicCode += `            if (actor_${i}_dy < 0.05 && actor_${i}_dy > -0.05) actor_${i}_dy = 0;\n`;
+                const fVal = Number((scene.friction ?? 1.0).toFixed(4));
+                if (scene.type === 'PLATFORMER') {
+                  actorLogicCode += `            bn::fixed current_friction = on_ice ? slide_friction : bn::fixed(${fVal});\n`;
+                  actorLogicCode += `            actor_${i}_dx = (actor_${i}_dx * (1 - current_friction)) + (target_dx * current_friction);\n`;
+                  actorLogicCode += `            if (actor_${i}_dx < 0.05 && actor_${i}_dx > -0.05) actor_${i}_dx = 0;\n`;
+                } else {
+                  actorLogicCode += `            actor_${i}_dx = (actor_${i}_dx * bn::fixed(${Number((1 - fVal).toFixed(4))})) + (target_dx * bn::fixed(${fVal}));\n`;
+                  actorLogicCode += `            actor_${i}_dy = (actor_${i}_dy * bn::fixed(${Number((1 - fVal).toFixed(4))})) + (target_dy * bn::fixed(${fVal}));\n`;
+                  actorLogicCode += `            if (actor_${i}_dx < 0.05 && actor_${i}_dx > -0.05) actor_${i}_dx = 0;\n`;
+                  actorLogicCode += `            if (actor_${i}_dy < 0.05 && actor_${i}_dy > -0.05) actor_${i}_dy = 0;\n`;
+                }
               }
             }
 
@@ -3398,8 +3430,8 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               actorLogicCode += `            actor_${i}_y = actor_${i}_float_y.integer();\n`;
             } else if (a.type === 'pushable') {
               if (scene.type === 'PLATFORMER') {
-                actorLogicCode += `            actor_${i}_dy += bn::fixed(${scene.gravity ?? 0.5}) * bn::fixed(${a.weight ?? 1});\n`;
-                actorLogicCode += `            if (actor_${i}_dy > bn::fixed(${scene.maxFallVelocity ?? 8.0})) actor_${i}_dy = bn::fixed(${scene.maxFallVelocity ?? 8.0});\n`;
+                actorLogicCode += `            actor_${i}_dy += ${getSceneValExpr('gravity', 0.5)} * bn::fixed(${a.weight ?? 1});\n`;
+                actorLogicCode += `            if (actor_${i}_dy > ${getSceneValExpr('maxFallVelocity', 8.0)}) actor_${i}_dy = ${getSceneValExpr('maxFallVelocity', 8.0)};\n`;
                 actorLogicCode += `            if (actor_${i}_dy != 0) {\n`;
                 actorLogicCode += `                bn::fixed new_y = actor_${i}_float_y + actor_${i}_dy;\n`;
                 actorLogicCode += `                bool blocked = false;\n`;
@@ -3737,8 +3769,8 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             // 2. Apply gravity in Platformer mode (unless it's vertical flying patrol)
             const isFlyingPatrol = (enemyBehavior === 'patrol' && dirVal === 'vertical' || dirVal === 'bounce') || (enemyBehavior === 'follow' && (parseInt(a.followProximity) || 0) > 0 && dirVal === 'vertical' || dirVal === 'bounce');
             if (scene.type === 'PLATFORMER' && !isFlyingPatrol) {
-              actorLogicCode += `            actor_${i}_dy += bn::fixed(${scene.gravity ?? 0.5});\n`;
-              actorLogicCode += `            if (actor_${i}_dy > bn::fixed(${scene.maxFallVelocity ?? 8.0})) actor_${i}_dy = bn::fixed(${scene.maxFallVelocity ?? 8.0});\n`;
+              actorLogicCode += `            actor_${i}_dy += ${getSceneValExpr('gravity', 0.5)};\n`;
+              actorLogicCode += `            if (actor_${i}_dy > ${getSceneValExpr('maxFallVelocity', 8.0)}) actor_${i}_dy = ${getSceneValExpr('maxFallVelocity', 8.0)};\n`;
 
               // Ground detection â€” also snap float_y to tile top so the actor doesn't sink into solids
               actorLogicCode += `            [[maybe_unused]] bool actor_${i}_on_ground = false;\n`;
@@ -4848,8 +4880,8 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
           // 2. Apply gravity in Platformer mode
           const isFlyingMovement = (['sine', 'zigzag'].includes(npcBehavior) && dirVal === 'vertical' || dirVal === 'bounce') || (npcBehavior === 'follow' && (parseInt(a.followProximity) || 0) > 0 && dirVal === 'vertical' || dirVal === 'bounce');
           if (scene.type === 'PLATFORMER' && !isFlyingMovement) {
-              actorLogicCode += `            actor_${i}_dy += bn::fixed(${scene.gravity ?? 0.5});\n`;
-              actorLogicCode += `            if (actor_${i}_dy > bn::fixed(${scene.maxFallVelocity ?? 8.0})) actor_${i}_dy = bn::fixed(${scene.maxFallVelocity ?? 8.0});\n`;
+              actorLogicCode += `            actor_${i}_dy += ${getSceneValExpr('gravity', 0.5)};\n`;
+              actorLogicCode += `            if (actor_${i}_dy > ${getSceneValExpr('maxFallVelocity', 8.0)}) actor_${i}_dy = ${getSceneValExpr('maxFallVelocity', 8.0)};\n`;
 
                // Ground detection â€” also snap float_y to tile top
               actorLogicCode += `            [[maybe_unused]] bool actor_${i}_on_ground = false;\n`;

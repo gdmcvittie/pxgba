@@ -390,7 +390,7 @@ const MusicPanel = ({ isCollapsed, onToggle }) => {
       type: 'group',
       isGroup: true,
       name: `Group ${musicTracks.filter(t => t.type === 'group').length + 1}`,
-      isOpen: true
+      isOpen: false
     };
     const nextTracks = [...musicTracks, newGroup];
     setMusicTracks(nextTracks);

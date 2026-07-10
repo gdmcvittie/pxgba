@@ -56,7 +56,7 @@ const ScenesPanel = ({ isCollapsed, onToggle }) => {
         id: Date.now() + Math.random(),
         type: 'group',
         name: sceneName,
-        isOpen: true
+        isOpen: false
       };
       groupId = newGroup.id;
       nextScripts = [...nextScripts, newGroup];
@@ -466,84 +466,213 @@ const ScenesPanel = ({ isCollapsed, onToggle }) => {
                         )}
                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                           <label style={{ fontSize: '10px', color: '#aaa', textAlign: 'left' }}>Horizontal Speed:</label>
-                          <input 
-                            className="nodrag" 
-                            type="number"
-                            step="0.1"
-                            value={scene.horizontalSpeed ?? 1.0} 
-                            onChange={(e) => {
-                              const val = parseFloat(e.target.value) || 0;
-                              const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, horizontalSpeed: val } : s);
-                              setScenes(nextScenes);
-                              saveHistory("Set Scene Horizontal Speed", layers, dimensions, { scenes: nextScenes });
-                            }}
-                            style={{ 
-                              width: '100%', 
-                              background: '#111', 
-                              color: '#fff', 
-                              border: '1px solid #555', 
-                              borderRadius: '4px', 
-                              padding: '6px', 
-                              fontSize: '11px', 
-                              outline: 'none',
-                              boxSizing: 'border-box'
-                            }}
-                          />
+                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center', width: '100%' }}>
+                            {scene.useVarHorizontalSpeed ? (
+                              <select
+                                className="nodrag"
+                                value={scene.horizontalSpeedVar || ''}
+                                onChange={(e) => {
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, horizontalSpeedVar: e.target.value } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Horizontal Speed Variable", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #555', borderRadius: '4px', padding: '6px', fontSize: '11px', outline: 'none' }}
+                              >
+                                <option value="">[Select Variable]</option>
+                                {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
+                              </select>
+                            ) : (
+                              <input 
+                                className="nodrag" 
+                                type="number"
+                                step="0.1"
+                                value={scene.horizontalSpeed ?? 1.0} 
+                                onChange={(e) => {
+                                  const val = parseFloat(e.target.value) || 0;
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, horizontalSpeed: val } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Horizontal Speed", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ 
+                                  flex: 1, 
+                                  background: '#111', 
+                                  color: '#fff', 
+                                  border: '1px solid #555', 
+                                  borderRadius: '4px', 
+                                  padding: '6px', 
+                                  fontSize: '11px', 
+                                  outline: 'none',
+                                  boxSizing: 'border-box'
+                                }}
+                              />
+                            )}
+                            <button
+                              className="nodrag"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const useVar = !(scene.useVarHorizontalSpeed ?? false);
+                                const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, useVarHorizontalSpeed: useVar } : s);
+                                setScenes(nextScenes);
+                                saveHistory("Toggle Horizontal Speed Variable", layers, dimensions, { scenes: nextScenes });
+                              }}
+                              title="Toggle Variable"
+                              style={{
+                                background: scene.useVarHorizontalSpeed ? '#4CAF50' : '#333',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '3px',
+                                padding: '6px 8px',
+                                cursor: 'pointer',
+                                fontSize: '10px',
+                                height: '27px',
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              V
+                            </button>
+                          </div>
                        </div>
                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                           <label style={{ fontSize: '10px', color: '#aaa', textAlign: 'left' }}>Vertical Speed:</label>
-                          <input 
-                            className="nodrag" 
-                            type="number"
-                            step="0.1"
-                            value={scene.verticalSpeed ?? 1.0} 
-                            onChange={(e) => {
-                              const val = parseFloat(e.target.value) || 0;
-                              const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, verticalSpeed: val } : s);
-                              setScenes(nextScenes);
-                              saveHistory("Set Scene Vertical Speed", layers, dimensions, { scenes: nextScenes });
-                            }}
-                            style={{ 
-                              width: '100%', 
-                              background: '#111', 
-                              color: '#fff', 
-                              border: '1px solid #555', 
-                              borderRadius: '4px', 
-                              padding: '6px', 
-                              fontSize: '11px', 
-                              outline: 'none',
-                              boxSizing: 'border-box'
-                            }}
-                          />
+                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center', width: '100%' }}>
+                            {scene.useVarVerticalSpeed ? (
+                              <select
+                                className="nodrag"
+                                value={scene.verticalSpeedVar || ''}
+                                onChange={(e) => {
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, verticalSpeedVar: e.target.value } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Vertical Speed Variable", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #555', borderRadius: '4px', padding: '6px', fontSize: '11px', outline: 'none' }}
+                              >
+                                <option value="">[Select Variable]</option>
+                                {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
+                              </select>
+                            ) : (
+                              <input 
+                                className="nodrag" 
+                                type="number"
+                                step="0.1"
+                                value={scene.verticalSpeed ?? 1.0} 
+                                onChange={(e) => {
+                                  const val = parseFloat(e.target.value) || 0;
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, verticalSpeed: val } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Vertical Speed", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ 
+                                  flex: 1, 
+                                  background: '#111', 
+                                  color: '#fff', 
+                                  border: '1px solid #555', 
+                                  borderRadius: '4px', 
+                                  padding: '6px', 
+                                  fontSize: '11px', 
+                                  outline: 'none',
+                                  boxSizing: 'border-box'
+                                }}
+                              />
+                            )}
+                            <button
+                              className="nodrag"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const useVar = !(scene.useVarVerticalSpeed ?? false);
+                                const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, useVarVerticalSpeed: useVar } : s);
+                                setScenes(nextScenes);
+                                saveHistory("Toggle Vertical Speed Variable", layers, dimensions, { scenes: nextScenes });
+                              }}
+                              title="Toggle Variable"
+                              style={{
+                                background: scene.useVarVerticalSpeed ? '#4CAF50' : '#333',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '3px',
+                                padding: '6px 8px',
+                                cursor: 'pointer',
+                                fontSize: '10px',
+                                height: '27px',
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              V
+                            </button>
+                          </div>
                        </div>
                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                           <label style={{ fontSize: '10px', color: '#aaa', textAlign: 'left' }}>Friction (0.01 - 1.0):</label>
-                          <input 
-                            className="nodrag" 
-                            type="number"
-                            step="0.05"
-                            min="0.01"
-                            max="1.0"
-                            value={scene.friction ?? 1.0} 
-                            onChange={(e) => {
-                              const val = parseFloat(e.target.value) || 1.0;
-                              const clampedVal = Math.min(1.0, Math.max(0.01, val));
-                              const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, friction: clampedVal } : s);
-                              setScenes(nextScenes);
-                              saveHistory("Set Scene Friction", layers, dimensions, { scenes: nextScenes });
-                            }}
-                            style={{ 
-                              width: '100%', 
-                              background: '#111', 
-                              color: '#fff', 
-                              border: '1px solid #555', 
-                              borderRadius: '4px', 
-                              padding: '6px', 
-                              fontSize: '11px', 
-                              outline: 'none',
-                              boxSizing: 'border-box'
-                            }}
-                          />
+                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center', width: '100%' }}>
+                            {scene.useVarFriction ? (
+                              <select
+                                className="nodrag"
+                                value={scene.frictionVar || ''}
+                                onChange={(e) => {
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, frictionVar: e.target.value } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Friction Variable", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #555', borderRadius: '4px', padding: '6px', fontSize: '11px', outline: 'none' }}
+                              >
+                                <option value="">[Select Variable]</option>
+                                {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
+                              </select>
+                            ) : (
+                              <input 
+                                className="nodrag" 
+                                type="number"
+                                step="0.05"
+                                min="0.01"
+                                max="1.0"
+                                value={scene.friction ?? 1.0} 
+                                onChange={(e) => {
+                                  const val = parseFloat(e.target.value) || 1.0;
+                                  const clampedVal = Math.min(1.0, Math.max(0.01, val));
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, friction: clampedVal } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Friction", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ 
+                                  flex: 1, 
+                                  background: '#111', 
+                                  color: '#fff', 
+                                  border: '1px solid #555', 
+                                  borderRadius: '4px', 
+                                  padding: '6px', 
+                                  fontSize: '11px', 
+                                  outline: 'none',
+                                  boxSizing: 'border-box'
+                                }}
+                              />
+                            )}
+                            <button
+                              className="nodrag"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const useVar = !(scene.useVarFriction ?? false);
+                                const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, useVarFriction: useVar } : s);
+                                setScenes(nextScenes);
+                                saveHistory("Toggle Friction Variable", layers, dimensions, { scenes: nextScenes });
+                              }}
+                              title="Toggle Variable"
+                              style={{
+                                background: scene.useVarFriction ? '#4CAF50' : '#333',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '3px',
+                                padding: '6px 8px',
+                                cursor: 'pointer',
+                                fontSize: '10px',
+                                height: '27px',
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              V
+                            </button>
+                          </div>
                        </div>
                      </>
                    )}
@@ -551,136 +680,351 @@ const ScenesPanel = ({ isCollapsed, onToggle }) => {
                      <>
                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                           <label style={{ fontSize: '10px', color: '#aaa', textAlign: 'left' }}>Gravity:</label>
-                          <input 
-                            className="nodrag" 
-                            type="number"
-                            step="0.1"
-                            value={scene.gravity ?? 0.5} 
-                            onChange={(e) => {
-                              const val = parseFloat(e.target.value) || 0;
-                              const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, gravity: val } : s);
-                              setScenes(nextScenes);
-                              saveHistory("Set Scene Gravity", layers, dimensions, { scenes: nextScenes });
-                            }}
-                            style={{ 
-                              width: '100%', 
-                              background: '#111', 
-                              color: '#fff', 
-                              border: '1px solid #555', 
-                              borderRadius: '4px', 
-                              padding: '6px', 
-                              fontSize: '11px', 
-                              outline: 'none',
-                              boxSizing: 'border-box'
-                            }}
-                          />
+                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center', width: '100%' }}>
+                            {scene.useVarGravity ? (
+                              <select
+                                className="nodrag"
+                                value={scene.gravityVar || ''}
+                                onChange={(e) => {
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, gravityVar: e.target.value } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Gravity Variable", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #555', borderRadius: '4px', padding: '6px', fontSize: '11px', outline: 'none' }}
+                              >
+                                <option value="">[Select Variable]</option>
+                                {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
+                              </select>
+                            ) : (
+                              <input 
+                                className="nodrag" 
+                                type="number"
+                                step="0.1"
+                                value={scene.gravity ?? 0.5} 
+                                onChange={(e) => {
+                                  const val = parseFloat(e.target.value) || 0;
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, gravity: val } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Gravity", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ 
+                                  flex: 1, 
+                                  background: '#111', 
+                                  color: '#fff', 
+                                  border: '1px solid #555', 
+                                  borderRadius: '4px', 
+                                  padding: '6px', 
+                                  fontSize: '11px', 
+                                  outline: 'none',
+                                  boxSizing: 'border-box'
+                                }}
+                              />
+                            )}
+                            <button
+                              className="nodrag"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const useVar = !(scene.useVarGravity ?? false);
+                                const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, useVarGravity: useVar } : s);
+                                setScenes(nextScenes);
+                                saveHistory("Toggle Gravity Variable", layers, dimensions, { scenes: nextScenes });
+                              }}
+                              title="Toggle Variable"
+                              style={{
+                                background: scene.useVarGravity ? '#4CAF50' : '#333',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '3px',
+                                padding: '6px 8px',
+                                cursor: 'pointer',
+                                fontSize: '10px',
+                                height: '27px',
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              V
+                            </button>
+                          </div>
                        </div>
                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                           <label style={{ fontSize: '10px', color: '#aaa', textAlign: 'left' }}>Jump Velocity:</label>
-                          <input 
-                            className="nodrag" 
-                            type="number"
-                            step="0.1"
-                            value={scene.jumpVelocity ?? -5.0} 
-                            onChange={(e) => {
-                              const val = parseFloat(e.target.value) || 0;
-                              const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, jumpVelocity: val } : s);
-                              setScenes(nextScenes);
-                              saveHistory("Set Scene Jump Velocity", layers, dimensions, { scenes: nextScenes });
-                            }}
-                            style={{ 
-                              width: '100%', 
-                              background: '#111', 
-                              color: '#fff', 
-                              border: '1px solid #555', 
-                              borderRadius: '4px', 
-                              padding: '6px', 
-                              fontSize: '11px', 
-                              outline: 'none',
-                              boxSizing: 'border-box'
-                            }}
-                          />
+                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center', width: '100%' }}>
+                            {scene.useVarJumpVelocity ? (
+                              <select
+                                className="nodrag"
+                                value={scene.jumpVelocityVar || ''}
+                                onChange={(e) => {
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, jumpVelocityVar: e.target.value } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Jump Velocity Variable", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #555', borderRadius: '4px', padding: '6px', fontSize: '11px', outline: 'none' }}
+                              >
+                                <option value="">[Select Variable]</option>
+                                {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
+                              </select>
+                            ) : (
+                              <input 
+                                className="nodrag" 
+                                type="number"
+                                step="0.1"
+                                value={scene.jumpVelocity ?? -5.0} 
+                                onChange={(e) => {
+                                  const val = parseFloat(e.target.value) || 0;
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, jumpVelocity: val } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Jump Velocity", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ 
+                                  flex: 1, 
+                                  background: '#111', 
+                                  color: '#fff', 
+                                  border: '1px solid #555', 
+                                  borderRadius: '4px', 
+                                  padding: '6px', 
+                                  fontSize: '11px', 
+                                  outline: 'none',
+                                  boxSizing: 'border-box'
+                                }}
+                              />
+                            )}
+                            <button
+                              className="nodrag"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const useVar = !(scene.useVarJumpVelocity ?? false);
+                                const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, useVarJumpVelocity: useVar } : s);
+                                setScenes(nextScenes);
+                                saveHistory("Toggle Jump Velocity Variable", layers, dimensions, { scenes: nextScenes });
+                              }}
+                              title="Toggle Variable"
+                              style={{
+                                background: scene.useVarJumpVelocity ? '#4CAF50' : '#333',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '3px',
+                                padding: '6px 8px',
+                                cursor: 'pointer',
+                                fontSize: '10px',
+                                height: '27px',
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              V
+                            </button>
+                          </div>
                        </div>
                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                           <label style={{ fontSize: '10px', color: '#aaa', textAlign: 'left' }}>Horizontal Speed:</label>
-                          <input 
-                            className="nodrag" 
-                            type="number"
-                            step="0.1"
-                            value={scene.horizontalSpeed ?? 1.5} 
-                            onChange={(e) => {
-                              const val = parseFloat(e.target.value) || 0;
-                              const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, horizontalSpeed: val } : s);
-                              setScenes(nextScenes);
-                              saveHistory("Set Scene Horizontal Speed", layers, dimensions, { scenes: nextScenes });
-                            }}
-                            style={{ 
-                              width: '100%', 
-                              background: '#111', 
-                              color: '#fff', 
-                              border: '1px solid #555', 
-                              borderRadius: '4px', 
-                              padding: '6px', 
-                              fontSize: '11px', 
-                              outline: 'none',
-                              boxSizing: 'border-box'
-                            }}
-                          />
+                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center', width: '100%' }}>
+                            {scene.useVarHorizontalSpeed ? (
+                              <select
+                                className="nodrag"
+                                value={scene.horizontalSpeedVar || ''}
+                                onChange={(e) => {
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, horizontalSpeedVar: e.target.value } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Horizontal Speed Variable", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #555', borderRadius: '4px', padding: '6px', fontSize: '11px', outline: 'none' }}
+                              >
+                                <option value="">[Select Variable]</option>
+                                {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
+                              </select>
+                            ) : (
+                              <input 
+                                className="nodrag" 
+                                type="number"
+                                step="0.1"
+                                value={scene.horizontalSpeed ?? 1.5} 
+                                onChange={(e) => {
+                                  const val = parseFloat(e.target.value) || 0;
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, horizontalSpeed: val } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Horizontal Speed", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ 
+                                  flex: 1, 
+                                  background: '#111', 
+                                  color: '#fff', 
+                                  border: '1px solid #555', 
+                                  borderRadius: '4px', 
+                                  padding: '6px', 
+                                  fontSize: '11px', 
+                                  outline: 'none',
+                                  boxSizing: 'border-box'
+                                }}
+                              />
+                            )}
+                            <button
+                              className="nodrag"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const useVar = !(scene.useVarHorizontalSpeed ?? false);
+                                const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, useVarHorizontalSpeed: useVar } : s);
+                                setScenes(nextScenes);
+                                saveHistory("Toggle Horizontal Speed Variable", layers, dimensions, { scenes: nextScenes });
+                              }}
+                              title="Toggle Variable"
+                              style={{
+                                background: scene.useVarHorizontalSpeed ? '#4CAF50' : '#333',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '3px',
+                                padding: '6px 8px',
+                                cursor: 'pointer',
+                                fontSize: '10px',
+                                height: '27px',
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              V
+                            </button>
+                          </div>
                        </div>
                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                           <label style={{ fontSize: '10px', color: '#aaa', textAlign: 'left' }}>Max Fall Velocity:</label>
-                          <input 
-                            className="nodrag" 
-                            type="number"
-                            step="0.1"
-                            value={scene.maxFallVelocity ?? 8.0} 
-                            onChange={(e) => {
-                              const val = parseFloat(e.target.value) || 0;
-                              const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, maxFallVelocity: val } : s);
-                              setScenes(nextScenes);
-                              saveHistory("Set Scene Max Fall", layers, dimensions, { scenes: nextScenes });
-                            }}
-                            style={{ 
-                              width: '100%', 
-                              background: '#111', 
-                              color: '#fff', 
-                              border: '1px solid #555', 
-                              borderRadius: '4px', 
-                              padding: '6px', 
-                              fontSize: '11px', 
-                              outline: 'none',
-                              boxSizing: 'border-box'
-                            }}
-                          />
+                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center', width: '100%' }}>
+                            {scene.useVarMaxFallVelocity ? (
+                              <select
+                                className="nodrag"
+                                value={scene.maxFallVelocityVar || ''}
+                                onChange={(e) => {
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, maxFallVelocityVar: e.target.value } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Max Fall Velocity Variable", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #555', borderRadius: '4px', padding: '6px', fontSize: '11px', outline: 'none' }}
+                              >
+                                <option value="">[Select Variable]</option>
+                                {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
+                              </select>
+                            ) : (
+                              <input 
+                                className="nodrag" 
+                                type="number"
+                                step="0.1"
+                                value={scene.maxFallVelocity ?? 8.0} 
+                                onChange={(e) => {
+                                  const val = parseFloat(e.target.value) || 0;
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, maxFallVelocity: val } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Max Fall", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ 
+                                  flex: 1, 
+                                  background: '#111', 
+                                  color: '#fff', 
+                                  border: '1px solid #555', 
+                                  borderRadius: '4px', 
+                                  padding: '6px', 
+                                  fontSize: '11px', 
+                                  outline: 'none',
+                                  boxSizing: 'border-box'
+                                }}
+                              />
+                            )}
+                            <button
+                              className="nodrag"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const useVar = !(scene.useVarMaxFallVelocity ?? false);
+                                const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, useVarMaxFallVelocity: useVar } : s);
+                                setScenes(nextScenes);
+                                saveHistory("Toggle Max Fall Velocity Variable", layers, dimensions, { scenes: nextScenes });
+                              }}
+                              title="Toggle Variable"
+                              style={{
+                                background: scene.useVarMaxFallVelocity ? '#4CAF50' : '#333',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '3px',
+                                padding: '6px 8px',
+                                cursor: 'pointer',
+                                fontSize: '10px',
+                                height: '27px',
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              V
+                            </button>
+                          </div>
                        </div>
                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                           <label style={{ fontSize: '10px', color: '#aaa', textAlign: 'left' }}>Friction (0.01 - 1.0):</label>
-                          <input 
-                            className="nodrag" 
-                            type="number"
-                            step="0.05"
-                            min="0.01"
-                            max="1.0"
-                            value={scene.friction ?? 1.0} 
-                            onChange={(e) => {
-                              const val = parseFloat(e.target.value) || 1.0;
-                              const clampedVal = Math.min(1.0, Math.max(0.01, val));
-                              const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, friction: clampedVal } : s);
-                              setScenes(nextScenes);
-                              saveHistory("Set Scene Friction", layers, dimensions, { scenes: nextScenes });
-                            }}
-                            style={{ 
-                              width: '100%', 
-                              background: '#111', 
-                              color: '#fff', 
-                              border: '1px solid #555', 
-                              borderRadius: '4px', 
-                              padding: '6px', 
-                              fontSize: '11px', 
-                              outline: 'none',
-                              boxSizing: 'border-box'
-                            }}
-                          />
+                          <div style={{ display: 'flex', gap: '4px', alignItems: 'center', width: '100%' }}>
+                            {scene.useVarFriction ? (
+                              <select
+                                className="nodrag"
+                                value={scene.frictionVar || ''}
+                                onChange={(e) => {
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, frictionVar: e.target.value } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Friction Variable", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #555', borderRadius: '4px', padding: '6px', fontSize: '11px', outline: 'none' }}
+                              >
+                                <option value="">[Select Variable]</option>
+                                {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
+                              </select>
+                            ) : (
+                              <input 
+                                className="nodrag" 
+                                type="number"
+                                step="0.05"
+                                min="0.01"
+                                max="1.0"
+                                value={scene.friction ?? 1.0} 
+                                onChange={(e) => {
+                                  const val = parseFloat(e.target.value) || 1.0;
+                                  const clampedVal = Math.min(1.0, Math.max(0.01, val));
+                                  const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, friction: clampedVal } : s);
+                                  setScenes(nextScenes);
+                                  saveHistory("Set Scene Friction", layers, dimensions, { scenes: nextScenes });
+                                }}
+                                style={{ 
+                                  flex: 1, 
+                                  background: '#111', 
+                                  color: '#fff', 
+                                  border: '1px solid #555', 
+                                  borderRadius: '4px', 
+                                  padding: '6px', 
+                                  fontSize: '11px', 
+                                  outline: 'none',
+                                  boxSizing: 'border-box'
+                                }}
+                              />
+                            )}
+                            <button
+                              className="nodrag"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const useVar = !(scene.useVarFriction ?? false);
+                                const nextScenes = scenes.map(s => s.id === scene.id ? { ...s, useVarFriction: useVar } : s);
+                                setScenes(nextScenes);
+                                saveHistory("Toggle Friction Variable", layers, dimensions, { scenes: nextScenes });
+                              }}
+                              title="Toggle Variable"
+                              style={{
+                                background: scene.useVarFriction ? '#4CAF50' : '#333',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '3px',
+                                padding: '6px 8px',
+                                cursor: 'pointer',
+                                fontSize: '10px',
+                                height: '27px',
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              V
+                            </button>
+                          </div>
                        </div>
                      </>
                    )}

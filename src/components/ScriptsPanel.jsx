@@ -34,7 +34,7 @@ const ScriptsPanel = ({ isCollapsed, onToggle }) => {
       id: Date.now() + Math.random(),
       type: 'group',
       name: `Group ${customScripts.filter(s => s.type === 'group').length + 1}`,
-      isOpen: true
+      isOpen: false
     };
     const nextScripts = [...customScripts, newGroup];
     setCustomScripts(nextScripts);

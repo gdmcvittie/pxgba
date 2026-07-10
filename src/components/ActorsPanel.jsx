@@ -1716,7 +1716,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
       id: Date.now() + Math.random(),
       type: 'group',
       name: `Group ${actors.filter(a => a.type === 'group').length + 1}`,
-      isOpen: true
+      isOpen: false
     };
     const nextActors = [...actors, newGroup];
     setActors(nextActors);
@@ -1778,7 +1778,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
         id: Date.now() + Math.random(),
         type: 'group',
         name: sceneName,
-        isOpen: true
+        isOpen: false
       };
       groupId = newGroup.id;
       nextScripts = [...nextScripts, newGroup];
@@ -1975,7 +1975,7 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
         ...actorToDuplicate,
         id: newGroupId,
         name: `${actorToDuplicate.name} (Copy)`,
-        isOpen: true
+        isOpen: false
       };
 
       const duplicatedActors = groupActors.map((a, idx) => {
