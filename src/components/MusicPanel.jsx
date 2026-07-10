@@ -346,10 +346,19 @@ const MusicPanel = ({ isCollapsed, onToggle }) => {
 
   const [playingSfxId, setPlayingSfxId] = useState(null);
   const sfxAudioRef = useRef(null);
+  const sfxFileInputRef = useRef(null);
 
   const handleMusicUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    if (file.name.toLowerCase().endsWith('.wav') && file.size > 5 * 1024 * 1024) {
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+      if (!window.confirm(`This WAV file is ${sizeMB}MB. Large WAV files can significantly increase GBA ROM size. Continue?`)) {
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        return;
+      }
+    }
 
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -490,6 +499,39 @@ const MusicPanel = ({ isCollapsed, onToggle }) => {
     reader.readAsDataURL(blob);
   };
 
+  const handleSfxWavUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith('.wav')) {
+      toast.error('Only .wav files are supported for SFX import.');
+      if (sfxFileInputRef.current) sfxFileInputRef.current.value = '';
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+      if (!window.confirm(`This WAV file is ${sizeMB}MB. Large WAV files can significantly increase GBA ROM size. Continue?`)) {
+        if (sfxFileInputRef.current) sfxFileInputRef.current.value = '';
+        return;
+      }
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const newSfx = {
+        id: Date.now().toString(),
+        name: file.name,
+        data: event.target.result,
+        isComposed: false,
+        isSfx: true
+      };
+      const nextTracks = [...musicTracks, newSfx];
+      setMusicTracks(nextTracks);
+      saveHistory("Import SFX WAV", layers, dimensions, { musicTracks: nextTracks });
+      toast.success(`Imported SFX "${file.name}"`);
+    };
+    reader.readAsDataURL(file);
+    if (sfxFileInputRef.current) sfxFileInputRef.current.value = '';
+  };
+
   const handlePlayTrackSfx = (track) => {
     if (playingSfxId === track.id) {
       if (sfxAudioRef.current) {
@@ -536,7 +578,8 @@ const MusicPanel = ({ isCollapsed, onToggle }) => {
       </div>
       {!isCollapsed && (
         <div style={{ flex: 1, padding: '10px', display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto' }}>
-          <input type="file" ref={fileInputRef} onChange={handleMusicUpload} style={{ display: 'none' }} accept=".mod,.s3m,.xm,.it" />
+          <input type="file" ref={fileInputRef} onChange={handleMusicUpload} style={{ display: 'none' }} accept=".mod,.s3m,.xm,.it,.wav" />
+          <input type="file" ref={sfxFileInputRef} onChange={handleSfxWavUpload} style={{ display: 'none' }} accept=".wav" />
 
           {/* Search ModArchive bar */}
           <div style={{ display: 'flex', gap: '6px', borderBottom: '1px solid #3c3c3c', backgroundColor: '#202022', padding: '10px', margin: '-10px -10px 10px -10px' }}>
@@ -770,7 +813,7 @@ const MusicPanel = ({ isCollapsed, onToggle }) => {
               <BsMusicNoteBeamed /> Compose Music (Piano Roll)
             </button>
             <button onClick={() => fileInputRef.current?.click()} style={{ background: '#333', color: '#fff', border: '1px solid #555', padding: '10px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-              <BsUpload /> Add Track (.mod, .s3m)
+              <BsUpload /> Add Track (.mod, .s3m, .wav)
             </button>
             <button onClick={() => setShowSfx(!showSfx)} style={{ background: showSfx ? '#555' : '#333', color: '#fff', border: '1px solid #555', padding: '10px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
               <BsSoundwave /> SFX Generator
@@ -811,6 +854,11 @@ const MusicPanel = ({ isCollapsed, onToggle }) => {
               <div style={{ display: 'flex', gap: '8px', marginTop: '5px' }}>
                 <button onClick={handlePlaySfx} style={{ flex: 1, background: '#0078d4', border: 'none', color: '#fff', padding: '6px', borderRadius: '3px', cursor: 'pointer', fontSize: '10px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}><BsPlayFill /> Play</button>
                 <button onClick={handleSaveSfxToProject} style={{ flex: 1, background: '#333', border: '1px solid #555', color: '#fff', padding: '6px', borderRadius: '3px', cursor: 'pointer', fontSize: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}><BsPlus /> Save</button>
+              </div>
+
+              <div style={{ borderTop: '1px solid #444', margin: '6px 0 0 0', paddingTop: '8px' }}>
+                <span style={{ fontSize: '10px', color: '#888', display: 'block', marginBottom: '6px' }}>Or import a WAV file:</span>
+                <button onClick={() => sfxFileInputRef.current?.click()} style={{ width: '100%', background: '#2a2a2a', border: '1px solid #555', color: '#e040fb', padding: '6px', borderRadius: '3px', cursor: 'pointer', fontSize: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}><BsUpload /> Import WAV</button>
               </div>
             </div>
           )}

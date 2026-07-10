@@ -129,6 +129,7 @@ export async function generateButano(ctx) {
       let mainCppIncludes = `#include "bn_core.h"\n#include "bn_log.h"\n#include "bn_random.h"\n#include "bn_camera_ptr.h"\n#include "bn_keypad.h"\n#include "bn_optional.h"\n#include "bn_sprite_ptr.h"\n#include "bn_sprite_tiles_ptr.h"\n#include "bn_sprite_palette_ptr.h"\n#include "bn_sprite_affine_mat_ptr.h"\n#include "bn_music.h"\n#include "bn_bg_palettes.h"\n#include "bn_blending.h"\n#include "bn_string_view.h"\n#include "bn_sprite_item.h"\n#include "bn_vector.h"\n`;
       mainCppIncludes += `#include "bn_affine_mat_attributes.h"\n#include "bn_affine_bg_ptr.h"\n#include "bn_regular_bg_ptr.h"\n#include "bn_sram.h"\n`;
       let hasMusic = false;
+      let hasSoundMusic = false;
       if (variables.some(v => v.type === 'string') || scenes.some(s => s.type === 'RACING')) {
         mainCppIncludes += `#include "bn_string.h"\n`;
       }
@@ -1018,8 +1019,13 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             }
             if (modBytes) {
               zip.file(`audio/${sanitizedMusicName}.${ext}`, modBytes);
-              musicPlayCode = `    bn::music_items::${sanitizedMusicName}.play();\n`;
-              hasMusic = true;
+              if (ext === 'wav') {
+                musicPlayCode = `    bn::sound_items::${sanitizedMusicName}.play();\n`;
+                hasSoundMusic = true;
+              } else {
+                musicPlayCode = `    bn::music_items::${sanitizedMusicName}.play();\n`;
+                hasMusic = true;
+              }
             } else {
               console.warn(`No usable music data for "${mTrack.name}" in scene ${sIdx}, skipping`);
             }
@@ -6782,8 +6788,13 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             }
             if (modBytes) {
               zip.file(`audio/${sanitizedMusicName}.${ext}`, modBytes);
-              creditsMusicPlayCode = `bn::music_items::${sanitizedMusicName}.play();\n`;
-              hasMusic = true;
+              if (ext === 'wav') {
+                creditsMusicPlayCode = `bn::sound_items::${sanitizedMusicName}.play();\n`;
+                hasSoundMusic = true;
+              } else {
+                creditsMusicPlayCode = `bn::music_items::${sanitizedMusicName}.play();\n`;
+                hasMusic = true;
+              }
             } else {
               console.warn(`[creditsMusic] No usable MOD data for "${mTrack.name}", skipping music`);
             }
@@ -7193,7 +7204,7 @@ ${effectUpdate}${scrollUpdate}        if(bn::keypad::any_pressed()) {
       }
 
       let finalIncludes = mainCppIncludes;
-      if (generatedSounds.size > 0) {
+      if (generatedSounds.size > 0 || hasSoundMusic) {
         finalIncludes += `#include "bn_sound_items.h"\n`;
       }
       if (hasMusic) {
