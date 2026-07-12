@@ -36,6 +36,54 @@ export async function generateButano(ctx) {
 
   autoDeclare(variables, customScripts, globalScript, scenes);
 
+  const generatePlayerProjDirLogic = (i, lockAxis, speed) => {
+    let code = "";
+    code += `                bn::fixed dx_dir = 0; bn::fixed dy_dir = 0;\n`;
+    if (lockAxis === 'horizontal') {
+      code += `                if (actor_${i}_dx < 0) dx_dir = -1; else if (actor_${i}_dx > 0) dx_dir = 1;\n`;
+      code += `                if (dx_dir == 0) {\n`;
+      code += `                    if (bn::keypad::left_held()) dx_dir = -1;\n`;
+      code += `                    else if (bn::keypad::right_held()) dx_dir = 1;\n`;
+      code += `                    else {\n`;
+      code += `                        dx_dir = actor_${i}_sprite.horizontal_flip() ? -1 : 1;\n`;
+      code += `                    }\n`;
+      code += `                }\n`;
+      code += `                dy_dir = 0;\n`;
+    } else if (lockAxis === 'vertical') {
+      code += `                if (actor_${i}_dy < 0) dy_dir = -1; else if (actor_${i}_dy > 0) dy_dir = 1;\n`;
+      code += `                if (dy_dir == 0) {\n`;
+      code += `                    if (bn::keypad::up_held()) dy_dir = -1;\n`;
+      code += `                    else if (bn::keypad::down_held()) dy_dir = 1;\n`;
+      code += `                    else {\n`;
+      code += `                        dy_dir = (actor_${i}_last_dy_dir != 0) ? actor_${i}_last_dy_dir : -1;\n`;
+      code += `                    }\n`;
+      code += `                }\n`;
+      code += `                dx_dir = 0;\n`;
+    } else {
+      code += `                if (actor_${i}_dx < 0) dx_dir = -1; else if (actor_${i}_dx > 0) dx_dir = 1;\n`;
+      code += `                if (actor_${i}_dy < 0) dy_dir = -1; else if (actor_${i}_dy > 0) dy_dir = 1;\n`;
+      code += `                if (dx_dir == 0 && dy_dir == 0) {\n`;
+      code += `                    if (bn::keypad::left_held()) dx_dir = -1; else if (bn::keypad::right_held()) dx_dir = 1;\n`;
+      code += `                    else if (bn::keypad::up_held()) dy_dir = -1; else if (bn::keypad::down_held()) dy_dir = 1;\n`;
+      code += `                    else {\n`;
+      code += `                        dx_dir = actor_${i}_last_dx_dir;\n`;
+      code += `                        dy_dir = actor_${i}_last_dy_dir;\n`;
+      code += `                    }\n`;
+      code += `                }\n`;
+      code += `                if (dx_dir == 0 && dy_dir == 0) {\n`;
+      code += `                    dx_dir = actor_${i}_sprite.horizontal_flip() ? -1 : 1;\n`;
+      code += `                }\n`;
+    }
+    code += `                if (dx_dir != 0 && dy_dir != 0) {\n`;
+    code += `                    proj_dx[p] = (dx_dir * bn::fixed(${speed}) * 707) / 1000;\n`;
+    code += `                    proj_dy[p] = (dy_dir * bn::fixed(${speed}) * 707) / 1000;\n`;
+    code += `                } else {\n`;
+    code += `                    proj_dx[p] = dx_dir * bn::fixed(${speed});\n`;
+    code += `                    proj_dy[p] = dy_dir * bn::fixed(${speed});\n`;
+    code += `                }\n`;
+    return code;
+  };
+
       const zip = new JSZip();
       zip.folder("audio");
       zip.folder("dmg_audio");
@@ -1664,24 +1712,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 deferredFireProjLambdas += `                proj_dx[p] = ${a.playerProjDx ?? 1};\n`;
                 deferredFireProjLambdas += `                proj_dy[p] = ${a.playerProjDy ?? 0};\n`;
               } else if (dirMode === 'facing') {
-                deferredFireProjLambdas += `                bn::fixed dx_dir = 0; bn::fixed dy_dir = 0;\n`;
-                deferredFireProjLambdas += `                if (actor_${i}_dx < 0) dx_dir = -1; else if (actor_${i}_dx > 0) dx_dir = 1;\n`;
-                deferredFireProjLambdas += `                if (actor_${i}_dy < 0) dy_dir = -1; else if (actor_${i}_dy > 0) dy_dir = 1;\n`;
-                deferredFireProjLambdas += `                if (dx_dir == 0 && dy_dir == 0) {\n`;
-                deferredFireProjLambdas += `                    if (bn::keypad::left_held()) dx_dir = -1; else if (bn::keypad::right_held()) dx_dir = 1;\n`;
-                deferredFireProjLambdas += `                    else if (bn::keypad::up_held()) dy_dir = -1; else if (bn::keypad::down_held()) dy_dir = 1;\n`;
-                deferredFireProjLambdas += `                    else {\n`;
-                deferredFireProjLambdas += `                        dx_dir = actor_${i}_last_dx_dir;\n`;
-                deferredFireProjLambdas += `                        dy_dir = actor_${i}_last_dy_dir;\n`;
-                deferredFireProjLambdas += `                    }\n`;
-                deferredFireProjLambdas += `                }\n`;
-                deferredFireProjLambdas += `                if (dx_dir != 0 && dy_dir != 0) {\n`;
-                deferredFireProjLambdas += `                    proj_dx[p] = (dx_dir * bn::fixed(${speed}) * 707) / 1000;\n`;
-                deferredFireProjLambdas += `                    proj_dy[p] = (dy_dir * bn::fixed(${speed}) * 707) / 1000;\n`;
-                deferredFireProjLambdas += `                } else {\n`;
-                deferredFireProjLambdas += `                    proj_dx[p] = dx_dir * bn::fixed(${speed});\n`;
-                deferredFireProjLambdas += `                    proj_dy[p] = dy_dir * bn::fixed(${speed});\n`;
-                deferredFireProjLambdas += `                }\n`;
+                deferredFireProjLambdas += generatePlayerProjDirLogic(i, a.playerProjLockAxis, speed);
               } else if (dirMode === 'angle') {
                 deferredFireProjLambdas += `                proj_dx[p] = bn::degrees_lut_cos(bn::fixed(${a.playerProjAngle ?? 0})) * bn::fixed(${speed});\n`;
                 deferredFireProjLambdas += `                proj_dy[p] = bn::degrees_lut_sin(bn::fixed(${a.playerProjAngle ?? 0})) * bn::fixed(${speed});\n`;
@@ -1713,24 +1744,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 deferredFireProjLambdas += `                        proj_dx[p] = bn::fixed(${speed}); proj_dy[p] = 0;\n`;
                 deferredFireProjLambdas += `                    }\n`;
                 deferredFireProjLambdas += `                } else {\n`;
-                deferredFireProjLambdas += `                    bn::fixed dx_dir = 0; bn::fixed dy_dir = 0;\n`;
-                deferredFireProjLambdas += `                    if (actor_${i}_dx < 0) dx_dir = -1; else if (actor_${i}_dx > 0) dx_dir = 1;\n`;
-                deferredFireProjLambdas += `                    if (actor_${i}_dy < 0) dy_dir = -1; else if (actor_${i}_dy > 0) dy_dir = 1;\n`;
-                deferredFireProjLambdas += `                    if (dx_dir == 0 && dy_dir == 0) {\n`;
-                deferredFireProjLambdas += `                        if (bn::keypad::left_held()) dx_dir = -1; else if (bn::keypad::right_held()) dx_dir = 1;\n`;
-                deferredFireProjLambdas += `                        else if (bn::keypad::up_held()) dy_dir = -1; else if (bn::keypad::down_held()) dy_dir = 1;\n`;
-                deferredFireProjLambdas += `                        else {\n`;
-                deferredFireProjLambdas += `                            dx_dir = actor_${i}_last_dx_dir;\n`;
-                deferredFireProjLambdas += `                            dy_dir = actor_${i}_last_dy_dir;\n`;
-                deferredFireProjLambdas += `                        }\n`;
-                deferredFireProjLambdas += `                    }\n`;
-                deferredFireProjLambdas += `                    if (dx_dir != 0 && dy_dir != 0) {\n`;
-                deferredFireProjLambdas += `                        proj_dx[p] = (dx_dir * bn::fixed(${speed}) * 707) / 1000;\n`;
-                deferredFireProjLambdas += `                        proj_dy[p] = (dy_dir * bn::fixed(${speed}) * 707) / 1000;\n`;
-                deferredFireProjLambdas += `                    } else {\n`;
-                deferredFireProjLambdas += `                        proj_dx[p] = dx_dir * bn::fixed(${speed});\n`;
-                deferredFireProjLambdas += `                        proj_dy[p] = dy_dir * bn::fixed(${speed});\n`;
-                deferredFireProjLambdas += `                    }\n`;
+                deferredFireProjLambdas += generatePlayerProjDirLogic(i, a.playerProjLockAxis, speed);
                 deferredFireProjLambdas += `                }\n`;
               }
               if (a.playerProjLockAxis === 'horizontal') {
@@ -1738,7 +1752,11 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               } else if (a.playerProjLockAxis === 'vertical') {
                 deferredFireProjLambdas += `                proj_dx[p] = 0;\n`;
               }
+              const lifetimeExpr = a.useVarPlayerProjLifetime && a.varPlayerProjLifetime
+                ? `int(${String(a.varPlayerProjLifetime).replace(/[^a-zA-Z0-9_]/g, '_')})`
+                : `${a.playerProjLifetime ?? 180}`;
               deferredFireProjLambdas += `                proj_active[p] = true;\n`;
+              deferredFireProjLambdas += `                proj_lifetime[p] = ${lifetimeExpr};\n`;
               deferredFireProjLambdas += `                proj_from_player[p] = true;\n`;
               deferredFireProjLambdas += `                proj_bouncing[p] = ${a.playerProjType === 'bouncing' ? 'true' : 'false'};\n`;
               deferredFireProjLambdas += `                proj_bounce_count[p] = 0;\n`;
@@ -3899,6 +3917,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                   actorLogicCode += `                            proj_dx[p] = 0;\n`;
                 }
                 actorLogicCode += `                            proj_active[p] = true;\n`;
+                actorLogicCode += `                            proj_lifetime[p] = 180;\n`;
                 actorLogicCode += `                            proj_from_player[p] = false;\n`;
                 actorLogicCode += `                            proj_bounce_count[p] = 0;\n`;
                 const pName = a.enemyProjectileSpriteId ? `proj_sprite_${String(a.enemyProjectileSpriteId).replace(/[^a-zA-Z0-9_]/g, '_')}` : 'bullet_sprite';
@@ -4050,6 +4069,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
                 actorLogicCode += `                        proj_dy[p] = ${a.turretProjDy};\n`;
               }
               actorLogicCode += `                        proj_active[p] = true;\n`;
+              actorLogicCode += `                        proj_lifetime[p] = 180;\n`;
               actorLogicCode += `                        proj_from_player[p] = false;\n`;
               actorLogicCode += `                        proj_bouncing[p] = ${projType === 'bouncing' ? 'true' : 'false'};\n`;
               actorLogicCode += `                        proj_bounce_count[p] = 0;\n`;
@@ -4296,6 +4316,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
               actorLogicCode += `                            proj_x[p] = actor_${i}_x + ${Math.floor((a.width || 16) / 2)};\n`;
               actorLogicCode += `                            proj_y[p] = actor_${i}_y + ${Math.floor((a.height || 16) / 2)};\n`;
               actorLogicCode += `                            proj_active[p] = true;\n`;
+              actorLogicCode += `                            proj_lifetime[p] = 180;\n`;
               actorLogicCode += `                            proj_from_player[p] = true;\n`;
               actorLogicCode += `                            proj_bouncing[p] = false;\n`;
               actorLogicCode += `                            proj_bounce_count[p] = 0;\n`;
@@ -5902,7 +5923,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
         sceneCode += bgDeclarations;
         const _hasKeys = sActors.some(a => a && a.type === 'key' || a.type === 'door');
         const _hasGrenades = sActors.some(a => a && a.type === 'grenade');
-        sceneCode += `    int proj_x[20];\n    int proj_y[20];\n    bn::fixed proj_dx[20];\n    bn::fixed proj_dy[20];\n    bool proj_active[20];\n    bool proj_from_player[20];\n    bool proj_bouncing[20];\n    int proj_bounce_count[20];\n    for(int i=0; i<20; ++i) {\n        proj_active[i] = false;\n        proj_from_player[i] = false;\n        proj_bouncing[i] = false;\n        proj_bounce_count[i] = 0;\n    }\n    bn::optional<bn::sprite_ptr> proj_sprites[20];\n`;
+        sceneCode += `    int proj_x[20];\n    int proj_y[20];\n    bn::fixed proj_dx[20];\n    bn::fixed proj_dy[20];\n    bool proj_active[20];\n    bool proj_from_player[20];\n    bool proj_bouncing[20];\n    int proj_bounce_count[20];\n    int proj_lifetime[20];\n    for(int i=0; i<20; ++i) {\n        proj_active[i] = false;\n        proj_from_player[i] = false;\n        proj_bouncing[i] = false;\n        proj_bounce_count[i] = 0;\n        proj_lifetime[i] = 0;\n    }\n    bn::optional<bn::sprite_ptr> proj_sprites[20];\n`;
         if (_hasGrenades) {
           sceneCode += `    int grenade_x[5];\n    int grenade_y[5];\n    bn::fixed grenade_dx[5];\n    bn::fixed grenade_dy[5];\n    bool grenade_active[5];\n    int grenade_timer[5];\n    for(int i=0; i<5; ++i) {\n        grenade_active[i] = false;\n        grenade_timer[i] = 0;\n    }\n    bn::optional<bn::sprite_ptr> grenade_sprites[5];\n`;
         }
@@ -6306,6 +6327,14 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
         }
         sceneCode += `        for(int p=0; p<20; ++p) {\n`;
         sceneCode += `            if(proj_active[p]) {\n`;
+        sceneCode += `                if(proj_lifetime[p] > 0) {\n`;
+        sceneCode += `                    proj_lifetime[p]--;\n`;
+        sceneCode += `                    if(proj_lifetime[p] == 0) {\n`;
+        sceneCode += `                        proj_active[p] = false;\n`;
+        sceneCode += `                        proj_sprites[p].reset();\n`;
+        sceneCode += `                        continue;\n`;
+        sceneCode += `                    }\n`;
+        sceneCode += `                }\n`;
         sceneCode += `                if(proj_bouncing[p]) {\n`;
         sceneCode += `                    proj_dy[p] += 0.20;\n`;
         sceneCode += `                    if(proj_dy[p] > 4) proj_dy[p] = 4;\n`;

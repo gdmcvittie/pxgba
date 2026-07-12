@@ -2530,6 +2530,18 @@ const ActorsPanel = ({ isCollapsed, onToggle }) => {
                               <option value="vertical">Vertical</option>
                             </select>
                           </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', width: '100%' }}>
+                            <label style={{ fontSize: '11px', color: '#aaa', width: '80px' }}>Proj Life (f):</label>
+                            {actor.useVarPlayerProjLifetime ? (
+                              <select value={actor.varPlayerProjLifetime || ''} onChange={(e) => updateActor(actor.id, 'varPlayerProjLifetime', e.target.value)} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px', minWidth: 0 }}>
+                                <option value="">Select Var</option>
+                                {variables.filter(v => v.type !== 'group').map(v => <option key={v.id} value={v.name}>{v.name}</option>)}
+                              </select>
+                            ) : (
+                              <input type="number" min="1" value={actor.playerProjLifetime ?? 180} onChange={(e) => updateActor(actor.id, 'playerProjLifetime', parseInt(e.target.value) || 180)} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px', minWidth: 0 }} />
+                            )}
+                            <button onClick={(e) => { e.stopPropagation(); updateActor(actor.id, 'useVarPlayerProjLifetime', !actor.useVarPlayerProjLifetime); }} title="Toggle Variable" style={{ background: actor.useVarPlayerProjLifetime ? '#4CAF50' : '#333', color: '#fff', border: 'none', borderRadius: '3px', padding: '4px 6px', cursor: 'pointer', fontSize: '10px' }}>V</button>
+                          </div>
                           {(actor.playerProjDirMode === 'vector' || !actor.playerProjDirMode) && (
                             <>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>

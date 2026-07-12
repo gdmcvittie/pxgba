@@ -480,6 +480,7 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
         }
 
         code += `${indent}        proj_active[p] = true;\n`;
+        code += `${indent}        proj_lifetime[p] = 180;\n`;
         code += `${indent}        proj_from_player[p] = ${isPlayer};\n`;
         code += `${indent}        proj_sprites[p] = bn::sprite_items::${pName}.create_sprite(proj_x[p] - ${Math.floor(sDims.w / 2)}, proj_y[p] - ${Math.floor(sDims.h / 2)});\n`;
         code += `${indent}        proj_sprites[p]->set_palette(shared_sprite_palette);\n`;
