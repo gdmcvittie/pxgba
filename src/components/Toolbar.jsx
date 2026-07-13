@@ -15,6 +15,7 @@ import { ImPacman, ImMan } from "react-icons/im";
 import { RiCheckboxBlankLine, RiCheckboxBlankFill, RiDragMove2Line, RiDragMoveFill } from 'react-icons/ri';
 import { HiAdjustmentsHorizontal } from 'react-icons/hi2';
 import { TbButterfly, TbButterflyFilled } from 'react-icons/tb';
+import TextSettings from './TextSettings';
 
 const Toolbar = () => {
   const [showExportGameAssetsMenu, setShowExportGameAssetsMenu] = useState(false);
@@ -369,7 +370,14 @@ const Toolbar = () => {
       <button onClick={() => setTool('move')} disabled={!selection} style={{ padding: '10px', backgroundColor: tool === 'move' ? '#4CAF50' : 'transparent', border: 'none', color: selection ? '#fff' : '#666', cursor: selection ? 'pointer' : 'default', borderRadius: '5px' }} title="Move Selection (M)"><RiDragMoveFill size={12} /></button>
       <button onClick={() => setTool('moveLayer')} style={{ padding: '10px', backgroundColor: tool === 'moveLayer' ? '#4CAF50' : 'transparent', border: 'none', color: '#fff', cursor: 'pointer', borderRadius: '5px' }} title="Move Layer (V)"><RiDragMove2Line size={12} /></button>
       <div style={{ height: '1px', background: '#3c3c3c', width: '80%', margin: '10px 0' }} />
-      <button onClick={() => setTool('text')} style={{ padding: '10px', backgroundColor: tool === 'text' ? '#4CAF50' : 'transparent', border: 'none', color: '#fff', cursor: 'pointer', borderRadius: '5px' }} title="Text Tool (T)"><BsType size={12} /></button>
+      <div style={{ position: 'relative' }}>
+        <button onClick={() => setTool('text')} style={{ padding: '10px', backgroundColor: tool === 'text' ? '#4CAF50' : 'transparent', border: 'none', color: '#fff', cursor: 'pointer', borderRadius: '5px' }} title="Text Tool (T)"><BsType size={12} /></button>
+        {tool === 'text' && (
+          <div style={{ position: 'absolute', left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: '10px', backgroundColor: '#333', border: '1px solid #444', borderRadius: '6px', padding: '12px', zIndex: 1000, boxShadow: '0 4px 16px rgba(0,0,0,0.6)', width: '250px' }}>
+            <TextSettings />
+          </div>
+        )}
+      </div>
       <div style={{ height: '1px', background: '#3c3c3c', width: '80%', margin: '10px 0' }} />
 
       <div style={{ margin: '10px 0', width: '80%', height: '1px', backgroundColor: '#3c3c3c' }} />

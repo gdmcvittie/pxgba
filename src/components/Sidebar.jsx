@@ -3,7 +3,6 @@ import { BsChevronLeft, BsChevronRight, BsMap, BsPalette, BsType, BsBorder, BsLa
 import { ImMan } from 'react-icons/im';
 import Navigator from './Navigator';
 import Palette from './Palette';
-import TextSettings from './TextSettings';
 import TilePanel from './TilePanel';
 import LayersPanel from './LayersPanel';
 import HistoryPanel from './HistoryPanel';
@@ -30,7 +29,6 @@ const Sidebar = () => {
   const col1Panels = [
     { key: 'scenes', icon: BsMap, title: 'Scenes' },
     { key: 'palette', icon: BsPalette, title: 'Palette' },
-    { key: 'text', icon: BsType, title: 'Text Settings' },
     { key: 'tiles', icon: BsBorder, title: 'Tiles' },
     { key: 'layers', icon: BsLayers, title: 'Layers' },
   ];
@@ -108,10 +106,7 @@ const Sidebar = () => {
   }, [draggingCol]);
 
   useEffect(() => {
-    if (['text'].includes(tool)) {
-      setActiveCol1Panel('text');
-      setCol1Collapsed(false);
-    } else if (['pen', 'brush', 'eraser', 'fill', 'gradient', 'drawLine', 'drawRect', 'drawRectFill', 'drawRoundRect', 'drawRoundRectFill', 'drawCircle', 'drawCircleFill'].includes(tool)) {
+    if (['pen', 'brush', 'eraser', 'fill', 'gradient', 'drawLine', 'drawRect', 'drawRectFill', 'drawRoundRect', 'drawRoundRectFill', 'drawCircle', 'drawCircleFill'].includes(tool)) {
       setActiveCol1Panel('palette');
       setCol1Collapsed(false);
     }
@@ -187,7 +182,6 @@ const Sidebar = () => {
         <div style={{ display: col1Collapsed ? 'none' : 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
           <ScenesPanel isCollapsed={activeCol1Panel !== 'scenes'} onToggle={() => setActiveCol1Panel(activeCol1Panel === 'scenes' ? null : 'scenes')} />
           <Palette isCollapsed={activeCol1Panel !== 'palette'} onToggle={() => setActiveCol1Panel(activeCol1Panel === 'palette' ? null : 'palette')} />
-          <TextSettings isCollapsed={activeCol1Panel !== 'text'} onToggle={() => setActiveCol1Panel(activeCol1Panel === 'text' ? null : 'text')} />
           <TilePanel isCollapsed={activeCol1Panel !== 'tiles'} onToggle={() => setActiveCol1Panel(activeCol1Panel === 'tiles' ? null : 'tiles')} />
           <LayersPanel isCollapsed={activeCol1Panel !== 'layers'} onToggle={() => setActiveCol1Panel(activeCol1Panel === 'layers' ? null : 'layers')} />
         </div>
