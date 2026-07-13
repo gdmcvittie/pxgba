@@ -567,6 +567,11 @@ export const PxShopProvider = ({ children }) => {
     setIncludedArtists(prev => prev.some(a => a.name === name) ? prev : [...prev, { name, source: 'modarchive' }]);
   }, []);
 
+  const addFreesoundArtist = useCallback((name) => {
+    if (!name || name === 'Unknown') return;
+    setIncludedArtists(prev => prev.some(a => a.name === name) ? prev : [...prev, { name, source: 'freesound' }]);
+  }, []);
+
   // Triggers state
   const [triggers, setTriggers] = useState(() => scenes[0].triggers || []);
   const [activeTriggerId, setActiveTriggerId] = useState(null);
@@ -9029,7 +9034,7 @@ const handleWizardCreate = () => {
     creditsBgColor, setCreditsBgColor, creditsTextColor, setCreditsTextColor,
     creditsMusicId, setCreditsMusicId,
     creditsEffect, setCreditsEffect,
-    addOgaArtist, addModArchiveArtist,
+    addOgaArtist, addModArchiveArtist, addFreesoundArtist,
     activeCol1Panel, setActiveCol1Panel,
     activeCol2Panel, setActiveCol2Panel,
     activeCol3Panel, setActiveCol3Panel,

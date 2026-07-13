@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { BsChevronLeft, BsChevronRight, BsMap, BsPalette, BsType, BsBorder, BsLayers, BsBoundingBox, BsLightningChargeFill, BsMusicNoteBeamed, BsCalculator, BsCodeSlash, BsClockHistory, BsTv } from 'react-icons/bs';
+import { BsChevronLeft, BsChevronRight, BsMap, BsPalette, BsType, BsBorder, BsLayers, BsBoundingBox, BsLightningChargeFill, BsMusicNoteBeamed, BsCalculator, BsCodeSlash, BsClockHistory, BsTv, BsSoundwave } from 'react-icons/bs';
 import { ImMan } from 'react-icons/im';
 import Navigator from './Navigator';
 import Palette from './Palette';
@@ -12,6 +12,7 @@ import ActorsPanel from './ActorsPanel';
 import TriggersPanel from './TriggersPanel';
 import CollisionsPanel from './CollisionsPanel';
 import MusicPanel from './MusicPanel';
+import SfxPanel from './SfxPanel';
 import VariablesPanel from './VariablesPanel';
 import ScriptsPanel from './ScriptsPanel';
 import AnimationsPanel from './AnimationsPanel';
@@ -43,6 +44,7 @@ const Sidebar = () => {
 
   const col3Panels = [
     { key: 'music', icon: BsMusicNoteBeamed, title: 'Music' },
+    { key: 'sfx', icon: BsSoundwave, title: 'SFX' },
     { key: 'variables', icon: BsCalculator, title: 'Variables' },
     { key: 'scripts', icon: BsCodeSlash, title: 'Scripts' },
     { key: 'history', icon: BsClockHistory, title: 'History' },
@@ -251,6 +253,7 @@ const Sidebar = () => {
 
         <div style={{ display: col3Collapsed ? 'none' : 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
           <MusicPanel isCollapsed={activeCol3Panel !== 'music'} onToggle={() => setActiveCol3Panel(activeCol3Panel === 'music' ? null : 'music')} />
+          <SfxPanel isCollapsed={activeCol3Panel !== 'sfx'} onToggle={() => setActiveCol3Panel(activeCol3Panel === 'sfx' ? null : 'sfx')} />
           <VariablesPanel isCollapsed={activeCol3Panel !== 'variables'} onToggle={() => setActiveCol3Panel(activeCol3Panel === 'variables' ? null : 'variables')} />
           <ScriptsPanel isCollapsed={activeCol3Panel !== 'scripts'} onToggle={() => setActiveCol3Panel(activeCol3Panel === 'scripts' ? null : 'scripts')} />
           <HistoryPanel isCollapsed={activeCol3Panel !== 'history'} onToggle={() => setActiveCol3Panel(activeCol3Panel === 'history' ? null : 'history')} />

@@ -6763,6 +6763,9 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             } else if (item.source === 'opengameart') {
               creditsCtx.fillText('\u25C6', drawX, credY);
               drawX += iconW;
+            } else if (item.source === 'freesound') {
+              creditsCtx.fillText('\u25C9', drawX, credY);
+              drawX += iconW;
             }
             creditsCtx.fillText(item.name, drawX, credY);
             drawX += creditsCtx.measureText(item.name).width;

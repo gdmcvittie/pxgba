@@ -20,7 +20,7 @@ const TextSettings = ({ isCollapsed, onToggle }) => {
         style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
       >
         <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <BsType /> Text Settings
+          <BsType /> Text
         </span>
         <div style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
           {isCollapsed ? <BsChevronRight style={{ color: '#aaa' }} /> : <BsChevronDown style={{ color: '#aaa' }} />}

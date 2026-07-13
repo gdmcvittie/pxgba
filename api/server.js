@@ -7,7 +7,7 @@ const fs = require('fs');
 const os = require('os');
 const crypto = require('crypto');
 const AdmZip = require('adm-zip');
-const { mockTilesetBmpBase64, mockSearchHtml, mockDetailsHtml, mockModSearchHtml } = require('./mockData');
+const { mockTilesetBmpBase64, mockSearchHtml, mockDetailsHtml, mockModSearchHtml, mockFreesoundSearchHtml } = require('./mockData');
 
 // Resolve the downloads directory (with environment variable fallback for packaged apps like Linux AppImages)
 const downloadDir = process.env.DOWNLOADS_DIR || path.join(__dirname, 'downloads');
@@ -870,6 +870,28 @@ const generateEmptyModBuffer = () => {
   return buffer;
 };
 
+// Helper to generate a minimal valid 8-bit mono WAV buffer (100ms) dynamically for offline fallbacks
+const generateEmptyWavBuffer = () => {
+  const sampleRate = 8000;
+  const numSamples = 800; // 100ms
+  const buffer = Buffer.alloc(44 + numSamples);
+  buffer.write('RIFF', 0);
+  buffer.writeUInt32LE(36 + numSamples, 4);
+  buffer.write('WAVE', 8);
+  buffer.write('fmt ', 12);
+  buffer.writeUInt32LE(16, 16);
+  buffer.writeUInt16LE(1, 20); // PCM
+  buffer.writeUInt16LE(1, 22); // mono
+  buffer.writeUInt32LE(sampleRate, 24);
+  buffer.writeUInt32LE(sampleRate, 28);
+  buffer.writeUInt16LE(1, 32);
+  buffer.writeUInt16LE(8, 34); // 8-bit
+  buffer.write('data', 36);
+  buffer.writeUInt32LE(numSamples, 40);
+  buffer.fill(128, 44); // 128 is silence in 8-bit PCM
+  return buffer;
+};
+
 app.get('/proxy-oga', async (req, res) => {
   let targetUrl = req.query.url;
   if (!targetUrl) {
@@ -927,11 +949,12 @@ app.get('/proxy-oga', async (req, res) => {
     const parsedUrl = new URL(targetUrl);
     const hostname = parsedUrl.hostname.toLowerCase();
 
-    // Safety check: allow opengameart.org and modarchive.org domains
+    // Safety check: allow opengameart.org, modarchive.org, and freesound.org domains
     const isOga = hostname === 'opengameart.org' || hostname.endsWith('.opengameart.org');
     const isModArchive = hostname === 'modarchive.org' || hostname.endsWith('.modarchive.org');
-    if (!isOga && !isModArchive) {
-      return res.status(400).send('Invalid target host. Only opengameart.org and modarchive.org are allowed.');
+    const isFreesound = hostname === 'freesound.org' || hostname.endsWith('.freesound.org');
+    if (!isOga && !isModArchive && !isFreesound) {
+      return res.status(400).send('Invalid target host. Only opengameart.org, modarchive.org, and freesound.org are allowed.');
     }
 
     // Force HTTPS to prevent redirects that strip the Cookie header, and automatically encode unescaped spaces
@@ -1038,10 +1061,18 @@ app.get('/proxy-oga', async (req, res) => {
       res.setHeader('Content-Type', 'text/html');
       res.setHeader('Access-Control-Allow-Origin', '*');
       return res.send(mockModSearchHtml);
+    } else if (targetUrl.includes('freesound.org') && targetUrl.includes('/search/')) {
+      res.setHeader('Content-Type', 'text/html');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      return res.send(mockFreesoundSearchHtml);
     } else if (targetUrl.includes('downloads.php') || targetUrl.includes('jsplayer.php')) {
       res.setHeader('Content-Type', 'audio/x-mod');
       res.setHeader('Access-Control-Allow-Origin', '*');
       return res.send(generateEmptyModBuffer());
+    } else if (targetUrl.includes('freesound.org') || targetUrl.endsWith('.mp3') || targetUrl.endsWith('.ogg') || targetUrl.endsWith('.wav') || targetUrl.includes('mock-preview')) {
+      res.setHeader('Content-Type', 'audio/wav');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      return res.send(generateEmptyWavBuffer());
     } else {
       // Fallback for files/images
       if (targetUrl.endsWith('.zip') || targetUrl.includes('zip') || targetUrl.includes('.zip')) {

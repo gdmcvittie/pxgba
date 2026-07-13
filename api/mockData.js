@@ -179,10 +179,37 @@ battle theme
 </html>
 `;
 
+const mockFreesoundSearchHtml = `
+<!DOCTYPE html>
+<html>
+<body>
+<div class="bw-search__result">
+  <div class="bw-player"
+       data-sound-id="478278"
+       data-username="Joao_Janz"
+       data-mp3="https://cdn.freesound.org/previews/478/478278_9961300-lq.mp3"
+       data-title="8-Bit Explosion 1_5"
+       data-duration="1.0625">
+  </div>
+</div>
+<div class="bw-search__result">
+  <div class="bw-player"
+       data-sound-id="745549"
+       data-username="SamsterBirdies"
+       data-mp3="https://cdn.freesound.org/previews/745/745549_5487341-lq.mp3"
+       data-title="Beefy Explosions"
+       data-duration="18.1456">
+  </div>
+</div>
+</body>
+</html>
+`;
+
 module.exports = {
   mockTilesetBmpBase64,
   mockSearchHtml,
   mockDetailsHtml,
-  mockModSearchHtml
+  mockModSearchHtml,
+  mockFreesoundSearchHtml
 };
 

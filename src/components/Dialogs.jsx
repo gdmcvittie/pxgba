@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { usePxShop, INITIAL_DEFAULT_TILES } from '../context/PxShopContext';
-import { BsFolder2Open, BsPlayFill, BsCameraVideo, BsMusicNoteBeamed, BsBrush, BsReddit, BsDiscord, BsStars, BsYoutube, BsInfo, BsInfoCircle, BsInfoCircleFill } from 'react-icons/bs';
+import { BsFolder2Open, BsPlayFill, BsCameraVideo, BsMusicNoteBeamed, BsBrush, BsReddit, BsDiscord, BsStars, BsYoutube, BsInfo, BsInfoCircle, BsInfoCircleFill, BsSoundwave } from 'react-icons/bs';
 import { version } from '../../package.json';
 import toast from 'react-hot-toast';
 import { API_BASE_URL, isDesktop } from '../config';
@@ -2342,12 +2342,14 @@ const Dialogs = () => {
                             
                             {includedArtists.length > 0 && (
                               <div style={{ fontSize: '11px', color: '#888', display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '8px', marginTop: '5px', textAlign:'left' }}>
-                                <span style={{ marginTop: '5px', fontSize: '10px', lineHeight:1.2, color: '#aaa', textTransform: 'uppercase', fontWeight: 'bold', textAlign:'left' }}>OpenGameArt / ModArchive Artists to Credit:</span>
+                                <span style={{ marginTop: '5px', fontSize: '10px', lineHeight:1.2, color: '#aaa', textTransform: 'uppercase', fontWeight: 'bold', textAlign:'left' }}>OpenGameArt / ModArchive / Freesound Artists to Credit:</span>
                                 <div style={{ display: 'flex', flexDirection: 'row', gap: '4px', marginTop: '4px' }}>
                                   {includedArtists.map((artist, i) => (
                                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                                       {artist.source === 'modarchive'
                                         ? <BsMusicNoteBeamed size={11} style={{ color: '#ed3ae4ff', flexShrink: 0 }} />
+                                        : artist.source === 'freesound'
+                                        ? <BsSoundwave size={11} style={{ color: '#e040fb', flexShrink: 0 }} />
                                         : <BsBrush size={11} style={{ color: '#1db8dfff', flexShrink: 0 }} />}
                                       <span style={{color:'white'}}>{artist.name}</span>
                                     </div>
