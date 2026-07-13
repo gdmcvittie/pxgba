@@ -1,3 +1,16 @@
+0.4.0
+- adds panel backgrounds based on their primary function color
+- adds ability to reorganize panels by dragging them
+- fixed hud vertical layout compile bug
+- fixed magenta flicker between scenes
+- fixed tile editor palette limits
+- added axis locking to projectiles
+- added life time for projectiles
+- fixed race level compile error
+- splits music and sfx into separate panels
+- adds freesound.org sfx search to sfx
+- moved text out of sidebar into a flyout menu
+
 0.3.5
 - adds tile editor with live preview
 - adds scene settings variables, and defaults new scenes to use them (velocity, traction, speed, etc)
