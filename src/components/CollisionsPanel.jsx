@@ -139,12 +139,14 @@ const CollisionsPanel = ({ isCollapsed, onToggle }) => {
             <button 
               onClick={(e) => { e.stopPropagation(); fillSelectionWithCollision(); }} 
               title="Fill Selection with Collision" 
-              style={{ backgroundColor: '#2196F3', border: 'none', color: '#fff', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: '11px', fontWeight: 'bold' }}
+              style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: '11px', fontWeight: 'bold', transition: 'all 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = '#2196F3'; e.currentTarget.style.color = '#2196F3'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}
             >
               Fill Sel
             </button>
           )}
-          <button onClick={addCollision} title="Add Collision" style={{ backgroundColor: '#4CAF50', border: 'none', color: '#fff', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}><BsPlus /></button>
+          <button onClick={addCollision} title="Add Collision" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.color = '#4CAF50'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsPlus /></button>
           <div onClick={e => { e.stopPropagation(); onToggle(); }} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
             {isCollapsed ? <BsChevronRight style={{ color: '#aaa' }} /> : <BsChevronDown style={{ color: '#aaa' }} />}
           </div>

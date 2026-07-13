@@ -622,9 +622,9 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
           <BsBorder /> Tiles
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onClick={e => { if (isCollapsed) { onToggle(); } e.stopPropagation(); }}>
-          <button onClick={downloadTilesAsSpritesheet} title="Download Spritesheet" style={{ backgroundColor: '#8522e8', border: 'none', color: '#fff', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}><BsBoxArrowUp /></button>
-          <button onClick={() => tileSheetInputRef.current?.click()} title="Import Sprite Sheet" style={{ backgroundColor: '#0078d4', border: 'none', color: '#fff', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}><BsBoxArrowInDown /></button>
-          <button onClick={saveSelectionAsTile} title="Capture Selection to Tile" style={{ backgroundColor: '#4CAF50', border: 'none', color: '#fff', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}><BsPlus /></button>
+          <button onClick={downloadTilesAsSpritesheet} title="Download Spritesheet" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#8522e8'; e.currentTarget.style.color = '#8522e8'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsBoxArrowUp /></button>
+          <button onClick={() => tileSheetInputRef.current?.click()} title="Import Sprite Sheet" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#0078d4'; e.currentTarget.style.color = '#0078d4'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsBoxArrowInDown /></button>
+          <button onClick={saveSelectionAsTile} title="Capture Selection to Tile" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.color = '#4CAF50'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsPlus /></button>
           <button
             onClick={() => {
               if (window.confirm("Are you sure you want to clear all custom tiles? This will remove all custom captured or imported tiles and reset to the default tiles.")) {
@@ -644,7 +644,9 @@ const TilePanel = ({ isCollapsed, onToggle }) => {
               }
             }}
             title="Clear & Reset Default Tiles"
-            style={{ backgroundColor: '#ff4444', border: 'none', color: '#fff', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+            style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = '#ff4444'; e.currentTarget.style.color = '#ff4444'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}
           >
             <BsTrash />
           </button>
