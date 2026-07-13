@@ -5,7 +5,7 @@ import { BsMusicNoteBeamed, BsUpload, BsTrash, BsChevronDown, BsChevronRight, Bs
 import toast from 'react-hot-toast';
 import { API_BASE_URL } from '../config';
 
-const MusicPanel = ({ isCollapsed, onToggle }) => {
+const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
   const { musicTracks, setMusicTracks, saveHistory, layers, dimensions, setIsMusicEditorOpen, setEditingMusicTrackId, addModArchiveArtist } = usePxShop();
   const fileInputRef = useRef(null);
 
@@ -455,9 +455,10 @@ const MusicPanel = ({ isCollapsed, onToggle }) => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#3d3d3d' }}>
-      <div 
+      <div
         onClick={onToggle}
-        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
+        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none' }}
+        {...dragProps}
       >
         <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <BsMusicNoteBeamed /> Music

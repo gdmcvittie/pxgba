@@ -3,7 +3,7 @@ import { BsTv, BsChevronDown, BsChevronRight, BsTextLeft, BsTextCenter, BsTextRi
 import PaletteColorPicker from './PaletteColorPicker';
 import { TileSelector } from './Dialogs';
 
-const HUDPanel = ({ isCollapsed, onToggle }) => {
+const HUDPanel = ({ isCollapsed, onToggle, dragProps }) => {
   const {
     hudSettings, setHudSettings,
     saveHistory, layers, dimensions,
@@ -77,7 +77,8 @@ const HUDPanel = ({ isCollapsed, onToggle }) => {
     <div style={{ display: 'flex', flexDirection: 'column', borderBottom: '2px solid #222', background: isCollapsed ? 'transparent' : '#3d3d3d' }}>
       <div 
         onClick={onToggle}
-        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
+        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none' }}
+        {...dragProps}
       >
         <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <BsTv /> HUD Settings

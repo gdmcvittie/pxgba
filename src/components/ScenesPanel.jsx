@@ -4,7 +4,7 @@ import { BsMap, BsPlus, BsTrash, BsFiles, BsChevronDown, BsChevronRight, BsGlobe
 import { TileSelector } from './Dialogs';
 import { toast } from 'react-hot-toast';
 
-const ScenesPanel = ({ isCollapsed, onToggle }) => {
+const ScenesPanel = ({ isCollapsed, onToggle, dragProps }) => {
   const [editingSceneId, setEditingSceneId] = useState(null);
   const [editingGroupId, setEditingGroupId] = useState(null);
   const [draggedSceneId, setDraggedSceneId] = useState(null);
@@ -139,7 +139,8 @@ const ScenesPanel = ({ isCollapsed, onToggle }) => {
     <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#3d3d3d' }}>
       <div 
         onClick={onToggle}
-        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
+        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none' }}
+        {...dragProps}
       >
         <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <BsMap /> Scenes

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { usePxShop } from '../context/PxShopContext';
 import { BsClockHistory, BsChevronDown, BsChevronRight, BsTrash } from 'react-icons/bs';
 
-const HistoryPanel = ({ isCollapsed, onToggle }) => {
+const HistoryPanel = ({ isCollapsed, onToggle, dragProps }) => {
   const {
     history,
     historyIndex,
@@ -29,7 +29,8 @@ const HistoryPanel = ({ isCollapsed, onToggle }) => {
     <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, minHeight: 0, borderTop: '2px solid #222', background: isCollapsed ? 'transparent' : '#3d3d3d' }}>
       <div 
         onClick={onToggle}
-        style={{ padding: '10px 15px', fontWeight: 'bold', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', background: '#2d2d2d', textAlign: 'left', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', userSelect: 'none' }}
+        style={{ padding: '10px 15px', fontWeight: 'bold', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', background: '#2d2d2d', textAlign: 'left', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'grab', userSelect: 'none' }}
+        {...dragProps}
       >
         <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <BsClockHistory /> HISTORY

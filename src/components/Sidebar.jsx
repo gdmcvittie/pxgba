@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { BsChevronLeft, BsChevronRight, BsMap, BsPalette, BsType, BsBorder, BsLayers, BsBoundingBox, BsLightningChargeFill, BsMusicNoteBeamed, BsCalculator, BsCodeSlash, BsClockHistory, BsTv, BsSoundwave } from 'react-icons/bs';
 import { ImMan } from 'react-icons/im';
 import Navigator from './Navigator';
@@ -18,6 +18,39 @@ import AnimationsPanel from './AnimationsPanel';
 import HUDPanel from './HUDPanel';
 import { usePxShop } from '../context/PxShopContext';
 
+const PANEL_META = {
+  scenes:     { icon: BsMap,                  title: 'Scenes' },
+  palette:    { icon: BsPalette,              title: 'Palette' },
+  tiles:      { icon: BsBorder,               title: 'Tiles' },
+  layers:     { icon: BsLayers,               title: 'Layers' },
+  hud:        { icon: BsTv,                   title: 'HUD Settings' },
+  actors:     { icon: ImMan,                  title: 'Actors' },
+  collisions: { icon: BsBoundingBox,          title: 'Collisions' },
+  triggers:   { icon: BsLightningChargeFill,  title: 'Triggers' },
+  music:      { icon: BsMusicNoteBeamed,      title: 'Music' },
+  sfx:        { icon: BsSoundwave,            title: 'SFX' },
+  variables:  { icon: BsCalculator,           title: 'Variables' },
+  scripts:    { icon: BsCodeSlash,            title: 'Scripts' },
+  history:    { icon: BsClockHistory,         title: 'History' },
+};
+
+const PANEL_COMPONENTS = {
+  scenes: ScenesPanel, palette: Palette, tiles: TilePanel, layers: LayersPanel,
+  hud: HUDPanel, actors: ActorsPanel, collisions: CollisionsPanel,
+  triggers: TriggersPanel, music: MusicPanel, sfx: SfxPanel,
+  variables: VariablesPanel, scripts: ScriptsPanel, history: HistoryPanel,
+};
+
+const DEFAULT_LAYOUT = {
+  col1: ['scenes', 'palette', 'tiles', 'layers'],
+  col2: ['hud', 'actors', 'collisions', 'triggers'],
+  col3: ['music', 'sfx', 'variables', 'scripts', 'history'],
+};
+
+const DropIndicator = () => (
+  <div style={{ position: 'absolute', top: -1, left: 0, right: 0, height: '2px', background: '#4CAF50', zIndex: 10, pointerEvents: 'none' }} />
+);
+
 const Sidebar = () => {
   const {
     tool,
@@ -26,27 +59,20 @@ const Sidebar = () => {
     activeCol3Panel, setActiveCol3Panel
   } = usePxShop();
 
-  const col1Panels = [
-    { key: 'scenes', icon: BsMap, title: 'Scenes' },
-    { key: 'palette', icon: BsPalette, title: 'Palette' },
-    { key: 'tiles', icon: BsBorder, title: 'Tiles' },
-    { key: 'layers', icon: BsLayers, title: 'Layers' },
-  ];
+  const [layout, setLayout] = useState(() => {
+    try {
+      const saved = localStorage.getItem('px_shop_panel_layout');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.col1 && parsed.col2 && parsed.col3) return parsed;
+      }
+    } catch {}
+    return DEFAULT_LAYOUT;
+  });
 
-  const col2Panels = [
-    { key: 'hud', icon: BsTv, title: 'HUD Settings' },
-    { key: 'actors', icon: ImMan, title: 'Actors' },
-    { key: 'collisions', icon: BsBoundingBox, title: 'Collisions' },
-    { key: 'triggers', icon: BsLightningChargeFill, title: 'Triggers' },
-  ];
-
-  const col3Panels = [
-    { key: 'music', icon: BsMusicNoteBeamed, title: 'Music' },
-    { key: 'sfx', icon: BsSoundwave, title: 'SFX' },
-    { key: 'variables', icon: BsCalculator, title: 'Variables' },
-    { key: 'scripts', icon: BsCodeSlash, title: 'Scripts' },
-    { key: 'history', icon: BsClockHistory, title: 'History' },
-  ];
+  useEffect(() => {
+    localStorage.setItem('px_shop_panel_layout', JSON.stringify(layout));
+  }, [layout]);
 
   const [col1Width, setCol1Width] = useState(() => {
     const saved = localStorage.getItem('px_shop_col1Width');
@@ -105,28 +131,175 @@ const Sidebar = () => {
     return () => { document.removeEventListener('mousemove', handleMouseMove); document.removeEventListener('mouseup', handleMouseUp); };
   }, [draggingCol]);
 
+  const findColumnForPanel = useCallback((panelKey) => {
+    if (layout.col1.includes(panelKey)) return 'col1';
+    if (layout.col2.includes(panelKey)) return 'col2';
+    if (layout.col3.includes(panelKey)) return 'col3';
+    return null;
+  }, [layout]);
+
+  const setActiveForColumn = useCallback((colName, panelKey) => {
+    if (colName === 'col1') { setActiveCol1Panel(panelKey); setCol1Collapsed(false); }
+    else if (colName === 'col2') { setActiveCol2Panel(panelKey); setCol2Collapsed(false); }
+    else if (colName === 'col3') { setActiveCol3Panel(panelKey); setCol3Collapsed(false); }
+  }, [setActiveCol1Panel, setActiveCol2Panel, setActiveCol3Panel]);
+
   useEffect(() => {
+    const activatePanel = (panelKey) => {
+      const col = findColumnForPanel(panelKey);
+      if (col) setActiveForColumn(col, panelKey);
+    };
+
     if (['pen', 'brush', 'eraser', 'fill', 'gradient', 'drawLine', 'drawRect', 'drawRectFill', 'drawRoundRect', 'drawRoundRectFill', 'drawCircle', 'drawCircleFill'].includes(tool)) {
-      setActiveCol1Panel('palette');
-      setCol1Collapsed(false);
+      activatePanel('palette');
     }
 
     if (['tile', 'tileFill'].includes(tool)) {
-      setActiveCol1Panel('tiles');
-      setCol1Collapsed(false);
+      activatePanel('tiles');
     } else if (['actor', 'spawn'].includes(tool)) {
-      setActiveCol2Panel('actors');
-      setCol2Collapsed(false);
+      activatePanel('actors');
     }
 
     if (['trigger'].includes(tool)) {
-      setActiveCol2Panel('triggers');
-      setCol2Collapsed(false);
+      activatePanel('triggers');
     } else if (['collision', 'collisionFill'].includes(tool)) {
-      setActiveCol2Panel('collisions');
-      setCol2Collapsed(false);
+      activatePanel('collisions');
     }
-  }, [tool]);
+  }, [tool, findColumnForPanel, setActiveForColumn]);
+
+  const draggedPanelRef = useRef(null);
+  const [draggingPanelKey, setDraggingPanelKey] = useState(null);
+  const [dropTarget, setDropTarget] = useState(null);
+
+  const movePanel = useCallback((draggedKey, fromCol, targetKey, toCol, position) => {
+    setLayout(prev => {
+      if (draggedKey === targetKey && fromCol === toCol) return prev;
+      const next = { col1: [...prev.col1], col2: [...prev.col2], col3: [...prev.col3] };
+      const fromArr = next[fromCol];
+      const dragIndex = fromArr.indexOf(draggedKey);
+      if (dragIndex === -1) return prev;
+      fromArr.splice(dragIndex, 1);
+      const toArr = next[toCol];
+      let insertIndex = toArr.indexOf(targetKey);
+      if (insertIndex === -1) {
+        toArr.push(draggedKey);
+      } else {
+        if (position === 'after') insertIndex += 1;
+        toArr.splice(insertIndex, 0, draggedKey);
+      }
+      return next;
+    });
+    setDropTarget(null);
+    setDraggingPanelKey(null);
+  }, []);
+
+  const movePanelToColumnEnd = useCallback((draggedKey, fromCol, toCol) => {
+    setLayout(prev => {
+      const next = { col1: [...prev.col1], col2: [...prev.col2], col3: [...prev.col3] };
+      const fromArr = next[fromCol];
+      const dragIndex = fromArr.indexOf(draggedKey);
+      if (dragIndex === -1) return prev;
+      fromArr.splice(dragIndex, 1);
+      next[toCol].push(draggedKey);
+      return next;
+    });
+    setDropTarget(null);
+    setDraggingPanelKey(null);
+  }, []);
+
+  const makeDragProps = useCallback((panelKey, colName) => ({
+    draggable: true,
+    onDragStart: (e) => {
+      draggedPanelRef.current = { key: panelKey, fromCol: colName };
+      setDraggingPanelKey(panelKey);
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', panelKey);
+    },
+    onDragEnd: () => {
+      draggedPanelRef.current = null;
+      setDraggingPanelKey(null);
+      setDropTarget(null);
+    },
+  }), []);
+
+  const handlePanelDragOver = useCallback((e, panelKey, colName) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const dragged = draggedPanelRef.current;
+    if (!dragged || (dragged.key === panelKey && dragged.fromCol === colName)) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const midY = rect.top + rect.height / 2;
+    const position = e.clientY < midY ? 'before' : 'after';
+    setDropTarget(prev => {
+      if (prev?.key === panelKey && prev?.position === position && prev?.col === colName) return prev;
+      return { key: panelKey, col: colName, position };
+    });
+  }, []);
+
+  const handlePanelDrop = useCallback((e, panelKey, colName) => {
+    e.preventDefault();
+    const dragged = draggedPanelRef.current;
+    if (!dragged || !dropTarget) return;
+    movePanel(dragged.key, dragged.fromCol, dropTarget.key, dropTarget.col, dropTarget.position);
+  }, [dropTarget, movePanel]);
+
+  const renderColumnPanels = useCallback((colName, activePanel, setActivePanel) => {
+    const panels = layout[colName];
+    return panels.map(panelKey => {
+      const Component = PANEL_COMPONENTS[panelKey];
+      if (!Component) return null;
+      const isActive = activePanel === panelKey;
+      const isDragging = draggingPanelKey === panelKey;
+      return (
+        <div
+          key={panelKey}
+          onDragOver={(e) => handlePanelDragOver(e, panelKey, colName)}
+          onDragLeave={() => setDropTarget(null)}
+          onDrop={(e) => handlePanelDrop(e, panelKey, colName)}
+          style={{ position: 'relative', flex: isActive ? 1 : 'none', minHeight: 0, display: 'flex', flexDirection: 'column', opacity: isDragging ? 0.4 : 1 }}
+        >
+          {dropTarget?.key === panelKey && dropTarget?.position === 'before' && <DropIndicator />}
+          <Component
+            isCollapsed={!isActive}
+            onToggle={() => setActivePanel(isActive ? null : panelKey)}
+            dragProps={makeDragProps(panelKey, colName)}
+          />
+          {dropTarget?.key === panelKey && dropTarget?.position === 'after' && <DropIndicator />}
+        </div>
+      );
+    });
+  }, [layout, draggingPanelKey, handlePanelDragOver, handlePanelDrop, makeDragProps]);
+
+  const renderCollapsedIcons = useCallback((colName, activePanel, setActivePanel, setCollapsed) => {
+    const panels = layout[colName];
+    return (
+      <div
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', padding: '10px 0', flex: 1 }}
+        onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; setDropTarget({ key: '__drop_' + colName + '__', col: colName, position: 'end' }); }}
+        onDragLeave={() => setDropTarget(null)}
+        onDrop={(e) => {
+          e.preventDefault();
+          const dragged = draggedPanelRef.current;
+          if (!dragged) return;
+          movePanelToColumnEnd(dragged.key, dragged.fromCol, colName);
+          setCollapsed(false);
+        }}
+      >
+        {panels.map(p => {
+          const meta = PANEL_META[p];
+          if (!meta) return null;
+          const Icon = meta.icon;
+          return (
+            <div key={p} className="collapsed-icon-btn" title={meta.title}
+              onClick={() => { setCollapsed(false); setActivePanel(p); }}
+              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '22px', height: '22px', borderRadius: '4px', background: activePanel === p ? '#3d3d3d' : 'transparent' }}>
+              <Icon size={14} color="#aaa" />
+            </div>
+          );
+        })}
+      </div>
+    );
+  }, [layout, movePanelToColumnEnd]);
 
   return (
     <>
@@ -166,24 +339,10 @@ const Sidebar = () => {
           {col1Collapsed ? <BsChevronLeft color="#aaa" size={12} /> : <BsChevronRight color="#aaa" size={12} />}
         </div>
 
-        {col1Collapsed && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', padding: '10px 0', flex: 1 }}>
-            {col1Panels.map(p => {
-              const Icon = p.icon;
-              return (
-                <div key={p.key} className="collapsed-icon-btn" title={p.title} onClick={() => { setCol1Collapsed(false); setActiveCol1Panel(p.key); }} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '22px', height: '22px', borderRadius: '4px', background: activeCol1Panel === p.key ? '#3d3d3d' : 'transparent' }}>
-                  <Icon size={14} color="#aaa" />
-                </div>
-              );
-            })}
-          </div>
-        )}
+        {col1Collapsed && renderCollapsedIcons('col1', activeCol1Panel, setActiveCol1Panel, setCol1Collapsed)}
 
         <div style={{ display: col1Collapsed ? 'none' : 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
-          <ScenesPanel isCollapsed={activeCol1Panel !== 'scenes'} onToggle={() => setActiveCol1Panel(activeCol1Panel === 'scenes' ? null : 'scenes')} />
-          <Palette isCollapsed={activeCol1Panel !== 'palette'} onToggle={() => setActiveCol1Panel(activeCol1Panel === 'palette' ? null : 'palette')} />
-          <TilePanel isCollapsed={activeCol1Panel !== 'tiles'} onToggle={() => setActiveCol1Panel(activeCol1Panel === 'tiles' ? null : 'tiles')} />
-          <LayersPanel isCollapsed={activeCol1Panel !== 'layers'} onToggle={() => setActiveCol1Panel(activeCol1Panel === 'layers' ? null : 'layers')} />
+          {renderColumnPanels('col1', activeCol1Panel, setActiveCol1Panel)}
         </div>
       </div>
 
@@ -199,24 +358,10 @@ const Sidebar = () => {
           {col2Collapsed ? <BsChevronLeft color="#aaa" size={12} /> : <BsChevronRight color="#aaa" size={12} />}
         </div>
 
-        {col2Collapsed && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', padding: '10px 0', flex: 1 }}>
-            {col2Panels.map(p => {
-              const Icon = p.icon;
-              return (
-                <div key={p.key} className="collapsed-icon-btn" title={p.title} onClick={() => { setCol2Collapsed(false); setActiveCol2Panel(p.key); }} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '22px', height: '22px', borderRadius: '4px', background: activeCol2Panel === p.key ? '#3d3d3d' : 'transparent' }}>
-                  <Icon size={14} color="#aaa" />
-                </div>
-              );
-            })}
-          </div>
-        )}
+        {col2Collapsed && renderCollapsedIcons('col2', activeCol2Panel, setActiveCol2Panel, setCol2Collapsed)}
 
         <div style={{ display: col2Collapsed ? 'none' : 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
-          <HUDPanel isCollapsed={activeCol2Panel !== 'hud'} onToggle={() => setActiveCol2Panel(activeCol2Panel === 'hud' ? null : 'hud')} />
-          <ActorsPanel isCollapsed={activeCol2Panel !== 'actors'} onToggle={() => setActiveCol2Panel(activeCol2Panel === 'actors' ? null : 'actors')} />
-          <CollisionsPanel isCollapsed={activeCol2Panel !== 'collisions'} onToggle={() => setActiveCol2Panel(activeCol2Panel === 'collisions' ? null : 'collisions')} />
-          <TriggersPanel isCollapsed={activeCol2Panel !== 'triggers'} onToggle={() => setActiveCol2Panel(activeCol2Panel === 'triggers' ? null : 'triggers')} />
+          {renderColumnPanels('col2', activeCol2Panel, setActiveCol2Panel)}
         </div>
       </div>
 
@@ -232,25 +377,10 @@ const Sidebar = () => {
           {col3Collapsed ? <BsChevronLeft color="#aaa" size={12} /> : <BsChevronRight color="#aaa" size={12} />}
         </div>
 
-        {col3Collapsed && (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', padding: '10px 0', flex: 1 }}>
-            {col3Panels.map(p => {
-              const Icon = p.icon;
-              return (
-                <div key={p.key} className="collapsed-icon-btn" title={p.title} onClick={() => { setCol3Collapsed(false); setActiveCol3Panel(p.key); }} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '22px', height: '22px', borderRadius: '4px', background: activeCol3Panel === p.key ? '#3d3d3d' : 'transparent' }}>
-                  <Icon size={14} color="#aaa" />
-                </div>
-              );
-            })}
-          </div>
-        )}
+        {col3Collapsed && renderCollapsedIcons('col3', activeCol3Panel, setActiveCol3Panel, setCol3Collapsed)}
 
         <div style={{ display: col3Collapsed ? 'none' : 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
-          <MusicPanel isCollapsed={activeCol3Panel !== 'music'} onToggle={() => setActiveCol3Panel(activeCol3Panel === 'music' ? null : 'music')} />
-          <SfxPanel isCollapsed={activeCol3Panel !== 'sfx'} onToggle={() => setActiveCol3Panel(activeCol3Panel === 'sfx' ? null : 'sfx')} />
-          <VariablesPanel isCollapsed={activeCol3Panel !== 'variables'} onToggle={() => setActiveCol3Panel(activeCol3Panel === 'variables' ? null : 'variables')} />
-          <ScriptsPanel isCollapsed={activeCol3Panel !== 'scripts'} onToggle={() => setActiveCol3Panel(activeCol3Panel === 'scripts' ? null : 'scripts')} />
-          <HistoryPanel isCollapsed={activeCol3Panel !== 'history'} onToggle={() => setActiveCol3Panel(activeCol3Panel === 'history' ? null : 'history')} />
+          {renderColumnPanels('col3', activeCol3Panel, setActiveCol3Panel)}
         </div>
       </div>
     </>
