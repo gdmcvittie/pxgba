@@ -126,13 +126,13 @@ const CollisionsPanel = ({ isCollapsed, onToggle, dragProps }) => {
   const ungroupedCollisions = collisions.filter(c => !c.isGroup && (!c.groupId || !groups.some(g => g.id === c.groupId)));
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#3d3d3d' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#3c3733' }}>
       <div
         onClick={onToggle}
-        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none' }}
+        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none', background: '#3b200e' }}
         {...dragProps}
       >
-        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#FF5722', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <BsBoundingBox /> Collisions
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onClick={e => { if (isCollapsed) { onToggle(); } e.stopPropagation(); }}>
@@ -147,7 +147,7 @@ const CollisionsPanel = ({ isCollapsed, onToggle, dragProps }) => {
               Fill Sel
             </button>
           )}
-          <button onClick={addCollision} title="Add Collision" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.color = '#4CAF50'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsPlus /></button>
+          <button onClick={addCollision} title="Add Collision" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#FF5722'; e.currentTarget.style.color = '#FF5722'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsPlus /></button>
           <div onClick={e => { e.stopPropagation(); onToggle(); }} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
             {isCollapsed ? <BsChevronRight style={{ color: '#aaa' }} /> : <BsChevronDown style={{ color: '#aaa' }} />}
           </div>
@@ -163,7 +163,9 @@ const CollisionsPanel = ({ isCollapsed, onToggle, dragProps }) => {
               <div style={{ display: 'flex', gap: '6px' }}>
                 <button
                   onClick={groupSelectedCollisions}
-                  style={{ backgroundColor: '#2196F3', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '3px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}
+                  style={{ backgroundColor: 'transparent', color: '#2196F3', border: '1px solid #2196F3', padding: '4px 8px', borderRadius: '3px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}
+                  onMouseEnter={e => { e.target.style.background = '#2196F3'; e.target.style.color = '#fff'; }}
+                  onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#2196F3'; }}
                 >
                   Group Selected
                 </button>

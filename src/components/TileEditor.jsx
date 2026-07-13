@@ -365,7 +365,7 @@ const TileEditor = () => {
           <BsEye size={12} /> Preview
           <input type="checkbox" checked={livePreview} onChange={(e) => handleLivePreviewToggle(e.target.checked)} style={{ margin: 0, cursor: 'pointer' }} />
         </label>
-        <button onClick={handleSave} title="Save" style={{ background: '#4CAF50', border: 'none', color: '#fff', borderRadius: '4px', padding: '4px 10px', cursor: 'pointer', fontWeight: 'bold', fontSize: '11px' }}>Save</button>
+        <button onClick={handleSave} title="Save" style={{ background: 'transparent', border: '1px solid #4CAF50', color: '#4CAF50', borderRadius: '4px', padding: '4px 10px', cursor: 'pointer', fontWeight: 'bold', fontSize: '11px' }} onMouseEnter={e => { e.target.style.background = '#4CAF50'; e.target.style.color = '#fff'; }} onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#4CAF50'; }}>Save</button>
         <button onClick={handleClose} title="Close (discard changes)" style={{ background: '#444', border: 'none', color: '#fff', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer', fontSize: '12px' }}>X</button>
       </div>
 

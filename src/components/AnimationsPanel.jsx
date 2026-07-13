@@ -97,7 +97,7 @@ const AnimationsPanel = ({ isCollapsed, onToggle }) => {
                              ) : null;
                            })()
                         )}
-                        <div onClick={() => removeFrame(anim.id, idx)} style={{ position: 'absolute', top: -4, right: -4, background: '#ff4444', color: '#fff', fontSize: '8px', width: '12px', height: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer' }}>✕</div>
+                        <div onClick={() => removeFrame(anim.id, idx)} style={{ position: 'absolute', top: -4, right: -4, background: 'transparent', color: '#ff4444', fontSize: '8px', width: '12px', height: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer', border: '1px solid #ff4444' }} onMouseEnter={e => { e.target.style.background = '#ff4444'; e.target.style.color = '#fff'; }} onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#ff4444'; }}>✕</div>
                      </div>
                    )
                  })}

@@ -126,7 +126,7 @@ const TextSettings = () => {
             />
           )}
         </div>
-        <button disabled={!textSettings.text} onClick={() => { renderText(textSettings, editingTextLayerId); setEditingTextLayerId(null); setTextSettings(prev => ({ ...prev, text: "" })); }} style={{ padding: '6px', background: '#4CAF50', color: '#fff', border: 'none', borderRadius: '3px', cursor: textSettings.text ? 'pointer' : 'default', opacity: textSettings.text ? 1 : 0.5, fontSize: '11px', fontWeight: 'bold' }}>{editingTextLayerId ? 'Update Text' : 'Draw Text'}</button>
+        <button disabled={!textSettings.text} onClick={() => { renderText(textSettings, editingTextLayerId); setEditingTextLayerId(null); setTextSettings(prev => ({ ...prev, text: "" })); }} style={{ padding: '6px', background: 'transparent', color: '#4CAF50', border: '1px solid #4CAF50', borderRadius: '3px', cursor: textSettings.text ? 'pointer' : 'default', opacity: textSettings.text ? 1 : 0.5, fontSize: '11px', fontWeight: 'bold' }} onMouseEnter={e => { e.target.style.background = '#4CAF50'; e.target.style.color = '#fff'; }} onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#4CAF50'; }}>{editingTextLayerId ? 'Update Text' : 'Draw Text'}</button>
       </div>
     </div>
   );

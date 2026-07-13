@@ -182,6 +182,25 @@ const StatusBar = () => {
           </span>
         </button>
       )}
+      <button
+        onClick={() => window.dispatchEvent(new Event('reset-panel-layout'))}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px',
+          background: 'transparent',
+          border: 'none',
+          color: '#888',
+          cursor: 'pointer',
+          padding: '0 4px',
+          fontSize: '11px',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.color = '#4CAF50'; }}
+        onMouseLeave={e => { e.currentTarget.style.color = '#888'; }}
+        title="Reset sidebar panel layout to defaults"
+      >
+        Reset Layout
+      </button>
     </div>
   );
 };

@@ -42,8 +42,8 @@ const PANEL_COMPONENTS = {
 };
 
 const DEFAULT_LAYOUT = {
-  col1: ['scenes', 'palette', 'tiles', 'layers'],
-  col2: ['hud', 'actors', 'collisions', 'triggers'],
+  col1: ['palette', 'tiles', 'layers'],
+  col2: ['hud', 'scenes', 'actors', 'collisions', 'triggers'],
   col3: ['music', 'sfx', 'variables', 'scripts', 'history'],
 };
 
@@ -73,6 +73,12 @@ const Sidebar = () => {
   useEffect(() => {
     localStorage.setItem('px_shop_panel_layout', JSON.stringify(layout));
   }, [layout]);
+
+  useEffect(() => {
+    const handleResetLayout = () => setLayout(DEFAULT_LAYOUT);
+    window.addEventListener('reset-panel-layout', handleResetLayout);
+    return () => window.removeEventListener('reset-panel-layout', handleResetLayout);
+  }, []);
 
   const [col1Width, setCol1Width] = useState(() => {
     const saved = localStorage.getItem('px_shop_col1Width');
@@ -174,6 +180,7 @@ const Sidebar = () => {
   const movePanel = useCallback((draggedKey, fromCol, targetKey, toCol, position) => {
     setLayout(prev => {
       if (draggedKey === targetKey && fromCol === toCol) return prev;
+      if (fromCol !== toCol && prev[fromCol].length <= 1) return prev;
       const next = { col1: [...prev.col1], col2: [...prev.col2], col3: [...prev.col3] };
       const fromArr = next[fromCol];
       const dragIndex = fromArr.indexOf(draggedKey);
@@ -195,6 +202,7 @@ const Sidebar = () => {
 
   const movePanelToColumnEnd = useCallback((draggedKey, fromCol, toCol) => {
     setLayout(prev => {
+      if (fromCol !== toCol && prev[fromCol].length <= 1) return prev;
       const next = { col1: [...prev.col1], col2: [...prev.col2], col3: [...prev.col3] };
       const fromArr = next[fromCol];
       const dragIndex = fromArr.indexOf(draggedKey);
@@ -227,6 +235,10 @@ const Sidebar = () => {
     e.dataTransfer.dropEffect = 'move';
     const dragged = draggedPanelRef.current;
     if (!dragged || (dragged.key === panelKey && dragged.fromCol === colName)) return;
+    if (dragged.fromCol !== colName && layout[dragged.fromCol].length <= 1) {
+      e.dataTransfer.dropEffect = 'none';
+      return;
+    }
     const rect = e.currentTarget.getBoundingClientRect();
     const midY = rect.top + rect.height / 2;
     const position = e.clientY < midY ? 'before' : 'after';
@@ -234,7 +246,7 @@ const Sidebar = () => {
       if (prev?.key === panelKey && prev?.position === position && prev?.col === colName) return prev;
       return { key: panelKey, col: colName, position };
     });
-  }, []);
+  }, [layout]);
 
   const handlePanelDrop = useCallback((e, panelKey, colName) => {
     e.preventDefault();

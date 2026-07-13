@@ -1921,7 +1921,7 @@ const ScriptEditor = () => {
     <div style={{ position: 'fixed', inset: 0, zIndex: 20000, backgroundColor: '#1e1e1e', display: 'flex', flexDirection: 'column' }}>
       <div style={{ padding: '10px 20px', borderBottom: '1px solid #333', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#2a2a2a' }}>
         <div style={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}>Script Editor: {entity.name}</div>
-        <button onClick={handleClose} style={{ background: '#ff4444', border: 'none', color: '#fff', padding: '6px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Close & Save</button>
+        <button onClick={handleClose} style={{ background: 'transparent', border: '1px solid #ff4444', color: '#ff4444', padding: '6px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }} onMouseEnter={e => { e.target.style.background = '#ff4444'; e.target.style.color = '#fff'; }} onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#ff4444'; }}>Close & Save</button>
       </div>
       <div style={{ flex: 1, position: 'relative' }}>
         <ReactFlowProvider>

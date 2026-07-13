@@ -1651,7 +1651,12 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button onClick={onClose} style={{ background: 'transparent', border: '1px solid #555', color: '#fff', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
-            <button onClick={() => onSave(idleAnim ? idleAnim.frames[0] : Array(cols * rows).fill(null), designerW, designerH, idleAnim, walkAnim, attackAnim, jumpAnim, customAnims, colX, colY, colW, colH, hflip, vflip, layersMetadata)} style={{ background: '#4CAF50', border: 'none', color: '#fff', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Save Layout</button>
+            <button
+              onClick={() => onSave(idleAnim ? idleAnim.frames[0] : Array(cols * rows).fill(null), designerW, designerH, idleAnim, walkAnim, attackAnim, jumpAnim, customAnims, colX, colY, colW, colH, hflip, vflip, layersMetadata)}
+              onMouseEnter={(e) => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50'; }}
+              style={{ background: 'transparent', border: '1px solid #4CAF50', color: '#4CAF50', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+            >Save Layout</button>
           </div>
         </div>
       </div>
@@ -2201,10 +2206,10 @@ const ActorsPanel = ({ isCollapsed, onToggle, dragProps }) => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#3d3d3d' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#334233' }}>
       <div
         onClick={onToggle}
-        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none' }}
+        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none', background: '#0e210e' }}
         {...dragProps}
       >
         <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -3643,11 +3648,13 @@ const ActorsPanel = ({ isCollapsed, onToggle, dragProps }) => {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <button
                       onClick={(e) => { e.stopPropagation(); setDesignerActorId(actor.id); }}
+                      onMouseEnter={(e) => { e.currentTarget.style.background = '#0078d4'; e.currentTarget.style.color = '#fff'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0078d4'; }}
                       style={{
                         flex: 1,
-                        background: '#0078d4',
-                        color: '#fff',
-                        border: 'none',
+                        background: 'transparent',
+                        color: '#0078d4',
+                        border: '1px solid #0078d4',
                         padding: '6px',
                         fontSize: '11px',
                         outline: 'none',
@@ -3806,7 +3813,9 @@ const ActorsPanel = ({ isCollapsed, onToggle, dragProps }) => {
                           setEditingCustomScriptId(actor.enemyDeathScriptId);
                           setTool('script');
                         }}
-                        style={{ flex: 1, background: '#2196F3', color: '#fff', border: 'none', padding: '6px', fontSize: '11px', outline: 'none', borderRadius: '3px', cursor: 'pointer', fontWeight: 'bold' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = '#2196F3'; e.currentTarget.style.color = '#fff'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#2196F3'; }}
+                        style={{ flex: 1, background: 'transparent', color: '#2196F3', border: '1px solid #2196F3', padding: '6px', fontSize: '11px', outline: 'none', borderRadius: '3px', cursor: 'pointer', fontWeight: 'bold' }}
                       >
                         Edit Custom Script
                       </button>
@@ -3816,12 +3825,19 @@ const ActorsPanel = ({ isCollapsed, onToggle, dragProps }) => {
                           setEditingCustomScriptId(actor.doorUnlockScriptId);
                           setTool('script');
                         }}
-                        style={{ flex: 1, background: '#2196F3', color: '#fff', border: 'none', padding: '6px', fontSize: '11px', outline: 'none', borderRadius: '3px', cursor: 'pointer', fontWeight: 'bold' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = '#2196F3'; e.currentTarget.style.color = '#fff'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#2196F3'; }}
+                        style={{ flex: 1, background: 'transparent', color: '#2196F3', border: '1px solid #2196F3', padding: '6px', fontSize: '11px', outline: 'none', borderRadius: '3px', cursor: 'pointer', fontWeight: 'bold' }}
                       >
                         Edit Custom Script
                       </button>
                     ) : actor.type !== 'sign' ? (
-                      <button onClick={() => setEditingScriptActorId(actor.id)} style={{ flex: 1, background: '#4CAF50', color: '#fff', border: 'none', padding: '6px', fontSize: '11px', outline: 'none', borderRadius: '3px', cursor: 'pointer', fontWeight: 'bold' }}>Edit Script</button>
+                      <button
+                        onClick={() => setEditingScriptActorId(actor.id)}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50'; }}
+                        style={{ flex: 1, background: 'transparent', color: '#4CAF50', border: '1px solid #4CAF50', padding: '6px', fontSize: '11px', outline: 'none', borderRadius: '3px', cursor: 'pointer', fontWeight: 'bold' }}
+                      >Edit Script</button>
                     ) : null}
                   </div>
 
@@ -3927,8 +3943,18 @@ const ActorsPanel = ({ isCollapsed, onToggle, dragProps }) => {
                         <input type="number" value={((scenes.find(s => s.id === activeSceneId)?.globalActorPositions || {})[actor.id]?.y ?? actor.y)} onChange={(e) => { const val = parseInt(e.target.value) || 0; setGlobalActorPosition(actor.id, ((scenes.find(s => s.id === activeSceneId)?.globalActorPositions || {})[actor.id]?.x ?? actor.x), val); }} style={{ width: '50px', background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px' }} />
                       </div>
                       <div style={{ display: 'flex', gap: '8px' }}>
-                        <button onClick={(e) => { e.stopPropagation(); setDesignerActorId(actor.id); }} style={{ flex: 1, background: '#4CAF50', color: '#fff', border: 'none', padding: '6px', fontSize: '11px', outline: 'none', borderRadius: '3px', cursor: 'pointer', fontWeight: 'bold' }}>Design Sprite</button>
-                        <button onClick={() => setEditingScriptActorId(actor.id)} style={{ flex: 1, background: '#4CAF50', color: '#fff', border: 'none', padding: '6px', fontSize: '11px', outline: 'none', borderRadius: '3px', cursor: 'pointer', fontWeight: 'bold' }}>Edit Script</button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setDesignerActorId(actor.id); }}
+                          onMouseEnter={(e) => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50'; }}
+                          style={{ flex: 1, background: 'transparent', color: '#4CAF50', border: '1px solid #4CAF50', padding: '6px', fontSize: '11px', outline: 'none', borderRadius: '3px', cursor: 'pointer', fontWeight: 'bold' }}
+                        >Design Sprite</button>
+                        <button
+                          onClick={() => setEditingScriptActorId(actor.id)}
+                          onMouseEnter={(e) => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50'; }}
+                          style={{ flex: 1, background: 'transparent', color: '#4CAF50', border: '1px solid #4CAF50', padding: '6px', fontSize: '11px', outline: 'none', borderRadius: '3px', cursor: 'pointer', fontWeight: 'bold' }}
+                        >Edit Script</button>
                       </div>
                     </div>
                   )}
@@ -4048,7 +4074,12 @@ const ActorsPanel = ({ isCollapsed, onToggle, dragProps }) => {
                 />
                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
                   <button onClick={() => setScriptPrompt(null)} style={{ background: '#333', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Cancel</button>
-                  <button onClick={() => { if (scriptPromptName.trim()) confirmAddScript(scriptPrompt.actorId, scriptPrompt.prop, scriptPromptName.trim()); }} style={{ background: '#4CAF50', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>Create</button>
+                  <button
+                    onClick={() => { if (scriptPromptName.trim()) confirmAddScript(scriptPrompt.actorId, scriptPrompt.prop, scriptPromptName.trim()); }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50'; }}
+                    style={{ background: 'transparent', color: '#4CAF50', border: '1px solid #4CAF50', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}
+                  >Create</button>
                 </div>
               </div>
             </div>

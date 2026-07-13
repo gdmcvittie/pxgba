@@ -613,19 +613,19 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
   });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, overflow: 'hidden', borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#3d3d3d' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, overflow: 'hidden', borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#373339' }}>
       <div
         onClick={onToggle}
-        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none' }}
+        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none', background: '#1f0f2f' }}
         {...dragProps}
       >
-        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#40c9f1', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <BsBorder /> Tiles
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onClick={e => { if (isCollapsed) { onToggle(); } e.stopPropagation(); }}>
           <button onClick={downloadTilesAsSpritesheet} title="Download Spritesheet" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#8522e8'; e.currentTarget.style.color = '#8522e8'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsBoxArrowUp /></button>
           <button onClick={() => tileSheetInputRef.current?.click()} title="Import Sprite Sheet" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#0078d4'; e.currentTarget.style.color = '#0078d4'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsBoxArrowInDown /></button>
-          <button onClick={saveSelectionAsTile} title="Capture Selection to Tile" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.color = '#4CAF50'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsPlus /></button>
+          <button onClick={saveSelectionAsTile} title="Capture Selection to Tile" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#40c9f1'; e.currentTarget.style.color = '#40c9f1'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsPlus /></button>
           <button
             onClick={() => {
               if (window.confirm("Are you sure you want to clear all custom tiles? This will remove all custom captured or imported tiles and reset to the default tiles.")) {
@@ -687,9 +687,9 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
             <button
               onClick={handleSearch}
               style={{
-                background: '#0078d4',
-                color: '#fff',
-                border: 'none',
+                background: 'transparent',
+                color: '#0078d4',
+                border: '1px solid #0078d4',
                 borderRadius: '4px',
                 padding: '6px 12px',
                 cursor: 'pointer',
@@ -699,6 +699,8 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
                 alignItems: 'center',
                 gap: '4px'
               }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#0078d4'; e.currentTarget.style.color = '#fff'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0078d4'; }}
             >
               Search
             </button>
@@ -1084,7 +1086,7 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
                   onClick={() => setTileEditor({ tileId: activeTile.id })}
                   disabled={!!tileEditor}
                   title="Edit this tile"
-                  style={{ flexShrink: 0, background: tileEditor ? '#3a3a3a' : '#4CAF50', border: 'none', color: '#fff', padding: '6px', borderRadius: '3px', cursor: tileEditor ? 'default' : 'pointer', opacity: tileEditor ? 0.6 : 1, fontSize: '12px', display: 'flex', alignItems: 'center' }}
+                  style={{ flexShrink: 0, background: tileEditor ? '#3a3a3a' : '#40c9f1', border: 'none', color: '#fff', padding: '6px', borderRadius: '3px', cursor: tileEditor ? 'default' : 'pointer', opacity: tileEditor ? 0.6 : 1, fontSize: '12px', display: 'flex', alignItems: 'center' }}
                 >
                   <BsPencil size={12} />
                 </button>
@@ -1101,7 +1103,9 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
                 setTool('pen');
                 setActiveDraw('pen');
               }}
-              style={{ padding: '8px', background: '#ff4444', color: '#fff', border: 'none', borderRadius: '4px', cursor: activeSavedTileId ? 'pointer' : 'default', opacity: activeSavedTileId ? 1 : 0.5, fontWeight: 'bold' }}
+              style={{ padding: '8px', background: 'transparent', color: '#ff4444', border: '1px solid #ff4444', borderRadius: '4px', cursor: activeSavedTileId ? 'pointer' : 'default', opacity: activeSavedTileId ? 1 : 0.5, fontWeight: 'bold' }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#ff4444'; e.currentTarget.style.color = '#fff'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#ff4444'; }}
             >
               Delete Tile
             </button>
@@ -1178,9 +1182,9 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
                 onClick={handleSearch}
                 disabled={isLoading}
                 style={{
-                  background: '#0078d4',
-                  color: '#fff',
-                  border: 'none',
+                  background: 'transparent',
+                  color: '#0078d4',
+                  border: '1px solid #0078d4',
                   borderRadius: '4px',
                   padding: '8px 18px',
                   cursor: 'pointer',
@@ -1188,6 +1192,8 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
                   fontWeight: 'bold',
                   opacity: isLoading ? 0.6 : 1
                 }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#0078d4'; e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0078d4'; }}
               >
                 {isLoading && !selectedTileset ? 'Searching...' : 'Search'}
               </button>
@@ -1215,7 +1221,9 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
                   <div><strong>Error:</strong> {error}</div>
                   <button
                     onClick={handleBack}
-                    style={{ alignSelf: 'flex-start', background: '#ff4444', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}
+                    style={{ alignSelf: 'flex-start', background: 'transparent', color: '#ff4444', border: '1px solid #ff4444', padding: '4px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}
+                    onMouseEnter={e => { e.currentTarget.style.background = '#ff4444'; e.currentTarget.style.color = '#fff'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#ff4444'; }}
                   >
                     Go Back
                   </button>
@@ -1277,15 +1285,17 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
                           onClick={(e) => { e.stopPropagation(); handleSelectTileset(result); }}
                           style={{
                             width: '100%',
-                            background: '#0078d4',
-                            color: '#fff',
-                            border: 'none',
+                            background: 'transparent',
+                            color: '#0078d4',
+                            border: '1px solid #0078d4',
                             borderRadius: '4px',
                             padding: '6px 12px',
                             cursor: 'pointer',
                             fontSize: '11px',
                             fontWeight: 'bold'
                           }}
+                          onMouseEnter={e => { e.currentTarget.style.background = '#0078d4'; e.currentTarget.style.color = '#fff'; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0078d4'; }}
                         >
                           Load Tileset
                         </button>
@@ -1361,15 +1371,17 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
                           </div>
                           <button
                             style={{
-                              background: '#0078d4',
-                              color: '#fff',
-                              border: 'none',
+                              background: 'transparent',
+                              color: '#0078d4',
+                              border: '1px solid #0078d4',
                               borderRadius: '4px',
                               padding: '8px 16px',
                               fontWeight: 'bold',
                               fontSize: '12px',
                               cursor: 'pointer'
                             }}
+                            onMouseEnter={e => { e.currentTarget.style.background = '#0078d4'; e.currentTarget.style.color = '#fff'; }}
+                            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0078d4'; }}
                           >
                             Load File
                           </button>
@@ -1448,15 +1460,17 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
                             onClick={(e) => { e.stopPropagation(); handleImportImage(img.url, img.name); }}
                             style={{
                               width: '100%',
-                              background: '#0078d4',
-                              color: '#fff',
-                              border: 'none',
+                              background: 'transparent',
+                              color: '#0078d4',
+                              border: '1px solid #0078d4',
                               borderRadius: '4px',
                               padding: '6px 12px',
                               cursor: 'pointer',
                               fontSize: '11px',
                               fontWeight: 'bold'
                         }}
+                        onMouseEnter={e => { e.currentTarget.style.background = '#0078d4'; e.currentTarget.style.color = '#fff'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0078d4'; }}
                       >
                         Import This Sheet
                       </button>

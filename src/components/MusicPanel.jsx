@@ -454,13 +454,13 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#3d3d3d' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#383238' }}>
       <div
         onClick={onToggle}
-        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none' }}
+        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none', background: '#270d27' }}
         {...dragProps}
       >
-        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#e040fb', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <BsMusicNoteBeamed /> Music
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onClick={e => { if (isCollapsed) { onToggle(); } e.stopPropagation(); }}>
@@ -504,9 +504,9 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
             <button
               onClick={handleSearch}
               style={{
-                background: '#0078d4',
-                color: '#fff',
-                border: 'none',
+                background: 'transparent',
+                color: '#0078d4',
+                border: '1px solid #0078d4',
                 borderRadius: '4px',
                 padding: '6px 12px',
                 cursor: 'pointer',
@@ -516,6 +516,8 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
                 alignItems: 'center',
                 gap: '4px'
               }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#0078d4'; e.currentTarget.style.color = '#fff'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0078d4'; }}
             >
               Search
             </button>
@@ -571,7 +573,7 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
 
               return (
                 <div key={track.id} style={{ marginLeft: track.groupId ? '15px' : '0', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#111', padding: '6px 8px', borderRadius: '4px', border: '1px solid #4CAF50', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#111', padding: '6px 8px', borderRadius: '4px', border: '1px solid #e040fb', gap: '8px' }}>
                     {renamingTrackId === track.id ? (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flex: 1 }}>
                         <input
@@ -587,14 +589,14 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
                             flex: 1,
                             background: '#222',
                             color: '#fff',
-                            border: '1px solid #4CAF50',
+                            border: '1px solid #e040fb',
                             borderRadius: '3px',
                             padding: '2px 6px',
                             fontSize: '12px',
                             outline: 'none'
                           }}
                         />
-                        <button onClick={() => handleRenameTrack(track.id, renamingName)} style={{ background: '#4CAF50', border: 'none', color: '#fff', borderRadius: '3px', padding: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                        <button onClick={() => handleRenameTrack(track.id, renamingName)} style={{ background: 'transparent', border: '1px solid #e040fb', color: '#e040fb', borderRadius: '3px', padding: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }} onMouseEnter={e => { e.currentTarget.style.background = '#e040fb'; e.currentTarget.style.color = '#fff'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e040fb'; }}>
                           <BsCheck size={14} />
                         </button>
                         <button onClick={() => setRenamingTrackId(null)} style={{ background: '#333', border: '1px solid #555', color: '#ff4444', borderRadius: '3px', padding: '3px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
@@ -624,7 +626,7 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
                     )}
                   </div>
                   {track.isComposed && (
-                    <button onClick={() => { setEditingMusicTrackId(track.id); setIsMusicEditorOpen(true); }} style={{ background: '#4CAF50', color: '#fff', border: 'none', padding: '6px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: 'bold', marginBottom: '4px' }}>
+                    <button onClick={() => { setEditingMusicTrackId(track.id); setIsMusicEditorOpen(true); }} style={{ background: 'transparent', color: '#e040fb', border: '1px solid #e040fb', padding: '6px', borderRadius: '4px', cursor: 'pointer', fontSize: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: 'bold', marginBottom: '4px' }} onMouseEnter={e => { e.currentTarget.style.background = '#e040fb'; e.currentTarget.style.color = '#fff'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e040fb'; }}>
                       <BsMusicNoteBeamed /> Edit Composed Music
                     </button>
                   )}
@@ -687,7 +689,7 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
           ) : <div style={{ fontSize: '11px', color: '#666', textAlign: 'center', padding: '10px 0' }}>No music tracks added</div>}
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '10px', borderTop: '1px solid #333', paddingTop: '10px' }}>
-            <button onClick={createNewComposed} style={{ background: '#4CAF50', color: '#fff', border: 'none', padding: '10px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: 'bold', boxShadow: '0 2px 6px rgba(76,175,80,0.3)' }}>
+            <button onClick={createNewComposed} style={{ background: 'transparent', color: '#e040fb', border: '1px solid #e040fb', padding: '10px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: 'bold' }} onMouseEnter={e => { e.currentTarget.style.background = '#e040fb'; e.currentTarget.style.color = '#fff'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e040fb'; }}>
               <BsMusicNoteBeamed /> Compose Music (Piano Roll)
             </button>
             <button onClick={() => fileInputRef.current?.click()} style={{ background: '#333', color: '#fff', border: '1px solid #555', padding: '10px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
@@ -766,9 +768,9 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
                 onClick={handleSearch}
                 disabled={isLoading}
                 style={{
-                  background: '#0078d4',
-                  color: '#fff',
-                  border: 'none',
+                  background: 'transparent',
+                  color: '#0078d4',
+                  border: '1px solid #0078d4',
                   borderRadius: '4px',
                   padding: '8px 18px',
                   cursor: 'pointer',
@@ -776,6 +778,8 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
                   fontWeight: 'bold',
                   opacity: isLoading ? 0.6 : 1
                 }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#0078d4'; e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0078d4'; }}
               >
                 {isLoading && !previewModuleId ? 'Searching...' : 'Search'}
               </button>
@@ -821,7 +825,7 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
                           flexDirection: 'column',
                           gap: '12px',
                           transition: 'all 0.2s',
-                          borderColor: isPreviewing ? '#4CAF50' : '#333',
+                          borderColor: isPreviewing ? '#e040fb' : '#333',
                           backgroundColor: isPreviewing ? '#202820' : '#1d1d1f'
                         }}
                         onMouseEnter={(e) => {
@@ -857,7 +861,7 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
                               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                 <span style={{ fontSize: '11px', color: '#888' }}>Title: {result.title}</span>
                                 {result.artist && result.artist !== 'Unknown' && (
-                                  <span style={{ fontSize: '10px', color: '#4CAF50', backgroundColor: 'rgba(76,175,80,0.1)', padding: '1px 6px', borderRadius: '3px', border: '1px solid rgba(76,175,80,0.2)' }}>
+                                  <span style={{ fontSize: '10px', color: '#e040fb', backgroundColor: 'rgba(224,64,251,0.1)', padding: '1px 6px', borderRadius: '3px', border: '1px solid rgba(224,64,251,0.2)' }}>
                                     By: {result.artist}
                                   </span>
                                 )}
@@ -887,16 +891,17 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
                             <button
                               onClick={() => { handleStopPreview(); handleSelectTrack(result); }}
                               style={{
-                                background: '#4CAF50',
-                                color: '#fff',
-                                border: 'none',
+                                background: 'transparent',
+                                color: '#e040fb',
+                                border: '1px solid #e040fb',
                                 borderRadius: '4px',
                                 padding: '6px 16px',
                                 cursor: 'pointer',
                                 fontSize: '12px',
-                                fontWeight: 'bold',
-                                boxShadow: '0 2px 6px rgba(76,175,80,0.3)'
+                                fontWeight: 'bold'
                               }}
+                              onMouseEnter={e => { e.currentTarget.style.background = '#e040fb'; e.currentTarget.style.color = '#fff'; }}
+                              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e040fb'; }}
                             >
                               Select
                             </button>
@@ -906,7 +911,7 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
                         {/* Bottom Row: Custom native player shown inline under selected song */}
                         {isPreviewing && (
                           <div style={{
-                            border: '1px solid #4CAF50',
+                            border: '1px solid #e040fb',
                             borderRadius: '6px',
                             padding: '12px 16px',
                             marginTop: '4px',
@@ -931,9 +936,9 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
                               <button
                                 onClick={handleTogglePause}
                                 style={{
-                                  background: '#4CAF50',
-                                  border: 'none',
-                                  color: '#fff',
+                                  background: 'transparent',
+                                  border: '1px solid #e040fb',
+                                  color: '#e040fb',
                                   width: '28px',
                                   height: '28px',
                                   borderRadius: '50%',
@@ -943,6 +948,8 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
                                   justifyContent: 'center',
                                   flexShrink: 0
                                 }}
+                                onMouseEnter={e => { e.currentTarget.style.background = '#e040fb'; e.currentTarget.style.color = '#fff'; }}
+                                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e040fb'; }}
                                 title={isPaused ? "Play" : "Pause"}
                               >
                                 {isPaused ? <BsPlayFill size={14} style={{ marginLeft: '1px' }} /> : <BsPauseFill size={14} />}
@@ -958,7 +965,7 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
                                   flex: 1,
                                   height: '4px',
                                   cursor: 'pointer',
-                                  accentColor: '#4CAF50',
+                                  accentColor: '#e040fb',
                                   background: '#333',
                                   borderRadius: '2px',
                                   outline: 'none'

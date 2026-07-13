@@ -42,23 +42,23 @@ const LayersPanel = ({ isCollapsed, onToggle, dragProps }) => {
   const [contextMenu, setContextMenu] = useState(null);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#3d3d3d' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#373339' }}>
       <div 
         onClick={onToggle}
-        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none' }}
+        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none', background: '#1f0f2f' }}
         {...dragProps}
       >
-        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#40c9f1', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <BsLayers /> Layers
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onClick={e => { if (isCollapsed) { onToggle(); } e.stopPropagation(); }}>
           {!isCollapsed && (
             <>
-              <button onClick={() => setViewActiveOnly(!viewActiveOnly)} title="View Active Layer Only" style={{ backgroundColor: 'transparent', border: viewActiveOnly ? '1px solid #65ff00' : '1px solid #555', color: viewActiveOnly ? '#65ff00' : '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#65ff00'; e.currentTarget.style.color = '#65ff00'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = viewActiveOnly ? '#65ff00' : '#555'; e.currentTarget.style.color = viewActiveOnly ? '#65ff00' : '#888'; }}><BsLayers /></button>
+              {/* <button onClick={() => setViewActiveOnly(!viewActiveOnly)} title="View Active Layer Only" style={{ backgroundColor: 'transparent', border: viewActiveOnly ? '1px solid #65ff00' : '1px solid #555', color: viewActiveOnly ? '#65ff00' : '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#65ff00'; e.currentTarget.style.color = '#65ff00'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = viewActiveOnly ? '#65ff00' : '#555'; e.currentTarget.style.color = viewActiveOnly ? '#65ff00' : '#888'; }}><BsLayers /></button> */}
               <button onClick={flattenLayers} title="Flatten Image" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#0078d4'; e.currentTarget.style.color = '#0078d4'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsBoxArrowInDown /></button>
               <button onClick={addGroup} title="Add Group" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#ff9800'; e.currentTarget.style.color = '#ff9800'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsFolder2Open /></button>
-              <button onClick={() => importLayerInputRef.current?.click()} title="Import to New Layer" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.color = '#4CAF50'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsCardImage /></button>
-              <button onClick={addLayer} title="Add Layer" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.color = '#4CAF50'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsPlus /></button>
+              <button onClick={() => importLayerInputRef.current?.click()} title="Import to New Layer" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#40c9f1'; e.currentTarget.style.color = '#40c9f1'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsCardImage /></button>
+              <button onClick={addLayer} title="Add Layer" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#40c9f1'; e.currentTarget.style.color = '#40c9f1'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsPlus /></button>
             </>
           )}
           <div onClick={e => { e.stopPropagation(); onToggle(); }} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
@@ -163,7 +163,7 @@ const LayersPanel = ({ isCollapsed, onToggle, dragProps }) => {
                   marginLeft: layer.groupId ? '15px' : '0', display: 'flex', flexDirection: 'column', padding: '10px', 
                   backgroundColor: activeLayerId === layer.id ? '#3c3c3c' : '#1e1e1e', 
                   borderRadius: '6px', cursor: 'pointer', 
-                  border: activeLayerId === layer.id ? '1px solid #4CAF50' : '1px solid transparent',
+                  border: activeLayerId === layer.id ? '1px solid #40c9f1' : '1px solid transparent',
                   boxShadow: (dragOverLayerId === layer.id && dragPosition === 'before') ? '0 -2px 0 #65ff00' : (dragOverLayerId === layer.id && dragPosition === 'after') ? '0 2px 0 #65ff00' : 'none'
                 }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -181,7 +181,7 @@ const LayersPanel = ({ isCollapsed, onToggle, dragProps }) => {
                           if (e.key === 'Enter') handleRenameComplete();
                           if (e.key === 'Escape') setEditingLayerId(null);
                         }}
-                        style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #4CAF50', outline: 'none', padding: '2px', fontSize: '13px' }}
+                        style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #40c9f1', outline: 'none', padding: '2px', fontSize: '13px' }}
                       />
                     ) : (
                       <span
@@ -248,8 +248,8 @@ const LayersPanel = ({ isCollapsed, onToggle, dragProps }) => {
       {contextMenu && createPortal(
         <>
           <div style={{ position: 'fixed', inset: 0, zIndex: 99999 }} onClick={() => setContextMenu(null)} onContextMenu={(e) => { e.preventDefault(); setContextMenu(null); }} />
-          <div style={{ position: 'fixed', top: Math.min(contextMenu.y, window.innerHeight - 300), left: Math.min(contextMenu.x, window.innerWidth - 180), zIndex: 100000, backgroundColor: '#2a2a2a', border: '1px solid #4CAF50', borderRadius: '6px', padding: '6px', display: 'flex', flexDirection: 'column', gap: '2px', minWidth: '160px', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
-            <div style={{ padding: '4px 8px', fontSize: '11px', color: '#4CAF50', fontWeight: 'bold', borderBottom: '1px solid #444', marginBottom: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <div style={{ position: 'fixed', top: Math.min(contextMenu.y, window.innerHeight - 300), left: Math.min(contextMenu.x, window.innerWidth - 180), zIndex: 100000, backgroundColor: '#2a2a2a', border: '1px solid #40c9f1', borderRadius: '6px', padding: '6px', display: 'flex', flexDirection: 'column', gap: '2px', minWidth: '160px', boxShadow: '0 10px 25px rgba(0,0,0,0.5)' }}>
+            <div style={{ padding: '4px 8px', fontSize: '11px', color: '#40c9f1', fontWeight: 'bold', borderBottom: '1px solid #444', marginBottom: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {contextMenu.layer.name}
             </div>
             

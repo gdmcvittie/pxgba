@@ -462,10 +462,10 @@ const SfxPanel = ({ isCollapsed, onToggle, dragProps }) => {
   const sfxTracks = musicTracks ? musicTracks.filter(t => t.isSfx) : [];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#3d3d3d' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#383238' }}>
       <div
         onClick={onToggle}
-        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none' }}
+        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none', background: '#270d27' }}
         {...dragProps}
       >
         <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#e040fb', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -512,9 +512,9 @@ const SfxPanel = ({ isCollapsed, onToggle, dragProps }) => {
             <button
               onClick={handleSfxSearch}
               style={{
-                background: '#e040fb',
-                color: '#fff',
-                border: 'none',
+                background: 'transparent',
+                color: '#e040fb',
+                border: '1px solid #e040fb',
                 borderRadius: '4px',
                 padding: '6px 12px',
                 cursor: 'pointer',
@@ -524,6 +524,8 @@ const SfxPanel = ({ isCollapsed, onToggle, dragProps }) => {
                 alignItems: 'center',
                 gap: '4px'
               }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#e040fb'; e.currentTarget.style.color = '#fff'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e040fb'; }}
             >
               Search
             </button>
@@ -606,7 +608,7 @@ const SfxPanel = ({ isCollapsed, onToggle, dragProps }) => {
                             outline: 'none'
                           }}
                         />
-                        <button onClick={() => handleRenameTrack(track.id, renamingName)} style={{ background: '#e040fb', border: 'none', color: '#fff', borderRadius: '3px', padding: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                        <button onClick={() => handleRenameTrack(track.id, renamingName)} style={{ background: 'transparent', border: '1px solid #e040fb', color: '#e040fb', borderRadius: '3px', padding: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center' }} onMouseEnter={e => { e.currentTarget.style.background = '#e040fb'; e.currentTarget.style.color = '#fff'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e040fb'; }}>
                           <BsCheck size={14} />
                         </button>
                         <button onClick={() => setRenamingTrackId(null)} style={{ background: '#333', border: '1px solid #555', color: '#ff4444', borderRadius: '3px', padding: '3px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
@@ -743,7 +745,7 @@ const SfxPanel = ({ isCollapsed, onToggle, dragProps }) => {
             </div>
 
             <div style={{ display: 'flex', gap: '8px', marginTop: '5px' }}>
-              <button onClick={handlePlaySfx} style={{ flex: 1, background: '#0078d4', border: 'none', color: '#fff', padding: '6px', borderRadius: '3px', cursor: 'pointer', fontSize: '10px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}><BsPlayFill /> Play</button>
+              <button onClick={handlePlaySfx} style={{ flex: 1, background: 'transparent', border: '1px solid #0078d4', color: '#0078d4', padding: '6px', borderRadius: '3px', cursor: 'pointer', fontSize: '10px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }} onMouseEnter={e => { e.currentTarget.style.background = '#0078d4'; e.currentTarget.style.color = '#fff'; }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0078d4'; }}><BsPlayFill /> Play</button>
               <button onClick={handleSaveSfxToProject} style={{ flex: 1, background: '#333', border: '1px solid #555', color: '#fff', padding: '6px', borderRadius: '3px', cursor: 'pointer', fontSize: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}><BsPlus /> Save</button>
             </div>
           </div>
@@ -826,9 +828,9 @@ const SfxPanel = ({ isCollapsed, onToggle, dragProps }) => {
                 onClick={handleSfxSearch}
                 disabled={isSfxLoading}
                 style={{
-                  background: '#e040fb',
-                  color: '#fff',
-                  border: 'none',
+                  background: 'transparent',
+                  color: '#e040fb',
+                  border: '1px solid #e040fb',
                   borderRadius: '4px',
                   padding: '8px 18px',
                   cursor: 'pointer',
@@ -836,6 +838,8 @@ const SfxPanel = ({ isCollapsed, onToggle, dragProps }) => {
                   fontWeight: 'bold',
                   opacity: isSfxLoading ? 0.6 : 1
                 }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#e040fb'; e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e040fb'; }}
               >
                 {isSfxLoading && !previewSfxId ? 'Searching...' : 'Search'}
               </button>
@@ -900,16 +904,21 @@ const SfxPanel = ({ isCollapsed, onToggle, dragProps }) => {
                         {/* Top Row: Track info and actions */}
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                            <div style={{
-                              background: '#e040fb',
-                              color: '#fff',
-                              padding: '4px 8px',
-                              borderRadius: '4px',
-                              fontSize: '11px',
-                              fontWeight: 'bold',
-                              minWidth: '36px',
-                              textAlign: 'center'
-                            }}>
+                            <div
+                              style={{
+                                background: 'transparent',
+                                color: '#e040fb',
+                                padding: '4px 8px',
+                                borderRadius: '4px',
+                                fontSize: '11px',
+                                fontWeight: 'bold',
+                                minWidth: '36px',
+                                textAlign: 'center',
+                                border: '1px solid #e040fb'
+                              }}
+                              onMouseEnter={e => { e.currentTarget.style.background = '#e040fb'; e.currentTarget.style.color = '#fff'; }}
+                              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e040fb'; }}
+                            >
                               WAV
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
@@ -948,17 +957,18 @@ const SfxPanel = ({ isCollapsed, onToggle, dragProps }) => {
                               onClick={() => { handleStopSfxPreview(); handleSelectSfx(result); }}
                               disabled={isSfxLoading}
                               style={{
-                                background: '#e040fb',
-                                color: '#fff',
-                                border: 'none',
+                                background: 'transparent',
+                                color: '#e040fb',
+                                border: '1px solid #e040fb',
                                 borderRadius: '4px',
                                 padding: '6px 16px',
                                 cursor: 'pointer',
                                 fontSize: '12px',
                                 fontWeight: 'bold',
-                                boxShadow: '0 2px 6px rgba(224,64,251,0.3)',
                                 opacity: isSfxLoading ? 0.6 : 1
                               }}
+                              onMouseEnter={e => { e.currentTarget.style.background = '#e040fb'; e.currentTarget.style.color = '#fff'; }}
+                              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e040fb'; }}
                             >
                               Select
                             </button>
@@ -993,9 +1003,9 @@ const SfxPanel = ({ isCollapsed, onToggle, dragProps }) => {
                               <button
                                 onClick={handleToggleSfxPause}
                                 style={{
-                                  background: '#e040fb',
-                                  border: 'none',
-                                  color: '#fff',
+                                  background: 'transparent',
+                                  border: '1px solid #e040fb',
+                                  color: '#e040fb',
                                   width: '28px',
                                   height: '28px',
                                   borderRadius: '50%',
@@ -1005,6 +1015,8 @@ const SfxPanel = ({ isCollapsed, onToggle, dragProps }) => {
                                   justifyContent: 'center',
                                   flexShrink: 0
                                 }}
+                                onMouseEnter={e => { e.currentTarget.style.background = '#e040fb'; e.currentTarget.style.color = '#fff'; }}
+                                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e040fb'; }}
                                 title={isSfxPaused ? "Play" : "Pause"}
                               >
                                 {isSfxPaused ? <BsPlayFill size={14} style={{ marginLeft: '1px' }} /> : <BsPauseFill size={14} />}

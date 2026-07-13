@@ -31,13 +31,13 @@ const Palette = ({ isCollapsed, onToggle, dragProps }) => {
   }, [recentColors]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', borderBottom: '2px solid #222', background: isCollapsed ? 'transparent' : '#3d3d3d' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', borderBottom: '2px solid #222', background: isCollapsed ? 'transparent' : '#373339' }}>
       <div 
         onClick={onToggle}
-        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none' }}
+        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none', background: '#1f0f2f' }}
         {...dragProps}
       >
-        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#40c9f1', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <BsPalette /> Palette
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onClick={e => { if (isCollapsed) { onToggle(); } e.stopPropagation(); }}>
@@ -45,7 +45,7 @@ const Palette = ({ isCollapsed, onToggle, dragProps }) => {
             onClick={() => paletteInputRef.current?.click()}
             title="Import Palette" 
             style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.color = '#4CAF50'; }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = '#40c9f1'; e.currentTarget.style.color = '#40c9f1'; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}
           >
             <BsPlus />

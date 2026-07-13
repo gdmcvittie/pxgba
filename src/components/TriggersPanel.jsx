@@ -132,17 +132,17 @@ const TriggersPanel = ({ isCollapsed, onToggle, dragProps }) => {
   const ungroupedTriggers = triggers.filter(t => !t.isGroup && (!t.groupId || !groups.some(g => g.id === t.groupId)));
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#3d3d3d' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#3c3733' }}>
       <div
         onClick={onToggle}
-        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none' }}
+        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none', background: '#3b200e' }}
         {...dragProps}
       >
-        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#FF5722', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <BsLightningChargeFill /> Triggers
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onClick={e => { if (isCollapsed) { onToggle(); } e.stopPropagation(); }}>
-          <button onClick={addTrigger} title="Add Trigger" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.color = '#4CAF50'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsPlus /></button>
+          <button onClick={addTrigger} title="Add Trigger" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#FF5722'; e.currentTarget.style.color = '#FF5722'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsPlus /></button>
           <div onClick={e => { e.stopPropagation(); onToggle(); }} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
             {isCollapsed ? <BsChevronRight style={{ color: '#aaa' }} /> : <BsChevronDown style={{ color: '#aaa' }} />}
           </div>
@@ -158,7 +158,9 @@ const TriggersPanel = ({ isCollapsed, onToggle, dragProps }) => {
               <div style={{ display: 'flex', gap: '6px' }}>
                 <button
                   onClick={groupSelectedTriggers}
-                  style={{ backgroundColor: '#2196F3', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '3px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}
+                  style={{ backgroundColor: 'transparent', color: '#2196F3', border: '1px solid #2196F3', padding: '4px 8px', borderRadius: '3px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold' }}
+                  onMouseEnter={e => { e.target.style.background = '#2196F3'; e.target.style.color = '#fff'; }}
+                  onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#2196F3'; }}
                 >
                   Group Selected
                 </button>
@@ -268,7 +270,7 @@ const TriggersPanel = ({ isCollapsed, onToggle, dragProps }) => {
                         ) : group.script?.nodes?.length > 0 ? (
                           <button onClick={() => setEditingScriptTriggerId(group.id)} style={{ background: 'transparent', color: '#888', border: 'none', padding: '2px 4px', cursor: 'pointer', fontSize: '13px', display: 'flex', alignItems: 'center', borderRadius: '3px', flexShrink: 0 }} title="Edit Script Graph"><BsPencil /></button>
                         ) : (
-                          <button onClick={() => setEditingScriptTriggerId(group.id)} style={{ background: 'transparent', color: '#4CAF50', border: 'none', padding: '2px 4px', cursor: 'pointer', fontSize: '15px', display: 'flex', alignItems: 'center', borderRadius: '3px', flexShrink: 0 }} title="Add Script"><BsPlus /></button>
+                          <button onClick={() => setEditingScriptTriggerId(group.id)} style={{ background: 'transparent', color: '#FF5722', border: 'none', padding: '2px 4px', cursor: 'pointer', fontSize: '15px', display: 'flex', alignItems: 'center', borderRadius: '3px', flexShrink: 0 }} title="Add Script"><BsPlus /></button>
                         )}
                       </div>
                     </div>
@@ -335,7 +337,7 @@ const TriggersPanel = ({ isCollapsed, onToggle, dragProps }) => {
                                     ) : (
                                       <input type="number" value={Math.round(child.x / 8)} onChange={(e) => updateTrigger(child.id, 'x', (parseInt(e.target.value) || 0) * 8)} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '2px', fontSize: '10px', outline: 'none', borderRadius: '3px', minWidth: 0 }} />
                                     )}
-                                    <button onClick={(e) => { e.stopPropagation(); updateTrigger(child.id, 'useVarX', !child.useVarX); }} title="Toggle Variable" style={{ background: child.useVarX ? '#4CAF50' : '#333', color: '#fff', border: 'none', borderRadius: '3px', padding: '2px 4px', cursor: 'pointer', fontSize: '9px' }}>V</button>
+                                    <button onClick={(e) => { e.stopPropagation(); updateTrigger(child.id, 'useVarX', !child.useVarX); }} title="Toggle Variable" style={{ background: child.useVarX ? '#FF5722' : '#333', color: '#fff', border: 'none', borderRadius: '3px', padding: '2px 4px', cursor: 'pointer', fontSize: '9px' }}>V</button>
                                   </div>
                                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px' }}>
                                     <label style={{ fontSize: '10px', color: '#aaa', width: '45px' }}>Y (tile):</label>
@@ -347,7 +349,7 @@ const TriggersPanel = ({ isCollapsed, onToggle, dragProps }) => {
                                     ) : (
                                       <input type="number" value={Math.round(child.y / 8)} onChange={(e) => updateTrigger(child.id, 'y', (parseInt(e.target.value) || 0) * 8)} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '2px', fontSize: '10px', outline: 'none', borderRadius: '3px', minWidth: 0 }} />
                                     )}
-                                    <button onClick={(e) => { e.stopPropagation(); updateTrigger(child.id, 'useVarY', !child.useVarY); }} title="Toggle Variable" style={{ background: child.useVarY ? '#4CAF50' : '#333', color: '#fff', border: 'none', borderRadius: '3px', padding: '2px 4px', cursor: 'pointer', fontSize: '9px' }}>V</button>
+                                    <button onClick={(e) => { e.stopPropagation(); updateTrigger(child.id, 'useVarY', !child.useVarY); }} title="Toggle Variable" style={{ background: child.useVarY ? '#FF5722' : '#333', color: '#fff', border: 'none', borderRadius: '3px', padding: '2px 4px', cursor: 'pointer', fontSize: '9px' }}>V</button>
                                   </div>
                                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px' }}>
                                     <label style={{ fontSize: '10px', color: '#aaa', width: '45px' }}>W (tile):</label>
@@ -438,7 +440,7 @@ const TriggersPanel = ({ isCollapsed, onToggle, dragProps }) => {
                       ) : (
                         <input type="number" value={Math.round(trigger.x / 8)} onChange={(e) => updateTrigger(trigger.id, 'x', (parseInt(e.target.value) || 0) * 8)} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px', minWidth: 0 }} />
                       )}
-                      <button onClick={(e) => { e.stopPropagation(); updateTrigger(trigger.id, 'useVarX', !trigger.useVarX); }} title="Toggle Variable" style={{ background: trigger.useVarX ? '#4CAF50' : '#333', color: '#fff', border: 'none', borderRadius: '3px', padding: '4px 6px', cursor: 'pointer', fontSize: '10px' }}>V</button>
+                      <button onClick={(e) => { e.stopPropagation(); updateTrigger(trigger.id, 'useVarX', !trigger.useVarX); }} title="Toggle Variable" style={{ background: trigger.useVarX ? '#FF5722' : '#333', color: '#fff', border: 'none', borderRadius: '3px', padding: '4px 6px', cursor: 'pointer', fontSize: '10px' }}>V</button>
                     </div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px' }}>
                       <label style={{ fontSize: '11px', color: '#aaa', width: '45px' }}>Y (tile):</label>
@@ -450,7 +452,7 @@ const TriggersPanel = ({ isCollapsed, onToggle, dragProps }) => {
                       ) : (
                         <input type="number" value={Math.round(trigger.y / 8)} onChange={(e) => updateTrigger(trigger.id, 'y', (parseInt(e.target.value) || 0) * 8)} style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px', fontSize: '11px', outline: 'none', borderRadius: '3px', minWidth: 0 }} />
                       )}
-                      <button onClick={(e) => { e.stopPropagation(); updateTrigger(trigger.id, 'useVarY', !trigger.useVarY); }} title="Toggle Variable" style={{ background: trigger.useVarY ? '#4CAF50' : '#333', color: '#fff', border: 'none', borderRadius: '3px', padding: '4px 6px', cursor: 'pointer', fontSize: '10px' }}>V</button>
+                      <button onClick={(e) => { e.stopPropagation(); updateTrigger(trigger.id, 'useVarY', !trigger.useVarY); }} title="Toggle Variable" style={{ background: trigger.useVarY ? '#FF5722' : '#333', color: '#fff', border: 'none', borderRadius: '3px', padding: '4px 6px', cursor: 'pointer', fontSize: '10px' }}>V</button>
                     </div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px' }}>
                       <label style={{ fontSize: '11px', color: '#aaa', width: '45px' }}>W (tile):</label>
@@ -480,7 +482,7 @@ const TriggersPanel = ({ isCollapsed, onToggle, dragProps }) => {
                     {trigger.scriptId ? (
                       <button onClick={() => { setEditingCustomScriptId(trigger.scriptId); setTool('script'); }} style={{ background: 'transparent', color: '#888', border: 'none', padding: '2px 4px', cursor: 'pointer', fontSize: '13px', display: 'flex', alignItems: 'center', borderRadius: '3px', flexShrink: 0 }} title="Edit Custom Script"><BsPencil /></button>
                     ) : (
-                      <button onClick={() => setEditingScriptTriggerId(trigger.id)} style={{ background: 'transparent', color: '#4CAF50', border: 'none', padding: '2px 4px', cursor: 'pointer', fontSize: '15px', display: 'flex', alignItems: 'center', borderRadius: '3px', flexShrink: 0 }} title="Edit Script"><BsPlus /></button>
+                      <button onClick={() => setEditingScriptTriggerId(trigger.id)} style={{ background: 'transparent', color: '#FF5722', border: 'none', padding: '2px 4px', cursor: 'pointer', fontSize: '15px', display: 'flex', alignItems: 'center', borderRadius: '3px', flexShrink: 0 }} title="Edit Script"><BsPlus /></button>
                     )}
                   </div>
 

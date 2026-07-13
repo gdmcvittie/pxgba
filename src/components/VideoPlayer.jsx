@@ -62,7 +62,7 @@ const VideoPlayer = () => {
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <button onClick={() => setShowVideoPlayerDialog(false)} style={{ padding: '10px 30px', background: '#4CAF50', border: 'none', color: '#fff', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Close</button>
+          <button onClick={() => setShowVideoPlayerDialog(false)} style={{ padding: '10px 30px', background: 'transparent', border: '1px solid #4CAF50', color: '#4CAF50', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }} onMouseEnter={e => { e.target.style.background = '#4CAF50'; e.target.style.color = '#fff'; }} onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#4CAF50'; }}>Close</button>
         </div>
       </div>
     </div>

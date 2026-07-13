@@ -139,13 +139,13 @@ const ScriptsPanel = ({ isCollapsed, onToggle, dragProps }) => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#3d3d3d' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#343339' }}>
       <div
         onClick={onToggle}
-        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none' }}
+        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none', background: '#0f0f33' }}
         {...dragProps}
       >
-        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#2196F3', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <BsCodeSlash /> Scripts
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onClick={e => { if (isCollapsed) { onToggle(); } e.stopPropagation(); }}>
@@ -153,7 +153,7 @@ const ScriptsPanel = ({ isCollapsed, onToggle, dragProps }) => {
           {!isCollapsed && (
             <button onClick={addScriptGroup} title="Add Group" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#ff9800'; e.currentTarget.style.color = '#ff9800'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsFolder2Open /></button>
           )}
-          <button onClick={addScript} title="Add Script" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.color = '#4CAF50'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsPlus /></button>
+          <button onClick={addScript} title="Add Script" style={{ backgroundColor: 'transparent', border: '1px solid #555', color: '#888', padding: '3px 7px', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }} onMouseEnter={e => { e.currentTarget.style.borderColor = '#2196F3'; e.currentTarget.style.color = '#2196F3'; }} onMouseLeave={e => { e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.color = '#888'; }}><BsPlus /></button>
           <div onClick={e => { e.stopPropagation(); onToggle(); }} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
             {isCollapsed ? <BsChevronRight style={{ color: '#aaa' }} /> : <BsChevronDown style={{ color: '#aaa' }} />}
           </div>
@@ -244,7 +244,7 @@ const ScriptsPanel = ({ isCollapsed, onToggle, dragProps }) => {
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === 'Escape') handleRenameComplete();
                       }}
-                      style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #4CAF50', outline: 'none', padding: '2px', fontSize: '13px' }}
+                      style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #2196F3', outline: 'none', padding: '2px', fontSize: '13px' }}
                     />
                   ) : (
                     <span
@@ -318,7 +318,12 @@ const ScriptsPanel = ({ isCollapsed, onToggle, dragProps }) => {
                     <option key={g.id} value={g.id}>{g.name}</option>
                   ))}
                 </select>
-                <button onClick={() => setEditingCustomScriptId(script.id)} style={{ background: '#0078d4', color: '#fff', border: 'none', padding: '6px 12px', fontSize: '11px', outline: 'none', borderRadius: '3px', cursor: 'pointer', fontWeight: 'bold' }}>Edit Script</button>
+                <button
+                  onClick={() => setEditingCustomScriptId(script.id)}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = '#0078d4'; e.currentTarget.style.color = '#fff'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0078d4'; }}
+                  style={{ background: 'transparent', color: '#0078d4', border: '1px solid #0078d4', padding: '6px 12px', fontSize: '11px', outline: 'none', borderRadius: '3px', cursor: 'pointer', fontWeight: 'bold' }}
+                >Edit Script</button>
               </div>
 
             </div>

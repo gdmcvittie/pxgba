@@ -130,9 +130,9 @@ const TimelinePanel = () => {
               
               {hoveredFrameId === frame.id && (
                 <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', zIndex: 5 }}>
-                  <button onClick={(e) => { e.stopPropagation(); duplicateFrame(frame.id); }} style={{ background: '#4CAF50', border: 'none', color: '#fff', cursor: 'pointer', padding: '6px', borderRadius: '4px', display: 'flex', alignItems: 'center' }} title="Duplicate"><BsFiles size={12} /></button>
+                  <button onClick={(e) => { e.stopPropagation(); duplicateFrame(frame.id); }} style={{ background: 'transparent', border: '1px solid #4CAF50', color: '#4CAF50', cursor: 'pointer', padding: '6px', borderRadius: '4px', display: 'flex', alignItems: 'center' }} title="Duplicate" onMouseEnter={e => { e.target.style.background = '#4CAF50'; e.target.style.color = '#fff'; }} onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#4CAF50'; }}><BsFiles size={12} /></button>
                   {frames.length > 1 && (
-                    <button onClick={(e) => { e.stopPropagation(); deleteFrame(frame.id); }} style={{ background: '#ff4444', border: 'none', color: '#fff', cursor: 'pointer', padding: '6px', borderRadius: '4px', display: 'flex', alignItems: 'center' }} title="Delete"><BsTrash size={12} /></button>
+                    <button onClick={(e) => { e.stopPropagation(); deleteFrame(frame.id); }} style={{ background: 'transparent', border: '1px solid #ff4444', color: '#ff4444', cursor: 'pointer', padding: '6px', borderRadius: '4px', display: 'flex', alignItems: 'center' }} title="Delete" onMouseEnter={e => { e.target.style.background = '#ff4444'; e.target.style.color = '#fff'; }} onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#ff4444'; }}><BsTrash size={12} /></button>
                   )}
                 </div>
               )}

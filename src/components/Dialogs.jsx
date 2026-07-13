@@ -1481,7 +1481,7 @@ const Dialogs = () => {
             </div>
             <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
               <button onClick={() => closeAdjustSelectionDialog(false)} style={{ flex: 1, padding: '8px', background: 'transparent', border: '1px solid #555', color: '#fff', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
-              <button onClick={() => closeAdjustSelectionDialog(true)} style={{ flex: 1, padding: '8px', background: '#4CAF50', border: 'none', color: '#fff', borderRadius: '4px', cursor: 'pointer' }}>OK</button>
+              <button onClick={() => closeAdjustSelectionDialog(true)} style={{ flex: 1, padding: '8px', background: 'transparent', border: '1px solid #4CAF50', color: '#4CAF50', borderRadius: '4px', cursor: 'pointer' }} onMouseEnter={e => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff' }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50' }}>OK</button>
             </div>
           </div>
         </div>
@@ -1533,7 +1533,7 @@ const Dialogs = () => {
             </div>
             <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
               <button onClick={() => handleResizeCanvas(false)} style={{ flex: 1, padding: '8px', background: 'transparent', border: '1px solid #555', color: '#fff', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
-              <button onClick={() => handleResizeCanvas(true)} style={{ flex: 1, padding: '8px', background: '#4CAF50', border: 'none', color: '#fff', borderRadius: '4px', cursor: 'pointer' }}>OK</button>
+              <button onClick={() => handleResizeCanvas(true)} style={{ flex: 1, padding: '8px', background: 'transparent', border: '1px solid #4CAF50', color: '#4CAF50', borderRadius: '4px', cursor: 'pointer' }} onMouseEnter={e => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff' }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50' }}>OK</button>
             </div>
           </div>
         </div>
@@ -1582,7 +1582,7 @@ const Dialogs = () => {
             </div>
             <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
               <button onClick={() => closeHSLDialog(false)} style={{ flex: 1, padding: '8px', background: 'transparent', border: '1px solid #555', color: '#fff', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
-              <button onClick={() => closeHSLDialog(true)} style={{ flex: 1, padding: '8px', background: '#4CAF50', border: 'none', color: '#fff', borderRadius: '4px', cursor: 'pointer' }}>OK</button>
+              <button onClick={() => closeHSLDialog(true)} style={{ flex: 1, padding: '8px', background: 'transparent', border: '1px solid #4CAF50', color: '#4CAF50', borderRadius: '4px', cursor: 'pointer' }} onMouseEnter={e => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff' }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50' }}>OK</button>
             </div>
           </div>
         </div>
@@ -1618,7 +1618,7 @@ const Dialogs = () => {
             </div>
             <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
               <button onClick={() => closeBCDialog(false)} style={{ flex: 1, padding: '8px', background: 'transparent', border: '1px solid #555', color: '#fff', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
-              <button onClick={() => closeBCDialog(true)} style={{ flex: 1, padding: '8px', background: '#4CAF50', border: 'none', color: '#fff', borderRadius: '4px', cursor: 'pointer' }}>OK</button>
+              <button onClick={() => closeBCDialog(true)} style={{ flex: 1, padding: '8px', background: 'transparent', border: '1px solid #4CAF50', color: '#4CAF50', borderRadius: '4px', cursor: 'pointer' }} onMouseEnter={e => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff' }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50' }}>OK</button>
             </div>
           </div>
         </div>
@@ -1660,7 +1660,7 @@ const Dialogs = () => {
             </div>
             <div style={{ display: 'flex', gap: '10px', marginTop: '5px' }}>
               <button onClick={() => closeMagicBgDialog(false)} style={{ flex: 1, padding: '8px', background: 'transparent', border: '1px solid #555', color: '#fff', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
-              <button onClick={() => closeMagicBgDialog(true)} style={{ flex: 1, padding: '8px', background: '#4CAF50', border: 'none', color: '#fff', borderRadius: '4px', cursor: 'pointer' }}>OK</button>
+              <button onClick={() => closeMagicBgDialog(true)} style={{ flex: 1, padding: '8px', background: 'transparent', border: '1px solid #4CAF50', color: '#4CAF50', borderRadius: '4px', cursor: 'pointer' }} onMouseEnter={e => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff' }} onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50' }}>OK</button>
             </div>
           </div>
         </div>
@@ -1715,16 +1715,16 @@ const Dialogs = () => {
                   onClick={() => confirmPaletteImport('overwrite')}
                   style={{
                     padding: '10px',
-                    background: '#4CAF50',
-                    border: 'none',
-                    color: '#fff',
+                    background: 'transparent',
+                    border: '1px solid #4CAF50',
+                    color: '#4CAF50',
                     borderRadius: '4px',
                     cursor: 'pointer',
                     fontWeight: 'bold',
                     transition: 'background 0.2s'
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#43a047'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4CAF50'}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50' }}
                 >
                   Replace Current Palette
                 </button>
@@ -2555,9 +2555,9 @@ const Dialogs = () => {
                     window.location.href = `mailto:dev@liftedpixel.ca?subject=${subject}&body=${body}`;
                   }}
                   style={{
-                    background: '#0078d4',
-                    color: '#fff',
-                    border: 'none',
+                    background: 'transparent',
+                    color: '#0078d4',
+                    border: '1px solid #0078d4',
                     padding: '8px 16px',
                     borderRadius: '4px',
                     cursor: 'pointer',
@@ -2565,8 +2565,8 @@ const Dialogs = () => {
                     fontWeight: 'bold',
                     alignSelf: 'flex-end'
                   }}
-                  onMouseEnter={e => e.currentTarget.style.backgroundColor = '#005a9e'}
-                  onMouseLeave={e => e.currentTarget.style.backgroundColor = '#0078d4'}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#0078d4'; e.currentTarget.style.color = '#fff' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0078d4' }}
                 >
                   Send to Developer
                 </button>
@@ -2683,20 +2683,20 @@ const Dialogs = () => {
               }}
               style={{
                 width: '100%',
-                background: '#4CAF50',
-                color: '#fff',
-                border: 'none',
+                background: 'transparent',
+                color: '#4CAF50',
+                border: '1px solid #4CAF50',
                 borderRadius: '4px',
                 padding: '12px',
                 fontWeight: 'bold',
                 cursor: 'pointer',
                 fontSize: '14px',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
+                boxShadow: 'none',
                 transition: 'background 0.2s',
                 marginTop: '10px'
               }}
-              onMouseEnter={e => e.currentTarget.style.backgroundColor = '#45a049'}
-              onMouseLeave={e => e.currentTarget.style.backgroundColor = '#4CAF50'}
+              onMouseEnter={e => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff' }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50' }}
             >
               Slice & Import Tiles
             </button>
@@ -2748,19 +2748,19 @@ const Dialogs = () => {
               <button
                 onClick={() => executeTileImport('replace')}
                 style={{
-                  background: '#4CAF50',
-                  color: '#fff',
-                  border: 'none',
+                  background: 'transparent',
+                  color: '#4CAF50',
+                  border: '1px solid #4CAF50',
                   borderRadius: '4px',
                   padding: '12px',
                   fontWeight: 'bold',
                   cursor: 'pointer',
                   fontSize: '12px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                  boxShadow: 'none',
                   transition: 'background 0.2s'
                 }}
-                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#45a049'}
-                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#4CAF50'}
+                onMouseEnter={e => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50' }}
               >
                 Update Project Palette to Match Image (re-index existing tiles & scenes)
               </button>
@@ -2768,19 +2768,19 @@ const Dialogs = () => {
               <button
                 onClick={() => executeTileImport('keep')}
                 style={{
-                  background: '#0078d4',
-                  color: '#fff',
-                  border: 'none',
+                  background: 'transparent',
+                  color: '#0078d4',
+                  border: '1px solid #0078d4',
                   borderRadius: '4px',
                   padding: '12px',
                   fontWeight: 'bold',
                   cursor: 'pointer',
                   fontSize: '12px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                  boxShadow: 'none',
                   transition: 'background 0.2s'
                 }}
-                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#005a9e'}
-                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#0078d4'}
+                onMouseEnter={e => { e.currentTarget.style.background = '#0078d4'; e.currentTarget.style.color = '#fff' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0078d4' }}
               >
                 Keep Current Palette (re-index imported tiles to fit current palette)
               </button>
@@ -4594,11 +4594,11 @@ const LevelGenDialog = ({ sceneId, scenes, savedTiles, recentColors, generateLev
           <button
             onClick={handleGenerate}
             style={{
-              background: '#4CAF50', color: '#fff', border: 'none', borderRadius: '4px',
+              background: 'transparent', color: '#4CAF50', border: '1px solid #4CAF50', borderRadius: '4px',
               padding: '10px 24px', fontWeight: 'bold', cursor: 'pointer', fontSize: '13px'
             }}
-            onMouseEnter={e => e.currentTarget.style.backgroundColor = '#45a049'}
-            onMouseLeave={e => e.currentTarget.style.backgroundColor = '#4CAF50'}
+            onMouseEnter={e => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50' }}
           >
             Generate
           </button>

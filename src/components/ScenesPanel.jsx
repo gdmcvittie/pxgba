@@ -136,10 +136,10 @@ const ScenesPanel = ({ isCollapsed, onToggle, dragProps }) => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#3d3d3d' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#334233' }}>
       <div 
         onClick={onToggle}
-        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none' }}
+        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none', background: '#0e210e' }}
         {...dragProps}
       >
         <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#4CAF50', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -1570,29 +1570,31 @@ const ScenesPanel = ({ isCollapsed, onToggle, dragProps }) => {
                    </div>
                    
                    {!scene.startScriptId ? (
-                     <button 
-                       onClick={(e) => { 
-                         e.stopPropagation(); 
-                         setEditingScriptSceneId(scene.id); 
-                       }} 
-                       style={{ 
-                         width: '100%',
-                         background: '#0078d4', 
-                         color: '#fff', 
-                         border: 'none', 
-                         padding: '6px', 
-                         fontSize: '11px', 
-                         outline: 'none', 
-                         borderRadius: '3px', 
-                         cursor: 'pointer', 
-                         fontWeight: 'bold',
-                         display: 'flex',
-                         alignItems: 'center',
-                         justifyContent: 'center',
-                         gap: '4px'
-                       }}
-                     >
-                       <BsCodeSlash size={12} /> Edit Visual Graph
+                      <button 
+                        onClick={(e) => { 
+                          e.stopPropagation(); 
+                          setEditingScriptSceneId(scene.id); 
+                        }} 
+                        onMouseEnter={(e) => { e.currentTarget.style.background = '#0078d4'; e.currentTarget.style.color = '#fff'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0078d4'; }}
+                        style={{ 
+                          width: '100%',
+                          background: 'transparent', 
+                          color: '#0078d4', 
+                          border: '1px solid #0078d4', 
+                          padding: '6px', 
+                          fontSize: '11px', 
+                          outline: 'none', 
+                          borderRadius: '3px', 
+                          cursor: 'pointer', 
+                          fontWeight: 'bold',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '4px'
+                        }}
+                      >
+                        <BsCodeSlash size={12} /> Edit Visual Graph
                      </button>
                    ) : (
                      <button 
@@ -1646,7 +1648,12 @@ const ScenesPanel = ({ isCollapsed, onToggle, dragProps }) => {
             />
             <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
               <button onClick={() => setScriptPrompt(null)} style={{ background: '#333', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Cancel</button>
-              <button onClick={() => { if (scriptPromptName.trim()) confirmAddSceneScript(scriptPrompt, scriptPromptName.trim(), scriptPromptType); }} style={{ background: '#4CAF50', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}>Create</button>
+              <button
+                onClick={() => { if (scriptPromptName.trim()) confirmAddSceneScript(scriptPrompt, scriptPromptName.trim(), scriptPromptType); }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50'; }}
+                style={{ background: 'transparent', color: '#4CAF50', border: '1px solid #4CAF50', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}
+              >Create</button>
             </div>
           </div>
         </div>

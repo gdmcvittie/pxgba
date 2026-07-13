@@ -110,10 +110,20 @@ const Header = () => {
             }
           }}
           title="Toggle GBA Screen Mask (240x160)"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#4CAF50';
+            e.currentTarget.style.borderColor = '#4CAF50';
+            e.currentTarget.style.color = '#fff';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.borderColor = showGbaMask ? '#4CAF50' : '#555';
+            e.currentTarget.style.color = showGbaMask ? '#4CAF50' : '#888';
+          }}
           style={{
-            background: showGbaMask ? '#4CAF50' : '#1e1e1e',
-            border: '1px solid #3c3c3c',
-            color: '#fff',
+            background: 'transparent',
+            border: showGbaMask ? '1px solid #4CAF50' : '1px solid #555',
+            color: showGbaMask ? '#4CAF50' : '#888',
             padding: '4px 7px',
             borderRadius: '3px',
             cursor: 'pointer',
@@ -140,10 +150,10 @@ const Header = () => {
             <>
               <div style={{ position: 'fixed', inset: 0, zIndex: 99 }} onClick={() => setShowGridMenu(false)} onContextMenu={(e) => { e.preventDefault(); setShowGridMenu(false); }} />
               <div style={{ position: 'absolute', left: 0, top: '100%', marginTop: '4px', backgroundColor: '#333', border: '1px solid #444', borderRadius: '4px', display: 'flex', gap: '5px', padding: '5px', zIndex: 100, boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
-                <button onClick={() => { setGridSize(1); setShowGridMenu(false); }} style={{ padding: '6px 8px', backgroundColor: gridSize === 1 ? '#4CAF50' : 'transparent', border: 'none', color: '#fff', cursor: 'pointer', borderRadius: '4px', whiteSpace: 'nowrap', fontSize: '11px' }}>1x1</button>
-                <button onClick={() => { setGridSize(8); setShowGridMenu(false); }} style={{ padding: '6px 8px', backgroundColor: gridSize === 8 ? '#4CAF50' : 'transparent', border: 'none', color: '#fff', cursor: 'pointer', borderRadius: '4px', whiteSpace: 'nowrap', fontSize: '11px' }}>8x8</button>
-                <button onClick={() => { setGridSize(16); setShowGridMenu(false); }} style={{ padding: '6px 8px', backgroundColor: gridSize === 16 ? '#4CAF50' : 'transparent', border: 'none', color: '#fff', cursor: 'pointer', borderRadius: '4px', whiteSpace: 'nowrap', fontSize: '11px' }}>16x16</button>
-                <button onClick={() => { setGridSize(0); setShowGridMenu(false); }} style={{ padding: '6px 8px', backgroundColor: gridSize === 0 ? '#4CAF50' : 'transparent', border: 'none', color: '#fff', cursor: 'pointer', borderRadius: '4px', whiteSpace: 'nowrap', fontSize: '11px' }}>Off</button>
+                <button onClick={() => { setGridSize(1); setShowGridMenu(false); }} onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#4CAF50'; e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.color = '#fff'; }} onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = gridSize === 1 ? '#4CAF50' : '#333'; e.currentTarget.style.color = gridSize === 1 ? '#4CAF50' : '#888'; }} style={{ padding: '6px 8px', backgroundColor: 'transparent', border: gridSize === 1 ? '1px solid #4CAF50' : '1px solid #333', color: gridSize === 1 ? '#4CAF50' : '#888', cursor: 'pointer', borderRadius: '4px', whiteSpace: 'nowrap', fontSize: '11px' }}>1x1</button>
+                <button onClick={() => { setGridSize(8); setShowGridMenu(false); }} onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#4CAF50'; e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.color = '#fff'; }} onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = gridSize === 8 ? '#4CAF50' : '#333'; e.currentTarget.style.color = gridSize === 8 ? '#4CAF50' : '#888'; }} style={{ padding: '6px 8px', backgroundColor: 'transparent', border: gridSize === 8 ? '1px solid #4CAF50' : '1px solid #333', color: gridSize === 8 ? '#4CAF50' : '#888', cursor: 'pointer', borderRadius: '4px', whiteSpace: 'nowrap', fontSize: '11px' }}>8x8</button>
+                <button onClick={() => { setGridSize(16); setShowGridMenu(false); }} onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#4CAF50'; e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.color = '#fff'; }} onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = gridSize === 16 ? '#4CAF50' : '#333'; e.currentTarget.style.color = gridSize === 16 ? '#4CAF50' : '#888'; }} style={{ padding: '6px 8px', backgroundColor: 'transparent', border: gridSize === 16 ? '1px solid #4CAF50' : '1px solid #333', color: gridSize === 16 ? '#4CAF50' : '#888', cursor: 'pointer', borderRadius: '4px', whiteSpace: 'nowrap', fontSize: '11px' }}>16x16</button>
+                <button onClick={() => { setGridSize(0); setShowGridMenu(false); }} onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#4CAF50'; e.currentTarget.style.borderColor = '#4CAF50'; e.currentTarget.style.color = '#fff'; }} onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = gridSize === 0 ? '#4CAF50' : '#333'; e.currentTarget.style.color = gridSize === 0 ? '#4CAF50' : '#888'; }} style={{ padding: '6px 8px', backgroundColor: 'transparent', border: gridSize === 0 ? '1px solid #4CAF50' : '1px solid #333', color: gridSize === 0 ? '#4CAF50' : '#888', cursor: 'pointer', borderRadius: '4px', whiteSpace: 'nowrap', fontSize: '11px' }}>Off</button>
               </div>
             </>
           )}
@@ -276,7 +286,17 @@ const Header = () => {
             onMouseLeave={() => setShowWarnings(false)}
           >
             <button
-              style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#ff9800', border: 'none', color: '#fff', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px', boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#ff9800';
+                e.currentTarget.style.borderColor = '#ff9800';
+                e.currentTarget.style.color = '#fff';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.borderColor = '#ff9800';
+                e.currentTarget.style.color = '#ff9800';
+              }}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'transparent', border: '1px solid #ff9800', color: '#ff9800', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px' }}
             >
               <BsExclamationTriangleFill size={16} />
             </button>

@@ -675,7 +675,7 @@ const WelcomeTour = () => {
                 <button
                   onClick={handleNext}
                   style={{
-                    background: stepIndex === TOUR_STEPS.length - 1 ? 'linear-gradient(135deg, #4CAF50, #45a049)' : 'linear-gradient(135deg, #0078d4, #005a9e)',
+                    background: stepIndex === TOUR_STEPS.length - 1 ? '#4CAF50' : '#0078d4',
                     border: 'none',
                     borderRadius: '6px',
                     color: '#fff',
@@ -686,8 +686,6 @@ const WelcomeTour = () => {
                     outline: 'none',
                     boxShadow: stepIndex === TOUR_STEPS.length - 1 ? '0 2px 6px rgba(76,175,80,0.3)' : '0 2px 6px rgba(0,120,212,0.3)'
                   }}
-                  onMouseEnter={e => e.target.style.opacity = '0.9'}
-                  onMouseLeave={e => e.target.style.opacity = '1'}
                 >
                   {stepIndex === TOUR_STEPS.length - 1 ? 'Finish' : 'Next'}
                 </button>

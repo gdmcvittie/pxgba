@@ -559,17 +559,22 @@ const MusicEditor = () => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {isPlaying ? (
             <button onClick={pausePlayback} style={{
-              background: '#b8860b', border: 'none', color: '#fff', width: '36px', height: '36px',
+              background: 'transparent', border: '1px solid #b8860b', color: '#b8860b', width: '36px', height: '36px',
               borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
-            }} title="Pause">
+            }} title="Pause"
+              onMouseEnter={e => { e.currentTarget.style.background = '#b8860b'; e.currentTarget.style.color = '#fff'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#b8860b'; }}
+            >
               <BsPauseFill size={18} />
             </button>
           ) : (
             <button onClick={startPlayback} style={{
-              background: '#4CAF50', border: 'none', color: '#fff', width: '36px', height: '36px',
-              borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 0 10px rgba(76, 175, 80, 0.4)'
-            }} title="Play">
+              background: 'transparent', border: '1px solid #4CAF50', color: '#4CAF50', width: '36px', height: '36px',
+              borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+            }} title="Play"
+              onMouseEnter={e => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50'; }}
+            >
               <BsPlayFill size={20} style={{ marginLeft: '2px' }} />
             </button>
           )}
@@ -648,11 +653,13 @@ const MusicEditor = () => {
           </button>
 
           <button onClick={handleSave} style={{
-            background: '#4CAF50', border: 'none', color: '#fff', 
+            background: 'transparent', border: '1px solid #4CAF50', color: '#4CAF50', 
             padding: '8px 18px', borderRadius: '6px', cursor: 'pointer', fontSize: '13px',
-            display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold',
-            boxShadow: '0 2px 8px rgba(76,175,80,0.3)'
-          }}>
+            display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 'bold'
+          }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50'; }}
+          >
             <BsCheckCircle size={14} /> Save & Close
           </button>
         </div>
