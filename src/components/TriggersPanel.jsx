@@ -135,7 +135,7 @@ const TriggersPanel = ({ isCollapsed, onToggle, dragProps }) => {
     <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#3c3733' }}>
       <div
         onClick={onToggle}
-        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none', background: '#3b200e' }}
+        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none', background: '#330e16' }}
         {...dragProps}
       >
         <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#FF5722', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -181,7 +181,7 @@ const TriggersPanel = ({ isCollapsed, onToggle, dragProps }) => {
             const isActive = activeTriggerId === group.id;
 
             return (
-              <div key={group.id} style={{ display: 'flex', flexDirection: 'column', border: isActive ? '1px solid #ff9800' : '1px solid #333', borderRadius: '6px', backgroundColor: '#1e1e1e', overflow: 'auto' }}>
+              <div key={group.id} style={{ display: 'flex', flexDirection: 'column', padding: '8px 10px', border: isActive ? '1px solid #ff9800' : '1px solid #555', borderRadius: '6px', backgroundColor: '#2a2a2a', overflow: 'auto', marginTop: '4px' }}>
                 {/* Group Header */}
                 <div
                   onClick={() => { setActiveTriggerId(group.id); setTool('trigger'); }}
@@ -221,7 +221,7 @@ const TriggersPanel = ({ isCollapsed, onToggle, dragProps }) => {
                     ) : (
                       <span
                         onDoubleClick={(e) => { e.stopPropagation(); setEditingTriggerId(group.id); }}
-                        style={{ fontSize: '13px', fontWeight: 'bold', color: '#ff9800', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                        style={{ fontSize: '13px', fontWeight: 'bold', color: isExpanded ? '#ff9800' : '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
                       >
                         {group.name} ({groupChildren.length})
                       </span>

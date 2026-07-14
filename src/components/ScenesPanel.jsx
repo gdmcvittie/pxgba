@@ -179,7 +179,7 @@ const ScenesPanel = ({ isCollapsed, onToggle, dragProps }) => {
             if (scene.type === 'group') {
               const isDragged = draggedSceneId === scene.id;
               const isDragOver = dragOverSceneId === scene.id;
-              const childCount = scenes.filter(s => String(s.groupId) === String(scene.id)).length;
+              const isActive = activeSceneId === scene.id;
 
               return (
                 <div key={scene.id}
@@ -193,19 +193,16 @@ const ScenesPanel = ({ isCollapsed, onToggle, dragProps }) => {
                     backgroundColor: '#2a2a2a',
                     borderRadius: '6px', cursor: 'pointer',
                     opacity: isDragged ? 0.4 : 1,
-                    transition: 'border 0.15s, opacity 0.15s',
-                    border: isDragOver ? '2px dashed #ff9800' : '1px solid #444'
+                    border: isDragOver ? '2px dashed #ff9800' : (isActive ? '1px solid #ff9800' : '1px solid #555'),
+                    marginTop: '4px'
                   }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <button
                       onClick={(e) => { e.stopPropagation(); toggleSceneGroup(scene.id); }}
-                      style={{ background: 'none', border: 'none', color: '#ff9800', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}
+                      style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: 0 }}
                     >
-                      {scene.isOpen ? <BsChevronDown size={12} /> : <BsChevronRight size={12} />}
+                      {scene.isOpen ? '▼' : '▶'}
                     </button>
-                    <span style={{ color: '#ff9800', display: 'flex', alignItems: 'center' }}>
-                      {scene.isOpen ? <BsFolder2Open size={14} /> : <BsFolder2 size={14} />}
-                    </span>
                     {editingGroupId === scene.id ? (
                       <input
                         autoFocus
@@ -216,36 +213,33 @@ const ScenesPanel = ({ isCollapsed, onToggle, dragProps }) => {
                           if (e.key === 'Enter' || e.key === 'Escape') setEditingGroupId(null);
                         }}
                         onClick={e => e.stopPropagation()}
-                        style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #ff9800', outline: 'none', padding: '2px', fontSize: '12px', fontWeight: 'bold' }}
+                        style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #ff9800', outline: 'none', padding: '2px', fontSize: '13px', fontWeight: 'bold', textAlign: 'left' }}
                       />
                     ) : (
                       <span
                         onDoubleClick={(e) => { e.stopPropagation(); setEditingGroupId(scene.id); }}
-                        style={{ fontSize: '12px', fontWeight: 'bold', color: '#ff9800', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                        style={{ fontSize: '13px', fontWeight: 'bold', color: scene.isOpen ? '#ff9800' : '#fff', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer', textAlign: 'left' }}
                       >
-                        {scene.name}
+                        📁 {scene.name}
                       </span>
                     )}
-                    <span style={{ fontSize: '10px', color: '#666' }}>{childCount}</span>
-                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                      <button title="Duplicate Group" onClick={(e) => { e.stopPropagation(); duplicateSceneGroup(scene.id); }} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}><BsFiles size={12} /></button>
-                      <button
-                        title={actualScenes.length > 1 ? "Delete Group & Scenes" : "Cannot Delete Last Scene"}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (actualScenes.length > 1) deleteSceneGroup(scene.id);
-                        }}
-                        style={{
-                          background: 'none', border: 'none',
-                          color: '#ff4444',
-                          cursor: actualScenes.length > 1 ? 'pointer' : 'not-allowed',
-                          opacity: actualScenes.length > 1 ? 0.8 : 0.3,
-                          display: 'flex', alignItems: 'center', padding: 0
-                        }}
-                      >
-                        <BsTrash size={12} />
-                      </button>
-                    </div>
+                    <button title="Duplicate Group" onClick={(e) => { e.stopPropagation(); duplicateSceneGroup(scene.id); }} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}><BsFiles size={14} /></button>
+                    <button
+                      title={actualScenes.length > 1 ? "Delete Group & Scenes" : "Cannot Delete Last Scene"}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (actualScenes.length > 1) deleteSceneGroup(scene.id);
+                      }}
+                      style={{
+                        background: 'none', border: 'none',
+                        color: '#ff4444',
+                        cursor: actualScenes.length > 1 ? 'pointer' : 'not-allowed',
+                        opacity: actualScenes.length > 1 ? 0.8 : 0.3,
+                        display: 'flex', alignItems: 'center', padding: 0
+                      }}
+                    >
+                      <BsTrash size={14} />
+                    </button>
                   </div>
                 </div>
               );

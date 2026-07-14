@@ -220,7 +220,7 @@ const HUDPanel = ({ isCollapsed, onToggle, dragProps }) => {
                     value={hudSettings.width ?? (hudSettings.position === 'left' || hudSettings.position === 'right' ? 2 : 30)}
                     onChange={(e) => updateHUDField('width', Math.max(1, Math.min(32, parseInt(e.target.value) || 0)))}
                     onBlur={commitHUDChanges}
-                    style={{ background: '#111', color: '#fff', border: '1px solid #444', padding: '6px', fontSize: '11px', outline: 'none', borderRadius: '3px', width: '100%' }}
+                    style={{ background: '#111', color: '#fff', border: '1px solid #444', padding: '6px', fontSize: '11px', outline: 'none', borderRadius: '3px' }}
                   />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
@@ -232,7 +232,7 @@ const HUDPanel = ({ isCollapsed, onToggle, dragProps }) => {
                     value={hudSettings.height ?? (hudSettings.position === 'left' || hudSettings.position === 'right' ? 20 : 2)}
                     onChange={(e) => updateHUDField('height', Math.max(1, Math.min(32, parseInt(e.target.value) || 0)))}
                     onBlur={commitHUDChanges}
-                    style={{ background: '#111', color: '#fff', border: '1px solid #444', padding: '6px', fontSize: '11px', outline: 'none', borderRadius: '3px', width: '100%' }}
+                    style={{ background: '#111', color: '#fff', border: '1px solid #444', padding: '6px', fontSize: '11px', outline: 'none', borderRadius: '3px'}}
                   />
                 </div>
               </div>

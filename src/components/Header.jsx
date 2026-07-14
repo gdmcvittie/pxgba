@@ -54,7 +54,7 @@ const Header = () => {
   const visibleWarnings = warnings ? warnings.filter(w => !dismissedWarnings.includes(w)) : [];
 
   return (
-    <div style={{
+    <div onDoubleClick={(e) => { const tag = e.target.tagName; if (tag !== 'BUTTON' && tag !== 'SELECT' && tag !== 'INPUT' && tag !== 'A') window.dispatchEvent(new Event('toggle-sidebar-minimize')); }} style={{
       height: '45px',
       backgroundColor: '#2d2d2d',
       borderBottom: '1px solid #3c3c3c',
@@ -301,7 +301,7 @@ const Header = () => {
               <BsExclamationTriangleFill size={16} />
             </button>
             {showWarnings && (
-              <div style={{
+    <div style={{
                 position: 'absolute',
                 top: '100%',
                 right: 0,

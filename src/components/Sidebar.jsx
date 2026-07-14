@@ -103,6 +103,18 @@ const Sidebar = () => {
   useEffect(() => { localStorage.setItem('px_shop_col2_collapsed', col2Collapsed); }, [col2Collapsed]);
   useEffect(() => { localStorage.setItem('px_shop_col3_collapsed', col3Collapsed); }, [col3Collapsed]);
 
+  useEffect(() => {
+    const handleToggleMinimize = () => {
+      const allCollapsed = col1Collapsed && col2Collapsed && col3Collapsed;
+      const val = !allCollapsed;
+      setCol1Collapsed(val);
+      setCol2Collapsed(val);
+      setCol3Collapsed(val);
+    };
+    window.addEventListener('toggle-sidebar-minimize', handleToggleMinimize);
+    return () => window.removeEventListener('toggle-sidebar-minimize', handleToggleMinimize);
+  }, [col1Collapsed, col2Collapsed, col3Collapsed]);
+
   const [isNavCollapsed, setIsNavCollapsed] = useState(() => {
     const saved = localStorage.getItem('px_shop_nav_collapsed');
     return saved === 'true';

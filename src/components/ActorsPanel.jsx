@@ -2258,10 +2258,10 @@ const ActorsPanel = ({ isCollapsed, onToggle, dragProps }) => {
                 return (
                   <div key={actor.id} id={`actor-item-${actor.id}`}
                     style={{ 
-                      display: 'flex', flexDirection: 'column', padding: '8px', 
+                      display: 'flex', flexDirection: 'column', padding: '8px 10px', 
                       backgroundColor: '#2a2a2a', 
                       borderRadius: '6px',
-                      border: '1px solid #555',
+                      border: activeActorId === actor.id ? '1px solid #ff9800' : '1px solid #555',
                       marginTop: '4px'
                     }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -2282,7 +2282,7 @@ const ActorsPanel = ({ isCollapsed, onToggle, dragProps }) => {
                       ) : (
                         <span
                           onDoubleClick={(e) => { e.stopPropagation(); setEditingActorId(actor.id); }}
-                          style={{ fontSize: '13px', fontWeight: 'bold', color: '#ff9800', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer', textAlign: 'left' }}
+                          style={{ fontSize: '13px', fontWeight: 'bold', color: actor.isOpen ? '#ff9800' : '#fff', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer', textAlign: 'left' }}
                         >
                           📁 {actor.name}
                         </span>

@@ -528,10 +528,10 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
                 return (
                   <div key={track.id} 
                     style={{ 
-                      display: 'flex', flexDirection: 'column', padding: '6px 10px', 
-                      backgroundColor: '#2d2d2d', 
-                      borderRadius: '4px',
-                      borderLeft: '3px solid #ff9800',
+                      display: 'flex', flexDirection: 'column', padding: '8px 10px', 
+                      backgroundColor: '#2a2a2a', 
+                      borderRadius: '6px',
+                      border: '1px solid #555',
                       marginTop: '4px'
                     }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -553,7 +553,7 @@ const MusicPanel = ({ isCollapsed, onToggle, dragProps }) => {
                       ) : (
                         <span
                           onDoubleClick={(e) => { e.stopPropagation(); setRenamingTrackId(track.id); setRenamingName(track.name); }}
-                          style={{ fontSize: '12px', fontWeight: 'bold', color: '#ff9800', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer', textAlign: 'left' }}
+                          style={{ fontSize: '12px', fontWeight: 'bold', color: track.isOpen ? '#ff9800' : '#fff', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer', textAlign: 'left' }}
                         >
                           📁 {track.name}
                         </span>

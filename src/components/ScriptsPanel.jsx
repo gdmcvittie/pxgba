@@ -181,7 +181,7 @@ const ScriptsPanel = ({ isCollapsed, onToggle, dragProps }) => {
             return (
               <div key={script.id} 
                 style={{ 
-                  display: 'flex', flexDirection: 'column', padding: '8px', 
+                  display: 'flex', flexDirection: 'column', padding: '8px 10px', 
                   backgroundColor: '#2a2a2a', 
                   borderRadius: '6px',
                   border: '1px solid #555',
@@ -205,7 +205,7 @@ const ScriptsPanel = ({ isCollapsed, onToggle, dragProps }) => {
                   ) : (
                     <span
                       onDoubleClick={(e) => { e.stopPropagation(); setEditingScriptId(script.id); }}
-                      style={{ fontSize: '13px', fontWeight: 'bold', color: '#ff9800', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer', textAlign: 'left' }}
+                      style={{ fontSize: '13px', fontWeight: 'bold', color: script.isOpen ? '#ff9800' : '#fff', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer', textAlign: 'left' }}
                     >
                       📁 {script.name}
                     </span>

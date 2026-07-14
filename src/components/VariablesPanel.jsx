@@ -189,7 +189,7 @@ const VariablesPanel = ({ isCollapsed, onToggle, dragProps }) => {
         {variables.map((v, index) => {
           if (v.type === 'group') {
             return (
-              <div key={v.id} style={{ display: 'flex', flexDirection: 'column', padding: '6px 10px', backgroundColor: '#2d2d2d', borderRadius: '4px', borderLeft: '3px solid #ff9800' }}>
+              <div key={v.id} style={{ display: 'flex', flexDirection: 'column', padding: '8px 10px', backgroundColor: '#2a2a2a', borderRadius: '6px', border: '1px solid #555', marginTop: '4px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <button 
                     onClick={() => toggleGroup(v.id)} 
@@ -211,7 +211,7 @@ const VariablesPanel = ({ isCollapsed, onToggle, dragProps }) => {
                   ) : (
                     <span
                       onDoubleClick={(e) => { if (!isProtectedGroup(v.id)) { e.stopPropagation(); setEditingGroupId(v.id); } }}
-                      style={{ fontSize: '12px', fontWeight: 'bold', color: '#ff9800', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: isProtectedGroup(v.id) ? 'default' : 'pointer', textAlign: 'left' }}
+                      style={{ fontSize: '12px', fontWeight: 'bold', color: v.isOpen ? '#ff9800' : '#fff', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: isProtectedGroup(v.id) ? 'default' : 'pointer', textAlign: 'left' }}
                     >
                       📁 {v.name}
                     </span>

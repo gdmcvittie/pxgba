@@ -87,11 +87,12 @@ const LayersPanel = ({ isCollapsed, onToggle, dragProps }) => {
                   }}
                   style={{ 
                     opacity: draggedLayerId === layer.id ? 0.5 : 1,
-                    display: 'flex', flexDirection: 'column', padding: '8px', 
-                    backgroundColor: activeLayerId === layer.id ? '#3c3c3c' : '#2a2a2a', 
+                    display: 'flex', flexDirection: 'column', padding: '8px 10px', 
+                    backgroundColor: '#2a2a2a', 
                     borderRadius: '6px', cursor: 'pointer', 
                     border: activeLayerId === layer.id ? '1px solid #ff9800' : (dragOverLayerId === layer.id && dragPosition === 'inside' ? '1px dashed #65ff00' : '1px solid #555'),
-                    boxShadow: (dragOverLayerId === layer.id && dragPosition === 'before') ? '0 -2px 0 #65ff00' : (dragOverLayerId === layer.id && dragPosition === 'after') ? '0 2px 0 #65ff00' : 'none'
+                    boxShadow: (dragOverLayerId === layer.id && dragPosition === 'before') ? '0 -2px 0 #65ff00' : (dragOverLayerId === layer.id && dragPosition === 'after') ? '0 2px 0 #65ff00' : 'none',
+                    marginTop: '4px'
                   }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <button onClick={(e) => { e.stopPropagation(); setLayers(ls => ls.map(l => l.id === layer.id ? { ...l, isOpen: !l.isOpen } : l)) }} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: 0 }}>
@@ -115,7 +116,7 @@ const LayersPanel = ({ isCollapsed, onToggle, dragProps }) => {
                     ) : (
                       <span
                         onDoubleClick={(e) => { e.stopPropagation(); setEditingLayerId(layer.id); }}
-                        style={{ fontSize: '13px', fontWeight: 'bold', color: '#ff9800', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'left' }}
+                        style={{ fontSize: '13px', fontWeight: 'bold', color: layer.isOpen ? '#ff9800' : '#fff', flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'left' }}
                       >
                         📁 {layer.name}
                       </span>
