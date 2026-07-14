@@ -42,8 +42,8 @@ const PANEL_COMPONENTS = {
 };
 
 const DEFAULT_LAYOUT = {
-  col1: ['palette', 'tiles', 'layers', 'music', 'sfx'],
-  col2: ['hud', 'scenes', 'actors', 'collisions', 'triggers', 'variables', 'scripts', 'history'],
+  col1: ['hud', 'scenes', 'actors', 'variables', 'scripts', 'collisions', 'triggers'],
+  col2: ['palette', 'tiles', 'layers', 'music', 'sfx', 'history'],
 };
 
 const DropIndicator = () => (
@@ -98,22 +98,24 @@ const Sidebar = () => {
   const [col1Collapsed, setCol1Collapsed] = useState(() => localStorage.getItem('px_shop_col1_collapsed') === 'true');
   const [col2Collapsed, setCol2Collapsed] = useState(() => localStorage.getItem('px_shop_col2_collapsed') === 'true');
   const [col3Collapsed, setCol3Collapsed] = useState(() => localStorage.getItem('px_shop_col3_collapsed') === 'true');
+  const allCollapsedRef = useRef(null);
 
   useEffect(() => { localStorage.setItem('px_shop_col1_collapsed', col1Collapsed); }, [col1Collapsed]);
   useEffect(() => { localStorage.setItem('px_shop_col2_collapsed', col2Collapsed); }, [col2Collapsed]);
   useEffect(() => { localStorage.setItem('px_shop_col3_collapsed', col3Collapsed); }, [col3Collapsed]);
+  allCollapsedRef.current = [col1Collapsed, col2Collapsed, col3Collapsed];
 
   useEffect(() => {
     const handleToggleMinimize = () => {
-      const allCollapsed = col1Collapsed && col2Collapsed && col3Collapsed;
-      const val = !allCollapsed;
-      setCol1Collapsed(val);
-      setCol2Collapsed(val);
-      setCol3Collapsed(val);
+      const next = !allCollapsedRef.current[0];
+      setCol1Collapsed(next);
+      setCol2Collapsed(next);
+      setCol3Collapsed(next);
     };
     window.addEventListener('toggle-sidebar-minimize', handleToggleMinimize);
-    return () => window.removeEventListener('toggle-sidebar-minimize', handleToggleMinimize);
-  }, [col1Collapsed, col2Collapsed, col3Collapsed]);
+    window.__toggleSidebarMinimize = handleToggleMinimize;
+    return () => { window.removeEventListener('toggle-sidebar-minimize', handleToggleMinimize); delete window.__toggleSidebarMinimize; };
+  }, []);
 
   const [isNavCollapsed, setIsNavCollapsed] = useState(() => {
     const saved = localStorage.getItem('px_shop_nav_collapsed');

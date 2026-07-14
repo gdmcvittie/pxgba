@@ -616,7 +616,7 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
     <div style={{ display: 'flex', flexDirection: 'column', flex: isCollapsed ? 'none' : 1, overflow: 'hidden', borderBottom: '2px solid #222', minHeight: 0, background: isCollapsed ? 'transparent' : '#373339' }}>
       <div
         onClick={onToggle}
-        style={{ padding: '15px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none', background: '#1f0f2f' }}
+        style={{ padding: '10px', borderBottom: isCollapsed ? 'none' : '1px solid #3c3c3c', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'grab', userSelect: 'none', background: '#1f0f2f' }}
         {...dragProps}
       >
         <span style={{ fontWeight: 'bold', fontSize: '11px', textTransform: 'uppercase', color: isCollapsed ? '#aaa' : '#40c9f1', letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>

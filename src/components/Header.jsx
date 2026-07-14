@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { usePxShop } from '../context/PxShopContext';
 import { BsPlayFill, BsFillSaveFill, BsExclamationTriangleFill, BsBorder, BsDice1, BsChevronDown } from 'react-icons/bs';
 
 const Header = () => {
   const [showWarnings, setShowWarnings] = useState(false);
   const [showSceneMenu, setShowSceneMenu] = useState(false);
+  const lastClickRef = useRef(0);
   const {
     warnings,
     dismissedWarnings, setDismissedWarnings,
@@ -54,7 +55,7 @@ const Header = () => {
   const visibleWarnings = warnings ? warnings.filter(w => !dismissedWarnings.includes(w)) : [];
 
   return (
-    <div onDoubleClick={(e) => { const tag = e.target.tagName; if (tag !== 'BUTTON' && tag !== 'SELECT' && tag !== 'INPUT' && tag !== 'A') window.dispatchEvent(new Event('toggle-sidebar-minimize')); }} style={{
+    <div onMouseDown={() => { const now = Date.now(); if (now - lastClickRef.current < 400) { window.__toggleSidebarMinimize?.(); window.dispatchEvent(new Event('toggle-sidebar-minimize')); lastClickRef.current = 0; } else { lastClickRef.current = now; } }} style={{
       height: '45px',
       backgroundColor: '#2d2d2d',
       borderBottom: '1px solid #3c3c3c',
