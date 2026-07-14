@@ -42,9 +42,8 @@ const PANEL_COMPONENTS = {
 };
 
 const DEFAULT_LAYOUT = {
-  col1: ['palette', 'tiles', 'layers'],
-  col2: ['hud', 'scenes', 'actors', 'collisions', 'triggers'],
-  col3: ['music', 'sfx', 'variables', 'scripts', 'history'],
+  col1: ['palette', 'tiles', 'layers', 'music', 'sfx'],
+  col2: ['hud', 'scenes', 'actors', 'collisions', 'triggers', 'variables', 'scripts', 'history'],
 };
 
 const DropIndicator = () => (
@@ -64,7 +63,7 @@ const Sidebar = () => {
       const saved = localStorage.getItem('px_shop_panel_layout');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed.col1 && parsed.col2 && parsed.col3) return parsed;
+        if (parsed.col1 && parsed.col2) return parsed;
       }
     } catch {}
     return DEFAULT_LAYOUT;
@@ -126,9 +125,8 @@ const Sidebar = () => {
     const handleMouseMove = (e) => {
       const deltaX = e.clientX - dragRef.current.startX;
       const newWidth = Math.max(150, dragRef.current.startWidth - deltaX);
-      if (draggingCol === 1) setCol1Width(newWidth);
-      else if (draggingCol === 2) setCol2Width(newWidth);
-      else if (draggingCol === 3) setCol3Width(newWidth);
+      const colWidthSetters = [setCol1Width, setCol2Width, setCol3Width];
+      if (colWidthSetters[draggingCol - 1]) colWidthSetters[draggingCol - 1](newWidth);
     };
     const handleMouseUp = () => setDraggingCol(null);
 
@@ -138,27 +136,23 @@ const Sidebar = () => {
   }, [draggingCol]);
 
   const findColumnForPanel = useCallback((panelKey) => {
-    if (layout.col1.includes(panelKey)) return 'col1';
-    if (layout.col2.includes(panelKey)) return 'col2';
-    if (layout.col3.includes(panelKey)) return 'col3';
+    for (const colKey of Object.keys(layout)) {
+      if (layout[colKey].includes(panelKey)) return colKey;
+    }
     return null;
   }, [layout]);
 
   const setActiveForColumn = useCallback((colName, panelKey) => {
-    if (colName === 'col1') { setActiveCol1Panel(panelKey); setCol1Collapsed(false); }
-    else if (colName === 'col2') { setActiveCol2Panel(panelKey); setCol2Collapsed(false); }
-    else if (colName === 'col3') { setActiveCol3Panel(panelKey); setCol3Collapsed(false); }
-  }, [setActiveCol1Panel, setActiveCol2Panel, setActiveCol3Panel]);
+    const setters = { col1: [setActiveCol1Panel, setCol1Collapsed], col2: [setActiveCol2Panel, setCol2Collapsed], col3: [setActiveCol3Panel, setCol3Collapsed] };
+    const pair = setters[colName];
+    if (pair) { pair[0](panelKey); pair[1](false); }
+  }, [setActiveCol1Panel, setActiveCol2Panel, setActiveCol3Panel, setCol1Collapsed, setCol2Collapsed, setCol3Collapsed]);
 
   useEffect(() => {
     const activatePanel = (panelKey) => {
       const col = findColumnForPanel(panelKey);
       if (col) setActiveForColumn(col, panelKey);
     };
-
-    if (['pen', 'brush', 'eraser', 'fill', 'gradient', 'drawLine', 'drawRect', 'drawRectFill', 'drawRoundRect', 'drawRoundRectFill', 'drawCircle', 'drawCircleFill'].includes(tool)) {
-      activatePanel('palette');
-    }
 
     if (['tile', 'tileFill'].includes(tool)) {
       activatePanel('tiles');
@@ -181,7 +175,8 @@ const Sidebar = () => {
     setLayout(prev => {
       if (draggedKey === targetKey && fromCol === toCol) return prev;
       if (fromCol !== toCol && prev[fromCol].length <= 1) return prev;
-      const next = { col1: [...prev.col1], col2: [...prev.col2], col3: [...prev.col3] };
+      const next = {};
+      for (const k of Object.keys(prev)) next[k] = [...prev[k]];
       const fromArr = next[fromCol];
       const dragIndex = fromArr.indexOf(draggedKey);
       if (dragIndex === -1) return prev;
@@ -203,7 +198,8 @@ const Sidebar = () => {
   const movePanelToColumnEnd = useCallback((draggedKey, fromCol, toCol) => {
     setLayout(prev => {
       if (fromCol !== toCol && prev[fromCol].length <= 1) return prev;
-      const next = { col1: [...prev.col1], col2: [...prev.col2], col3: [...prev.col3] };
+      const next = {};
+      for (const k of Object.keys(prev)) next[k] = [...prev[k]];
       const fromArr = next[fromCol];
       const dragIndex = fromArr.indexOf(draggedKey);
       if (dragIndex === -1) return prev;
@@ -268,14 +264,16 @@ const Sidebar = () => {
           onDragOver={(e) => handlePanelDragOver(e, panelKey, colName)}
           onDragLeave={() => setDropTarget(null)}
           onDrop={(e) => handlePanelDrop(e, panelKey, colName)}
-          style={{ position: 'relative', flex: isActive ? 1 : 'none', minHeight: 0, display: 'flex', flexDirection: 'column', opacity: isDragging ? 0.4 : 1 }}
+          style={{ position: 'relative', flex: isActive ? 1 : 'none', minHeight: 0, display: 'flex', flexDirection: 'column', opacity: isDragging ? 0.4 : 1, overflow: 'hidden' }}
         >
           {dropTarget?.key === panelKey && dropTarget?.position === 'before' && <DropIndicator />}
-          <Component
-            isCollapsed={!isActive}
-            onToggle={() => setActivePanel(isActive ? null : panelKey)}
-            dragProps={makeDragProps(panelKey, colName)}
-          />
+          <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
+            <Component
+              isCollapsed={!isActive}
+              onToggle={() => setActivePanel(isActive ? null : panelKey)}
+              dragProps={makeDragProps(panelKey, colName)}
+            />
+          </div>
           {dropTarget?.key === panelKey && dropTarget?.position === 'after' && <DropIndicator />}
         </div>
       );
@@ -339,62 +337,33 @@ const Sidebar = () => {
         .collapsed-icon-btn:hover svg { color: #4CAF50 !important; }
       `}</style>
       
-      {/* Column 1 */}
-      <div id="tour-sidebar-col1" style={{ position: 'relative', width: `${col1Collapsed ? 30 : col1Width}px`, backgroundColor: '#2d2d2d', borderLeft: '1px solid #1a1a1a', display: 'flex', flexDirection: 'column', zIndex: 10, flexShrink: 0, transition: 'width 0.2s ease' }}>
-        {!col1Collapsed && <div onMouseDown={startDrag(1, col1Width)} style={{ position: 'absolute', top: 0, left: -3, width: 6, bottom: 0, cursor: 'col-resize', zIndex: 20 }} />}
-        
-        <div 
-          onClick={() => setCol1Collapsed(!col1Collapsed)}
-          style={{ height: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', background: '#1a1a1a', borderBottom: col1Collapsed ? 'none' : '1px solid #3c3c3c', flexShrink: 0 }}
-          title={col1Collapsed ? "Expand Column" : "Collapse Column"}
-        >
-          {col1Collapsed ? <BsChevronLeft color="#aaa" size={12} /> : <BsChevronRight color="#aaa" size={12} />}
-        </div>
-
-        {col1Collapsed && renderCollapsedIcons('col1', activeCol1Panel, setActiveCol1Panel, setCol1Collapsed)}
-
-        <div style={{ display: col1Collapsed ? 'none' : 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
-          {renderColumnPanels('col1', activeCol1Panel, setActiveCol1Panel)}
-        </div>
-      </div>
-
-      {/* Column 2 */}
-      <div id="tour-sidebar-col2" style={{ position: 'relative', width: `${col2Collapsed ? 30 : col2Width}px`, backgroundColor: '#252528', borderLeft: '1px solid #1a1a1a', display: 'flex', flexDirection: 'column', zIndex: 10, flexShrink: 0, transition: 'width 0.2s ease' }}>
-        {!col2Collapsed && <div onMouseDown={startDrag(2, col2Width)} style={{ position: 'absolute', top: 0, left: -3, width: 6, bottom: 0, cursor: 'col-resize', zIndex: 20 }} />}
-        
-        <div 
-          onClick={() => setCol2Collapsed(!col2Collapsed)}
-          style={{ height: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', background: '#1a1a1a', borderBottom: col2Collapsed ? 'none' : '1px solid #3c3c3c', flexShrink: 0 }}
-          title={col2Collapsed ? "Expand Column" : "Collapse Column"}
-        >
-          {col2Collapsed ? <BsChevronLeft color="#aaa" size={12} /> : <BsChevronRight color="#aaa" size={12} />}
-        </div>
-
-        {col2Collapsed && renderCollapsedIcons('col2', activeCol2Panel, setActiveCol2Panel, setCol2Collapsed)}
-
-        <div style={{ display: col2Collapsed ? 'none' : 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
-          {renderColumnPanels('col2', activeCol2Panel, setActiveCol2Panel)}
-        </div>
-      </div>
-
-      {/* Column 3 */}
-      <div id="tour-sidebar-col3" style={{ position: 'relative', width: `${col3Collapsed ? 30 : col3Width}px`, backgroundColor: '#252528', borderLeft: '1px solid #1a1a1a', display: 'flex', flexDirection: 'column', zIndex: 10, flexShrink: 0, transition: 'width 0.2s ease' }}>
-        {!col3Collapsed && <div onMouseDown={startDrag(3, col3Width)} style={{ position: 'absolute', top: 0, left: -3, width: 6, bottom: 0, cursor: 'col-resize', zIndex: 20 }} />}
-        
-        <div 
-          onClick={() => setCol3Collapsed(!col3Collapsed)}
-          style={{ height: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', background: '#1a1a1a', borderBottom: col3Collapsed ? 'none' : '1px solid #3c3c3c', flexShrink: 0 }}
-          title={col3Collapsed ? "Expand Column" : "Collapse Column"}
-        >
-          {col3Collapsed ? <BsChevronLeft color="#aaa" size={12} /> : <BsChevronRight color="#aaa" size={12} />}
-        </div>
-
-        {col3Collapsed && renderCollapsedIcons('col3', activeCol3Panel, setActiveCol3Panel, setCol3Collapsed)}
-
-        <div style={{ display: col3Collapsed ? 'none' : 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
-          {renderColumnPanels('col3', activeCol3Panel, setActiveCol3Panel)}
-        </div>
-      </div>
+      {/* Dynamic columns */}
+      {Object.keys(layout).map((colKey, i) => {
+        const colNum = i + 1;
+        const colWidth = [col1Width, col2Width, col3Width][i] ?? 260;
+        const colCollapsed = [col1Collapsed, col2Collapsed, col3Collapsed][i];
+        const setColCollapsed = [setCol1Collapsed, setCol2Collapsed, setCol3Collapsed][i];
+        const activePanel = [activeCol1Panel, activeCol2Panel, activeCol3Panel][i];
+        const setActivePanel = [setActiveCol1Panel, setActiveCol2Panel, setActiveCol3Panel][i];
+        const setColWidth = [setCol1Width, setCol2Width, setCol3Width][i];
+        const defaultBg = i === 0 ? '#2d2d2d' : '#252528';
+        return (
+          <div key={colKey} id={`tour-sidebar-${colKey}`} style={{ position: 'relative', width: `${colCollapsed ? 30 : colWidth}px`, backgroundColor: defaultBg, borderLeft: '1px solid #1a1a1a', display: 'flex', flexDirection: 'column', zIndex: 10, flexShrink: 0, transition: 'width 0.2s ease' }}>
+            {!colCollapsed && <div onMouseDown={startDrag(colNum, colWidth)} style={{ position: 'absolute', top: 0, left: -3, width: 6, bottom: 0, cursor: 'col-resize', zIndex: 20 }} />}
+            <div
+              onClick={() => setColCollapsed(!colCollapsed)}
+              style={{ height: '24px', display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', background: '#1a1a1a', borderBottom: colCollapsed ? 'none' : '1px solid #3c3c3c', flexShrink: 0 }}
+              title={colCollapsed ? "Expand Column" : "Collapse Column"}
+            >
+              {colCollapsed ? <BsChevronLeft color="#aaa" size={12} /> : <BsChevronRight color="#aaa" size={12} />}
+            </div>
+            {colCollapsed && renderCollapsedIcons(colKey, activePanel, setActivePanel, setColCollapsed)}
+            <div style={{ display: colCollapsed ? 'none' : 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+              {renderColumnPanels(colKey, activePanel, setActivePanel)}
+            </div>
+          </div>
+        );
+      })}
     </>
   );
 };

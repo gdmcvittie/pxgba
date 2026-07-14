@@ -1086,30 +1086,30 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
                   onClick={() => setTileEditor({ tileId: activeTile.id })}
                   disabled={!!tileEditor}
                   title="Edit this tile"
-                  style={{ flexShrink: 0, background: tileEditor ? '#3a3a3a' : '#40c9f1', border: 'none', color: '#fff', padding: '6px', borderRadius: '3px', cursor: tileEditor ? 'default' : 'pointer', opacity: tileEditor ? 0.6 : 1, fontSize: '12px', display: 'flex', alignItems: 'center' }}
+                  onMouseEnter={e => { if (!tileEditor) { e.currentTarget.style.backgroundColor = '#40c9f1'; e.currentTarget.style.color = '#fff'; } }}
+                  onMouseLeave={e => { if (!tileEditor) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#40c9f1'; } }}
+                  style={{ flexShrink: 0, background: 'transparent', border: tileEditor ? '1px solid #555' : '1px solid #40c9f1', color: tileEditor ? '#666' : '#40c9f1', padding: '6px', borderRadius: '3px', cursor: tileEditor ? 'default' : 'pointer', opacity: tileEditor ? 0.6 : 1, fontSize: '12px', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }}
                 >
                   <BsPencil size={12} />
+                </button>
+                <button
+                  disabled={!activeSavedTileId}
+                  onClick={() => {
+                    setSavedTiles(savedTiles.filter(t => t.id !== activeSavedTileId));
+                    setActiveSavedTileId(null);
+                    setTool('pen');
+                    setActiveDraw('pen');
+                  }}
+                  title="Delete this tile"
+                  onMouseEnter={e => { if (activeSavedTileId) { e.currentTarget.style.backgroundColor = '#ff4444'; e.currentTarget.style.color = '#fff'; } }}
+                  onMouseLeave={e => { if (activeSavedTileId) { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#ff4444'; } }}
+                  style={{ flexShrink: 0, background: 'transparent', border: activeSavedTileId ? '1px solid #ff4444' : '1px solid #555', color: activeSavedTileId ? '#ff4444' : '#666', padding: '6px', borderRadius: '3px', cursor: activeSavedTileId ? 'pointer' : 'default', opacity: activeSavedTileId ? 1 : 0.5, fontSize: '12px', display: 'flex', alignItems: 'center', transition: 'all 0.2s' }}
+                >
+                  <BsTrash size={12} />
                 </button>
               </div>
             </div>
           )}
-
-          <div style={{ padding: '10px', display: 'flex', flexDirection: 'column', gap: '8px', borderTop: '1px solid #444', backgroundColor: '#2d2d2d' }}>
-            <button
-              disabled={!activeSavedTileId}
-              onClick={() => {
-                setSavedTiles(savedTiles.filter(t => t.id !== activeSavedTileId));
-                setActiveSavedTileId(null);
-                setTool('pen');
-                setActiveDraw('pen');
-              }}
-              style={{ padding: '8px', background: 'transparent', color: '#ff4444', border: '1px solid #ff4444', borderRadius: '4px', cursor: activeSavedTileId ? 'pointer' : 'default', opacity: activeSavedTileId ? 1 : 0.5, fontWeight: 'bold' }}
-              onMouseEnter={e => { e.currentTarget.style.background = '#ff4444'; e.currentTarget.style.color = '#fff'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#ff4444'; }}
-            >
-              Delete Tile
-            </button>
-          </div>
         </>
       )}
 
