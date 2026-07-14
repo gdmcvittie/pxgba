@@ -199,6 +199,7 @@ export const PxShopProvider = ({ children }) => {
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
   const panStart = useRef({ x: 0, y: 0 });
+  const initialZoomSetRef = useRef(false);
 
   // Tools state
   const [selection, setSelection] = useState(null);
@@ -1053,18 +1054,36 @@ export const PxShopProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    initialZoomSetRef.current = initialZoomSet;
+  }, [initialZoomSet]);
+
+  useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+    let prevW = 0;
+    let prevH = 0;
     const observer = new ResizeObserver(entries => {
       const { width, height } = entries[0].contentRect;
+      if (initialZoomSetRef.current && prevW > 0 && prevH > 0) {
+        const dw = width - prevW;
+        const dh = height - prevH;
+        if (dw !== 0 || dh !== 0) {
+          setPanOffset(prev => ({ x: prev.x - dw / 2, y: prev.y - dh / 2 }));
+        }
+      }
+      prevW = width;
+      prevH = height;
       setViewportSize({ w: width, h: height });
-      const dims = dimensionsRef.current;
-      if (dims.w > 0 && dims.h > 0 && width > 0 && height > 0) {
-        const availableW = width - 60;
-        const availableH = height - 60;
-        const fitZoom = Math.min(availableW / dims.w, availableH / dims.h);
-        setZoom(Math.max(0.1, Math.min(4, fitZoom)));
-        setPanOffset({ x: 0, y: 0 });
+      if (!initialZoomSetRef.current) {
+        const dims = dimensionsRef.current;
+        if (dims.w > 0 && dims.h > 0 && width > 0 && height > 0) {
+          const availableW = width - 60;
+          const availableH = height - 60;
+          const fitZoom = Math.min(availableW / dims.w, availableH / dims.h);
+          setZoom(Math.max(0.1, Math.min(4, fitZoom)));
+          setPanOffset({ x: 0, y: 0 });
+          setInitialZoomSet(true);
+        }
       }
     });
     observer.observe(container);

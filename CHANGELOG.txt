@@ -1,3 +1,6 @@
+0.4.4
+- collapsing/expanding sidebars no longer resets zoom/pan
+
 0.4.3
 - slims down to 2 sidebars, you may need to 'reset layout' in the footer to see the change
 - minor ui tweaks to sidebar panels
