@@ -39,6 +39,7 @@ const MapOverviewDialog = () => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [draggingSceneId, setDraggingSceneId] = useState(null);
+  const [hoveredSceneId, setHoveredSceneId] = useState(null);
   const [dragStart, setDragStart] = useState(null);
   const [isPanning, setIsPanning] = useState(false);
   const containerRef = useRef(null);
@@ -312,6 +313,8 @@ const MapOverviewDialog = () => {
               key={scene.id}
               onMouseDown={(e) => handleMouseDown(e, scene)}
               onDoubleClick={(e) => { e.stopPropagation(); switchScene(scene.id); setShowMapOverviewDialog(false); }}
+              onMouseEnter={() => setHoveredSceneId(scene.id)}
+              onMouseLeave={() => setHoveredSceneId(null)}
               style={{
                 position: 'absolute',
                 left: scene.worldX || 0,
@@ -329,6 +332,32 @@ const MapOverviewDialog = () => {
               <div style={{ position: 'absolute', top: -20, left: 0, color: activeSceneId === scene.id ? '#65ff00' : '#aaa', fontSize: '12px', whiteSpace: 'nowrap', textShadow: '1px 1px 0 #000' }}>
                 {scene.name}
               </div>
+              {hoveredSceneId === scene.id && (
+                <div
+                  onMouseDown={e => e.stopPropagation()}
+                  style={{ position: 'absolute', bottom: -28, left: '50%', transform: 'translateX(-50%)', zIndex: 20 }}
+                >
+                  <button
+                    onClick={(e) => { e.stopPropagation(); switchScene(scene.id); setShowMapOverviewDialog(false); }}
+                    style={{
+                      background: '#2a4a2a',
+                      border: '1px solid #4CAF50',
+                      color: '#fff',
+                      padding: '4px 10px',
+                      borderRadius: '3px',
+                      cursor: 'pointer',
+                      fontSize: '11px',
+                      fontWeight: 'bold',
+                      whiteSpace: 'nowrap',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.5)'
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.background = '#4CAF50'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = '#2a4a2a'; }}
+                  >
+                    Edit
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>
