@@ -22,7 +22,7 @@ export async function checkForUpdates(onStatus) {
     const updateResult = await window.electronAPI.applyUpdate();
 
     if (updateResult.status === 'updated') {
-      onStatus?.('ready');
+      onStatus?.('ready', updateResult.changelog);
     } else {
       onStatus?.('error', updateResult.message);
     }

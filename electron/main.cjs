@@ -347,9 +347,17 @@ app.whenReady().then(() => {
         })
       );
 
+      let changelog = '';
+      try {
+        const changelogPath = path.join(distDir, 'changelog.txt');
+        if (fs.existsSync(changelogPath)) {
+          changelog = fs.readFileSync(changelogPath, 'utf8');
+        }
+      } catch (e) { }
+
       updateApplied = true;
       console.log('Update applied to:', distDir);
-      return { status: 'updated' };
+      return { status: 'updated', changelog };
     } catch (error) {
       return { status: 'error', message: error.message };
     }

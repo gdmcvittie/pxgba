@@ -3,6 +3,7 @@ import { usePxShop } from '../context/PxShopContext';
 import { BsDownload, BsExclamationTriangleFill } from 'react-icons/bs';
 import { checkForUpdates } from '../utils/updater';
 import { GrUpgrade } from 'react-icons/gr';
+import toast from 'react-hot-toast';
 
 const formatBytes = (bytes) => {
   if (bytes < 1024) return `${bytes} B`;
@@ -46,10 +47,55 @@ const StatusBar = () => {
 
   useEffect(() => {
     if (isServerHost) return;
+    const pending = localStorage.getItem('pxgba_pending_changelog');
+    if (pending) {
+      localStorage.removeItem('pxgba_pending_changelog');
+      const lines = pending.split('\n');
+      const changelogLines = [];
+      let started = false;
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!started) {
+          if (/^\d+\.\d+/.test(line)) { started = true; changelogLines.push(line); }
+          continue;
+        }
+        if (/^\d+\.\d+/.test(line) && i > 0) break;
+        changelogLines.push(lines[i]);
+      }
+      const content = (changelogLines.length ? changelogLines : lines).join('\n').trim();
+      if (content) {
+        toast.custom((t) => (
+          <div style={{
+            background: '#1a1a1a', color: '#eee', border: '1px solid #333',
+            borderRadius: '8px', padding: '16px 20px', maxWidth: '380px', width: '100%',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.7)', fontFamily: 'system-ui, -apple-system, sans-serif',
+            display: 'flex', flexDirection: 'column', gap: '10px',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontWeight: 'bold', fontSize: '13px', color: '#4CAF50', letterSpacing: '0.3px' }}>Update Applied</span>
+              <button onClick={() => toast.dismiss(t.id)} style={{ background: 'none', border: 'none', color: '#666', cursor: 'pointer', fontSize: '16px', padding: '0 2px', lineHeight: 1 }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={e => { e.currentTarget.style.color = '#666'; }}
+              >&#x2715;</button>
+            </div>
+            <pre style={{ whiteSpace: 'pre-wrap', fontSize: '12px', color: '#aaa', margin: 0, fontFamily: 'inherit', lineHeight: '1.6', textAlign: 'left' }}>{content}</pre>
+          </div>
+        ), { duration: 15000, position: 'bottom-right' });
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isServerHost) return;
     setUpdateStatus('checking');
     checkForUpdates((status, message) => {
       setUpdateStatus(status);
-      if (message) setUpdateMessage(message);
+      if (status === 'ready' && message) {
+        localStorage.setItem('pxgba_pending_changelog', message);
+        setUpdateMessage('');
+      } else if (message) {
+        setUpdateMessage(message);
+      }
     });
   }, []);
 
@@ -61,7 +107,12 @@ const StatusBar = () => {
     setUpdateStatus('checking');
     checkForUpdates((status, message) => {
       setUpdateStatus(status);
-      if (message) setUpdateMessage(message);
+      if (status === 'ready' && message) {
+        localStorage.setItem('pxgba_pending_changelog', message);
+        setUpdateMessage('');
+      } else if (message) {
+        setUpdateMessage(message);
+      }
     });
   };
 
