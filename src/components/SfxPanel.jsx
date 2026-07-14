@@ -513,8 +513,8 @@ const SfxPanel = ({ isCollapsed, onToggle, dragProps }) => {
               onClick={handleSfxSearch}
               style={{
                 background: 'transparent',
-                color: '#e040fb',
-                border: '1px solid #e040fb',
+                color: '#0078d4',
+                border: '1px solid #0078d4',
                 borderRadius: '4px',
                 padding: '6px 12px',
                 cursor: 'pointer',
@@ -524,8 +524,8 @@ const SfxPanel = ({ isCollapsed, onToggle, dragProps }) => {
                 alignItems: 'center',
                 gap: '4px'
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = '#e040fb'; e.currentTarget.style.color = '#fff'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e040fb'; }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#0078d4'; e.currentTarget.style.color = '#fff'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0078d4'; }}
             >
               Search
             </button>
@@ -829,8 +829,8 @@ const SfxPanel = ({ isCollapsed, onToggle, dragProps }) => {
                 disabled={isSfxLoading}
                 style={{
                   background: 'transparent',
-                  color: '#e040fb',
-                  border: '1px solid #e040fb',
+                  color: '#0078d4',
+                  border: '1px solid #0078d4',
                   borderRadius: '4px',
                   padding: '8px 18px',
                   cursor: 'pointer',
@@ -838,8 +838,8 @@ const SfxPanel = ({ isCollapsed, onToggle, dragProps }) => {
                   fontWeight: 'bold',
                   opacity: isSfxLoading ? 0.6 : 1
                 }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#e040fb'; e.currentTarget.style.color = '#fff'; }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#e040fb'; }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#0078d4'; e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#0078d4'; }}
               >
                 {isSfxLoading && !previewSfxId ? 'Searching...' : 'Search'}
               </button>
