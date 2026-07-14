@@ -1,6 +1,8 @@
+- fixed freesound search results
+
 0.4.0
-- adds panel backgrounds based on their primary function color
-- adds ability to reorganize panels by dragging them
+- adds panel backgrounds based on their primary function
+- adds ability to reorganize panels by dragging them (saves automatically, reset in footer)
 - fixed hud vertical layout compile bug
 - fixed magenta flicker between scenes
 - fixed tile editor palette limits
