@@ -1,3 +1,9 @@
+0.4.3
+- slims down to 2 sidebars, you may need to 'reset layout' in the footer to see the change
+- minor ui tweaks to sidebar panels
+- double-click header to toggle sidebars
+- added edit button to scenes in global map overlay
+
 0.4.2
 - added changelog to auto update
 
