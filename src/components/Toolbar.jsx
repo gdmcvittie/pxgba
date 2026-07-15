@@ -60,7 +60,6 @@ const Toolbar = () => {
     outlineSelection,
     fillSelectionWithCollision,
     showAdjustSelectionDialog,
-    setShowWelcomeTour,
     setShowWizardDialog
   } = usePxShop();
 
@@ -105,7 +104,6 @@ const Toolbar = () => {
               <button onClick={() => { imageInputRef.current?.click(); setShowFileMenu(false); }} style={{ background: 'transparent', border: 'none', color: '#fff', padding: '8px 12px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4CAF50'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}><BsUpload size={14} /> Import</button>
               <button onClick={() => { if (!isBusy) setShowExportDialog(true); setShowFileMenu(false); }} style={{ background: 'transparent', border: 'none', color: isBusy ? '#666' : '#fff', padding: '8px 12px', textAlign: 'left', cursor: isBusy ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '8px', width: '100%', outline: 'none' }} onMouseEnter={(e) => { if (!isBusy) e.currentTarget.style.backgroundColor = '#4CAF50'; }} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}><BsGrid3X3GapFill size={14} /> Export</button>
               <div style={{ height: '1px', background: '#444', margin: '4px 0' }} />
-              <button onClick={() => { setShowWelcomeTour(true); setShowFileMenu(false); }} style={{ background: 'transparent', border: 'none', color: '#fff', padding: '8px 12px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4CAF50'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}><BsInfoCircle size={14} /> Welcome Tour</button>
               <button onClick={() => { setShowAboutDialog(true); setShowFileMenu(false); }} style={{ background: 'transparent', border: 'none', color: '#fff', padding: '8px 12px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4CAF50'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}><BsInfoCircle size={14} /> About</button>
             </div>
           </>

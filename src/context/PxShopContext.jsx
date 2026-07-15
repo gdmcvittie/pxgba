@@ -406,7 +406,6 @@ export const PxShopProvider = ({ children }) => {
     return saved !== null ? (saved === '' ? null : saved) : 'music';
   });
 
-  const [showWelcomeTour, setShowWelcomeTour] = useState(false);
   const [showGbaMask, setShowGbaMask] = useState(true);
 
   const [hudSettings, setHudSettings] = useState({
@@ -9057,7 +9056,6 @@ const handleWizardCreate = () => {
     activeCol1Panel, setActiveCol1Panel,
     activeCol2Panel, setActiveCol2Panel,
     activeCol3Panel, setActiveCol3Panel,
-    showWelcomeTour, setShowWelcomeTour,
     hudSettings, setHudSettings,
     estimatedRomSize,
     lastSavedTime,

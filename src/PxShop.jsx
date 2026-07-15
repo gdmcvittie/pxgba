@@ -9,7 +9,6 @@ import ScriptEditor from './components/ScriptEditor';
 import MusicEditor from './components/MusicEditor';
 import StatusBar from './components/StatusBar';
 import { Toaster } from 'react-hot-toast';
-import WelcomeTour from './components/WelcomeTour';
 import TileEditor from './components/TileEditor';
 
 const TileEditorContainer = () => {
@@ -24,7 +23,6 @@ const PxShop = () => {
         <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
           <Toaster containerStyle={{ zIndex: 99999 }} />
           <Dialogs />
-          <WelcomeTour />
           <Toolbar />
           <div id="tour-canvas-container" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             <Header />

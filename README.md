@@ -93,6 +93,12 @@ PxGBA operates as an integrated desktop application that bridges modern web tech
 * **Tracker Music Search**: Search and import `.mod`/`.s3m` files from ModArchive.org with inline preview player, artist credit tracking, and automatic attribution.
 * **SFX Generator**: Built-in sound effect synthesizer supporting Square, Sine, Sawtooth, and Noise waveforms with configurable frequency, duration, and fade-out envelopes. Save generated SFX as WAV files directly into your project.
 
+### 🖥️ Workspace & UI Customization
+* **Flexible Dual Sidebar Layout**: Slimmed down from three columns to two sidebars, maximizing the central canvas workspace.
+* **Drag-and-Drop Reorganization**: Fully customizable workspace where panels can be dragged and dropped between columns to create your preferred layout. Panel organization is saved automatically to local storage, and can be restored using the "Reset Layout" button in the status bar/footer.
+* **Smart Collapsing & Zoom Preservation**: Columns can be individually collapsed, or both minimized at once by double-clicking the main header bar. Expanding/collapsing sidebars preserves the zoom level and pan coordinates of the canvas.
+* **Global Map Overview Navigation**: Features a zoomable, draggable world map showing all scenes in your project. Each scene preview has an "Edit" button on hover, and double-clicking any scene instantly loads it for editing.
+
 ---
 
 ## ⚙️ Prerequisites
@@ -231,7 +237,8 @@ pxgba/
 │   │   ├── ScenesPanel.jsx    # Scene configuration and Level Generators
 │   │   ├── ScriptEditor.jsx   # React-Flow visual node scripting
 │   │   ├── MusicEditor.jsx    # 4-channel piano roll sequencer with waveform synthesis, BPM control, and ProTracker MOD export
-│   │   └── MusicPanel.jsx     # Music & SFX asset manager, ModArchive search, track organization, and SFX generator
+│   │   ├── MusicPanel.jsx     # Music manager and ModArchive search client
+│   │   └── SfxPanel.jsx       # SFX manager, wave synthesizer, and Freesound.org search client
 │   ├── utils/                 # Utility functions
 │   │   └── modSerializer.js   # ProTracker MOD binary serializer for exporting composed tracks
 │   ├── context/               # Global React state and Context wrappers

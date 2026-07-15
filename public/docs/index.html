@@ -812,7 +812,7 @@ DEVKITARM = C:\devkitPro\devkitARM</code></pre>
         <section id="workspace-layout">
           <h2>Workspace Layout</h2>
           <p>
-            The layout of the visual suite is split into four primary segments to focus your drawing, level scripting, and sound editing workflows:
+            The layout of the visual suite is designed to maximize screen real estate, split into a toolbar, a central editor canvas, and a highly customizable two-column sidebar layout:
           </p>
           
           <img src="./docs-images/workspace.png" alt="PxGBA Workspace Overview Layout" class="doc-screenshot">
@@ -832,9 +832,14 @@ DEVKITARM = C:\devkitPro\devkitARM</code></pre>
                 <td>Art tools (Pen, selection shapes, bucket, mirror modes)</td>
               </tr>
               <tr>
-                <td><strong>Side Editors</strong></td>
-                <td>Three-column panels</td>
-                <td>Layout managers (Scenes, Tiles, Layers, Actors, Triggers, Music, Script Graphs)</td>
+                <td><strong>Sidebar Column 1</strong></td>
+                <td>Left side editor column</td>
+                <td>Core settings panels (HUD Settings, Scenes, Actors, Variables, Scripts, Collisions, Triggers)</td>
+              </tr>
+              <tr>
+                <td><strong>Sidebar Column 2</strong></td>
+                <td>Right side editor column</td>
+                <td>Resource panels (Palette, Tiles, Layers, Music, Sound Effects, History)</td>
               </tr>
               <tr>
                 <td><strong>Canvas</strong></td>
@@ -848,6 +853,22 @@ DEVKITARM = C:\devkitPro\devkitARM</code></pre>
               </tr>
             </tbody>
           </table>
+
+          <div class="alert alert-info">
+            <svg class="alert-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            <div class="alert-content">
+              <h5>Customizing Your Workspace Layout</h5>
+              <p>You can drag and drop panels by their headers between Sidebar Column 1 and Sidebar Column 2 to tailor the layout to your workflow. Panel layouts are automatically saved to local storage. If you want to return to default layout positions, simply click the <strong>Reset Layout</strong> button in the status bar/footer on the bottom-right.</p>
+            </div>
+          </div>
+
+          <div class="alert alert-info">
+            <svg class="alert-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            <div class="alert-content">
+              <h5>Collapsing Sidebars & Zoom/Pan Preservation</h5>
+              <p>Sidebar columns can be individually minimized using the chevron buttons at the top of each column. You can also minimize both sidebars concurrently by double-clicking the main application header. Collapsing or expanding the sidebars will automatically shift the canvas offset to keep your view centered, preserving your zoom factor and coordinates perfectly.</p>
+            </div>
+          </div>
         </section>
         
         <!-- SECTION: Header Controls -->
@@ -860,7 +881,7 @@ DEVKITARM = C:\devkitPro\devkitARM</code></pre>
           <img src="./docs-images/header.png" alt="Header Controls Panel" class="doc-screenshot">
           
           <ul>
-            <li><strong>File Menu</strong>: Access new project options, open project files (`.pxg`), save, export individual tiles/assets to `.png` graphics, and launch the Welcome Tour guide.</li>
+            <li><strong>File Menu</strong>: Access new project options, open project files (`.pxg`), save, and export individual tiles/assets to `.png` graphics.</li>
             <li><strong>Project Wizard</strong>: A bulk level creation script that prompts you for scene types (e.g. 2 Top-Down levels, 1 SHMUP boss scene, a Pause scene) and constructs them instantly with starter layouts.</li>
             <li><strong>Level Generator</strong>: Opens a procedural generation panel (robot icon) to create cave systems, top-down paths, floating-platform arrays, or loop racing tracks in seconds.</li>
             <li><strong>Play Button</strong>: Loads a built-in browser-based GBA emulator (Iodine-GBA) so you can playtest scripts, gravity variables, and hitboxes immediately. Press <kbd>Esc</kbd> to exit.</li>
@@ -1075,7 +1096,7 @@ DEVKITARM = C:\devkitPro\devkitARM</code></pre>
         <section id="music-panel">
           <h2>Music Panel (Audio & Composition)</h2>
           <p>
-            PxGBA features a complete music and sound effect production suite built directly into the editor. You can compose original chiptune tracks with a piano roll sequencer, generate sound effects, import tracker modules from ModArchive, and organize everything into groups for scene assignment.
+            PxGBA features a complete chiptune music production client built directly into the editor. You can compose original 4-channel tracks with a built-in piano roll sequencer, import tracker modules from ModArchive, and organize music assets into groups for scene assignment.
           </p>
           
           <img src="./docs-images/music_panel.png" alt="Built-in Tracker-Based Sequencer" class="doc-screenshot">
@@ -1090,26 +1111,24 @@ DEVKITARM = C:\devkitPro\devkitARM</code></pre>
 
           <h3>Music Panel Overview</h3>
           <p>
-            The Music Panel (found in the right sidebar under "Music & SFX") is the central hub for managing all audio assets in your project. It provides:
+            The Music Panel (found in Sidebar Column 2 under "Music") is the central hub for managing all music assets in your project. It provides:
           </p>
           <ul>
-            <li><strong>Track List</strong>: Displays all imported and composed tracks with their names, types, and group assignments.</li>
+            <li><strong>Track List</strong>: Displays all imported and composed music tracks with their names, types, and group assignments.</li>
             <li><strong>Search ModArchive</strong>: A search bar that queries ModArchive.org for <code>.mod</code> and <code>.s3m</code> tracker files you can import directly.</li>
             <li><strong>Compose Music (Piano Roll)</strong>: Opens the built-in 4-channel sequencer to create original chiptune compositions.</li>
             <li><strong>Add Track</strong>: Upload <code>.mod</code>, <code>.s3m</code>, <code>.xm</code>, or <code>.it</code> files from your computer.</li>
-            <li><strong>SFX Generator</strong>: A quick-synth tool for generating simple sound effects (jumps, coins, lasers, hits) as WAV files.</li>
             <li><strong>Group Folders</strong>: Organize tracks into colored group folders for cleaner project management.</li>
           </ul>
 
           <h4>Track Management</h4>
           <p>
-            Each track in the list displays its name, a format indicator (green border for music tracks, magenta for SFX), and action buttons:
+            Each track in the list displays its name, a format indicator (green border for music tracks), and action buttons:
           </p>
           <ul>
             <li><strong>Rename</strong>: Click the pencil icon to rename a track inline. Extensions are preserved automatically.</li>
             <li><strong>Reorder</strong>: Use the ▲ and ▼ buttons to change playback/display order.</li>
             <li><strong>Delete</strong>: Removes the track from the project (shown with a red trash icon).</li>
-            <li><strong>Play SFX</strong>: For sound effects, a play/pause button lets you preview the audio directly in the panel.</li>
             <li><strong>Edit Composed Music</strong>: For tracks created with the piano roll, a green "Edit Composed Music" button reopens the sequencer.</li>
             <li><strong>Group Assignment</strong>: Each track can be assigned to a group via the dropdown selector, keeping related tracks organized together.</li>
           </ul>
@@ -1223,13 +1242,14 @@ DEVKITARM = C:\devkitPro\devkitARM</code></pre>
 
           <hr>
 
-          <h3>SFX Generator</h3>
+          <h3>SFX Panel (Sound Effects Synthesizer & Freesound)</h3>
           <p>
-            The SFX Generator is a quick-synth tool for creating simple sound effects without leaving the editor. Open it by clicking the <strong>SFX Generator</strong> button at the bottom of the Music Panel.
+            PxGBA features a dedicated SFX Panel (found in Sidebar Column 2 under "Sound Effects") designed to manage, synthesize, and source sound effects for your game. Sound effects are stored as standard 16 kHz, 8-bit mono WAV files inside your project metadata.
           </p>
 
           <img src="./docs-images/sfx_generator.png" alt="SFX Generator Panel" class="doc-screenshot">
 
+          <h4>Synthesizer Parameters</h4>
           <table>
             <thead>
               <tr>
@@ -1239,16 +1259,31 @@ DEVKITARM = C:\devkitPro\devkitARM</code></pre>
               </tr>
             </thead>
             <tbody>
-              <tr><td><strong>Waveform</strong></td><td>Square, Sine, Sawtooth, Noise</td><td>The base waveform type. Square gives classic blips/jumps, Sine is smooth (coin sounds), Sawtooth is harsh (lasers), Noise is for crashes/hits.</td></tr>
-              <tr><td><strong>Frequency</strong></td><td>50 - 2000 Hz</td><td>Pitch of the sound effect. Lower values for thuds/impacts, higher values for pings/laser zaps.</td></tr>
-              <tr><td><strong>Length</strong></td><td>50 - 1000 ms</td><td>Duration of the sound effect in milliseconds.</td></tr>
-              <tr><td><strong>Fade Out</strong></td><td>On / Off</td><td>When enabled, applies a smooth volume fade-out envelope to prevent click artifacts at the end of the sound.</td></tr>
+              <tr><td><strong>Waveform</strong></td><td>Square, Sine, Sawtooth, Noise</td><td>The base waveform type. Square gives classic retro blips, Sine is smooth (ideal for coins), Sawtooth is harsh (lasers/beams), and Noise is a randomized signal (explosions/hits).</td></tr>
+              <tr><td><strong>Frequency</strong></td><td>50 - 2000 Hz</td><td>Pitch of the synthesized sound effect. Lower values for deep explosions, higher values for zaps/pings.</td></tr>
+              <tr><td><strong>Length</strong></td><td>50 - 1000 ms</td><td>Duration of the sound effect playback in milliseconds.</td></tr>
+              <tr><td><strong>Fade Out</strong></td><td>On / Off</td><td>Applies an envelope volume fade-out to prevent sharp audio clicking at the end of the waveform.</td></tr>
             </tbody>
           </table>
           <ul>
-            <li><strong>Play</strong>: Preview the sound effect using the current parameters.</li>
-            <li><strong>Save</strong>: Saves the SFX as a WAV file (16 kHz, 8-bit, mono) in your project's track list with the name format <code>sfx_{type}_{freq}Hz.wav</code>. The generation parameters are stored as <code>sfxParams</code> metadata.</li>
+            <li><strong>Play</strong>: Previews the sound effect with your current settings in the browser.</li>
+            <li><strong>Save</strong>: Encodes and saves the generated sound effect as a WAV file in your project's SFX asset list.</li>
           </ul>
+
+          <h4>Freesound.org Search Client</h4>
+          <p>
+            You can query the massive online sound database at <a href="https://freesound.org" target="_blank">Freesound.org</a> directly from within the panel:
+          </p>
+          <ul>
+            <li>Click <strong>Freesound Search</strong> to open the search modal.</li>
+            <li>Type search tags (e.g. <code>coin</code>, <code>explosion</code>, <code>jump</code>) and click <strong>Search</strong>.</li>
+            <li>Preview results directly using the inline browser player, and import any file into your project assets with a single click.</li>
+          </ul>
+
+          <h4>WAV Local File Import</h4>
+          <p>
+            If you have pre-recorded sound effects, click <strong>Import WAV File</strong> at the bottom of the SFX Panel to import files directly. Large files will display warning notices to help you manage the GBA's strict compiled ROM storage constraints.
+          </p>
 
           <hr>
 
