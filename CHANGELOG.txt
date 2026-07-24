@@ -1,3 +1,7 @@
+0.4.5
+- adds initial GB Studio project importing (don't expect stuff to just work, it's a work in progress!)
+- removed billion step welcome tour
+
 0.4.4
 - collapsing/expanding sidebars no longer resets zoom/pan
 
