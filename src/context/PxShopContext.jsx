@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import toast from 'react-hot-toast';
+import TileEditor from '../components/TileEditor';
 import JSZip from 'jszip';
 import { readPsd, writePsd } from 'ag-psd';
 import { API_BASE_URL } from '../config';
@@ -18,6 +19,7 @@ import { generateFormat, getFormatLabel, getFormatFilename } from './codegen/for
 import { hexToRgbLocal } from './codegen/shared';
 import { useHistory } from './hooks/useHistory';
 import { useImportImage } from './hooks/useImportImage';
+import { importGbStudioProject } from '../utils/gbStudioImporter';
 
 export function getLuminance(hex) {
   if (!hex || hex === 'transparent') return 0;
@@ -123,6 +125,7 @@ export const PxShopProvider = ({ children }) => {
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(showNewProjectOnStartup);
   const [newProjectSettings, setNewProjectSettings] = useState({ w: 256, h: 256, bgColor: '#fff1e8', transparentBg: false });
   const [showWizardDialog, setShowWizardDialog] = useState(false);
+  const [showGbStudioImportDialog, setShowGbStudioImportDialog] = useState(false);
   const [wizardSettings, setWizardSettings] = useState({ topdown: 1, platformer: 1, metroidvania: 1, pointnclick: 1, shmup: 1, racing: 1, beatemup: 1, intro: 2, pause: true, randomBg: true, globalPlayer: true, generateLevels: true });
   const [dimensions, setDimensions] = useState({ w: 256, h: 256 });
   const dimensionsRef = useRef(dimensions);
@@ -915,6 +918,7 @@ export const PxShopProvider = ({ children }) => {
   const selectionRef = useRef(null);
   const containerRef = useRef(null);
   const projectInputRef = useRef(null);
+  const gbStudioInputRef = useRef(null);
 
   const {
     imageInputRef, importLayerInputRef, paletteInputRef,
@@ -6652,8 +6656,14 @@ export const PxShopProvider = ({ children }) => {
       });
     } else {
       // Keep existing project palette, but check if we can add any missing colors from the imported image's dominant colors (up to 256 total)
-      const currentPalette = recentColors && recentColors.length > 0 ? [...recentColors] : [...DEFAULT_16_PALETTE];
-      const newColors = dominantColorsList.filter(color => !currentPalette.includes(color));
+      const currentPalette = (recentColors && recentColors.length > 0 ? [...recentColors] : [...DEFAULT_16_PALETTE])
+        .filter(c => c && typeof c === 'string')
+        .map(c => c.toLowerCase().trim());
+      const currentPaletteSet = new Set(currentPalette);
+      const newColors = dominantColorsList
+        .filter(color => color && typeof color === 'string')
+        .map(color => color.toLowerCase().trim())
+        .filter(color => !currentPaletteSet.has(color));
       const spaceLeft = 256 - currentPalette.length;
 
       if (newColors.length > 0 && spaceLeft > 0) {
@@ -7616,6 +7626,7 @@ export const PxShopProvider = ({ children }) => {
     } else {
       setActiveSavedTileId(1);
     }
+    //console.log('[PxShopContext Debug] project.variables from importer:', project.variables ? project.variables.map(v => ({ id: v.id, name: v.name, type: v.type })) : 'EMPTY');
     const loadedVars = (project.variables || []).map((v, index) => ({
       id: v.id || Date.now() + Math.random() + index,
       ...v
@@ -7954,6 +7965,57 @@ export const PxShopProvider = ({ children }) => {
     };
     reader.readAsText(file);
     if (projectInputRef.current) projectInputRef.current.value = "";
+  };
+
+  const handleGbStudioUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const toastId = toast.loading("Importing GB Studio project... Slicing assets...");
+    setIsBusy(true);
+
+    try {
+      const { project, warnings } = await importGbStudioProject(file, RAW_DEFAULT_TILES, recentColors || DEFAULT_16_PALETTE);
+      
+      loadProjectData(project);
+
+      if (warnings.length > 0) {
+        const skippedFiles = warnings.map(w => {
+          const match = w.match(/"([^"]+)"/);
+          if (match) {
+            return match[1].split('/').pop();
+          }
+          if (w.toLowerCase().includes('variables file')) return 'variables.gbsres';
+          if (w.toLowerCase().includes('settings')) return 'settings.gbsres';
+          return w;
+        });
+        const uniqueSkippedFiles = [...new Set(skippedFiles)];
+
+        toast.success(
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', textAlign: 'left' }}>
+            <div style={{ fontWeight: 'bold' }}>Imported with warnings!</div>
+            <div style={{ fontSize: '11px', maxHeight: '120px', overflowY: 'auto', paddingRight: '4px' }}>
+              <div style={{ fontWeight: 600 }}>Skipped files:</div>
+              <ul style={{ margin: '4px 0 0 12px', padding: 0, listStyleType: 'disc' }}>
+                {uniqueSkippedFiles.map((filename, idx) => (
+                  <li key={idx} style={{ marginBottom: '2px' }}>{filename}</li>
+                ))}
+              </ul>
+            </div>
+          </div>,
+          { id: toastId, duration: 10000 }
+        );
+        //console.warn("GB Studio Import Warnings:", warnings);
+      } else {
+        toast.success("GB Studio project imported successfully!", { id: toastId });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to import GB Studio project: " + err.message, { id: toastId });
+    } finally {
+      setIsBusy(false);
+      if (gbStudioInputRef.current) gbStudioInputRef.current.value = "";
+    }
   };
 
 
@@ -8924,6 +8986,7 @@ const handleWizardCreate = () => {
     selectionRef,
     containerRef,
     projectInputRef,
+    gbStudioInputRef,
     imageInputRef,
     importLayerInputRef,
     tileSheetInputRef,
@@ -9006,6 +9069,7 @@ const handleWizardCreate = () => {
     exportProjectJSON,
     loadProjectData,
     handleProjectUpload,
+    handleGbStudioUpload,
     handleImageUpload,
     handleImportToLayer,
     importFileAsLayer,
@@ -9025,6 +9089,7 @@ const handleWizardCreate = () => {
     exportAllLayersZipped,
     handleCreateNewProject,
     showWizardDialog, setShowWizardDialog,
+    showGbStudioImportDialog, setShowGbStudioImportDialog,
     wizardSettings, setWizardSettings,
     handleWizardCreate,
     renderText,
@@ -9069,6 +9134,7 @@ const handleWizardCreate = () => {
   return (
     <PxShopContext.Provider value={value}>
       {children}
+      <TileEditor key={tileEditor?.tileId ?? 'closed'} />
     </PxShopContext.Provider>
   );
 };

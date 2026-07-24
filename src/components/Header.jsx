@@ -19,6 +19,7 @@ const Header = () => {
     showGbaMask, setShowGbaMask,
     setTool,
     projectInputRef, handleProjectUpload,
+    gbStudioInputRef, handleGbStudioUpload,
     imageInputRef, handleImageUpload,
     importLayerInputRef, handleImportToLayer,
     paletteInputRef, handlePaletteUpload,
@@ -160,6 +161,7 @@ const Header = () => {
           )}
         </div>
         <input type="file" ref={projectInputRef} onChange={handleProjectUpload} style={{ display: 'none' }} accept=".pxg,.json" />
+        <input type="file" ref={gbStudioInputRef} onChange={handleGbStudioUpload} style={{ display: 'none' }} accept=".zip" />
         <input type="file" ref={imageInputRef} onChange={handleImageUpload} style={{ display: 'none' }} accept="image/*,.psd" />
         <input type="file" ref={importLayerInputRef} onChange={handleImportToLayer} style={{ display: 'none' }} accept="image/*" />
         <input type="file" ref={paletteInputRef} onChange={handlePaletteUpload} style={{ display: 'none' }} accept=".gpl,.json,.hex,.txt,image/*" />

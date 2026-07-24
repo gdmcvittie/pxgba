@@ -39,12 +39,18 @@ export function useImportImage({
     }
     
     const sortedUniqueColors = Object.keys(colorCounts).sort((a, b) => colorCounts[b] - colorCounts[a]);
-    const currentPalette = recentColors && recentColors.length > 0 ? [...recentColors] : [];
+    const currentPalette = (recentColors && recentColors.length > 0 ? [...recentColors] : [])
+      .filter(c => c && typeof c === 'string')
+      .map(c => c.toLowerCase().trim());
     const currentPaletteSet = new Set(currentPalette);
     const newColors = [];
     for (const color of sortedUniqueColors) {
-      if (!currentPaletteSet.has(color)) {
-        newColors.push(color);
+      if (color && typeof color === 'string') {
+        const lowerColor = color.toLowerCase().trim();
+        if (!currentPaletteSet.has(lowerColor)) {
+          newColors.push(lowerColor);
+          currentPaletteSet.add(lowerColor);
+        }
       }
     }
 
@@ -121,6 +127,40 @@ export function useImportImage({
       setShowImportPaletteDialog(true);
       toast.success(`Found ${sortedColors.length} colors!`, { id: loadingToastId });
       return;
+    }
+
+    if (importMode === 'tiles' || !shouldConvert) {
+      const uniqueImgColors = new Set();
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          if (originalData[y] && originalData[y][x]) {
+            uniqueImgColors.add(originalData[y][x]);
+          }
+        }
+      }
+      setRecentColors(prev => {
+        const seen = new Set();
+        const merged = [];
+        for (const color of (prev || [])) {
+          if (color && typeof color === 'string') {
+            const lower = color.toLowerCase().trim();
+            if (!seen.has(lower)) {
+              seen.add(lower);
+              merged.push(lower);
+            }
+          }
+        }
+        for (const color of uniqueImgColors) {
+          if (color && typeof color === 'string') {
+            const lower = color.toLowerCase().trim();
+            if (!seen.has(lower) && merged.length < 256) {
+              seen.add(lower);
+              merged.push(lower);
+            }
+          }
+        }
+        return merged;
+      });
     }
 
     if (importMode === 'tiles') {
