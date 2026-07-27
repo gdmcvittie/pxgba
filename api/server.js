@@ -114,6 +114,24 @@ app.post('/compile', upload.single('project'), (req, res) => {
         }
       }
 
+      // Ensure Linux binaries have execute permissions (may be lost during deployment/copy)
+      if (!isWindows) {
+        const chmodDirs = [
+          path.join(buildToolsPath, 'linux', 'bin'),
+          path.join(buildToolsPath, 'linux', 'python', 'bin'),
+          path.join(buildToolsPath, 'linux', 'devkitpro', 'devkitARM', 'bin'),
+          path.join(buildToolsPath, 'linux', 'devkitpro', 'tools', 'bin')
+        ];
+        chmodDirs.forEach(dir => {
+          if (fs.existsSync(dir)) {
+            fs.readdirSync(dir).forEach(file => {
+              const filePath = path.join(dir, file);
+              try { if (fs.statSync(filePath).isFile()) fs.chmodSync(filePath, 0o755); } catch (_) {}
+            });
+          }
+        });
+      }
+
       // If we are on Windows, we create/ensure a space-free directory junction to buildTools
       if (isWindows) {
         const junctionPath = 'C:\\Users\\Public\\pxgba-build-tools';
@@ -235,6 +253,7 @@ app.post('/compile', upload.single('project'), (req, res) => {
         const bundledMakeDir = path.join(buildToolsPath, 'linux', 'bin');
         const bundledMake = path.join(bundledMakeDir, 'make');
         if (fs.existsSync(bundledMake)) {
+          try { fs.chmodSync(bundledMake, 0o755); } catch (_) {}
           makeCmd = bundledMake;
           newPath = bundledMakeDir + ':' + newPath;
         }
@@ -242,6 +261,7 @@ app.post('/compile', upload.single('project'), (req, res) => {
         const bundledPythonDir = path.join(buildToolsPath, 'linux', 'python', 'bin');
         const bundledPython = path.join(bundledPythonDir, 'python3');
         if (fs.existsSync(bundledPython)) {
+          try { fs.chmodSync(bundledPython, 0o755); } catch (_) {}
           pythonCmd = bundledPython;
           newPath = bundledPythonDir + ':' + newPath;
         }
