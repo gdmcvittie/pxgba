@@ -1,12 +1,25 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { usePxShop, INITIAL_DEFAULT_TILES } from '../context/PxShopContext';
-import { BsPlus, BsTrash, BsChevronDown, BsChevronRight, BsCopy, BsPencil, BsSymmetryVertical, BsSymmetryHorizontal, BsFolder2Open, BsFiles, BsLayers, BsEye, BsEyeSlash } from 'react-icons/bs';
+import { BsPlus, BsTrash, BsChevronDown, BsChevronRight, BsCopy, BsPencil, BsSymmetryVertical, BsSymmetryHorizontal, BsFolder2Open, BsFiles, BsLayers, BsEye, BsEyeSlash, BsBoundingBox } from 'react-icons/bs';
 import { ImMan } from 'react-icons/im';
 import TileIcon from './TileIcon';
 import PaletteColorPicker from './PaletteColorPicker';
 import { TbArrowsLeftRight, TbArrowsUpDown} from 'react-icons/tb';
 import { TileSelector } from './Dialogs';
+import { getGroupBrushInfo as getGroupBrushInfoUtil } from '../context/utils';
+
+const COLLISION_OPTIONS = [
+  { value: 'solid', label: 'Solid' },
+  { value: 'none', label: 'None' },
+  { value: 'top', label: 'Top' },
+  { value: 'bottom', label: 'Bottom' },
+  { value: 'left', label: 'Left' },
+  { value: 'right', label: 'Right' },
+  { value: 'ladder', label: 'Ladder' },
+  { value: 'slope-up', label: 'Slope Up' },
+  { value: 'slope-down', label: 'Slope Down' }
+];
 const ACTOR_DEFAULT_TILE_MAP = {
   player: 1,
   npc: 2,
@@ -88,57 +101,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
   const [hoveredIdx, setHoveredIdx] = useState(null);
 
   const getGroupBrushInfo = useCallback((tileId) => {
-    if (tileId === null) return null;
-    const selectedTile = savedTiles.find(t => String(t.id) === String(tileId));
-    if (!selectedTile || !selectedTile.groupId) return null;
-    
-    const groupTiles = savedTiles.filter(t => String(t.groupId) === String(selectedTile.groupId));
-    if (groupTiles.length <= 1) return null;
-    
-    let groupCols = 1, groupRows = 1;
-    const firstName = groupTiles[0].name || '';
-    
-    if (/\(TL\)|\(TR\)|\(BL\)|\(BR\)/.test(firstName)) {
-      groupCols = 2;
-      groupRows = 2;
-    } else if (/\(\d_\d\)/.test(firstName)) {
-      let maxRow = 0;
-      let maxCol = 0;
-      for (const tile of groupTiles) {
-        const gridMatch = (tile.name || '').match(/\((\d)_(\d)\)/);
-        if (gridMatch) {
-          maxRow = Math.max(maxRow, parseInt(gridMatch[1]));
-          maxCol = Math.max(maxCol, parseInt(gridMatch[2]));
-        }
-      }
-      groupCols = maxCol + 1;
-      groupRows = maxRow + 1;
-    } else {
-      return null;
-    }
-    
-    const sortedGroupTiles = new Array(groupCols * groupRows).fill(null);
-    for (const tile of groupTiles) {
-      const name = tile.name || '';
-      const tlMatch = name.match(/\((TL|TR|BL|BR)\)/);
-      if (tlMatch) {
-        const pos = { TL: 0, TR: 1, BL: 2, BR: 3 }[tlMatch[1]];
-        sortedGroupTiles[pos] = tile;
-      } else {
-        const gridMatch = name.match(/\((\d)_(\d)\)/);
-        if (gridMatch) {
-          const row = parseInt(gridMatch[1]);
-          const col = parseInt(gridMatch[2]);
-          sortedGroupTiles[row * groupCols + col] = tile;
-        }
-      }
-    }
-    
-    return {
-      tiles: sortedGroupTiles,
-      cols: groupCols,
-      rows: groupRows
-    };
+    return getGroupBrushInfoUtil(tileId, savedTiles);
   }, [savedTiles]);
 
   const flattenFrame = useCallback((fl, layersList) => {
@@ -239,6 +202,8 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
   const [colY, setColY] = useState(() => actor.collisionY !== undefined ? actor.collisionY : 0);
   const [colW, setColW] = useState(() => actor.collisionW !== undefined ? actor.collisionW : (actor.width || 8));
   const [colH, setColH] = useState(() => actor.collisionH !== undefined ? actor.collisionH : (actor.height || 8));
+  const [colType, setColType] = useState(() => actor.collisionType || 'solid');
+  const [showCollisionMenu, setShowCollisionMenu] = useState(false);
 
   const getCurrentAnim = useCallback(() => {
     if (activeTab === 'idle') return idleAnim;
@@ -1112,6 +1077,75 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
             </div>
             <div style={{ background: '#151515', border: '1px solid #333', borderRadius: '6px', padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#4CAF50' }}>Collision Box</div>
+              {/* Actor collision selector disabled for now
+              <div style={{ position: 'relative' }}>
+                <button
+                  onClick={() => setShowCollisionMenu(!showCollisionMenu)}
+                  title={`Collision Type: ${colType}`}
+                  style={{
+                    background: 'transparent',
+                    border: colType !== 'none' ? '1px solid #FF5722' : '1px solid #555',
+                    color: colType !== 'none' ? '#FF5722' : '#aaa',
+                    padding: '2px 6px',
+                    borderRadius: '3px',
+                    cursor: 'pointer',
+                    fontSize: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
+                >
+                  <BsBoundingBox size={10} />
+                  <span style={{ textTransform: 'capitalize' }}>
+                    {colType !== 'none' ? colType : 'None'}
+                  </span>
+                </button>
+
+                {showCollisionMenu && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '100%',
+                      right: 0,
+                      marginBottom: '4px',
+                      backgroundColor: '#222',
+                      border: '1px solid #444',
+                      borderRadius: '4px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+                      zIndex: 1000,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      minWidth: '100px',
+                      overflow: 'hidden'
+                    }}
+                  >
+                    {COLLISION_OPTIONS.map(opt => (
+                      <button
+                        key={opt.value}
+                        onClick={() => {
+                          setColType(opt.value);
+                          setShowCollisionMenu(false);
+                        }}
+                        style={{
+                          background: colType === opt.value ? '#333' : 'transparent',
+                          color: colType === opt.value ? '#FF5722' : '#ccc',
+                          border: 'none',
+                          padding: '6px 10px',
+                          textAlign: 'left',
+                          fontSize: '11px',
+                          cursor: 'pointer',
+                          transition: 'background 0.15s'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = '#383838'}
+                        onMouseLeave={(e) => e.target.style.background = colType === opt.value ? '#333' : 'transparent'}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <span style={{ fontSize: '10px', color: '#aaa', width: '12px' }}>X:</span>
@@ -1652,7 +1686,7 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
           <div style={{ display: 'flex', gap: '10px' }}>
             <button onClick={onClose} style={{ background: 'transparent', border: '1px solid #555', color: '#fff', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
             <button
-              onClick={() => onSave(idleAnim ? idleAnim.frames[0] : Array(cols * rows).fill(null), designerW, designerH, idleAnim, walkAnim, attackAnim, jumpAnim, customAnims, colX, colY, colW, colH, hflip, vflip, layersMetadata)}
+              onClick={() => onSave(idleAnim ? idleAnim.frames[0] : Array(cols * rows).fill(null), designerW, designerH, idleAnim, walkAnim, attackAnim, jumpAnim, customAnims, colX, colY, colW, colH, hflip, vflip, layersMetadata, colType)}
               onMouseEnter={(e) => { e.currentTarget.style.background = '#4CAF50'; e.currentTarget.style.color = '#fff'; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#4CAF50'; }}
               style={{ background: 'transparent', border: '1px solid #4CAF50', color: '#4CAF50', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
@@ -1904,6 +1938,7 @@ const ActorsPanel = ({ isCollapsed, onToggle, dragProps }) => {
       varY: '',
       width: 8,
       height: 8,
+      collisionType: 'solid',
       color: '#ff00ff',
       spriteId: defaultSpriteId,
       isHidden: false,
@@ -2393,6 +2428,20 @@ const ActorsPanel = ({ isCollapsed, onToggle, dragProps }) => {
                       {ACTOR_TYPE_NAMES[actor.type] || 'Actor'}
                     </button>
                   </div>
+                  {/* Collision dropdown disabled for now
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <label style={{ fontSize: '11px', color: '#aaa', width: '60px' }}>Collision:</label>
+                    <select
+                      value={actor.collisionType || 'solid'}
+                      onChange={(e) => updateActor(actor.id, 'collisionType', e.target.value)}
+                      style={{ flex: 1, background: '#111', color: '#fff', border: '1px solid #444', padding: '4px 8px', fontSize: '11px', outline: 'none', borderRadius: '3px', textTransform: 'capitalize' }}
+                    >
+                      {COLLISION_OPTIONS.map(opt => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  */}
 
                   {actor.type === 'player' && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '4px', background: '#222', padding: '8px', borderRadius: '4px', border: '1px solid #444' }}>
@@ -3972,7 +4021,7 @@ const ActorsPanel = ({ isCollapsed, onToggle, dragProps }) => {
               dimensions={dimensions}
               animations={animations}
               onClose={() => setDesignerActorId(null)}
-              onSave={(newSpriteIds, newW, newH, newIdle, newWalk, newAttack, newJump, newCustoms, newColX, newColY, newColW, newColH, newHFlip, newVFlip, newLayersMetadata) => {
+              onSave={(newSpriteIds, newW, newH, newIdle, newWalk, newAttack, newJump, newCustoms, newColX, newColY, newColW, newColH, newHFlip, newVFlip, newLayersMetadata, newColType) => {
                 const expectedLength = Math.max(1, Math.floor(newW / 8) * Math.floor(newH / 8));
                 let trimmedSpriteIds = Array.isArray(newSpriteIds) ? newSpriteIds.slice(0, expectedLength) : Array(expectedLength).fill(null);
                 while (trimmedSpriteIds.length < expectedLength) {
@@ -4035,6 +4084,7 @@ const ActorsPanel = ({ isCollapsed, onToggle, dragProps }) => {
                     ...a, spriteIds: trimmedSpriteIds, spriteId: null, width: newW, height: newH,
                     idleAnimId: idleId, walkAnimId: walkId, attackAnimId: attackId, jumpAnimId: jumpId, customAnimIds: customIds,
                     collisionX: newColX, collisionY: newColY, collisionW: newColW, collisionH: newColH,
+                    collisionType: newColType || 'solid',
                     hflip: newHFlip, vflip: newVFlip,
                     designerLayers: newLayersMetadata
                   } : a);
@@ -4045,6 +4095,7 @@ const ActorsPanel = ({ isCollapsed, onToggle, dragProps }) => {
                     ...a, spriteIds: trimmedSpriteIds, spriteId: null, width: newW, height: newH,
                     idleAnimId: idleId, walkAnimId: walkId, attackAnimId: attackId, jumpAnimId: jumpId, customAnimIds: customIds,
                     collisionX: newColX, collisionY: newColY, collisionW: newColW, collisionH: newColH,
+                    collisionType: newColType || 'solid',
                     hflip: newHFlip, vflip: newVFlip,
                     designerLayers: newLayersMetadata
                   } : a);

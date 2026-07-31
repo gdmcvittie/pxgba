@@ -513,3 +513,69 @@ export const detectTransparencyColor = (imageData, w, h) => {
 
   return null;
 };
+
+export const getGroupBrushInfo = (tileId, savedTiles) => {
+  if (tileId === null || tileId === undefined || !savedTiles) return null;
+  const selectedTile = savedTiles.find(t => String(t.id) === String(tileId));
+  if (!selectedTile || !selectedTile.groupId) return null;
+
+  const groupTiles = savedTiles.filter(t => String(t.groupId) === String(selectedTile.groupId));
+  if (groupTiles.length <= 1) return null;
+
+  let groupCols = 1, groupRows = 1;
+  const firstName = groupTiles[0].name || '';
+
+  if (/\(TL\)|\(TR\)|\(BL\)|\(BR\)/.test(firstName)) {
+    groupCols = 2;
+    groupRows = 2;
+  } else if (/\(\d+_\d+\)/.test(firstName)) {
+    let maxRow = 0;
+    let maxCol = 0;
+    for (const tile of groupTiles) {
+      const gridMatch = (tile.name || '').match(/\((\d+)_(\d+)\)/);
+      if (gridMatch) {
+        maxRow = Math.max(maxRow, parseInt(gridMatch[1], 10));
+        maxCol = Math.max(maxCol, parseInt(gridMatch[2], 10));
+      }
+    }
+    groupCols = maxCol + 1;
+    groupRows = maxRow + 1;
+  } else {
+    const sqrt = Math.sqrt(groupTiles.length);
+    if (Number.isInteger(sqrt) && sqrt > 1) {
+      groupCols = sqrt;
+      groupRows = sqrt;
+    } else {
+      return null;
+    }
+  }
+
+  const sortedGroupTiles = new Array(groupCols * groupRows).fill(null);
+  for (let i = 0; i < groupTiles.length; i++) {
+    const tile = groupTiles[i];
+    const name = tile.name || '';
+    const tlMatch = name.match(/\((TL|TR|BL|BR)\)/);
+    if (tlMatch) {
+      const pos = { TL: 0, TR: 1, BL: 2, BR: 3 }[tlMatch[1]];
+      sortedGroupTiles[pos] = tile;
+    } else {
+      const gridMatch = name.match(/\((\d+)_(\d+)\)/);
+      if (gridMatch) {
+        const row = parseInt(gridMatch[1], 10);
+        const col = parseInt(gridMatch[2], 10);
+        if (row < groupRows && col < groupCols) {
+          sortedGroupTiles[row * groupCols + col] = tile;
+        }
+      } else if (i < sortedGroupTiles.length) {
+        sortedGroupTiles[i] = tile;
+      }
+    }
+  }
+
+  return {
+    tiles: sortedGroupTiles,
+    cols: groupCols,
+    rows: groupRows
+  };
+};
+

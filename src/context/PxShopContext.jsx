@@ -12,7 +12,7 @@ import {
   adjustBrightnessContrastHex, blendHexColors, invertHex, getNextZoom,
   parseColorTo32, generateWav, cloneLayersForHistory, createEmptyLayer,
   getClosestPaletteColor, filterSimilarColors, generateUniqueId, sortColorsByHue,
-  detectTransparencyColor
+  detectTransparencyColor, getGroupBrushInfo
 } from './utils';
 import { generateButano } from './codegen/butano';
 import { generateFormat, getFormatLabel, getFormatFilename } from './codegen/formats';
@@ -108,6 +108,7 @@ let sharedPCanvas = null;
 
 export const INITIAL_DEFAULT_TILES = RAW_DEFAULT_TILES.map(tile => ({
   ...tile,
+  collisionType: 'none',
   data: tile.data.map(row => row.map(color => color ? getClosestPaletteColor(color, DEFAULT_16_PALETTE) : null))
 }));
 
@@ -584,6 +585,9 @@ export const PxShopProvider = ({ children }) => {
 
   // Collisions state
   const [collisions, setCollisions] = useState(() => scenes[0].collisions || []);
+  const collisionsRef = useRef(collisions);
+  useEffect(() => { collisionsRef.current = collisions; }, [collisions]);
+  const tempTileCollisionsRef = useRef([]);
   const [activeCollisionId, setActiveCollisionId] = useState(null);
   const [tempPaintedCollisions, setTempPaintedCollisions] = useState([]);
   const [isPaintingCollisions, setIsPaintingCollisions] = useState(false);
@@ -600,10 +604,22 @@ export const PxShopProvider = ({ children }) => {
   const [activeActorId, setActiveActorId] = useState(null);
   const [editingScriptActorId, setEditingScriptActorId] = useState(null);
   const [editingScriptSceneId, setEditingScriptSceneId] = useState(null);
-  const [activeLayerId, setActiveLayerId] = useState('background-layer');
+  const [activeLayerId, setActiveLayerId] = useState(() => frames[0]?.layers.find(l => l.type !== 'group')?.id || frames[0]?.layers[0]?.id || null);
   const [editingLayerId, setEditingLayerId] = useState(null);
   const [viewActiveOnly, setViewActiveOnly] = useState(false);
   const [editingTextLayerId, setEditingTextLayerId] = useState(null);
+
+  // Fallback to ensure top layer in layers panel is ALWAYS selected as active layer
+  useEffect(() => {
+    if (!layers || layers.length === 0) return;
+    const currentLayerExists = layers.some(l => l.id === activeLayerId);
+    if (!activeLayerId || !currentLayerExists) {
+      const topLayer = layers.find(l => l.type !== 'group') || layers[0];
+      if (topLayer) {
+        setActiveLayerId(topLayer.id);
+      }
+    }
+  }, [layers, activeLayerId]);
 
   const [draggedLayerId, setDraggedLayerId] = useState(null);
   const [dragOverLayerId, setDragOverLayerId] = useState(null);
@@ -4498,6 +4514,10 @@ export const PxShopProvider = ({ children }) => {
       }
       const updatedActiveLayers = [...generatedLayers, ...targetFrame.layers.filter(l => l.name !== 'Level Design' && l.name !== 'Cave Background' && l.name !== 'Sky Background' && l.name !== 'Clouds' && l.name !== 'Sky & Clouds' && l.name !== 'Background')];
       setLayers(updatedActiveLayers);
+      const topGeneratedLayer = updatedActiveLayers.find(l => l.type !== 'group') || updatedActiveLayers[0];
+      if (topGeneratedLayer) {
+        setActiveLayerId(topGeneratedLayer.id);
+      }
       setDimensions(newDims);
       const activeSceneObj = updatedScenes.find(s => s.id === sceneId);
       if (activeSceneObj && activeSceneObj.actors) {
@@ -5377,29 +5397,79 @@ export const PxShopProvider = ({ children }) => {
     }
 
     if (tool === 'tile') {
-      const activeTile = savedTiles.find(t => t.id === activeSavedTileId);
+      if (isFirstClick) {
+        tempTileCollisionsRef.current = [];
+      }
+      const activeTile = savedTiles.find(t => String(t.id) === String(activeSavedTileId));
       if (!activeTile) return;
       if (!activeLayer || activeLayer.type === 'group' || !activeLayer.visible) return;
 
       const points = getSymmetricPixels([{ x, y }], dimensions.w, dimensions.h, symmetryMode);
       const ctx = canvasRef.current?.getContext('2d');
+      const groupInfo = getGroupBrushInfo(activeSavedTileId, savedTiles);
+
+      const primaryType = activeTile.collisionType && activeTile.collisionType !== 'none' ? activeTile.collisionType : null;
 
       points.forEach(p => {
         const snapX = Math.floor(p.x / 8) * 8;
         const snapY = Math.floor(p.y / 8) * 8;
-        for (let py = 0; py < 8; py++) {
-          for (let px = 0; px < 8; px++) {
-            const targetY = snapY + py;
-            const targetX = snapX + px;
-            if (targetY >= 0 && targetY < dimensions.h && targetX >= 0 && targetX < dimensions.w) {
-              const pxVal = activeTile.data[py][px];
-              if (pxVal !== null && activeLayer.data[targetY][targetX] !== pxVal) {
-                activeLayer.data[targetY][targetX] = pxVal;
-                if (ctx) {
-                  ctx.fillStyle = pxVal;
-                  ctx.fillRect(targetX * zoom, targetY * zoom, zoom, zoom);
+
+        if (groupInfo) {
+          for (let r = 0; r < groupInfo.rows; r++) {
+            for (let c = 0; c < groupInfo.cols; c++) {
+              const subTile = groupInfo.tiles[r * groupInfo.cols + c];
+              if (!subTile || !subTile.data) continue;
+              const tileSnapX = snapX + c * 8;
+              const tileSnapY = snapY + r * 8;
+              for (let py = 0; py < 8; py++) {
+                for (let px = 0; px < 8; px++) {
+                  const targetY = tileSnapY + py;
+                  const targetX = tileSnapX + px;
+                  if (targetY >= 0 && targetY < dimensions.h && targetX >= 0 && targetX < dimensions.w && activeLayer.data[targetY]) {
+                    const pxVal = subTile.data[py][px];
+                    if (pxVal !== null && activeLayer.data[targetY][targetX] !== pxVal) {
+                      activeLayer.data[targetY][targetX] = pxVal;
+                      if (ctx) {
+                        ctx.fillStyle = pxVal;
+                        ctx.fillRect(targetX * zoom, targetY * zoom, zoom, zoom);
+                      }
+                    }
+                  }
                 }
               }
+
+              const colType = (subTile.collisionType && subTile.collisionType !== 'none')
+                ? subTile.collisionType
+                : primaryType;
+
+              if (colType && tileSnapX >= 0 && tileSnapX < dimensions.w && tileSnapY >= 0 && tileSnapY < dimensions.h) {
+                if (!tempTileCollisionsRef.current.some(item => item.x === tileSnapX && item.y === tileSnapY && item.type === colType)) {
+                  tempTileCollisionsRef.current.push({ x: tileSnapX, y: tileSnapY, type: colType });
+                }
+              }
+            }
+          }
+        } else {
+          for (let py = 0; py < 8; py++) {
+            for (let px = 0; px < 8; px++) {
+              const targetY = snapY + py;
+              const targetX = snapX + px;
+              if (targetY >= 0 && targetY < dimensions.h && targetX >= 0 && targetX < dimensions.w && activeLayer.data[targetY]) {
+                const pxVal = activeTile.data[py][px];
+                if (pxVal !== null && activeLayer.data[targetY][targetX] !== pxVal) {
+                  activeLayer.data[targetY][targetX] = pxVal;
+                  if (ctx) {
+                    ctx.fillStyle = pxVal;
+                    ctx.fillRect(targetX * zoom, targetY * zoom, zoom, zoom);
+                  }
+                }
+              }
+            }
+          }
+
+          if (primaryType && snapX >= 0 && snapX < dimensions.w && snapY >= 0 && snapY < dimensions.h) {
+            if (!tempTileCollisionsRef.current.some(item => item.x === snapX && item.y === snapY && item.type === primaryType)) {
+              tempTileCollisionsRef.current.push({ x: snapX, y: snapY, type: primaryType });
             }
           }
         }
@@ -5409,30 +5479,60 @@ export const PxShopProvider = ({ children }) => {
 
     if (tool === 'tileFill') {
       if (!isFirstClick) return;
-      const activeTile = savedTiles.find(t => t.id === activeSavedTileId);
+      tempTileCollisionsRef.current = [];
+      const activeTile = savedTiles.find(t => String(t.id) === String(activeSavedTileId));
       if (!activeTile) return;
       if (!activeLayer || activeLayer.type === 'group' || !activeLayer.visible) return;
 
       const points = getSymmetricPixels([{ x, y }], dimensions.w, dimensions.h, symmetryMode);
       const ctx = canvasRef.current?.getContext('2d');
+      const groupInfo = getGroupBrushInfo(activeSavedTileId, savedTiles);
+      const primaryType = activeTile.collisionType && activeTile.collisionType !== 'none' ? activeTile.collisionType : null;
+
+      const patW = groupInfo ? groupInfo.cols * 8 : 8;
+      const patH = groupInfo ? groupInfo.rows * 8 : 8;
 
       points.forEach(p => {
         if (p.x >= 0 && p.x < dimensions.w && p.y >= 0 && p.y < dimensions.h) {
           if (selection && selection.size > 0 && !selection.has(`${p.x},${p.y}`)) return;
+          if (!activeLayer.data[p.y]) return;
           const targetColor = activeLayer.data[p.y][p.x];
           const stack = [[p.x, p.y]];
           const visited = new Set();
           while (stack.length > 0) {
             const [cx, cy] = stack.pop();
             const key = `${cx},${cy}`;
-            if (cx >= 0 && cx < dimensions.w && cy >= 0 && cy < dimensions.h && !visited.has(key) && activeLayer.data[cy][cx] === targetColor) {
+            if (cx >= 0 && cx < dimensions.w && cy >= 0 && cy < dimensions.h && !visited.has(key) && activeLayer.data[cy] && activeLayer.data[cy][cx] === targetColor) {
               if (!selection || selection.size === 0 || selection.has(key)) {
                 visited.add(key);
-                const tileY = cy % 8;
-                const tileX = cx % 8;
-                const pxVal = activeTile.data[tileY][tileX];
+                let pxVal = null;
+                let colType = primaryType;
+                if (groupInfo) {
+                  const modX = ((cx % patW) + patW) % patW;
+                  const modY = ((cy % patH) + patH) % patH;
+                  const c = Math.floor(modX / 8);
+                  const r = Math.floor(modY / 8);
+                  const subTile = groupInfo.tiles[r * groupInfo.cols + c];
+                  if (subTile && subTile.data) {
+                    pxVal = subTile.data[modY % 8][modX % 8];
+                    if (subTile.collisionType && subTile.collisionType !== 'none') {
+                      colType = subTile.collisionType;
+                    }
+                  }
+                } else {
+                  const tileY = ((cy % 8) + 8) % 8;
+                  const tileX = ((cx % 8) + 8) % 8;
+                  pxVal = activeTile.data[tileY][tileX];
+                }
                 if (pxVal !== null && activeLayer.data[cy][cx] !== pxVal) {
                   activeLayer.data[cy][cx] = pxVal;
+                  if (colType) {
+                    const snapX = Math.floor(cx / 8) * 8;
+                    const snapY = Math.floor(cy / 8) * 8;
+                    if (!tempTileCollisionsRef.current.some(item => item.x === snapX && item.y === snapY && item.type === colType)) {
+                      tempTileCollisionsRef.current.push({ x: snapX, y: snapY, type: colType });
+                    }
+                  }
                 }
                 stack.push([cx + 1, cy], [cx - 1, cy], [cx, cy + 1], [cx, cy - 1]);
               }
@@ -5677,7 +5777,69 @@ export const PxShopProvider = ({ children }) => {
       const actionName = tool === 'pen' ? "Draw" : tool === 'brush' ? "Brush" : tool === 'eraser' ? "Erase" : tool === 'fill' ? "Fill" : tool === 'tile' ? "Tile Stamp" : "Tile Fill";
       const updatedLayers = layers.map(l => l.id === activeLayerId ? { ...l, data: l.data ? l.data.map(row => row.slice()) : null } : l);
       setLayers(updatedLayers);
-      saveHistory(actionName, updatedLayers, dimensions);
+
+      let currentCols = collisionsRef.current || collisions;
+      const paintedCells = tempTileCollisionsRef.current || [];
+      tempTileCollisionsRef.current = [];
+
+      if (['tile', 'tileFill'].includes(tool) && paintedCells.length > 0) {
+        const typeMap = {};
+        paintedCells.forEach(cell => {
+          if (!typeMap[cell.type]) typeMap[cell.type] = [];
+          if (!typeMap[cell.type].some(c => c.x === cell.x && c.y === cell.y)) {
+            typeMap[cell.type].push({ x: cell.x, y: cell.y });
+          }
+        });
+
+        let nextCollisions = [...currentCols];
+
+        Object.keys(typeMap).forEach(paintType => {
+          const cells = typeMap[paintType];
+          const combinedRects = combineCellsToRectangles(cells);
+
+          const filtered = nextCollisions.filter(c => {
+            if (c.isGroup) return true;
+            const overlapsAny = combinedRects.some(r => {
+              return c.x < r.x + r.width &&
+                c.x + c.width > r.x &&
+                c.y < r.y + r.height &&
+                c.y + c.height > r.y;
+            });
+            return !overlapsAny;
+          });
+
+          const groupId = Date.now() + Math.random();
+          const groupCount = filtered.filter(c => c.isGroup).length + 1;
+          const newGroup = {
+            id: groupId,
+            name: `Group ${groupCount}`,
+            isGroup: true,
+            type: paintType
+          };
+
+          const newChildren = [];
+          combinedRects.forEach((rect, idx) => {
+            newChildren.push({
+              id: Date.now() + Math.random() + idx,
+              name: `Collision ${filtered.length + idx + 1}`,
+              type: paintType,
+              x: rect.x,
+              y: rect.y,
+              width: rect.width,
+              height: rect.height,
+              groupId: groupId,
+              isPainted: true
+            });
+          });
+
+          nextCollisions = [...filtered, ...newChildren, newGroup];
+        });
+
+        currentCols = nextCollisions;
+        setCollisions(currentCols);
+      }
+
+      saveHistory(actionName, updatedLayers, dimensions, { collisions: currentCols });
     }
 
     if (wasDrawing && ['drawRect', 'drawRectFill', 'drawRoundRect', 'drawRoundRectFill', 'drawCircle', 'drawCircleFill', 'drawLine', 'gradient'].includes(tool) && selectionStart) {

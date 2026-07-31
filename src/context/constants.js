@@ -40,7 +40,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 3,
     name: "Platform",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       ["#00e436", "#00e436", "#00e436", "#00e436", "#00e436", "#00e436", "#00e436", "#00e436"],
       ["#00e436", "#00e436", "#00e436", "#00e436", "#00e436", "#00e436", "#00e436", "#00e436"],
@@ -55,7 +55,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 4,
     name: "Ladder",
-    collisionType: "ladder",
+    collisionType: "none",
     data: [
       ["#ab5236", "#5f574f", null, null, null, null, "#ab5236", "#5f574f"],
       ["#ab5236", "#5f574f", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#5f574f"],
@@ -130,7 +130,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 9,
     name: "Destructible",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       ["#ab5236", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#fff1e8"],
       ["#ab5236", "#000000", "#ab5236", "#ab5236", "#ab5236", "#000000", "#ab5236", "#ab5236"],
@@ -160,7 +160,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 11,
     name: "Locked Door",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       ["#5f574f", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#5f574f"],
       ["#5f574f", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#5f574f"],
@@ -205,7 +205,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 14,
     name: "Conveyor Belt",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       ["#5f574f", "#5f574f", "#5f574f", "#5f574f", "#5f574f", "#5f574f", "#5f574f", "#5f574f"],
       ["#5f574f", "#c2c3c7", "#c2c3c7", "#c2c3c7", "#5f574f", "#c2c3c7", "#c2c3c7", "#5f574f"],
@@ -220,7 +220,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 15,
     name: "Brick Block",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       ["#ff004d", "#ff004d", "#ff004d", "#ff004d", "#7e2553", "#c2c3c7", "#ff004d", "#ff004d"],
       ["#ff004d", "#ff004d", "#ff004d", "#ff004d", "#7e2553", "#c2c3c7", "#ff004d", "#ff004d"],
@@ -235,7 +235,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 16,
     name: "Sand Block",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       ["#ffec27", "#ffec27", "#ffec27", "#ffec27", "#ffa300", "#ffa300", "#ffec27", "#ffec27"],
       ["#ffec27", "#ffec27", "#ffec27", "#ffa300", "#fff1e8", "#fff1e8", "#ffa300", "#ffec27"],
@@ -250,7 +250,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 17,
     name: "Mud Block",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       ["#5f574f", "#5f574f", "#5f574f", "#5f574f", "#5f574f", "#5f574f", "#5f574f", "#5f574f"],
       ["#5f574f", "#5f574f", "#5f574f", "#5f574f", "#5f574f", "#5f574f", "#008751", "#5f574f"],
@@ -265,7 +265,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 18,
     name: "Stone Wall",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       ["#83769c", "#83769c", "#83769c", "#83769c", "#5f574f", "#1d2b53", "#83769c", "#83769c"],
       ["#83769c", "#c2c3c7", "#c2c3c7", "#83769c", "#5f574f", "#1d2b53", "#83769c", "#c2c3c7"],
@@ -295,7 +295,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 20,
     name: "Wood Block",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       ["#1d2b53", "#1d2b53", "#1d2b53", "#1d2b53", "#1d2b53", "#1d2b53", "#1d2b53", "#1d2b53"],
       ["#1d2b53", "#fff1e8", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#5f574f", "#1d2b53"],
@@ -415,7 +415,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 28,
     name: "Racing Obstacle",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       [null, null, null, null, null, null, null, null],
       [null, null, null, "#ffa300", "#ffa300", null, null, null],
@@ -505,7 +505,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 34,
     name: "Pressure Plate",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -550,7 +550,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 37,
     name: "Crumbling Platform",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -565,7 +565,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 38,
     name: "Ice Block",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       ["#29adff", "#29adff", "#29adff", "#29adff", "#29adff", "#29adff", "#29adff", "#29adff"],
       ["#29adff", "#fff1e8", "#fff1e8", "#29adff", "#29adff", "#fff1e8", "#fff1e8", "#29adff"],
@@ -580,7 +580,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 39,
     name: "Chest",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       [null, null, null, null, null, null, null, null],
       [null, "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#ab5236", null],
@@ -640,7 +640,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 44,
     name: "Shield",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       [null, null, "#c2c3c7", "#c2c3c7", "#c2c3c7", "#c2c3c7", null, null],
       [null, "#c2c3c7", "#29adff", "#29adff", "#29adff", "#29adff", "#c2c3c7", null],
@@ -685,7 +685,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 48,
     name: "Wall Jump Surface",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       ["#5f574f", "#c2c3c7", "#5f574f", "#5f574f", "#5f574f", "#5f574f", "#5f574f", "#5f574f"],
       ["#5f574f", "#c2c3c7", "#5f574f", "#5f574f", "#5f574f", "#5f574f", "#5f574f", "#5f574f"],
@@ -700,7 +700,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 49,
     name: "One-Way Wall",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       ["#ab5236", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#ab5236", "#ab5236"],
       ["#ab5236", "#5f574f", "#5f574f", "#ab5236", "#ab5236", "#5f574f", "#5f574f", "#ab5236"],
@@ -745,7 +745,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 56,
     name: "Boost Pad",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       [null, null, null, null, null, null, null, null],
       [null, null, null, null, null, null, null, null],
@@ -790,7 +790,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 59,
     name: "Grass Block",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       ["#00e436", "#00e436", "#008751", "#00e436", "#00e436", "#00e436", "#008751", "#00e436"],
       ["#00e436", "#008751", "#008751", "#00e436", "#00e436", "#00e436", "#008751", "#008751"],
@@ -805,7 +805,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 60,
     name: "Cave Wall",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       ["#1d2b53", "#1d2b53", "#5f574f", "#1d2b53", "#1d2b53", "#5f574f", "#1d2b53", "#1d2b53"],
       ["#1d2b53", "#5f574f", "#5f574f", "#1d2b53", "#5f574f", "#5f574f", "#5f574f", "#1d2b53"],
@@ -820,7 +820,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 61,
     name: "Cave Platform",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       ["#7e2553", "#7e2553", "#7e2553", "#7e2553", "#7e2553", "#7e2553", "#7e2553", "#7e2553"],
       ["#7e2553", "#ab5236", "#ab5236", "#7e2553", "#7e2553", "#ab5236", "#ab5236", "#7e2553"],
@@ -865,7 +865,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 64,
     name: "Cave Vine",
-    collisionType: "ladder",
+    collisionType: "none",
     data: [
       [null, null, "#00e436", "#00e436", "#00e436", "#00e436", null, null],
       [null, "#00e436", "#008751", "#00e436", "#00e436", "#008751", "#00e436", null],
@@ -895,7 +895,7 @@ export const RAW_DEFAULT_TILES = [
   {
     id: 66,
     name: "Cave Pillar",
-    collisionType: "solid",
+    collisionType: "none",
     data: [
       [null, null, "#5f574f", "#5f574f", "#5f574f", "#5f574f", null, null],
       [null, "#5f574f", "#83769c", "#83769c", "#83769c", "#83769c", "#5f574f", null],

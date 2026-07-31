@@ -1,5 +1,6 @@
 import { useEffect, useState, useLayoutEffect } from 'react';
 import { usePxShop } from '../context/PxShopContext';
+import { getGroupBrushInfo } from '../context/utils';
 import { BsUpload } from 'react-icons/bs';
 
 const Canvas = () => {
@@ -967,13 +968,43 @@ const Canvas = () => {
       }
 
       if (tool === 'tile' && cursorPos.x >= 0 && cursorPos.x < dimensions.w && cursorPos.y >= 0 && cursorPos.y < dimensions.h) {
-        const activeTile = savedTiles?.find(t => t.id === activeSavedTileId);
+        const activeTile = savedTiles?.find(t => String(t.id) === String(activeSavedTileId));
         const points = getSymmetricPixels([{ x: cursorPos.x, y: cursorPos.y }], dimensions.w, dimensions.h, symmetryMode);
+        const groupInfo = getGroupBrushInfo(activeSavedTileId, savedTiles);
 
         points.forEach(p => {
           const snapX = Math.floor(p.x / 8) * 8;
           const snapY = Math.floor(p.y / 8) * 8;
-          if (activeTile) {
+          if (groupInfo) {
+            ctx.globalAlpha = 0.6;
+            for (let r = 0; r < groupInfo.rows; r++) {
+              for (let c = 0; c < groupInfo.cols; c++) {
+                const subTile = groupInfo.tiles[r * groupInfo.cols + c];
+                if (!subTile || !subTile.data) continue;
+                const tileSnapX = snapX + c * 8;
+                const tileSnapY = snapY + r * 8;
+                for (let py = 0; py < 8; py++) {
+                  for (let px = 0; px < 8; px++) {
+                    const pixelVal = subTile.data[py][px];
+                    if (pixelVal !== null) {
+                      ctx.fillStyle = pixelVal;
+                      ctx.fillRect((tileSnapX + px) * zoom, (tileSnapY + py) * zoom, zoom, zoom);
+                    }
+                  }
+                }
+              }
+            }
+            ctx.globalAlpha = 1.0;
+            const wPx = groupInfo.cols * 8 * zoom;
+            const hPx = groupInfo.rows * 8 * zoom;
+            ctx.strokeStyle = '#fff';
+            ctx.setLineDash([]);
+            ctx.strokeRect(snapX * zoom, snapY * zoom, wPx, hPx);
+            ctx.strokeStyle = '#4CAF50';
+            ctx.setLineDash([2, 2]);
+            ctx.lineDashOffset = -(performance.now() / 100);
+            ctx.strokeRect(snapX * zoom, snapY * zoom, wPx, hPx);
+          } else if (activeTile) {
             ctx.globalAlpha = 0.6;
             for (let py = 0; py < 8; py++) {
               for (let px = 0; px < 8; px++) {
@@ -985,17 +1016,24 @@ const Canvas = () => {
               }
             }
             ctx.globalAlpha = 1.0;
+            ctx.strokeStyle = '#fff';
+            ctx.setLineDash([]);
+            ctx.strokeRect(snapX * zoom, snapY * zoom, 8 * zoom, 8 * zoom);
+            ctx.strokeStyle = '#4CAF50';
+            ctx.setLineDash([2, 2]);
+            ctx.lineDashOffset = -(performance.now() / 100);
+            ctx.strokeRect(snapX * zoom, snapY * zoom, 8 * zoom, 8 * zoom);
           } else {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
             ctx.fillRect(snapX * zoom, snapY * zoom, 8 * zoom, 8 * zoom);
+            ctx.strokeStyle = '#fff';
+            ctx.setLineDash([]);
+            ctx.strokeRect(snapX * zoom, snapY * zoom, 8 * zoom, 8 * zoom);
+            ctx.strokeStyle = '#4CAF50';
+            ctx.setLineDash([2, 2]);
+            ctx.lineDashOffset = -(performance.now() / 100);
+            ctx.strokeRect(snapX * zoom, snapY * zoom, 8 * zoom, 8 * zoom);
           }
-          ctx.strokeStyle = '#fff';
-          ctx.setLineDash([]);
-          ctx.strokeRect(snapX * zoom, snapY * zoom, 8 * zoom, 8 * zoom);
-          ctx.strokeStyle = '#4CAF50';
-          ctx.setLineDash([2, 2]);
-          ctx.lineDashOffset = -(performance.now() / 100);
-          ctx.strokeRect(snapX * zoom, snapY * zoom, 8 * zoom, 8 * zoom);
         });
       }
 

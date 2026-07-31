@@ -1,12 +1,24 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { usePxShop, INITIAL_DEFAULT_TILES } from '../context/PxShopContext';
-import { BsBorder, BsBoxArrowInDown, BsPlus, BsChevronDown, BsChevronRight, BsSearch, BsFileEarmarkZip, BsFileEarmarkImage, BsFileEarmarkText, BsArrowLeft, BsBoxArrowUp, BsTrash, BsPencil } from 'react-icons/bs';
+import { BsBorder, BsBoxArrowInDown, BsPlus, BsChevronDown, BsChevronRight, BsSearch, BsFileEarmarkZip, BsFileEarmarkImage, BsFileEarmarkText, BsArrowLeft, BsBoxArrowUp, BsTrash, BsPencil, BsBoundingBox } from 'react-icons/bs';
 import toast from 'react-hot-toast';
 import JSZip from 'jszip';
 import TileIcon from './TileIcon';
 import { API_BASE_URL } from '../config';
 import { getClosestPaletteColor, detectTransparencyColor } from '../context/utils';
+
+const COLLISION_OPTIONS = [
+  { value: 'none', label: 'None' },
+  { value: 'solid', label: 'Solid' },
+  { value: 'top', label: 'Top' },
+  { value: 'bottom', label: 'Bottom' },
+  { value: 'left', label: 'Left' },
+  { value: 'right', label: 'Right' },
+  { value: 'ladder', label: 'Ladder' },
+  { value: 'slope-up', label: 'Slope Up' },
+  { value: 'slope-down', label: 'Slope Down' }
+];
 
 
 const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
@@ -34,6 +46,18 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
     setShowTileImportSizeDialog,
     ogaImportTilesWide
   } = usePxShop();
+
+  const [showCollisionMenu, setShowCollisionMenu] = useState(false);
+
+  const handleCollisionTypeChange = (newType) => {
+    if (!activeTile) return;
+    setSavedTiles(prev => prev.map(t => {
+      if (t.id === activeTile.id || (activeTile.groupId && t.groupId === activeTile.groupId)) {
+        return { ...t, collisionType: newType };
+      }
+      return t;
+    }));
+  };
 
   const [tilesWideFlow, setTilesWideFlow] = useState(() => {
     const saved = localStorage.getItem('px_shop_tilesWideFlow');
@@ -1074,14 +1098,115 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
           })()}
 
           {activeTile && (
-            <div style={{ padding: '10px', borderTop: '1px solid #444', display: 'flex', flexDirection: 'column', gap: '8px', backgroundColor: '#252525' }}>
-              <div style={{ display: 'flex', flexGrow: 1, gap: '4px' }}>
+            <div style={{
+              position: 'sticky',
+              bottom: 0,
+              zIndex: 10,
+              marginTop: 'auto',
+              padding: '10px',
+              borderTop: '1px solid #444',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              backgroundColor: '#252525'
+            }}>
+              <div style={{ display: 'flex', flexGrow: 1, gap: '4px', alignItems: 'center', position: 'relative' }}>
                 <input
                   type="text"
                   value={activeTile.name || ''}
                   onChange={(e) => updateActiveTileProp('name', e.target.value)}
-                  style={{ maxWidth: '100%', width: '100%', background: '#111', color: '#fff', border: '1px solid #444', padding: '6px', outline: 'none', borderRadius: '3px', fontSize: '12px' }}
+                  style={{ flex: 1, minWidth: 0, background: '#111', color: '#fff', border: '1px solid #444', padding: '6px', outline: 'none', borderRadius: '3px', fontSize: '12px' }}
                 />
+
+                {/* Collision Button with Flyout Menu */}
+                <div style={{ position: 'relative', flexShrink: 0 }}>
+                  <button
+                    onClick={() => setShowCollisionMenu(!showCollisionMenu)}
+                    title={`Collision: ${activeTile.collisionType && activeTile.collisionType !== 'none' ? activeTile.collisionType : 'None'}`}
+                    style={{
+                      background: 'transparent',
+                      border: (activeTile.collisionType && activeTile.collisionType !== 'none') ? '1px solid #FF5722' : '1px solid #555',
+                      color: (activeTile.collisionType && activeTile.collisionType !== 'none') ? '#FF5722' : '#aaa',
+                      padding: '6px 8px',
+                      borderRadius: '3px',
+                      cursor: 'pointer',
+                      fontSize: '12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    <BsBoundingBox size={12} />
+                    <span style={{ fontSize: '11px', textTransform: 'capitalize' }}>
+                      {activeTile.collisionType && activeTile.collisionType !== 'none' ? activeTile.collisionType : ''}
+                    </span>
+                  </button>
+
+                  {showCollisionMenu && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: '100%',
+                        right: 0,
+                        marginBottom: '6px',
+                        backgroundColor: '#1e1e1e',
+                        border: '1px solid #444',
+                        borderRadius: '4px',
+                        boxShadow: '0 4px 16px rgba(0,0,0,0.6)',
+                        zIndex: 100,
+                        minWidth: '130px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        padding: '4px 0',
+                        maxHeight: '220px',
+                        overflowY: 'auto'
+                      }}
+                    >
+                      {COLLISION_OPTIONS.map(opt => {
+                        const isSelected = (activeTile.collisionType || 'none') === opt.value;
+                        return (
+                          <button
+                            key={opt.value}
+                            onClick={() => {
+                              handleCollisionTypeChange(opt.value);
+                              setShowCollisionMenu(false);
+                            }}
+                            style={{
+                              background: isSelected ? '#333' : 'transparent',
+                              color: isSelected ? '#FF5722' : '#ccc',
+                              border: 'none',
+                              padding: '6px 12px',
+                              textAlign: 'left',
+                              cursor: 'pointer',
+                              fontSize: '11px',
+                              fontWeight: isSelected ? 'bold' : 'normal',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between'
+                            }}
+                            onMouseEnter={e => {
+                              if (!isSelected) {
+                                e.currentTarget.style.backgroundColor = '#2a2a2a';
+                                e.currentTarget.style.color = '#fff';
+                              }
+                            }}
+                            onMouseLeave={e => {
+                              if (!isSelected) {
+                                e.currentTarget.style.backgroundColor = 'transparent';
+                                e.currentTarget.style.color = '#ccc';
+                              }
+                            }}
+                          >
+                            <span>{opt.label}</span>
+                            {isSelected && <span style={{ color: '#FF5722', fontSize: '10px' }}>✓</span>}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
                 <button
                   onClick={() => setTileEditor({ tileId: activeTile.id })}
                   disabled={!!tileEditor}

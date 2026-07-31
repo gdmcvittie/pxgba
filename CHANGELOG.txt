@@ -1,3 +1,11 @@
+0.4.7
+- added ability to paint with full tile groups insteaf of just 8x8 tiles
+- added ability to set a collision type for a tile, so when you draw with a selected tile, you also draw the selected collision group on top of it at the same time
+- top most layer is selected by default, so you can draw right away
+
+0.4.6
+- fixed linux permissions build error
+
 0.4.5
 - adds initial GB Studio project importing (don't expect stuff to just work, it's a work in progress!)
 - removed billion step welcome tour
