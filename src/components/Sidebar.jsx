@@ -281,7 +281,7 @@ const Sidebar = () => {
           style={{ position: 'relative', flex: isActive ? 1 : 'none', minHeight: 0, display: 'flex', flexDirection: 'column', opacity: isDragging ? 0.4 : 1, overflow: 'hidden' }}
         >
           {dropTarget?.key === panelKey && dropTarget?.position === 'before' && <DropIndicator />}
-          <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
             <Component
               isCollapsed={!isActive}
               onToggle={() => setActivePanel(isActive ? null : panelKey)}

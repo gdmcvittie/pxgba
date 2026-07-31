@@ -1,3 +1,7 @@
+0.4.8
+- added ability to delete imported tile groups
+- tile name and edit stuff stays fixed at the bottom of the tile panel instead of scrolling with the tiles
+
 0.4.7
 - added ability to paint with full tile groups insteaf of just 8x8 tiles
 - added ability to set a collision type for a tile, so when you draw with a selected tile, you also draw the selected collision group on top of it at the same time

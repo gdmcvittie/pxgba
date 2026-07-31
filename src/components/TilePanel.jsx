@@ -1010,7 +1010,44 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
                             </span>
                           )}
                         </div>
-                        <span style={{ fontSize: '9px', color: '#888', paddingLeft: '4px', flexShrink: 0 }}>{folder.tiles.length} tiles</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
+                          <span style={{ fontSize: '9px', color: '#888' }}>{folder.tiles.length} tiles</span>
+                          {!folder.isDefault && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const tileIdsToDelete = new Set(folder.tiles.map(t => t.id));
+                                if (window.confirm(`Are you sure you want to delete the tile group "${folder.name}" (${folder.tiles.length} tiles)?`)) {
+                                  const updatedTiles = savedTiles.filter(t => !tileIdsToDelete.has(t.id));
+                                  setSavedTiles(updatedTiles);
+                                  if (activeSavedTileId && tileIdsToDelete.has(activeSavedTileId)) {
+                                    setActiveSavedTileId(null);
+                                    setTool('pen');
+                                    setActiveDraw('pen');
+                                  }
+                                  saveHistory(`Delete Tile Group "${folder.name}"`, layers, dimensions, { savedTiles: updatedTiles });
+                                  toast.success(`Deleted tile group "${folder.name}"`);
+                                }
+                              }}
+                              title={`Delete group "${folder.name}" (${folder.tiles.length} tiles)`}
+                              style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: '#888',
+                                padding: '2px 4px',
+                                borderRadius: '3px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                transition: 'all 0.2s'
+                              }}
+                              onMouseEnter={e => { e.currentTarget.style.color = '#ff4444'; e.currentTarget.style.backgroundColor = 'rgba(255,68,68,0.2)'; }}
+                              onMouseLeave={e => { e.currentTarget.style.color = '#888'; e.currentTarget.style.backgroundColor = 'transparent'; }}
+                            >
+                              <BsTrash size={11} />
+                            </button>
+                          )}
+                        </div>
                       </div>
 
                       {/* Folder Content */}
@@ -1067,9 +1104,46 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
                                         padding: '4px',
                                         background: '#202020',
                                         border: '1px solid #444',
-                                        borderRadius: '4px'
+                                        borderRadius: '4px',
+                                        position: 'relative'
                                       }}
                                     >
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          const tileIdsToDelete = new Set(group.map(t => t.id));
+                                          if (window.confirm(`Are you sure you want to delete this group of ${group.length} tiles?`)) {
+                                            const updatedTiles = savedTiles.filter(t => !tileIdsToDelete.has(t.id));
+                                            setSavedTiles(updatedTiles);
+                                            if (activeSavedTileId && tileIdsToDelete.has(activeSavedTileId)) {
+                                              setActiveSavedTileId(null);
+                                              setTool('pen');
+                                              setActiveDraw('pen');
+                                            }
+                                            saveHistory("Delete Multi-Tile Group", layers, dimensions, { savedTiles: updatedTiles });
+                                            toast.success(`Deleted ${group.length} tiles in group`);
+                                          }
+                                        }}
+                                        title={`Delete tile group (${group.length} tiles)`}
+                                        style={{
+                                          position: 'absolute',
+                                          top: '-6px',
+                                          right: '-6px',
+                                          background: '#1a1a1a',
+                                          border: '1px solid #555',
+                                          color: '#aaa',
+                                          padding: '2px 4px',
+                                          borderRadius: '8px',
+                                          cursor: 'pointer',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          zIndex: 5
+                                        }}
+                                        onMouseEnter={e => { e.currentTarget.style.color = '#ff4444'; e.currentTarget.style.borderColor = '#ff4444'; e.currentTarget.style.backgroundColor = '#222'; }}
+                                        onMouseLeave={e => { e.currentTarget.style.color = '#aaa'; e.currentTarget.style.borderColor = '#555'; e.currentTarget.style.backgroundColor = '#1a1a1a'; }}
+                                      >
+                                        <BsTrash size={10} />
+                                      </button>
                                       <div
                                         style={{
                                           display: 'grid',
@@ -1103,6 +1177,7 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
               bottom: 0,
               zIndex: 10,
               marginTop: 'auto',
+              flexShrink: 0,
               padding: '10px',
               borderTop: '1px solid #444',
               display: 'flex',
@@ -1232,6 +1307,35 @@ const TilePanel = ({ isCollapsed, onToggle, dragProps }) => {
                 >
                   <BsTrash size={12} />
                 </button>
+                {activeTile && (activeTile.groupId || activeTile.importGroupId) && (
+                  <button
+                    onClick={() => {
+                      const grpId = activeTile.groupId;
+                      const impId = activeTile.importGroupId;
+                      const groupTiles = savedTiles.filter(t => 
+                        (grpId && t.groupId === grpId) || (!grpId && impId && t.importGroupId === impId)
+                      );
+                      const grpName = activeTile.name ? `the group for "${activeTile.name}"` : 'this tile group';
+                      if (window.confirm(`Are you sure you want to delete ${grpName} (${groupTiles.length} tiles)?`)) {
+                        const tileIdsToDelete = new Set(groupTiles.map(t => t.id));
+                        const updatedTiles = savedTiles.filter(t => !tileIdsToDelete.has(t.id));
+                        setSavedTiles(updatedTiles);
+                        setActiveSavedTileId(null);
+                        setTool('pen');
+                        setActiveDraw('pen');
+                        saveHistory("Delete Tile Group", layers, dimensions, { savedTiles: updatedTiles });
+                        toast.success(`Deleted ${groupTiles.length} tiles in group`);
+                      }
+                    }}
+                    title={`Delete entire tile group (${savedTiles.filter(t => (activeTile.groupId && t.groupId === activeTile.groupId) || (!activeTile.groupId && activeTile.importGroupId && t.importGroupId === activeTile.importGroupId)).length} tiles)`}
+                    style={{ flexShrink: 0, background: 'transparent', border: '1px solid #ff4444', color: '#ff4444', padding: '4px 6px', borderRadius: '3px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '4px', transition: 'all 0.2s' }}
+                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#ff4444'; e.currentTarget.style.color = '#fff'; }}
+                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#ff4444'; }}
+                  >
+                    <BsTrash size={11} />
+                    <span style={{ fontSize: '10px' }}>Group</span>
+                  </button>
+                )}
               </div>
             </div>
           )}
