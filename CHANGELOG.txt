@@ -1,3 +1,7 @@
+0.4.9
+- fixed npc wander and walk animation bugs
+- starting to work on 'sonic' style level gen, not ready yet, gimme a while.
+
 0.4.8
 - added ability to delete imported tile groups
 - tile name and edit stuff stays fixed at the bottom of the tile panel instead of scrolling with the tiles

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 
 export default function PaletteColorPicker({
   selectedColor,
+  color,
   onChange,
   recentColors,
   label = 'Select Color',
@@ -10,6 +11,7 @@ export default function PaletteColorPicker({
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const currentColor = selectedColor !== undefined ? selectedColor : color;
   const colors = recentColors || [];
 
   const handleSelect = (color) => {
@@ -42,7 +44,7 @@ export default function PaletteColorPicker({
     );
   };
 
-  const isTransparentSelected = selectedColor === null || selectedColor === undefined || selectedColor === '';
+  const isTransparentSelected = currentColor === null || currentColor === undefined || currentColor === '';
 
   return (
     <>
@@ -74,10 +76,10 @@ export default function PaletteColorPicker({
             flexShrink: 0
           }}
         >
-          {renderSwatch(selectedColor)}
+          {renderSwatch(currentColor)}
         </div>
         <span style={{ fontSize: '11px', color: '#eee', fontFamily: 'monospace' }}>
-          {isTransparentSelected ? 'Transparent' : selectedColor.toUpperCase()}
+          {isTransparentSelected ? 'Transparent' : currentColor.toUpperCase()}
         </span>
       </div>
 

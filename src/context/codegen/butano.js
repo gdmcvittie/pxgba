@@ -32,7 +32,7 @@ export async function generateButano(ctx) {
     startingSceneIdx = newStartingIdx;
   }
   
-  scenes = scenes.map(s => s.type === 'METROIDVANIA' ? { ...s, type: 'PLATFORMER' } : s);
+  scenes = scenes.map(s => (s.type === 'METROIDVANIA' || s.type === 'SONIC') ? { ...s, type: 'PLATFORMER' } : s);
 
   autoDeclare(variables, customScripts, globalScript, scenes);
 
@@ -5041,20 +5041,28 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
             } else {
               actorLogicCode += `                int next_state_${i} = 0;\n`;
             }
-            if (jumpAnim && walkAnim) {
-              actorLogicCode += `                if (actor_${i}_dy != 0) {\n`;
-              actorLogicCode += `                    next_state_${i} = 2;\n`;
-              actorLogicCode += `                } else if (actor_${i}_dx != 0 || actor_${i}_dy != 0) {\n`;
-              actorLogicCode += `                    next_state_${i} = 1;\n`;
-              actorLogicCode += `                }\n`;
-            } else if (jumpAnim) {
-              actorLogicCode += `                if (actor_${i}_dy != 0) {\n`;
-              actorLogicCode += `                    next_state_${i} = 2;\n`;
-              actorLogicCode += `                }\n`;
-            } else if (walkAnim) {
-              actorLogicCode += `                if (actor_${i}_dx != 0 || actor_${i}_dy != 0) {\n`;
-              actorLogicCode += `                    next_state_${i} = 1;\n`;
-              actorLogicCode += `                }\n`;
+            if (scene.type === 'PLATFORMER') {
+              if (jumpAnim && jumpIndices.length > 0 && walkAnim && walkIndices.length > 0) {
+                actorLogicCode += `                if (!actor_${i}_on_ground && actor_${i}_dy != 0) {\n`;
+                actorLogicCode += `                    next_state_${i} = 2;\n`;
+                actorLogicCode += `                } else if (actor_${i}_dx != 0) {\n`;
+                actorLogicCode += `                    next_state_${i} = 1;\n`;
+                actorLogicCode += `                }\n`;
+              } else if (jumpAnim && jumpIndices.length > 0) {
+                actorLogicCode += `                if (!actor_${i}_on_ground && actor_${i}_dy != 0) {\n`;
+                actorLogicCode += `                    next_state_${i} = 2;\n`;
+                actorLogicCode += `                }\n`;
+              } else if (walkAnim && walkIndices.length > 0) {
+                actorLogicCode += `                if (actor_${i}_dx != 0) {\n`;
+                actorLogicCode += `                    next_state_${i} = 1;\n`;
+                actorLogicCode += `                }\n`;
+              }
+            } else {
+              if (walkAnim && walkIndices.length > 0) {
+                actorLogicCode += `                if (actor_${i}_dx != 0 || actor_${i}_dy != 0) {\n`;
+                actorLogicCode += `                    next_state_${i} = 1;\n`;
+                actorLogicCode += `                }\n`;
+              }
             }
             actorLogicCode += `                if (next_state_${i} != actor_${i}_anim_state) {\n`;
             actorLogicCode += `                    actor_${i}_anim_state = next_state_${i};\n`;
@@ -6641,6 +6649,7 @@ void show_dialog_text(const bn::string_view& text, bn::vector<bn::sprite_ptr, 12
           sceneCode += `            _lap_time_frames++;\n`;
           sceneCode += `        }\n`;
         }
+        sceneCode += `        rng.update();\n`;
         sceneCode += `        bn::core::update();\n`;
         if (scene.type === 'INTRO') {
           const nextSceneIdx = currentSceneIdx + 1 < scenes.length ? currentSceneIdx + 1 : startingSceneIdx;

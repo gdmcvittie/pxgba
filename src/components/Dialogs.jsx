@@ -3572,24 +3572,7 @@ const LevelGenDialog = ({ sceneId, scenes, savedTiles, recentColors, generateLev
 
   const handleBgTypeChange = (val) => {
     setPlatformBgType(val);
-    const palette = recentColors && recentColors.length > 0 ? recentColors : DEFAULT_16_PALETTE;
-    const hexToRgb = (hex) => {
-      if (!hex) return { r: 0, g: 0, b: 0 };
-      const clean = hex.replace('#', '');
-      const num = parseInt(clean, 16);
-      return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
-    };
-    const getLuminance = (hex) => {
-      const { r, g, b } = hexToRgb(hex);
-      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-    };
-    const sorted = [...palette].map(c => ({ hex: c, lum: getLuminance(c) })).sort((a, b) => b.lum - a.lum);
-    const lightest = sorted[0]?.hex || '#fff1e8';
-    const darkest = sorted[sorted.length - 1]?.hex || '#000000';
-
-    if (val === 'starry') {
-      setPlatformSkyColor(darkest);
-    } else if (val === 'solid' || val === 'clouds') {
+    if (!platformSkyColor) {
       setPlatformSkyColor('#29adff');
     }
   };
@@ -3628,9 +3611,31 @@ const LevelGenDialog = ({ sceneId, scenes, savedTiles, recentColors, generateLev
   const [borderColor, setBorderColor] = useState('#000000');
   const [bottomThickness, setBottomThickness] = useState(2);
 
+  const [sonicLoopCount, setSonicLoopCount] = useState(3);
+  const [sonicGrassTileId, setSonicGrassTileId] = useState(null);
+  const [sonicSoilTileId, setSonicSoilTileId] = useState(null);
+  const [sonicRingTileId, setSonicRingTileId] = useState(null);
+  const [sonicSpringTileId, setSonicSpringTileId] = useState(null);
+  const [sonicDashPadTileId, setSonicDashPadTileId] = useState(null);
+  const [sonicSlopeUpTileId, setSonicSlopeUpTileId] = useState(null);
+  const [sonicSlopeDownTileId, setSonicSlopeDownTileId] = useState(null);
+
   const handleGenerate = () => {
     const config = {};
-    if (sceneType === 'TOPDOWN') {
+    if (sceneType === 'SONIC') {
+      config.sonicLoopCount = sonicLoopCount;
+      config.sonicGrassTileId = sonicGrassTileId || undefined;
+      config.sonicSoilTileId = sonicSoilTileId || undefined;
+      config.sonicRingTileId = sonicRingTileId || undefined;
+      config.sonicSpringTileId = sonicSpringTileId || undefined;
+      config.sonicDashPadTileId = sonicDashPadTileId || undefined;
+      config.sonicSlopeUpTileId = sonicSlopeUpTileId || undefined;
+      config.sonicSlopeDownTileId = sonicSlopeDownTileId || undefined;
+      config.platformBgType = platformBgType;
+      config.platformSkyColor = platformSkyColor;
+      config.platformCloudColor1 = platformCloudColor1;
+      config.platformCloudColor2 = platformCloudColor2;
+    } else if (sceneType === 'TOPDOWN') {
       config.grassTileId = grassTileId || undefined;
       config.sandTileId = sandTileId || undefined;
       config.waterTileId = waterTileId || undefined;
@@ -3747,6 +3752,7 @@ const LevelGenDialog = ({ sceneId, scenes, savedTiles, recentColors, generateLev
             {[
               { value: 'TOPDOWN', label: 'Top Down' },
               { value: 'PLATFORMER', label: 'Platformer' },
+              // { value: 'SONIC', label: 'Sonic Level' },
               { value: 'METROIDVANIA', label: 'Metroidvania' },
               { value: 'POINTNCLICK', label: 'Point & Click' },
               { value: 'SHMUP', label: "Shoot 'Em Up" },
@@ -3885,6 +3891,89 @@ const LevelGenDialog = ({ sceneId, scenes, savedTiles, recentColors, generateLev
             </div>
             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#ccc', cursor: 'pointer', userSelect: 'none' }}>
               <input type="checkbox" checked={generateCollisions} onChange={e => setGenerateCollisions(e.target.checked)} style={{ accentColor: '#4CAF50' }} />
+              Generate Collisions & Triggers
+            </label>
+          </>
+        )}
+
+        {sceneType === 'SONIC' && (
+          <>
+            <div style={{ display: 'flex', flexDirection: 'row', gap: '8px' }}>
+              <TileSelector tiles={tiles} value={sonicGrassTileId} onChange={setSonicGrassTileId} label="Grass Surface" style={{ flexGrow: 1, flexBasis: '50%' }} />
+              <TileSelector tiles={tiles} value={sonicSoilTileId} onChange={setSonicSoilTileId} label="Checkered Soil" style={{ flexGrow: 1, flexBasis: '50%' }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'row', gap: '8px' }}>
+              <TileSelector tiles={tiles} value={sonicSlopeUpTileId} onChange={setSonicSlopeUpTileId} label="Slope Up" style={{ flexGrow: 1, flexBasis: '50%' }} />
+              <TileSelector tiles={tiles} value={sonicSlopeDownTileId} onChange={setSonicSlopeDownTileId} label="Slope Down" style={{ flexGrow: 1, flexBasis: '50%' }} />
+            </div>
+            <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#aaa', marginBottom: '4px' }}>
+                  <span>360° Loop Count</span>
+                  <input type="range" min="1" max="6" value={sonicLoopCount} onChange={e => setSonicLoopCount(Number(e.target.value))} style={{ flexGrow: 1, maxWidth: '70%', accentColor: '#29adff' }} />
+                  <span>{sonicLoopCount} loop{sonicLoopCount > 1 ? 's' : ''}</span>
+                </div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', borderTop: '1px solid #3c3c3c', paddingTop: '8px', marginTop: '4px' }}>
+              <div style={{ fontSize: '11px', color: '#888', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '1px' }}>Background</div>
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+                <select
+                  value={platformBgType}
+                  onChange={e => handleBgTypeChange(e.target.value)}
+                  style={{
+                    background: '#111', color: '#fff', border: '1px solid #444',
+                    padding: '4px', fontSize: '12px', outline: 'none', borderRadius: '3px'
+                  }}
+                >
+                  <option value="none">None (Transparent)</option>
+                  <option value="solid">Solid Color</option>
+                  <option value="clouds">Solid Color + Clouds</option>
+                  <option value="starry">Starry Night Sky</option>
+                </select>
+
+                {(platformBgType === 'solid' || platformBgType === 'clouds') && (
+                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '4px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{ fontSize: '12px', color: '#aaa' }}>Sky:</span>
+                      <PaletteColorPicker
+                        selectedColor={platformSkyColor}
+                        onChange={setPlatformSkyColor}
+                        recentColors={recentColors || []}
+                        label="Sky Color"
+                        allowTransparent={false}
+                      />
+                    </div>
+                    {platformBgType === 'clouds' && (
+                      <>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontSize: '12px', color: '#aaa' }}>Cloud Main:</span>
+                          <PaletteColorPicker
+                            selectedColor={platformCloudColor1}
+                            onChange={setPlatformCloudColor1}
+                            recentColors={recentColors || []}
+                            label="Cloud Main Color"
+                            allowTransparent={false}
+                          />
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{ fontSize: '12px', color: '#aaa' }}>Cloud Accent:</span>
+                          <PaletteColorPicker
+                            selectedColor={platformCloudColor2}
+                            onChange={setPlatformCloudColor2}
+                            recentColors={recentColors || []}
+                            label="Cloud Accent Color"
+                            allowTransparent={false}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#ccc', cursor: 'pointer', userSelect: 'none' }}>
+              <input type="checkbox" checked={generateCollisions} onChange={e => setGenerateCollisions(e.target.checked)} style={{ accentColor: '#29adff' }} />
               Generate Collisions & Triggers
             </label>
           </>

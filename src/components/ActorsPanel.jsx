@@ -288,7 +288,8 @@ const ActorDesignerModal = ({ actor, savedTiles, setSavedTiles, saveHistory, lay
 
   const getCurrentSpriteIds = () => {
     const anim = getCurrentAnim();
-    if (anim && anim.frames[activeFrameIdx]) return anim.frames[activeFrameIdx];
+    const frameIdx = isPlayingPreview ? previewFrameIdx : activeFrameIdx;
+    if (anim && anim.frames[frameIdx]) return anim.frames[frameIdx];
     return Array(cols * rows).fill(null);
   };
 

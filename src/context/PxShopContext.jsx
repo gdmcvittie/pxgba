@@ -2336,6 +2336,283 @@ export const PxShopProvider = ({ children }) => {
           }
         }
       }
+    } else if (sceneType === 'SONIC') {
+      // Sonic Level Generator (Authentic Single 360° Loops with Top Monitors, Log Bridges, Hills, Springs & High Routes)
+      if (cfg.platformBgType === 'solid' || cfg.platformBgType === 'clouds' || cfg.platformBgType === 'starry') {
+        const targetColors = [
+          cfg.platformSkyColor || '#29adff',
+          cfg.platformCloudColor1 || '#ffffff',
+          cfg.platformCloudColor2 || '#c2c3c7',
+          cfg.platformStarColor || '#fff1e8'
+        ].filter(Boolean);
+        let paletteChanged = false;
+        const paletteCopy = [...updatedPalette];
+        for (const col of targetColors) {
+          if (!paletteCopy.some(c => c.toLowerCase() === col.toLowerCase()) && paletteCopy.length < 256) {
+            paletteCopy.push(col);
+            paletteChanged = true;
+          }
+        }
+        if (paletteChanged) {
+          updatedPalette = paletteCopy;
+          setRecentColors(updatedPalette);
+        }
+      }
+
+      const paletteToUse = updatedPalette;
+      const mapColor = (hex) => getClosestPaletteColor(hex, paletteToUse);
+
+      const sonicGrass = findTileStr(['sonic grass', 'grass', 'platform'], cfg.sonicGrassTileId, 73);
+      const sonicSlopeUp = findTileStr(['sonic slope up', 'slope up'], cfg.sonicSlopeUpTileId, 74);
+      const sonicSlopeDown = findTileStr(['sonic slope down', 'slope down'], cfg.sonicSlopeDownTileId, 75);
+      const sonicGentleUp = findTileStr(['sonic gentle slope up'], cfg.sonicSlopeUpTileId, 76);
+      const sonicGentleDown = findTileStr(['sonic gentle slope down'], cfg.sonicSlopeDownTileId, 77);
+      const sonicSoil = findTileStr(['sonic checkered soil', 'mud block', 'brick'], cfg.sonicSoilTileId, 78);
+      const sonicLoopArchTL = findTileStr(['sonic loop arch tl', 'loop arch tl'], null, 79);
+      const sonicLoopArchTR = findTileStr(['sonic loop arch tr', 'loop arch tr'], null, 84);
+      const sonicLoopWallL = findTileStr(['sonic loop wall l', 'loop wall l'], null, 80);
+      const sonicLoopWallR = findTileStr(['sonic loop wall r', 'loop wall r'], null, 81);
+      const sonicLoopBase = findTileStr(['sonic loop base', 'loop base'], null, 82);
+      const sonicSpring = findTileStr(['sonic spring', 'spring'], cfg.sonicSpringTileId, 71);
+      const sonicDashPad = findTileStr(['sonic dash pad', 'boost pad', 'conveyor'], cfg.sonicDashPadTileId, 72);
+      const sonicPalmTree = findTileStr(['sonic palm tree', 'torch'], null, 83);
+      const sonicLogBridge = findTileStr(['sonic log bridge', 'bridge', 'log'], null, 85);
+      const sonicMonitor = findTileStr(['sonic monitor', 'item box'], null, 86);
+      const sonicFlower = findTileStr(['sonic flower', 'flower'], null, 87);
+
+      // Background Sky & Parallax Clouds (Respect platformBgType setting)
+      if (cfg.platformBgType && cfg.platformBgType !== 'none') {
+        const skyHex = cfg.platformSkyColor || (cfg.platformBgType === 'starry' ? '#000000' : '#29adff');
+        const skyBgLayerData = Array(newDims.h).fill(null).map(() => Array(newDims.w).fill(mapColor(skyHex)));
+
+        if (cfg.platformBgType === 'clouds') {
+          const cloudColor1 = mapColor(cfg.platformCloudColor1 || '#ffffff');
+          const cloudColor2 = mapColor(cfg.platformCloudColor2 || '#c2c3c7');
+          const cloudCount = Math.floor(newDims.w / 14);
+          for (let i = 0; i < cloudCount; i++) {
+            const cx = Math.floor((i + 0.5) * (newDims.w / cloudCount));
+            const cy = 2 + Math.floor(Math.random() * 4);
+            const cw = 8 + Math.floor(Math.random() * 6);
+            for (let dy = -1; dy <= 1; dy++) {
+              for (let dx = -cw / 2; dx <= cw / 2; dx++) {
+                const px = Math.round(cx + dx);
+                const py = Math.round(cy + dy);
+                if (px >= 0 && px < newDims.w && py >= 0 && py < newDims.h) {
+                  skyBgLayerData[py][px] = dy === -1 ? cloudColor1 : cloudColor2;
+                }
+              }
+            }
+          }
+        } else if (cfg.platformBgType === 'starry') {
+          const starColor = mapColor(cfg.platformStarColor || '#fff1e8');
+          const starCount = Math.floor((newDims.w * newDims.h) / 80);
+          for (let i = 0; i < starCount; i++) {
+            const sx = Math.floor(Math.random() * newDims.w);
+            const sy = Math.floor(Math.random() * (newDims.h - 16));
+            skyBgLayerData[sy][sx] = starColor;
+          }
+        }
+
+        skyBgLayer = {
+          id: Date.now() + Math.random() + 0.05,
+          textData: null,
+          type: 'layer',
+          name: cfg.platformBgType === 'clouds' ? 'Sonic Sky & Clouds' : (cfg.platformBgType === 'starry' ? 'Sonic Starry Background' : 'Sonic Sky Background'),
+          visible: true,
+          groupId: null,
+          data: skyBgLayerData,
+          parallax: true,
+          parallaxX: 0.15,
+          parallaxY: 0.15
+        };
+      }
+
+      const stampTile = (tx, ty, tile, typeName = 'groundTop') => {
+        if (tx < 0 || tx >= cols || ty < 0 || ty >= rows) return;
+        tileGrid[ty][tx] = typeName;
+        if (tile && tile.data) {
+          for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+              const px = tx * 8 + c;
+              const py = ty * 8 + r;
+              if (py < newDims.h && px < newDims.w) {
+                newLayerData[py][px] = tile.data[r][c];
+              }
+            }
+          }
+        }
+      };
+
+      const baseY = rows - 6;
+      let curY = baseY;
+
+      // Determine 360° Loop locations
+      const requestedLoops = cfg.sonicLoopCount !== undefined ? cfg.sonicLoopCount : 1;
+      const loopPositions = [];
+      if (requestedLoops === 1) {
+        loopPositions.push(Math.floor(cols / 2) - 3);
+      } else {
+        const spacing = Math.floor((cols - 20) / Math.max(1, requestedLoops));
+        for (let i = 0; i < requestedLoops; i++) {
+          const lp = 16 + i * spacing;
+          if (lp < cols - 10) loopPositions.push(lp);
+        }
+      }
+
+      let x = 0;
+      while (x < cols) {
+        // Check for 360 Loop placement
+        const nearLoop = loopPositions.find(lp => lp >= x && lp <= x + 2);
+        if (nearLoop !== undefined && nearLoop < cols - 10) {
+          x = nearLoop;
+
+          // Authentic Single 6x6 Green Hill Zone 360° Circular Loop Structure
+          // Row -5: Top cliff platform overhang with green grass
+          for (let lx = 0; lx < 6; lx++) stampTile(x + lx, curY - 5, sonicGrass, 'groundTop');
+
+          // Row -4: Dome top arch curve (╭───╮)
+          stampTile(x, curY - 4, sonicSoil, 'soil');
+          stampTile(x + 1, curY - 4, sonicLoopArchTL, 'solid');
+          stampTile(x + 2, curY - 4, sonicLoopBase, 'solid');
+          stampTile(x + 3, curY - 4, sonicLoopBase, 'solid');
+          stampTile(x + 4, curY - 4, sonicLoopArchTR, 'solid');
+          stampTile(x + 5, curY - 4, sonicSoil, 'soil');
+
+          // Row -3: Upper diagonal curve (╱   ╲)
+          stampTile(x, curY - 3, sonicSoil, 'soil');
+          stampTile(x + 1, curY - 3, sonicLoopWallL, 'solid');
+          stampTile(x + 4, curY - 3, sonicLoopWallR, 'solid');
+          stampTile(x + 5, curY - 3, sonicSoil, 'soil');
+
+          // Row -2: Lower diagonal curve (╱   ╲)
+          stampTile(x, curY - 2, sonicGentleUp, 'slopeUp');
+          stampTile(x + 1, curY - 2, sonicLoopWallL, 'solid');
+          stampTile(x + 4, curY - 2, sonicLoopWallR, 'solid');
+          stampTile(x + 5, curY - 2, sonicGentleDown, 'slopeDown');
+
+          // Row -1: Ground Crossover Track
+          for (let lx = 0; lx < 6; lx++) stampTile(x + lx, curY - 1, sonicGrass, 'groundTop');
+
+          // Row 0 & Foundation: Solid Checkered Soil
+          for (let lx = 0; lx < 6; lx++) {
+            stampTile(x + lx, curY, sonicSoil, 'soil');
+            for (let fillY = curY + 1; fillY < rows; fillY++) {
+              stampTile(x + lx, fillY, sonicSoil, 'soil');
+            }
+          }
+
+          x += 6;
+          continue;
+        }
+
+        // Random track features (Slopes, Wide Hills, High Route Platforms, Underground Tunnels, Log Bridge over Chasm, Speedway)
+        const randFeat = Math.random();
+        if (randFeat < 0.25 && x < cols - 14) {
+          // Wide Rolling Hill (Slope Up -> 4 Flat Hilltop Tiles -> Slope Down)
+          stampTile(x, curY, sonicGentleUp, 'slopeUp');
+          for (let fillY = curY + 1; fillY < rows; fillY++) stampTile(x, fillY, sonicSoil, 'soil');
+          x++; curY = Math.max(4, curY - 1);
+
+          stampTile(x, curY, sonicSlopeUp, 'slopeUp');
+          for (let fillY = curY + 1; fillY < rows; fillY++) stampTile(x, fillY, sonicSoil, 'soil');
+          x++; curY = Math.max(4, curY - 1);
+
+          // Wide Hilltop (4 flat tiles)
+          for (let hx = 0; hx < 4; hx++) {
+            stampTile(x, curY, sonicGrass, 'groundTop');
+            if (hx === 1) stampTile(x, curY - 1, sonicFlower, 'flower');
+            if (hx === 3) stampTile(x, curY - 1, sonicPalmTree, 'tree');
+            for (let fillY = curY + 1; fillY < rows; fillY++) stampTile(x, fillY, sonicSoil, 'soil');
+            x++;
+          }
+
+          // Slope Down
+          stampTile(x, curY, sonicSlopeDown, 'slopeDown');
+          for (let fillY = curY + 1; fillY < rows; fillY++) stampTile(x, fillY, sonicSoil, 'soil');
+          x++; curY = Math.min(baseY, curY + 1);
+
+          stampTile(x, curY, sonicGentleDown, 'slopeDown');
+          for (let fillY = curY + 1; fillY < rows; fillY++) stampTile(x, fillY, sonicSoil, 'soil');
+          x++; curY = Math.min(baseY, curY + 1);
+
+          // ALWAYS force flat ground gap after a hill so hills are NEVER right beside each other!
+          const gapLen = 6 + Math.floor(Math.random() * 4);
+          for (let gx = 0; gx < gapLen && x < cols - 2; gx++) {
+            stampTile(x, curY, sonicGrass, 'groundTop');
+            if (gx % 4 === 0) stampTile(x, curY - 1, sonicFlower, 'flower');
+            for (let fillY = curY + 1; fillY < rows; fillY++) stampTile(x, fillY, sonicSoil, 'soil');
+            x++;
+          }
+        } else if (randFeat < 0.45 && x < cols - 16) {
+          // Underground Pathway / Tunnel Route (Low Route)
+          const tunnelY = Math.min(rows - 2, curY + 3);
+          const tunnelLen = 8 + Math.floor(Math.random() * 6);
+
+          // Entrance slope down into tunnel
+          stampTile(x, curY, sonicGentleDown, 'slopeDown');
+          for (let fillY = curY + 1; fillY < rows; fillY++) stampTile(x, fillY, sonicSoil, 'soil');
+          x++;
+
+          // Underground Cave Tunnel with overhead roof
+          for (let tx = 0; tx < tunnelLen && x < cols - 4; tx++) {
+            // Overhead Surface Roof
+            stampTile(x, curY - 3, sonicGrass, 'groundTop');
+            for (let ry = curY - 2; ry <= curY - 1; ry++) stampTile(x, ry, sonicSoil, 'soil');
+
+            // Underground Tunnel Pathway
+            stampTile(x, tunnelY, sonicGrass, 'groundTop');
+            if (tx % 3 === 0) stampTile(x, tunnelY - 1, sonicFlower, 'flower');
+            for (let fillY = tunnelY + 1; fillY < rows; fillY++) stampTile(x, fillY, sonicSoil, 'soil');
+            x++;
+          }
+
+          // Exit slope up out of tunnel
+          stampTile(x, tunnelY - 1, sonicGentleUp, 'slopeUp');
+          for (let fillY = tunnelY; fillY < rows; fillY++) stampTile(x, fillY, sonicSoil, 'soil');
+          x++;
+        } else if (randFeat < 0.68 && x < cols - 10) {
+          // High Route Upper Platform
+          stampTile(x, curY, sonicGrass, 'groundTop');
+          for (let fillY = curY + 1; fillY < rows; fillY++) stampTile(x, fillY, sonicSoil, 'soil');
+          x++;
+
+          const highY = Math.max(3, curY - 5);
+          const platLen = 6 + Math.floor(Math.random() * 4);
+          for (let px = 0; px < platLen && x < cols - 2; px++) {
+            stampTile(x, curY, sonicGrass, 'groundTop');
+            if (px % 3 === 0) stampTile(x, curY - 1, sonicFlower, 'flower');
+            for (let fillY = curY + 1; fillY < rows; fillY++) stampTile(x, fillY, sonicSoil, 'soil');
+            stampTile(x, highY, sonicGrass, 'platform');
+            x++;
+          }
+        } else if (randFeat < 0.85 && x < cols - 8) {
+          // Log Bridge over Chasm with soil pillar below
+          stampTile(x, curY, sonicGrass, 'groundTop');
+          for (let fillY = curY + 1; fillY < rows; fillY++) stampTile(x, fillY, sonicSoil, 'soil');
+          x++;
+
+          const bridgeLen = 5 + Math.floor(Math.random() * 3);
+          const pillarX = Math.floor(bridgeLen / 2);
+          for (let bx = 0; bx < bridgeLen && x < cols - 2; bx++) {
+            stampTile(x, curY, sonicLogBridge, 'bridge');
+            if (bx === pillarX) {
+              for (let py = curY + 2; py < rows; py++) stampTile(x, py, sonicSoil, 'soil');
+            }
+            x++;
+          }
+
+          stampTile(x, curY, sonicGrass, 'groundTop');
+          for (let fillY = curY + 1; fillY < rows; fillY++) stampTile(x, fillY, sonicSoil, 'soil');
+          x++;
+        } else {
+          // Flat Speedway with palm trees and flowers
+          stampTile(x, curY, sonicGrass, 'groundTop');
+          if (x % 12 === 0) stampTile(x, curY - 1, sonicPalmTree, 'tree');
+          else if (x % 7 === 0) stampTile(x, curY - 1, sonicFlower, 'flower');
+          for (let fillY = curY + 1; fillY < rows; fillY++) stampTile(x, fillY, sonicSoil, 'soil');
+          x++;
+        }
+      }
     } else if (sceneType === 'PLATFORMER') {
       // Platformer generator
       // 0. Inject target colors for background
@@ -3908,12 +4185,12 @@ export const PxShopProvider = ({ children }) => {
       const sidewalkStartRow = Math.max(0, streetStartRow - 3);
       startX = 16;
       startY = (sidewalkStartRow + 1) * 8;
-    } else if (sceneType === 'PLATFORMER') {
+    } else if (sceneType === 'PLATFORMER' || sceneType === 'SONIC') {
       // Near lower left corner, 2 tiles above the ground
       let groundRow = rows - 1;
       for (let checkTx = 0; checkTx < Math.min(4, cols); checkTx++) {
         for (let ty = 0; ty < rows; ty++) {
-          if (tileGrid[ty][checkTx] === 'groundTop') {
+          if (tileGrid[ty][checkTx] === 'groundTop' || tileGrid[ty][checkTx] === 'loopBase') {
             groundRow = ty;
             break;
           }
@@ -4128,6 +4405,81 @@ export const PxShopProvider = ({ children }) => {
             id: groupId,
             name: 'Ladder',
             isGroup: true, type: 'ladder',
+            isGenerated: true
+          });
+        }
+      } else if (sceneType === 'SONIC') {
+        const solidCells = collectCells('groundTop', 'soil', 'loopBase');
+        const slopeUpCells = collectCells('slopeUp');
+        const slopeDownCells = collectCells('slopeDown');
+        const platformCells = collectCells('platform');
+
+        if (solidCells.length > 0) {
+          const rects = combineCellsToRectangles(solidCells);
+          const groupId = Date.now() + Math.random();
+          const c0 = updatedCollisions.length;
+          rects.forEach((rect, idx) => {
+            updatedCollisions.push({
+              id: Date.now() + Math.random() + idx,
+              name: `Collision ${c0 + idx + 1}`,
+              type: 'solid',
+              x: rect.x, y: rect.y,
+              width: rect.width, height: rect.height,
+              isPainted: false, groupId,
+              isGenerated: true
+            });
+          });
+          updatedCollisions.push({
+            id: groupId,
+            name: 'Solid',
+            isGroup: true, type: 'solid',
+            isGenerated: true
+          });
+        }
+
+        if (slopeUpCells.length > 0) {
+          slopeUpCells.forEach((cell, idx) => {
+            updatedCollisions.push({
+              id: Date.now() + Math.random() + idx,
+              name: `Slope Up ${idx + 1}`,
+              type: 'slope-up',
+              x: cell.x, y: cell.y, width: 8, height: 8,
+              isPainted: false, isGenerated: true
+            });
+          });
+        }
+
+        if (slopeDownCells.length > 0) {
+          slopeDownCells.forEach((cell, idx) => {
+            updatedCollisions.push({
+              id: Date.now() + Math.random() + idx,
+              name: `Slope Down ${idx + 1}`,
+              type: 'slope-down',
+              x: cell.x, y: cell.y, width: 8, height: 8,
+              isPainted: false, isGenerated: true
+            });
+          });
+        }
+
+        if (platformCells.length > 0) {
+          const rects = combineCellsToRectangles(platformCells);
+          const groupId = Date.now() + Math.random();
+          const c0 = updatedCollisions.length;
+          rects.forEach((rect, idx) => {
+            updatedCollisions.push({
+              id: Date.now() + Math.random() + idx,
+              name: `Collision ${c0 + idx + 1}`,
+              type: 'top',
+              x: rect.x, y: rect.y,
+              width: rect.width, height: rect.height,
+              isPainted: false, groupId,
+              isGenerated: true
+            });
+          });
+          updatedCollisions.push({
+            id: groupId,
+            name: 'Top',
+            isGroup: true, type: 'top',
             isGenerated: true
           });
         }
@@ -4483,7 +4835,7 @@ export const PxShopProvider = ({ children }) => {
           actors: updatedActors,
           collisions: updatedCollisions,
           triggers: updatedTriggers,
-          frames: [{ ...s.frames[0], layers: [...generatedLayers, ...s.frames[0].layers.filter(l => l.name !== 'Level Design' && l.name !== 'Cave Background' && l.name !== 'Sky Background' && l.name !== 'Clouds' && l.name !== 'Sky & Clouds' && l.name !== 'Background')] }]
+          frames: [{ ...s.frames[0], layers: [...generatedLayers, ...s.frames[0].layers.filter(l => l.name !== 'Level Design' && l.name !== 'Cave Background' && l.name !== 'Sky Background' && l.name !== 'Clouds' && l.name !== 'Sky & Clouds' && l.name !== 'Sonic Sky Background' && l.name !== 'Sonic Sky & Clouds' && l.name !== 'Background')] }]
         };
       }
     });
@@ -4512,7 +4864,7 @@ export const PxShopProvider = ({ children }) => {
       if (skyBgLayer) {
         generatedLayers.push(skyBgLayer);
       }
-      const updatedActiveLayers = [...generatedLayers, ...targetFrame.layers.filter(l => l.name !== 'Level Design' && l.name !== 'Cave Background' && l.name !== 'Sky Background' && l.name !== 'Clouds' && l.name !== 'Sky & Clouds' && l.name !== 'Background')];
+      const updatedActiveLayers = [...generatedLayers, ...targetFrame.layers.filter(l => l.name !== 'Level Design' && l.name !== 'Cave Background' && l.name !== 'Sky Background' && l.name !== 'Clouds' && l.name !== 'Sky & Clouds' && l.name !== 'Sonic Sky Background' && l.name !== 'Sonic Sky & Clouds' && l.name !== 'Background')];
       setLayers(updatedActiveLayers);
       const topGeneratedLayer = updatedActiveLayers.find(l => l.type !== 'group') || updatedActiveLayers[0];
       if (topGeneratedLayer) {

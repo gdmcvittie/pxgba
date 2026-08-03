@@ -424,6 +424,7 @@ const ScenesPanel = ({ isCollapsed, onToggle, dragProps }) => {
                       >
                          <option value="TOPDOWN">Top Down</option>
                          <option value="PLATFORMER">Platformer</option>
+                         {/* <option value="SONIC">Sonic Level</option> */}
                          <option value="METROIDVANIA">Metroidvania</option>
                          <option value="POINTNCLICK">Point & Click</option>
                          <option value="SHMUP">Shoot 'Em Up</option>
@@ -433,7 +434,7 @@ const ScenesPanel = ({ isCollapsed, onToggle, dragProps }) => {
                          <option value="BEATEMUP">Beat 'Em Up</option>
                       </select>
                    </div>
-                    {scene.type !== 'PLATFORMER' && scene.type !== 'METROIDVANIA' && scene.type !== 'RACING' && scene.type !== 'INTRO' && scene.type !== 'PAUSE' && (
+                    {scene.type !== 'PLATFORMER' && scene.type !== 'SONIC' && scene.type !== 'METROIDVANIA' && scene.type !== 'RACING' && scene.type !== 'INTRO' && scene.type !== 'PAUSE' && (
                      <>
                         {scene.type === 'POINTNCLICK' && (
                           <>
