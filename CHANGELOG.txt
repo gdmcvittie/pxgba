@@ -1,3 +1,6 @@
+0.5.0
+- fixed variable check script node, adds compare options 
+
 0.4.9
 - fixed npc wander and walk animation bugs
 - starting to work on 'sonic' style level gen, not ready yet, gimme a while.

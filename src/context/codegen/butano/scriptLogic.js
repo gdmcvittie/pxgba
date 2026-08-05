@@ -977,10 +977,12 @@ export function generateScriptLogic(script, actorIndex, actorWidth, actorHeight,
             val = `${val}f`;
           }
         }
-        if (!val) {
-          val = (variable && variable.type === 'string') ? '""' : (variable && variable.type === 'float') ? '0.0f' : '0';
-        }
-        code += `${indent}if (${sv} == ${val}) {\n`; openBraces++;
+         if (!val) {
+           val = (variable && variable.type === 'string') ? '""' : (variable && variable.type === 'float') ? '0.0f' : '0';
+         }
+          let op = currentNode.data.operator || '==';
+          if (!['==', '!=', '>', '>=', '<', '<='].includes(op)) op = '==';
+          code += `${indent}if (${sv} ${op} ${val}) {\n`; openBraces++;
       }
     } else if (label === 'Set Flag' || currentNode.data?.actionType === 'set_flag') {
       const flagName = resolveVarName(currentNode.data.flag);

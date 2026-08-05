@@ -785,12 +785,22 @@ const CustomActionNode = ({ id, data }) => {
               <input className="nodrag" type="text" placeholder="e.g. has_key" value={data.varName || ''} onChange={(e) => updateData({ varName: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }} />
             )}
           </div>
-          <div>
-            <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Value:</label>
-            <input className="nodrag" type="text" placeholder="e.g. 1" value={data.varValue || ''} onChange={(e) => updateData({ varValue: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }} />
-          </div>
-        </div>
-      )}
+          {data.actionType === 'check_var' && (
+             <select className="nodrag" value={data.operator || '=='} onChange={(e) => updateData({ operator: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }}>
+               <option value="==">is equal to (==)</option>
+               <option value="!=">is not equal to (!=)</option>
+               <option value=">">is greater than (&gt;)</option>
+               <option value=">=">is greater or equal (&gt;=)</option>
+               <option value="<">is less than (&lt;)</option>
+               <option value="<=">is less or equal (&lt;=)</option>
+             </select>
+           )}
+           <div>
+             <label style={{ fontSize: '10px', color: '#aaa', display: 'block', marginBottom: '2px' }}>Value:</label>
+             <input className="nodrag" type="text" placeholder="e.g. 1" value={data.varValue || ''} onChange={(e) => updateData({ varValue: e.target.value })} style={{ width: '100%', background: '#111', color: '#fff', border: '1px solid #4CAF50', borderRadius: '3px', padding: '4px', fontSize: '11px', outline: 'none', boxSizing: 'border-box' }} />
+           </div>
+         </div>
+       )}
 
       {data.actionType === 'set_random_var' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
